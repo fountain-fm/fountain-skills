@@ -52,7 +52,7 @@ Skill names MUST start with `fountain-`.
 ### Frontmatter
 
 - `name` - skill name (REQUIRED)
-- `description` - short description, max 60 chars (REQUIRED)
+- `description` - short description, max 120 chars (REQUIRED)
 
 ### Body
 
@@ -90,7 +90,7 @@ Module is a mini skill - an isolatable chunk of skill logic.
 ### Frontmatter
 
 - `name` - module name (REQUIRED)
-- `description` - short description, max 60 chars (REQUIRED)
+- `description` - short description, max 120 chars (REQUIRED)
 
 ### Body
 
