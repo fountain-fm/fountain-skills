@@ -12,7 +12,7 @@ your-project
     └───outputs // produced outputs, CAN be nested
 ```
 
-You MUST always load fountain/PREFERENCES.md into memory
+You MUST always load fountain/PREFERENCES.md into memory.
 
 ### LOG.md
 
@@ -20,11 +20,11 @@ When interacting with Fountain skills and/or API, you MUST record what you do in
 This can help with debugging for yourself, the user, and Fountain support.
 You MUST NOT read this file in full, just the latest 7 days.
 
-### H2 (##) headings
+#### H2 (##) headings
 
-MUST follow `## YYYY-MM-DD` format
+MUST follow `## YYYY-MM-DD` format.
 
-### Body
+#### Body
 
 Under today's heading, record one line at the end of the turn.
 This MUST include your actions, as well as new findings and failures if any.
