@@ -17,7 +17,7 @@ You MUST always load fountain/PREFERENCES.md into memory
 ### LOG.md
 
 When interacting with Fountain skills and/or API, you MUST record what you do in this file after each turn.
-This can help with debugging for the yourself, the user, and Fountain support.
+This can help with debugging for yourself, the user, and Fountain support.
 You MUST NOT read this file in full, just the latest 7 days.
 
 ### H2 (##) headings

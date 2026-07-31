@@ -46,7 +46,7 @@ Files names MUST be in kebab-case.extension, except SKILL.md and MODULE.md
 
 Skill names MUST start with `fountain-`
 
-## SKILL.md contents
+## SKILL.md
 
 ### Frontmatter
 
@@ -75,15 +75,15 @@ You MUST NOT repeat information that's already in assets/HOUSEKEEPING.md
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
   Modules' requirements MUST be included here.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills.
-  Steps and the usage of certain skills and modules can be optional
+  Steps and the usage of certain skills and modules can be optional.
+  You MUST NOT overdescribe edge cases, failure modes, etc. here - use "Additional notes" for that.
 - Additional notes (OPTIONAL) - anything else
 
 You MUST NOT add any other H2 headings
 
-## MODULE.md contents
+## MODULE.md
 
-Module is a mini skill.
-It is an isolatable chunk of skill logic.
+Module is a mini skill - an isolatable chunk of skill logic.
 
 ### Frontmatter
 
@@ -105,7 +105,9 @@ You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detec
 - Output (REQUIRED) - list of what the module produces
 - Requirements (OPTIONAL) - list of skills and software requirements (e.g. python or Fountain API).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
-- Process (REQUIRED) - list of steps to complete the task, when relevant refer to other modules or skills
+- Process (REQUIRED) - list of steps to complete the task, when relevant refer to other modules or skills.
+  Steps and the usage of certain skills and modules can be optional.
+  You MUST NOT overdescribe edge cases, failure modes, etc. here - use "Additional notes" for that.
 - Additional notes (OPTIONAL) - anything else
 
 You MUST NOT add any other H2 headings
@@ -114,6 +116,11 @@ You MUST NOT add any other H2 headings
 
 You MUST use snake_case for variables and SCREAMING_SNAKE_CASE for constants.
 Aside from variable naming, you MUST use each programming language's standard variable naming pactise.
+
+You MUST write robust, easy-to-read code.
+You MUST use comments sparingly, only to explain separate blocks of code and non-obvious logic.
+In ffmpeg commands, you MUST use comments to explain every argument.
+All comments MUST be at most one line and 120 chars.
 
 ## Fountain API
 
