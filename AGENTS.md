@@ -46,8 +46,11 @@ H2 (##) headings:
 - Overview - short description of how the skill works, do not repeat `description`, max 280 characters (REQUIRED)
 - Input - list of what the skill requires, combination of variables (e.g. `start_time_seconds`) and/or unstructured user input (REQUIRED)
 - Output - list of what the skill produces (REQUIRED)
+- Housekeepig - "You MUST read HOUSEKEEPING.md", this section is the same in every skill (REQUIRED)
 - Requirements - list of software requirements (e.g. python or Fountain API), when relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features (OPTIONAL)
-- Process - list of steps to complete the task, when relevant refer to modules by name, you MUST not repeat modules' logic (REQUIRED)
+- Process - list of steps to complete the task, when relevant refer to modules (REQUIRED)
 - Additional notes - anything else (OPTIONAL)
 
 You MUST NOT add any other H2 headings
+
+You MUST refer to modules by name (e.g. "module face-detection"). You MUST NOT refer to modules by path (e.g. "modules/face-detection/MODULE.md).
