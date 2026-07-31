@@ -64,7 +64,7 @@ Significant chunks of isolatable logic CAN be exported to a module.
 You MUST refer to skills and modules by name (e.g. "module face-detection").
 You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md").
 
-You MUST NOT repeat information that is already in assets/HOUSEKEEPING.md.
+You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 
 #### H2 (##) headings
 
@@ -129,10 +129,14 @@ All comments MUST be at most one line and 120 chars.
 
 Fountain API docs live at https://fountain.fm/docs.md
 
-Each skill will have loaded HOUSEKEEPING.md and know how to use the API.
+A skill that needs the API MUST tell the agent to load skill fountain-api first.
 In the skills, you MUST NOT refer to individual endpoints, request shapes, or response shapes.
 You MUST refer to the API only by its group (Project, Content, Search, People, Vaults, Publishing, Uploads, Social).
-E.g., you CAN say "Before creating an episode, load the latest episode via Fountain Publishing API".
+E.g., you CAN say "Load skill fountain-api, then load the latest episode via Fountain Publishing API".
+
+Skill fountain-api is the only exception.
+It CAN refer to authentication, base URLs, and the structure of the docs.
+It still MUST NOT refer to individual endpoints, request shapes, or response shapes.
 
 You MUST NOT write scripts for interacting with the Fountain API.
 You MUST NOT suggest idiosyncratic ways of interacting with the API.

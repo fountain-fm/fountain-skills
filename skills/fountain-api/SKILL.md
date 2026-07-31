@@ -1,32 +1,49 @@
 ---
 name: fountain-api
-description: You MUST load this if you want to interact with the Fountain API. Load and search content, publish your own podcasts.
+description: Interact with the Fountain API. Load and search content, publish your own podcasts, create social posts.
 ---
 
 ## Overview
 
-Fountain API is fully defined at https://fountain.fm/docs.md
+The Fountain API is fully defined at https://fountain.fm/docs.md.
+The docs are the ONLY source of truth.
 
 ## Input
 
-Freeform input targeting one or more endpoints of the Fountain API.
+Freeform input that targets one or more parts of the Fountain API.
 
 ## Output
 
-Fountain API endpoint responses.
+Fountain API responses.
 
 ## Housekeeping
 
 You MUST read HOUSEKEEPING.md if you haven't already.
 
+## Requirements
+
+- An HTTP client, e.g. curl.
+
 ## Process
 
-1. You MUST read https://fountain.fm/docs.md and relevant endpoints every new session.
-   The API may change.
-2. Call the relevant endpoints.
+1. Read https://fountain.fm/docs.md in each new session.
+   The API can change.
+2. This page is an index.
+   Read the pages that it links to for the parts of the API that you need.
+3. Find the project API key in the `FOUNTAIN_PROJECT_API_KEY` environment variable or in `.env`.
+   If the key is not there:
+   - Ask the user to create a project API key at https://fountain.fm/studio/api.
+   - Ask the user to copy the agent instructions from that page and to paste them to you.
+     These instructions give you a safe way to store the key - a one-time link that you pipe into `.env`.
+4. Send each request with the API key as a bearer token in the `Authorization` header.
 
 ## Additional notes
 
-You MUST avoid creating API-specific scripts.
-The API may change.
-But if you do, you MUST review them against the most recent version of the API.
+You MUST read https://fountain.fm/docs.md in each new session.
+
+You CAN write a throwaway script, e.g. to do the same request for many items.
+You MUST write it to a temporary location and delete it at the end of the session.
+You MUST NOT keep a script that wraps the Fountain API, because the API can change.
+
+You MUST NOT write the key into logs, command output, or files other than the key store.
+If the key store is `.env`, you MUST make sure that `.gitignore` contains `.env`.
