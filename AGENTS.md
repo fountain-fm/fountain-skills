@@ -7,6 +7,19 @@ These skills utilize Fountain API, our own learnings, and tools like ffmpeg.
 
 You MUST write in ASD-STE100 Simplified Technical English
 
+## Markdown
+
+Each sentence MUST be a different line.
+
+```md
+Sentence 1.
+Sentence 2.
+
+- Item 1.
+  Item 1 continued.
+- Item 2
+```
+
 ## Skill structure
 
 ```
@@ -42,9 +55,13 @@ Skill names MUST start with `fountain-`
 
 ### Body
 
-MUST be under 100 lines - the shorter the better. Significant chunks of isolatable logic can be exported to a module.
+Each line MUST be under 120 chars.
+Body MUST be under 100 lines - the shorter the better.
 
-You MUST refer to skills and modules by name (e.g. "module face-detection"). You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md).
+Significant chunks of isolatable logic CAN be exported to a module.
+
+You MUST refer to skills and modules by name (e.g. "module face-detection").
+You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md).
 
 #### H2 (##) headings
 
@@ -52,13 +69,19 @@ You MUST refer to skills and modules by name (e.g. "module face-detection"). You
 - Input (REQUIRED) - list of what the skill requires: combination of variables (e.g. `start_time_seconds`) and/or unstructured user input
 - Output (REQUIRED) - list of what the skill produces
 - Housekeeping (REQUIRED) - "You MUST read HOUSEKEEPING.md if you haven't already", this section is the same in every skill
-- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. python or Fountain API). When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features. Modules' requirements MUST be included here.
-- Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills. Steps and the usage of certain skills and modules can be optional
+- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. python or Fountain API).
+  When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
+  Modules' requirements MUST be included here.
+- Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills.
+  Steps and the usage of certain skills and modules can be optional
 - Additional notes (OPTIONAL) - anything else
 
 You MUST NOT add any other H2 headings
 
 ## MODULE.md contents
+
+Module is a mini skill.
+It is an isolatable chunk of skill logic.
 
 ### Frontmatter
 
@@ -67,16 +90,19 @@ You MUST NOT add any other H2 headings
 
 ### Body
 
-MUST be under 100 lines - the shorter the better.
+Each line MUST be under 120 chars.
+Body MUST be under 100 lines - the shorter the better.
 
-You MUST refer to skills and other modules by name (e.g. "module face-detection"). You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detection/MODULE.md).
+You MUST refer to skills and other modules by name (e.g. "module face-detection").
+You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detection/MODULE.md).
 
 #### H2 (##) headings
 
 - Overview (REQUIRED) - short description of how the module works, do not repeat `description`, max 500 characters
 - Input (REQUIRED) - list of what the module requires: combination of variables (e.g. `start_time_seconds`) and/or unstructured agent input
 - Output (REQUIRED) - list of what the module produces
-- Requirements (OPTIONAL) - list of skills and software requirements (e.g. python or Fountain API). When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
+- Requirements (OPTIONAL) - list of skills and software requirements (e.g. python or Fountain API).
+  When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to other modules or skills
 - Additional notes (OPTIONAL) - anything else
 
@@ -85,5 +111,4 @@ You MUST NOT add any other H2 headings
 ## Code conventions
 
 You MUST use snake_case for variables and SCREAMING_SNAKE_CASE for constants.
-
-You MUST use each programming language's standard variable naming pactise.
+Aside from variable naming, you MUST use each programming language's standard variable naming pactise.
