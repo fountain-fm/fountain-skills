@@ -1,0 +1,20 @@
+{
+  "name": "fountain-skills",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Fountain Skills for agents",
+  "scripts": {
+    "setup": "./scripts/setup.sh",
+    "format": "./scripts/format.sh",
+    "format:check": "./scripts/format.sh --check",
+    "housekeeping": "./scripts/sync-housekeeping.sh",
+    "housekeeping:check": "./scripts/sync-housekeeping.sh --check",
+    "fix": "./scripts/fix.sh",
+    "check": "./scripts/fix.sh --check",
+    "prepare": "git config core.hooksPath .githooks"
+  },
+  "devDependencies": {
+    "prettier": "3.9.6",
+    "prettier-plugin-sh": "0.19.0"
+  }
+}

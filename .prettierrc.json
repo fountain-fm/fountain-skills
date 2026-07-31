@@ -1,0 +1,14 @@
+{
+  "plugins": ["prettier-plugin-sh"],
+  "printWidth": 120,
+  "proseWrap": "preserve",
+  "overrides": [
+    {
+      "files": ["*.sh", "*.bash"],
+      "options": {
+        "indent": 2,
+        "keepComments": true
+      }
+    }
+  ]
+}

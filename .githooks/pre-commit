@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Syncs HOUSEKEEPING.md and formats the staged files, then stages the results.
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+if [[ ! -d node_modules ]]; then
+  echo "pre-commit: dependencies are missing - run 'npm run setup'" >&2
+  exit 1
+fi
+
+./scripts/sync-housekeeping.sh
+
+shopt -s nullglob
+housekeeping_files=(skills/*/HOUSEKEEPING.md)
+[[ ${#housekeeping_files[@]} -gt 0 ]] && git add -- "${housekeeping_files[@]}"
+
+staged_files=()
+while IFS= read -r staged_file; do
+  [[ -f "$staged_file" ]] && staged_files+=("$staged_file")
+done < <(git diff --cached --name-only --diff-filter=ACMR)
+
+[[ ${#staged_files[@]} -gt 0 ]] || exit 0
+
+./scripts/format.sh "${staged_files[@]}"
+
+git add -- "${staged_files[@]}"

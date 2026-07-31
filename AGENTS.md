@@ -138,3 +138,19 @@ You MUST NOT write scripts for interacting with the Fountain API.
 You MUST NOT suggest idiosyncratic ways of interacting with the API.
 If something is not working, you MUST investigate and suggest potential solutions before writing the skill.
 E.g., if you encounter Cloudflare 1010 block, you MUST report back to us to fix it.
+
+## Repository tooling
+
+Install the tools one time with `npm run setup`.
+It installs the npm packages, installs uv with Homebrew, and turns on the git hooks.
+
+Dependencies:
+
+- Node.js 22 or later, with npm.
+  It runs prettier and prettier-plugin-sh, which format Markdown, JSON, YAML, and shell scripts.
+- uv.
+  It runs ruff 0.16.1, which formats and lints Python.
+
+The agent hooks run at the end of each turn.
+Claude Code also formats each file directly after it writes the file.
+The git pre-commit hook runs the same steps before each commit.
