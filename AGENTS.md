@@ -63,6 +63,8 @@ Significant chunks of isolatable logic CAN be exported to a module.
 You MUST refer to skills and modules by name (e.g. "module face-detection").
 You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md).
 
+You MUST NOT repeat information that's already in assets/HOUSEKEEPING.md
+
 #### H2 (##) headings
 
 - Overview (REQUIRED) - short description of how the skill works, do not repeat `description`, max 500 characters
@@ -112,3 +114,17 @@ You MUST NOT add any other H2 headings
 
 You MUST use snake_case for variables and SCREAMING_SNAKE_CASE for constants.
 Aside from variable naming, you MUST use each programming language's standard variable naming pactise.
+
+## Fountain API
+
+Fountain API docs live at https://fountain.fm/docs.md
+
+Each skill will have loaded HOUSEKEEPING.md and know how to use the API.
+In the skills, you MUST NOT refer to individual endpoints, request shapes, or response shapes.
+You MUST refer to the API only by its group (Project, Content, Search, People, Vaults, Publishing, Uplaods, Social).
+E.g., you CAN say "Before creating an episode, load the latest episode via Fountain Publishing API".
+
+You MUST NOT write scripts for interacting with the Fountain API.
+You MUST NOT suggest idiosyncratic ways of interacting with the API.
+If something is not working, you MUST investigate and suggest potential solutions before writing the skill.
+E.g., if you encounter Cloudflare 1010 block, you MUST report back to us to fix it.
