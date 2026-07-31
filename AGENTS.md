@@ -73,7 +73,7 @@ You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 - Output (REQUIRED) - list of what the skill produces
 - Housekeeping (REQUIRED) - "You MUST read HOUSEKEEPING.md if you haven't already".
   This section is the same in every skill.
-- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. python or Fountain API).
+- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. skill fountain-api or python).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
   Modules' requirements MUST be included here.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills.
@@ -106,7 +106,7 @@ You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detec
 - Input (REQUIRED) - list of what the module requires: combination of variables (e.g. `start_time_seconds`)
   and/or unstructured agent input
 - Output (REQUIRED) - list of what the module produces
-- Requirements (OPTIONAL) - list of skills and software requirements (e.g. python or Fountain API).
+- Requirements (OPTIONAL) - list of skills and software requirements (e.g. skill fountain-api or python).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to other modules or skills.
   Steps and the usage of certain skills and modules can be optional.
@@ -129,13 +129,17 @@ All comments MUST be at most one line and 120 chars.
 
 Fountain API docs live at https://fountain.fm/docs.md
 
-A skill that needs the API MUST tell the agent to load skill fountain-api first.
+Skill fountain-api is the only way to interact with the API.
+A skill or module that needs the API MUST list skill fountain-api in Requirements.
+It MUST also tell the agent to load skill fountain-api before the first request.
+It MUST NOT give instructions about authentication, API keys, or base URLs - skill fountain-api owns those.
+
 In the skills, you MUST NOT refer to individual endpoints, request shapes, or response shapes.
 You MUST refer to the API only by its group (Project, Content, Search, People, Vaults, Publishing, Uploads, Social).
-E.g., you CAN say "Load skill fountain-api, then load the latest episode via Fountain Publishing API".
+E.g., you CAN say "Load the latest episode via Publishing API of skill fountain-api".
 
 Skill fountain-api is the only exception.
-It CAN refer to authentication, base URLs, and the structure of the docs.
+It CAN refer to authentication and the structure of the docs.
 It still MUST NOT refer to individual endpoints, request shapes, or response shapes.
 
 You MUST NOT write scripts for interacting with the Fountain API.
@@ -147,13 +151,6 @@ E.g., if you encounter Cloudflare 1010 block, you MUST report back to us to fix 
 
 Install the tools one time with `npm run setup`.
 It installs the npm packages, installs uv with Homebrew, and turns on the git hooks.
-
-Dependencies:
-
-- Node.js 22 or later, with npm.
-  It runs prettier and prettier-plugin-sh, which format Markdown, JSON, YAML, and shell scripts.
-- uv.
-  It runs ruff 0.16.1, which formats and lints Python.
 
 The agent hooks run at the end of each turn.
 Claude Code also formats each file directly after it writes the file.

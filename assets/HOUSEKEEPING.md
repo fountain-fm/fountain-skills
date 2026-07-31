@@ -35,3 +35,7 @@ When interacting with Fountain skills and/or API, you MUST record user preferenc
 This can include posting schedule, captions styles, narratives for clips, etc.
 You MUST be succinct.
 This can also help with debugging for Fountain support.
+
+## Fountain API
+
+Skill fountain-api is the ONLY way to interact with the Fountain API.
