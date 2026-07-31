@@ -153,5 +153,4 @@ Install the tools one time with `npm run setup`.
 It installs the npm packages, installs uv with Homebrew, and turns on the git hooks.
 
 The agent hooks run at the end of each turn.
-Claude Code also formats each file directly after it writes the file.
 The git pre-commit hook runs the same steps before each commit.
