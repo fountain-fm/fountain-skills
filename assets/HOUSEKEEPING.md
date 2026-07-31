@@ -9,6 +9,7 @@ your-project
 └───fountain
     │   LOG.md // daily log
     │   PREFERENCES.md // Fountain-skills-related user preferences
+    └───outputs // produced outputs, CAN be nested
 ```
 
 You MUST always load fountain/PREFERENCES.md into memory
