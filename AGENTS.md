@@ -14,10 +14,11 @@ fountain-skills
 └───skills
     └───fountain-abc // skill name
         │   SKILL.md // skill
+        │   HOUSEKEEPING.md // rules, copy-pasted with a script
         └───scripts // skill-wide scripts
         │   | def.py
         └───assets // skill-wide non-script assets
-        │   | template-ghi.ass
+        │   | example-ghi.srt
         └───modules // parts of a skill
             │ MODULE.md // module
             └───scripts // module-wide scripts
@@ -43,7 +44,7 @@ Skill names MUST start with `fountain-`
 
 H2 (##) headings:
 
-- Overview - short description of how the skill works, do not repeat `description`, max 280 characters (REQUIRED)
+- Overview - short description of how the skill works, do not repeat `description`, max 500 characters (REQUIRED)
 - Input - list of what the skill requires, combination of variables (e.g. `start_time_seconds`) and/or unstructured user input (REQUIRED)
 - Output - list of what the skill produces (REQUIRED)
 - Housekeepig - "You MUST read HOUSEKEEPING.md", this section is the same in every skill (REQUIRED)
