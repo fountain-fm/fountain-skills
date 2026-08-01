@@ -19,7 +19,7 @@ Skill [fountain-daily-growth] reads the learnings file to improve the next day's
 
 ## Output
 
-Files in `fountain/outputs/daily-performance/`:
+Files in `fountain/outputs/daily-performance/<show-slug>/`:
 
 - `history/<date>.json` - one normalized snapshot per day.
 - `reports/<date>.md` - the daily report, also printed to stdout.

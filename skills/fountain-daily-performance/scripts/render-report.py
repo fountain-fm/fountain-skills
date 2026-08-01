@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import statistics
 from datetime import date, timedelta
 from pathlib import Path
@@ -36,7 +37,13 @@ PLATFORM_NAMES = {
 ENGAGEMENT_KEYS = ("likes", "replies", "reposts", "shares", "saves", "comments")
 # Claims from buckets smaller than this stay out of the learnings file, so a fluke cannot drive choices.
 MIN_BUCKET_SIZE = 3
-DEFAULT_DATA_DIR = Path("fountain") / "outputs" / "daily-performance"
+DEFAULT_OUT_ROOT = Path("fountain") / "outputs" / "daily-performance"
+
+
+def default_data_dir(show_name: str) -> Path:
+    # Derive a per-show folder so two shows in one project do not mix history, baselines, or learnings.
+    slug = re.sub(r"[^a-z0-9]+", "-", show_name.lower()).strip("-")
+    return DEFAULT_OUT_ROOT / (slug or "default")
 
 
 def platform_label(platform: str) -> str:
@@ -392,7 +399,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Render the daily performance report from a snapshot.")
     parser.add_argument("--snapshot", required=True, type=Path, help="Path to the day's normalized snapshot JSON.")
     parser.add_argument(
-        "--data-dir", type=Path, default=DEFAULT_DATA_DIR, help="Directory holding history, reports, learnings."
+        "--data-dir", type=Path, help="Directory holding history, reports, learnings. Default: a per-show folder."
     )
     parser.add_argument("--show-name", help="Show name for the report header. Default: the snapshot's 'show' field.")
     parser.add_argument("--no-persist", action="store_true", help="Print the report without writing any files.")
@@ -400,17 +407,18 @@ def main() -> None:
 
     today = json.loads(args.snapshot.read_text(encoding="utf-8"))
     show_name = args.show_name or today.get("show") or "Show"
-    history_dir = args.data_dir / "history"
+    data_dir = args.data_dir or default_data_dir(show_name)
+    history_dir = data_dir / "history"
     if not args.no_persist:
         history_dir.mkdir(parents=True, exist_ok=True)
         (history_dir / f"{today['date']}.json").write_text(json.dumps(today, indent=2), encoding="utf-8")
     history = load_history(history_dir, today["date"])
-    report, meta = render(today, history, show_name, args.data_dir)
+    report, meta = render(today, history, show_name, data_dir)
     if not args.no_persist:
-        reports_dir = args.data_dir / "reports"
+        reports_dir = data_dir / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
         (reports_dir / f"{today['date']}.md").write_text(report, encoding="utf-8")
-        write_learnings(args.data_dir / "learnings.md", show_name, today["date"], meta)
+        write_learnings(data_dir / "learnings.md", show_name, today["date"], meta)
     print(report)
 
 
