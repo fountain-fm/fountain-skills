@@ -60,8 +60,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 A skill name in square brackets is planned but not in this repository yet.
 
-Skip this skill when you already know the episode's YouTube URL.
-Give that URL straight to skill [fountain-clip-producer] - it does not care how the URL was found.
+Skip this skill when you already know the episode's YouTube URL, or when the show has no RSS feed at all.
+Give the YouTube URL straight to skill [fountain-clip-producer] - it does not care how the URL was found.
 
 The index reflects the feed and the channel at build time.
 Build the index one time per show, then refresh it when the feed or the channel gets new items.

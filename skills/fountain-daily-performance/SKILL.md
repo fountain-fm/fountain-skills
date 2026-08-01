@@ -36,21 +36,21 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Load skill fountain-api.
-2. Fetch the show's posts and per-post engagement with the Social API.
-3. Build the day's snapshot in the shape that `render-report.py` documents.
-   Put each post that failed to publish in `failed`, not in `posts`.
+1. Load skill fountain-api and fetch the show's posts and per-post engagement with the Social API.
+2. Build the day's snapshot in the shape that `render-report.py` documents.
+   A post whose scheduled time has passed but whose state is an error never went live.
+   Put each such post in `failed`, not in `posts`.
    Record each unavailable metric as `n/a` with the reason - never a zero.
-4. Diagnose each post that underperformed its platform baseline and name the likely cause.
-   Common causes: weak hook, wrong platform for the clip, bad posting time, clip too long, saturated topic.
-5. Write concrete recommendations for the next posts into the snapshot's `recommendations`.
-6. Render the report:
+3. Diagnose each post that clearly beat or missed its platform baseline and name the likely cause.
+   Causes to consider: hook strength, platform fit, posting time, clip length, topic saturation.
+4. Write concrete recommendations for the next posts into the snapshot's `recommendations`.
+5. Render the report:
 
    ```bash
    scripts/render-report.py --snapshot <snapshot.json>
    ```
 
-7. Present the report to the user.
+6. Present the report to the user.
    Call out each failed post and recommend a re-approval and reschedule through skill [fountain-post-scheduler].
 
 ## Additional notes
@@ -62,6 +62,9 @@ You MUST NOT post, schedule, or delete anything with this skill.
 Run this skill each day before the [fountain-daily-growth] run.
 
 A failed post is not a weak post - it never went live, so its fix is operational, not editorial.
+
+When one platform's fetch fails, do not abort the run.
+Record the error on that channel and build the snapshot from the platforms that responded.
 
 On the first run there is no history, so baselines show "no baseline yet".
 This is expected - the run still renders the report and seeds the history.

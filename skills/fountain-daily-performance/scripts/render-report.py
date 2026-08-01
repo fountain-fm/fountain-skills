@@ -107,13 +107,15 @@ def load_history(history_dir: Path, exclude_date: str) -> list[dict]:
 
 
 def baseline_median(history: list[dict], platform: str) -> float | None:
-    rates = [
-        engagement_rate(post["metrics"])
-        for snapshot in history
-        for post in snapshot.get("posts", [])
-        if post["platform"] == platform
-    ]
-    return statistics.median(rates) if rates else None
+    # Median over each unique post's latest observation, so a long-tracked post does not weigh more.
+    latest: dict[str, dict] = {}
+    for snapshot in sorted(history, key=lambda snap: snap["date"]):
+        for post in snapshot.get("posts", []):
+            if post["platform"] == platform:
+                latest[post["id"]] = post["metrics"]
+    if not latest:
+        return None
+    return statistics.median(engagement_rate(metrics) for metrics in latest.values())
 
 
 def collect_series(today: dict, history: list[dict], days: int = 7) -> dict[str, list]:
