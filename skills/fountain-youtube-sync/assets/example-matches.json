@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "built_at": "2026-05-14T09:20:00+00:00",
+    "show_slug": "example-show",
+    "youtube_sources": ["https://www.youtube.com/@ExampleShow/videos", "https://www.youtube.com/playlist?list=PLxxxx"],
+    "youtube_jsonl_caches": [],
+    "episode_count": 4,
+    "video_count": 187,
+    "latest_episode_published": "2026-05-12",
+    "latest_video_uploaded": "2026-05-12",
+    "confidence_counts": {
+      "high": 1,
+      "medium": 1,
+      "low": 1,
+      "unmatched": 1
+    }
+  },
+  "matches": [
+    {
+      "episode_number": 142,
+      "episode_id": "episode:id:abc123",
+      "episode_title": "142: Why Rate Cuts Won't Save The Market",
+      "episode_published": "2026-05-12",
+      "episode_duration_seconds": 3120,
+      "episode_has_video": false,
+      "youtube_video_id": "aB3xQ9k2Lmo",
+      "youtube_url": "https://www.youtube.com/watch?v=aB3xQ9k2Lmo",
+      "youtube_title": "Why Rate Cuts Won't Save The Market | Episode 142",
+      "youtube_uploaded": "2026-05-12",
+      "youtube_duration_seconds": 3105,
+      "match_confidence": "high",
+      "match_score": 100.0,
+      "title_similarity": 0.804,
+      "duration_delta_seconds": 15,
+      "date_delta_days": 0
+    },
+    {
+      "episode_number": 141,
+      "episode_id": "episode:id:def456",
+      "episode_title": "141: The Hidden Cost Of Cheap Money",
+      "episode_published": "2026-05-05",
+      "episode_duration_seconds": 2894,
+      "episode_has_video": false,
+      "youtube_video_id": "pR7mN4vT1zQ",
+      "youtube_url": "https://www.youtube.com/watch?v=pR7mN4vT1zQ",
+      "youtube_title": "Cheap Money Always Has A Cost | Full Show",
+      "youtube_uploaded": "2026-05-03",
+      "youtube_duration_seconds": 2685,
+      "match_confidence": "medium",
+      "match_score": 50.6,
+      "title_similarity": 0.37,
+      "duration_delta_seconds": 209,
+      "date_delta_days": 2
+    },
+    {
+      "episode_number": 139,
+      "episode_id": "episode:id:ghi789",
+      "episode_title": "139: Bonus - Live Q&A From The Conference",
+      "episode_published": "2026-04-21",
+      "episode_duration_seconds": 1860,
+      "episode_has_video": false,
+      "youtube_video_id": "xK9wL2sB6yA",
+      "youtube_url": "https://www.youtube.com/watch?v=xK9wL2sB6yA",
+      "youtube_title": "Live Q&A - Audience Questions",
+      "youtube_uploaded": "2026-04-16",
+      "youtube_duration_seconds": 1802,
+      "match_confidence": "low",
+      "match_score": 51.6,
+      "title_similarity": 0.37,
+      "duration_delta_seconds": 58,
+      "date_delta_days": 5
+    },
+    {
+      "episode_number": 138,
+      "episode_id": "episode:id:jkl012",
+      "episode_title": "138: Members Only - Mailbag",
+      "episode_published": "2026-04-14",
+      "episode_duration_seconds": 1240,
+      "episode_has_video": false,
+      "youtube_video_id": "",
+      "youtube_url": "",
+      "youtube_title": "",
+      "youtube_uploaded": "",
+      "youtube_duration_seconds": null,
+      "match_confidence": "unmatched",
+      "match_score": 29.6,
+      "title_similarity": 0.144,
+      "duration_delta_seconds": 562,
+      "date_delta_days": 2
+    }
+  ]
+}
