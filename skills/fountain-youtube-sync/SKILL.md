@@ -6,10 +6,10 @@ description: Match a podcast's RSS episodes to its YouTube videos and build a pe
 ## Overview
 
 Many podcast RSS feeds are audio-only, while a video version of the same episode often exists on YouTube.
-RSS episode titles and YouTube video titles are rarely identical, so matching must be fuzzy.
 The skill's script scores each (episode, video) pair on title similarity, duration delta, and publish-date distance.
 It combines them into one 0-100 score and gives each episode its best video and a confidence tier.
-The result is a per-show index that other skills can read to find the video source for an episode.
+The result is a per-show index of each episode's video source.
+Skills [fountain-clip-finder] and [fountain-clip-producer] read this index.
 
 ## Input
 
@@ -58,7 +58,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
+A skill name in square brackets is planned but not in this repository yet.
+
 Skip this skill when you already know the episode's YouTube URL.
+Give that URL straight to skill [fountain-clip-producer] - it does not care how the URL was found.
 
 The index reflects the feed and the channel at build time.
 Build the index one time per show, then refresh it when the feed or the channel gets new items.
