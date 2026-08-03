@@ -19,13 +19,14 @@ If data is available from an API, you MUST load it from the API, and you MUST NO
 
 ### LOG.md
 
-When interacting with Fountain skills and/or API, you MUST record what you do in this file after each turn.
+When interacting with Fountain skills, you MUST record what you do in this file after each turn.
 This can help with debugging for yourself, the user, and Fountain support.
-You MUST NOT read this file in full, just the latest 7 days.
+You MUST NOT read this file in full, just the latest 7 days at the end of the file.
 
 #### H2 (##) headings
 
 MUST follow `## YYYY-MM-DD` format.
+The oldest day MUST be first.
 
 #### Body
 
@@ -37,7 +38,7 @@ You MUST be succinct.
 
 When interacting with Fountain skills, you MUST record user preferences in this file.
 You MUST be succinct.
-This is the ONLY file that keeps data for later sessions.
+This is the ONLY file that keeps user data for later sessions.
 This can also help with debugging for Fountain support.
 
 #### H2 (##) headings

@@ -134,6 +134,7 @@ The skill MUST NOT keep a local copy of that data for a later session.
 
 Outputs are ephemeral.
 A skill MUST NOT tell the agent to keep an output for a later session.
+A skill MUST NOT tell the agent to read an output of an earlier session.
 
 fountain/PREFERENCES.md is the ONLY store for data that later sessions need.
 
