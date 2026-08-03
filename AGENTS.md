@@ -125,6 +125,19 @@ You MUST use comments sparingly, only to explain separate blocks of code and non
 In ffmpeg commands, you MUST use comments to explain every argument.
 All comments MUST be at most one line and 120 chars.
 
+## State
+
+A skill can run on the user's machine, where files are available, or elsewhere, where they are not.
+Thus you MUST make each skill as stateless as possible.
+If data is available from an API, the skill MUST load it from the API.
+The skill MUST NOT keep a local copy of that data for a later session.
+
+Outputs are ephemeral.
+A skill MUST NOT tell the agent to keep an output for a later session.
+A skill MUST NOT tell the agent to read an output of an earlier session.
+
+fountain/PREFERENCES.md is the ONLY store for data that later sessions need.
+
 ## Fountain API
 
 Fountain API docs live at https://fountain.fm/docs.md
