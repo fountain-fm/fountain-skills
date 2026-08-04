@@ -8,8 +8,8 @@ description: Match a podcast's RSS episodes to its YouTube videos and build a pe
 Many podcast RSS feeds are audio-only, while a video version of the same episode often exists on YouTube.
 The skill's script scores each (episode, video) pair on title similarity, duration delta, and publish-date distance.
 It combines them into one 0-100 score and gives each episode its best video and a confidence tier.
-The result is a per-show index of each episode's video source.
-Skills [fountain-clip-finder] and [fountain-clip-producer] read this index.
+The result is a per-show table of each episode's video source.
+Skills [fountain-clip-finder] and [fountain-clip-producer] use these matches.
 
 ## Input
 
@@ -63,15 +63,14 @@ A skill name in square brackets is planned but not in this repository yet.
 Skip this skill when you already know the episode's YouTube URL, or when the show has no RSS feed at all.
 Give the YouTube URL straight to skill [fountain-clip-producer] - it does not care how the URL was found.
 
-The index reflects the feed and the channel at build time.
-Build the index one time per show, then refresh it when the feed or the channel gets new items.
-Do not rebuild the index for each episode lookup.
+Build the match table one time per session, then reuse it for every episode lookup in that session.
+Do not rebuild the table for each episode lookup, and do not reuse a table from an earlier session.
 
 A wrong video makes every clip timestamp wrong.
 You MUST NOT use a `low` or `unmatched` result without manual confirmation.
 
 A live fetch of a large channel is slow and can hit rate limits.
-Cache the yt-dlp dump one time and replay it with `--youtube-jsonl`.
+Dump the yt-dlp data one time per session and replay it with `--youtube-jsonl` for repeat runs in that session.
 
 Title normalization strips common English stopwords.
 Review matches for non-English shows with extra care, whatever the reported confidence tier.
