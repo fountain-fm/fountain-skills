@@ -136,7 +136,8 @@ Outputs are ephemeral.
 A skill MUST NOT tell the agent to keep an output for a later session.
 A skill MUST NOT tell the agent to read an output of an earlier session.
 
-fountain/PREFERENCES.md is the ONLY store for data that later sessions need.
+Fountain-hosted preferences are the ONLY store for data that later sessions need.
+The agent loads and updates them with the Project API of skill fountain-api.
 
 ## Fountain API
 
