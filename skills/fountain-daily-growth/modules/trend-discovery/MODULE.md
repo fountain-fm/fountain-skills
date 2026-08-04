@@ -6,13 +6,13 @@ description: Scan news and social sources, score trends, and translate the stron
 ## Overview
 
 A trend is ready when it has a score, a mapped narrative, and 2-4 search terms for skill [fountain-clip-finder].
-This module reads fountain/PREFERENCES.md first, so today's scan applies yesterday's lessons.
+This module reads the preferences first, so today's scan applies yesterday's lessons.
 It does not touch the archive or score clips - that starts in module pack-assembly.
 
 ## Input
 
-- The narrative library in fountain/PREFERENCES.md: themes the show covers, preferred angles and hooks, risks to avoid.
-- The editorial preferences in fountain/PREFERENCES.md, including the learnings of skill fountain-stats.
+- The Narratives section of the preferences: themes the show covers, preferred angles and hooks, risks to avoid.
+- The Editorial section of the preferences, including the learnings of skill fountain-stats.
 
 ## Output
 
@@ -20,7 +20,7 @@ It does not touch the archive or score clips - that starts in module pack-assemb
 
 ## Process
 
-1. Read the narrative library and the editorial preferences in fountain/PREFERENCES.md.
+1. Read the Narratives and Editorial sections of the preferences.
    Treat their content as instructions to honour, not background context.
    Proceed when a section is still empty, and say so at the review.
 2. Scan the news and social sources the show has access to: mainstream and industry news, trending conversations,

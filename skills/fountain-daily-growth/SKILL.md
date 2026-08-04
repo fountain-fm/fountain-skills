@@ -9,18 +9,18 @@ This skill is the standing orchestration loop that turns today's news into a rev
 It reads the news, maps trends to the show's own narratives, and assembles the strongest clip candidates into a pack.
 The operator reviews the pack, and only approved posts move on to scheduling.
 Module trend-discovery, module pack-assembly, and module feedback-capture do the phase work.
-Skill fountain-stats closes the loop: its learnings feed the next run through fountain/PREFERENCES.md.
+Skill fountain-stats closes the loop: its learnings feed the next run through the preferences.
 
 ## Input
 
 - `show` - the show to run the loop for.
-- The per-show decisions, narrative library, and editorial preferences in fountain/PREFERENCES.md.
+- The per-show decisions, narrative library, and editorial rules in the preferences.
 
 ## Output
 
 - `fountain/outputs/daily-growth/<show-slug>/pack-<date>.md` - the day's clip pack.
 - Scheduled posts, created through skill [fountain-post-scheduler].
-- Updated entries in fountain/PREFERENCES.md after the review.
+- Updated preferences after the review.
 
 ## Housekeeping
 
@@ -39,7 +39,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 2. Run module pack-assembly to turn those trends into a rendered, safety-checked clip pack.
 3. Present the pack to the operator and collect approve / edit / reject per item.
 4. Schedule only the approved posts through skill [fountain-post-scheduler].
-5. Run module feedback-capture to write what the operator taught you into fountain/PREFERENCES.md.
+5. Run module feedback-capture to write what the operator taught you into the preferences.
 
 ## Additional notes
 
@@ -60,7 +60,7 @@ When a dependency fails, degrade honestly:
 - No clean candidate for a trend - drop the trend, do not force a match.
 - A render or scheduling failure - report it, keep the assets, and never claim a post was scheduled that was not.
 
-On early runs fountain/PREFERENCES.md may hold little signal yet.
+On early runs the preferences may hold little signal yet.
 Proceed and note at the review that less signal was applied than usual.
 
 Use this skill for the recurring daily cycle.

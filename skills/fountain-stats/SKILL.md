@@ -9,7 +9,7 @@ This skill runs after posts are live.
 Each run fetches the show's recent posts and their current metrics from the API and builds one normalized snapshot.
 A renderer script turns that snapshot into the daily report.
 The skill is read-only and keeps no local history - baselines come from the older posts in the same fetch.
-Durable learnings go into fountain/PREFERENCES.md under the Editorial heading.
+Durable learnings go into the preferences under the Editorial heading.
 
 ## Input
 
@@ -20,7 +20,7 @@ Durable learnings go into fountain/PREFERENCES.md under the Editorial heading.
 ## Output
 
 - The daily report, printed to stdout and presented to the user.
-- Updated entries in fountain/PREFERENCES.md when the run finds durable learnings.
+- Updated preferences when the run finds durable learnings.
 
 ## Housekeeping
 
@@ -37,7 +37,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Fetch the show's posts for the last 7 days and their per-post engagement with the Social API.
 2. Build the snapshot in the shape that `render-report.py` documents.
    Derive each post's editorial metadata (narrative, hook style, clip length) from the post's copy and clip data
-   in the API, together with the narrative library in fountain/PREFERENCES.md.
+   in the API, together with the Narratives section of the preferences.
    A post whose scheduled time has passed but whose state is an error never went live.
    Put each such post in `failed`, not in `posts`.
    Record each unavailable metric as `n/a` with the reason - never a zero.
@@ -52,7 +52,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 6. Present the report to the user.
    Call out each failed post and recommend a re-approval and reschedule through skill [fountain-post-scheduler].
-7. Record durable learnings under the Editorial heading of fountain/PREFERENCES.md, succinctly.
+7. Record durable learnings under the Editorial heading of the preferences, succinctly.
    A durable learning holds across days, for example "question hooks beat statement hooks on X".
    One-day noise MUST NOT go in.
 

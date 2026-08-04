@@ -13,7 +13,7 @@ It does not re-score archive matches or re-verify clip boundaries - skill [fount
 ## Input
 
 - Scored, translated trends from module trend-discovery.
-- The show's platforms, clip formats, and voice notes from fountain/PREFERENCES.md.
+- The show's platforms, clip formats, and voice notes from the preferences.
 
 ## Output
 
@@ -35,7 +35,7 @@ It does not re-score archive matches or re-verify clip boundaries - skill [fount
 4. Render the selected clips with skill [fountain-clip-producer] in the show's format(s).
    Every clip MUST be rendered and QA-passed before the review, not after approval.
 5. Write a one-paragraph "why publish today" per clip: the live trend, the narrative it maps to, the archive-match
-   strength, and any supporting signal from the editorial preferences in fountain/PREFERENCES.md.
+   strength, and any supporting signal from the Editorial section of the preferences.
 6. Run the copy and safety pass (see the notes), then write per-platform copy and tag the on-camera speaker.
 7. Assemble and send the pack one time.
    Each entry MUST include: working title, episode reference, thumbnail and preview links, duration, speaker and
@@ -63,7 +63,7 @@ Speaker tagging:
 
 - Tag whoever is on camera - verify it, because multi-host shows often cut to a reaction shot.
 - Use only that platform's confirmed handle from the episode's show notes or the handle library in
-  fountain/PREFERENCES.md.
+  the preferences.
 - Credit by name when no handle is confirmed for that platform - never guess or reuse a handle across platforms.
 
 Approval:

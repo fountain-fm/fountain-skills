@@ -1,13 +1,13 @@
 ---
 name: feedback-capture
-description: Turn the operator's review feedback into durable editorial preferences in fountain/PREFERENCES.md.
+description: Turn the operator's review feedback into durable entries in the preferences.
 ---
 
 ## Overview
 
 This module makes the loop learn without local state.
 It distills why the operator approved, edited, or rejected each item, and writes the durable lessons into
-fountain/PREFERENCES.md.
+the preferences.
 Module trend-discovery and skill fountain-stats read those lessons on the next run.
 It does not log posts - the scheduled posts and their metadata live in the API.
 
@@ -17,7 +17,7 @@ It does not log posts - the scheduled posts and their metadata live in the API.
 
 ## Output
 
-- Updated entries in fountain/PREFERENCES.md.
+- Updated preferences.
 
 ## Process
 
@@ -25,7 +25,7 @@ It does not log posts - the scheduled posts and their metadata live in the API.
    Capture why the operator decided, not just the outcome.
 2. Keep only the lessons that hold beyond today.
    Examples: a banned phrase, a preferred hook style, a rejected topic, a newly confirmed platform handle.
-3. Write each lesson under the matching heading of fountain/PREFERENCES.md, succinctly.
+3. Write each lesson under the matching heading of the preferences, succinctly.
    Record a narrative the operator approved in the narrative library.
 4. When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 
@@ -33,7 +33,7 @@ It does not log posts - the scheduled posts and their metadata live in the API.
 
 An outcome with no reason teaches nothing - ask the operator for the reason when it is unclear.
 
-One-day noise MUST NOT go into fountain/PREFERENCES.md.
+One-day noise MUST NOT go into the preferences.
 "Reject: we already covered this topic this week" is noise.
 "Reject: never use price predictions in copy" is a durable lesson.
 
