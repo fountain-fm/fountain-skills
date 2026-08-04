@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Render a daily social performance report from a normalized snapshot and local snapshot history.
+"""Render a daily social performance report from one normalized snapshot.
 
-The snapshot is agent-built (see skill fountain-daily-performance) and normalized across sources:
+The snapshot is agent-built (see skill fountain-stats) from a fresh API fetch each run:
 {
   "date": "2026-07-29", "asOf": "2026-07-29T05:58:12Z", "show": "Show Name",
   "channels": [{"platform": "x", "views_7d": 100, "engagement_7d": 10, "error": "optional reason"}],
@@ -12,6 +12,8 @@ The snapshot is agent-built (see skill fountain-daily-performance) and normalize
               "narrative": "...", "error": "..."}],
   "recommendations": ["..."]
 }
+"posts" holds every post of the last 7 days with its cumulative metrics as the platform reports them now.
+Baselines are computed inside the snapshot: the median engagement rate of the posts older than 24 hours per platform.
 Metrics may also carry impressions, replies, reposts, shares, and saves when the source exposes them.
 A missing metric stays absent or null - never zero-filled.
 """
@@ -20,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import statistics
 from datetime import date, timedelta
 from pathlib import Path
@@ -35,15 +36,8 @@ PLATFORM_NAMES = {
     "threads": "Threads",
 }
 ENGAGEMENT_KEYS = ("likes", "replies", "reposts", "shares", "saves", "comments")
-# Claims from buckets smaller than this stay out of the learnings file, so a fluke cannot drive choices.
+# Claims from buckets smaller than this are marked low confidence, so a fluke cannot drive choices.
 MIN_BUCKET_SIZE = 3
-DEFAULT_OUT_ROOT = Path("fountain") / "outputs" / "daily-performance"
-
-
-def default_data_dir(show_name: str) -> Path:
-    # Derive a per-show folder so two shows in one project do not mix history, baselines, or learnings.
-    slug = re.sub(r"[^a-z0-9]+", "-", show_name.lower()).strip("-")
-    return DEFAULT_OUT_ROOT / (slug or "default")
 
 
 def platform_label(platform: str) -> str:
@@ -99,51 +93,16 @@ def short_episode(title: str | None) -> str:
     return (title or "—").split(" with ")[0]
 
 
-def load_history(history_dir: Path, exclude_date: str) -> list[dict]:
-    snapshots = []
-    if not history_dir.exists():
-        return snapshots
-    for path in sorted(history_dir.glob("*.json")):
-        if path.stem == exclude_date:
-            continue
-        try:
-            snapshots.append(json.loads(path.read_text(encoding="utf-8")))
-        except (OSError, json.JSONDecodeError):
-            continue
-    return snapshots
-
-
-def baseline_median(history: list[dict], platform: str) -> float | None:
-    # Median over each unique post's latest observation, so a long-tracked post does not weigh more.
-    latest: dict[str, dict] = {}
-    for snapshot in sorted(history, key=lambda snap: snap["date"]):
-        for post in snapshot.get("posts", []):
-            if post["platform"] == platform:
-                latest[post["id"]] = post["metrics"]
-    if not latest:
+def baseline_median(posts: list[dict], platform: str) -> float | None:
+    # Median over the older posts on the platform, so today's cohort is judged against prior performance.
+    rates = [
+        engagement_rate(post["metrics"])
+        for post in posts
+        if post["platform"] == platform and not post.get("in_24h") and reach(post["metrics"]) > 0
+    ]
+    if not rates:
         return None
-    return statistics.median(engagement_rate(metrics) for metrics in latest.values())
-
-
-def collect_series(today: dict, history: list[dict], days: int = 7) -> dict[str, list]:
-    cutoff = date.fromisoformat(today["date"]) - timedelta(days=days)
-    snapshots = [snap for snap in [*history, today] if date.fromisoformat(snap["date"]) >= cutoff]
-    snapshots.sort(key=lambda snap: snap["date"])
-    series: dict[str, list] = {}
-    for snapshot in snapshots:
-        for post in snapshot.get("posts", []):
-            series.setdefault(post["id"], []).append(post)
-    return series
-
-
-def latest_with_previous(series: dict[str, list]) -> list[tuple[dict, dict | None]]:
-    pairs = []
-    for entries in series.values():
-        latest = entries[-1]
-        previous = entries[-2] if len(entries) >= 2 else None
-        if reach(latest["metrics"]) > 0:
-            pairs.append((latest, previous))
-    return pairs
+    return statistics.median(rates)
 
 
 def compare_buckets(groups: dict[str, list[float]], labels: dict[str, str] | None = None):
@@ -180,16 +139,14 @@ def length_bucket(post: dict) -> str:
     return ">40s clips"
 
 
-def render_channel_overview(today: dict, history: list[dict], report_date: date) -> list[str]:
-    lines = ["## 1. Channel Overview", "", "| Platform | Views (7d) | Engagement (7d) | Trend |", "|---|--:|--:|:--:|"]
-    yesterday = str(report_date - timedelta(days=1))
-    previous_snapshot = next((snap for snap in history if snap["date"] == yesterday), None)
+def render_channel_overview(today: dict, report_date: date) -> list[str]:
+    lines = ["## 1. Channel Overview", "", "| Platform | Views (7d) | Engagement (7d) |", "|---|--:|--:|"]
     week_ago = report_date - timedelta(days=7)
     summed_views_used = False
     for channel in today.get("channels", []):
         platform = channel["platform"]
         if channel.get("error"):
-            lines.append(f"| {platform_label(platform)} | unavailable (api error) | — | · |")
+            lines.append(f"| {platform_label(platform)} | unavailable (api error) | — |")
             continue
         # Channel analytics can under-report vs a post's own cumulative views - take whichever is higher.
         channel_views = channel.get("views_7d") or 0
@@ -205,22 +162,18 @@ def render_channel_overview(today: dict, history: list[dict], report_date: date)
         if post_views > channel_views:
             marker = " †"
             summed_views_used = True
-        previous_views = None
-        if previous_snapshot:
-            prev = next((c for c in previous_snapshot.get("channels", []) if c["platform"] == platform), None)
-            previous_views = prev.get("views_7d") if prev else None
-        trend = trend_arrow(pct_change(views, previous_views)) if previous_views else "·"
         views_text = f"{fmt_number(views)}{marker}" if views else "—"
         engagement_text = fmt_metric(channel.get("engagement_7d"))
-        lines.append(f"| {platform_label(platform)} | {views_text} | {engagement_text} | {trend} |")
+        lines.append(f"| {platform_label(platform)} | {views_text} | {engagement_text} |")
     if summed_views_used:
         lines += ["", "> † Views summed from post-level data because channel analytics are unavailable."]
     lines.append("")
     return lines
 
 
-def render_recent_posts(today: dict, history: list[dict]) -> list[str]:
-    cohort = [post for post in today.get("posts", []) if post.get("in_24h")]
+def render_recent_posts(today: dict) -> list[str]:
+    all_posts = today.get("posts", [])
+    cohort = [post for post in all_posts if post.get("in_24h")]
     failed = [failure for failure in today.get("failed", []) if failure.get("in_24h")]
     lines = ["## 2. Recent Posts (Last 24 Hours)", ""]
     if not cohort:
@@ -242,7 +195,7 @@ def render_recent_posts(today: dict, history: list[dict]) -> list[str]:
             for post in sorted(group, key=lambda item: -engagement_rate(item["metrics"])):
                 metrics = post["metrics"]
                 rate = engagement_rate(metrics)
-                baseline = baseline_median(history, post["platform"])
+                baseline = baseline_median(all_posts, post["platform"])
                 change = pct_change(rate, baseline)
                 verdict = f"{trend_arrow(change)} {fmt_pct(change)}" if baseline else "(no baseline yet)"
                 total_reach += reach(metrics)
@@ -255,7 +208,9 @@ def render_recent_posts(today: dict, history: list[dict]) -> list[str]:
                 f"| **Clip total** | | **{fmt_number(total_reach)}** | | | **{clip_average[clip] * 100:.1f}% avg** | |"
             )
             lines.append("")
-        lines.append("> **vs baseline** = engagement rate vs the median of all prior posts on the same platform.")
+        lines.append(
+            "> **vs baseline** = engagement rate vs the median of the show's older posts on the same platform."
+        )
     if failed:
         lines += ["", f"**⚠️ {len(failed)} failed publish(es) in this window - never went live:**", ""]
         for failure in failed:
@@ -296,9 +251,8 @@ def render_top_posts(week_posts: list[dict]) -> list[str]:
     return lines
 
 
-def render_key_learnings(week_pairs: list[tuple[dict, dict | None]], week_posts: list[dict]):
+def render_key_learnings(week_posts: list[dict]) -> list[str]:
     lines = ["## 4. Key Learnings", "", "**This week's patterns** (last 7 days):", ""]
-    learnings: list[str] = []
     claims = [
         compare_buckets(bucket_rates(week_posts, lambda post: post.get("narrative") or "unknown")),
         compare_buckets(bucket_rates(week_posts, lambda post: post["platform"]), PLATFORM_NAMES),
@@ -307,119 +261,49 @@ def render_key_learnings(week_pairs: list[tuple[dict, dict | None]], week_posts:
     ]
     claims = [claim for claim in claims if claim]
     if claims:
+        actionable_count = 0
         for claim, actionable in claims:
             lines.append(f"- {claim}")
             if actionable:
-                learnings.append(claim)
-        if not learnings:
+                actionable_count += 1
+        if not actionable_count:
             hold = f"keep current defaults until ≥{MIN_BUCKET_SIZE} posts per bucket"
             lines.append(f"- _All patterns above are low-confidence - {hold}._")
     else:
         lines.append("- _Not enough volume in the last 7 days to call a pattern yet._")
-    lines += ["", "**Evolving posts** - older posts still moving since the previous snapshot:", ""]
-    movers = []
-    for latest, previous in week_pairs:
-        if latest.get("in_24h") or previous is None:
-            continue
-        reach_change = pct_change(reach(latest["metrics"]), reach(previous["metrics"]))
-        gains = {}
-        for key in ENGAGEMENT_KEYS:
-            delta = (latest["metrics"].get(key) or 0) - (previous["metrics"].get(key) or 0)
-            if delta > 0:
-                gains[key] = delta
-        if (reach_change is None or abs(reach_change) < 15) and not gains:
-            continue
-        movers.append((reach_change or 0, gains, latest))
-    movers.sort(key=lambda item: -(abs(item[0]) + sum(item[1].values())))
-    for reach_change, gains, post in movers[:5]:
-        if reach_change:
-            direction = "still gaining" if reach_change > 0 else "cooling off"
-            reach_text = f"{direction} {fmt_pct(reach_change)} reach"
-        else:
-            reach_text = "flat on reach"
-        gain_text = ""
-        if gains:
-            parts = [f"+{value} {key}" for key, value in sorted(gains.items(), key=lambda kv: -kv[1])]
-            gain_text = f" — picked up {', '.join(parts)}"
-        note = (
-            f"**{post['title'][:30]}** ({platform_label(post['platform'])}) "
-            f"{reach_text}{gain_text} — {post.get('narrative', '—')}."
-        )
-        lines.append(f"- {note}")
-        learnings.append(f"Long-tail: {note}")
-    if not movers:
-        lines.append("- _No older post moved more than 15% since the last snapshot._")
     lines.append("")
-    return lines, learnings
+    return lines
 
 
-def render(today: dict, history: list[dict], show_name: str, data_dir: Path):
+def render(today: dict, show_name: str) -> str:
     report_date = date.fromisoformat(today["date"])
-    week_pairs = latest_with_previous(collect_series(today, history))
-    week_posts = [latest for latest, _ in week_pairs]
+    week_posts = [post for post in today.get("posts", []) if reach(post["metrics"]) > 0]
     lines = [
         f"# {show_name} Daily Performance Report - {today['date']}",
         "",
-        f"_As of {today['asOf']}. Ranked by engagement rate. Trends come from local snapshot history._",
+        f"_As of {today['asOf']}. Ranked by engagement rate. Metrics are cumulative as reported at fetch time._",
         "",
     ]
-    lines += render_channel_overview(today, history, report_date)
-    lines += render_recent_posts(today, history)
+    lines += render_channel_overview(today, report_date)
+    lines += render_recent_posts(today)
     lines += render_top_posts(week_posts)
-    learning_lines, learnings = render_key_learnings(week_pairs, week_posts)
-    lines += learning_lines
+    lines += render_key_learnings(week_posts)
     recommendations = today.get("recommendations", [])
     lines += ["## 5. Recommendations for Today", ""]
     lines += [f"- {item}" for item in recommendations] or ["- _No recommendations generated._"]
-    lines += [
-        "",
-        "---",
-        f"_Snapshot: `{data_dir}/history/{today['date']}.json`. Learnings: `{data_dir}/learnings.md`._",
-    ]
-    return "\n".join(lines), {"recommendations": recommendations, "learnings": learnings}
-
-
-def write_learnings(path: Path, show_name: str, snapshot_date: str, meta: dict) -> None:
-    # Prepend the newest entry so a reader can act on the top block without scanning the file.
-    title = f"# {show_name} Performance Learnings"
-    entry = [f"## {snapshot_date}", "", "**Recommendations for the next posts:**"]
-    entry += [f"- {item}" for item in meta["recommendations"]] or ["- (none)"]
-    entry += ["", "**Performance learnings to apply:**"]
-    entry += [f"- {item}" for item in meta["learnings"]] or ["- (none)"]
-    entry += ["", "---", ""]
-    previous = ""
-    if path.exists():
-        text = path.read_text(encoding="utf-8")
-        previous = text.split("\n\n", 2)[-1] if text.startswith(title) else text
-    header = f"{title}\n\n_Newest entry first. Written by skill fountain-daily-performance._\n\n"
-    path.write_text(header + "\n".join(entry) + previous, encoding="utf-8")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Render the daily performance report from a snapshot.")
-    parser.add_argument("--snapshot", required=True, type=Path, help="Path to the day's normalized snapshot JSON.")
-    parser.add_argument(
-        "--data-dir", type=Path, help="Directory holding history, reports, learnings. Default: a per-show folder."
-    )
+    parser.add_argument("--snapshot", required=True, type=Path, help="Path to the run's normalized snapshot JSON.")
     parser.add_argument("--show-name", help="Show name for the report header. Default: the snapshot's 'show' field.")
-    parser.add_argument("--no-persist", action="store_true", help="Print the report without writing any files.")
     args = parser.parse_args()
 
     today = json.loads(args.snapshot.read_text(encoding="utf-8"))
     show_name = args.show_name or today.get("show") or "Show"
-    data_dir = args.data_dir or default_data_dir(show_name)
-    history_dir = data_dir / "history"
-    if not args.no_persist:
-        history_dir.mkdir(parents=True, exist_ok=True)
-        (history_dir / f"{today['date']}.json").write_text(json.dumps(today, indent=2), encoding="utf-8")
-    history = load_history(history_dir, today["date"])
-    report, meta = render(today, history, show_name, data_dir)
-    if not args.no_persist:
-        reports_dir = data_dir / "reports"
-        reports_dir.mkdir(parents=True, exist_ok=True)
-        (reports_dir / f"{today['date']}.md").write_text(report, encoding="utf-8")
-        write_learnings(data_dir / "learnings.md", show_name, today["date"], meta)
-    print(report)
+    print(render(today, show_name))
 
 
 if __name__ == "__main__":
