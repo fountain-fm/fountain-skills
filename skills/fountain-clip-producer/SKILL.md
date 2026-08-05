@@ -40,6 +40,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - ffmpeg and ffprobe, from the Homebrew `ffmpeg-full` formula.
   The default `ffmpeg` formula carries no libass, no drawtext, and no fontconfig, so it cannot burn a caption.
 - ImageMagick, to measure the width of caption text.
+  The fonts that the presets name ship in `assets`, so no machine has to install one.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
 
 ## Process

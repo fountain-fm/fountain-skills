@@ -73,7 +73,7 @@ A simple lower third reads well.
 Heavy branding on the first frame reads as an advertisement, and it raises the skip rate.
 Keep a title card clear of the caption zone, and take it off screen before the viewer must read both at once.
 
-Take the font and the colours from the kit of the show rather than choose them per clip,
+Take the font from `assets/fonts`, or from the kit of the show, rather than choose one per clip,
 because a title card in the wrong typeface breaks the look exactly as a caption does.
 
 On a two-speaker clip, use the speaker labels of module **captions** rather than name the speaker in both layers.

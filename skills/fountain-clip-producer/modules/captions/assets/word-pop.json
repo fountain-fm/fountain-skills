@@ -1,9 +1,33 @@
 {
   "name": "word-pop",
   "description": "CapCut-default style: one word at a time, each scaling in with a small overshoot. Words marked \"emphasize\": true in the words JSON render in the highlight color.",
-  "font": { "family": "Montserrat Bold", "size": 80, "bold": true, "case": "upper" },
-  "colors": { "primary": "#FFFFFF", "highlight": "#FFD400", "outline": "#000000" },
-  "border": { "style": "outline", "outline": 5, "shadow": 0 },
-  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 250 },
-  "animation": { "type": "word-pop", "appearMs": 120, "settleMs": 100, "overshootPct": 112, "entryPct": 55 }
+  "font": {
+    "family": "Montserrat",
+    "size": 80,
+    "bold": true,
+    "case": "upper"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#FFD400",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 5,
+    "shadow": 0
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 60,
+    "marginR": 60,
+    "marginV": 250
+  },
+  "animation": {
+    "type": "word-pop",
+    "appearMs": 120,
+    "settleMs": 100,
+    "overshootPct": 112,
+    "entryPct": 55
+  }
 }

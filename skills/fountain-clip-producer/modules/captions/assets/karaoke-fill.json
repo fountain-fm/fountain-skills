@@ -1,10 +1,32 @@
 {
   "name": "karaoke-fill",
   "description": "Whole phrase visible; color fills progressively across each word as it is spoken (white -> gold). Suits voiceover and music-led clips.",
-  "font": { "family": "Montserrat Bold", "size": 76, "bold": true, "case": "verbatim" },
-  "colors": { "primary": "#FFD400", "highlight": "#FFFFFF", "outline": "#000000" },
-  "border": { "style": "outline", "outline": 5, "shadow": 0 },
-  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 240 },
-  "grouping": { "maxWords": 5 },
-  "animation": { "type": "karaoke-fill" }
+  "font": {
+    "family": "Montserrat",
+    "size": 76,
+    "bold": true,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFD400",
+    "highlight": "#FFFFFF",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 5,
+    "shadow": 0
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 60,
+    "marginR": 60,
+    "marginV": 240
+  },
+  "grouping": {
+    "maxWords": 5
+  },
+  "animation": {
+    "type": "karaoke-fill"
+  }
 }

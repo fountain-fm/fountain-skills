@@ -47,7 +47,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
    ```bash
    # label renders the text at the real font and size, and "%w" prints the width it took.
-   magick -background none -font "/path/to/Font-Bold.otf" -pointsize 72 \
+   magick -background none -font assets/fonts/Montserrat-Bold.ttf -pointsize 72 \
      label:"the line to measure" -format "%w" info:
    ```
 
@@ -60,7 +60,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
    # The subtitles filter hands the file to libass, which reads the styles and the animation from it.
    # -c:a copy leaves the audio untouched, because this pass changes the picture alone.
    ffmpeg -hide_banner -y -i clip-vertical.mp4 \
-     -vf "subtitles=captions.ass" \
+     -vf "subtitles=captions.ass:fontsdir=assets/fonts" \
      -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
      clip-vertical-captioned.mp4
    ```
