@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Move a moment to clean clip in and out points, and cut the word-level slice of a final span.
 
-Reads a ContentHitTranscript on stdin, and uses `start`, `end`, `text` and `speaker` of each
-TranscriptSegment, plus `word`, `start` and `end` of each TranscriptWord.
-Without `--span` it prints the sentences around the moment and every in/out pair inside the duration range.
+Reads a ContentHitTranscript on stdin, and uses `start`, `end` and `text` of each TranscriptSegment,
+plus `word`, `start` and `end` of each TranscriptWord.
+Without `--span` it prints the in/out pairs inside the duration range, spread across that range.
 With `--span` it prints the words of that span on stdout, as TranscriptWord with the times rebased to clip time.
 """
 
@@ -34,11 +34,6 @@ def load_transcript(payload: object) -> tuple[list[dict], list[dict], str]:
     raise SystemExit("find-clip-boundaries: the transcript holds no segments - generate it first")
 
 
-def label(segment: dict) -> str:
-    speaker = segment.get("speaker")
-    return f"{speaker}: {segment['text']}" if speaker else segment["text"]
-
-
 def print_boundaries(segments: list[dict], args: argparse.Namespace, source: str) -> None:
     window_start = args.moment_start - args.lookback
     window_end = args.moment_end + args.lookahead
@@ -65,9 +60,9 @@ def print_boundaries(segments: list[dict], args: argparse.Namespace, source: str
         return
     # A long moment yields hundreds of pairs, so show a spread rather than every one.
     pairs.sort(key=lambda pair: pair[2])
-    if len(pairs) > args.context:
-        step = len(pairs) / args.context
-        pairs = [pairs[int(i * step)] for i in range(args.context)]
+    if len(pairs) > args.pairs:
+        step = len(pairs) / args.pairs
+        pairs = [pairs[int(i * step)] for i in range(args.pairs)]
     print(f"  showing {len(pairs)} of the pairs, spread across the duration range\n")
     for start_segment, end_segment, duration in pairs:
         print(
@@ -110,7 +105,7 @@ def main() -> int:
     parser.add_argument("--lookahead", type=float, default=90.0, help="Seconds after the moment. Default: 90.")
     parser.add_argument("--min-dur", type=float, default=35.0, help="Shortest clip in seconds. Default: 35.")
     parser.add_argument("--max-dur", type=float, default=75.0, help="Longest clip in seconds. Default: 75.")
-    parser.add_argument("--context", type=int, default=8, help="Sentences to show on each side. Default: 8.")
+    parser.add_argument("--pairs", type=int, default=8, help="In/out pairs to print. Default: 8.")
     args = parser.parse_args()
 
     segments, words, source = load_transcript(json.loads(sys.stdin.read()))
