@@ -11,6 +11,10 @@ You MUST write in ASD-STE100 Simplified Technical English.
 
 Each sentence MUST be on a different line.
 
+You MUST put the name of a skill or a module in bold (e.g. module **face-detection**).
+You MUST bold the name only, and not the words "skill" or "module".
+A planned name keeps its brackets inside the bold (e.g. skill **[fountain-clip-producer]**).
+
 ```md
 Sentence 1.
 Sentence 2.
@@ -61,7 +65,7 @@ Body MUST be under 100 lines - the shorter the better.
 
 Significant chunks of isolatable logic CAN be exported to a module.
 
-You MUST refer to skills and modules by name (e.g. "module face-detection").
+You MUST refer to skills and modules by name (e.g. module **face-detection**).
 You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md").
 
 You MUST NOT repeat information that is already in HOUSEKEEPING.md.
@@ -73,7 +77,7 @@ You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 - Output (REQUIRED) - list of what the skill produces
 - Housekeeping (REQUIRED) - "You MUST read HOUSEKEEPING.md if you haven't already".
   This section is the same in every skill.
-- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. skill fountain-api or python).
+- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. skill **fountain-api** or python).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
   Modules' requirements MUST be included here.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills.
@@ -97,7 +101,7 @@ Module is a mini skill - an isolatable chunk of skill logic.
 Each line MUST be under 120 chars.
 Body MUST be under 100 lines - the shorter the better.
 
-You MUST refer to skills and other modules by name (e.g. "module face-detection").
+You MUST refer to skills and other modules by name (e.g. module **face-detection**).
 You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detection/MODULE.md").
 
 #### H2 (##) headings
@@ -106,7 +110,7 @@ You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detec
 - Input (REQUIRED) - list of what the module requires: combination of variables (e.g. `start_time_seconds`)
   and/or unstructured agent input
 - Output (REQUIRED) - list of what the module produces
-- Requirements (OPTIONAL) - list of skills and software requirements (e.g. skill fountain-api or python).
+- Requirements (OPTIONAL) - list of skills and software requirements (e.g. skill **fountain-api** or python).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to other modules or skills.
   Steps and the usage of certain skills and modules can be optional.
@@ -137,22 +141,22 @@ A skill MUST NOT tell the agent to keep an output for a later session.
 A skill MUST NOT tell the agent to read an output of an earlier session.
 
 Fountain-hosted preferences are the ONLY store for data that later sessions need.
-The agent loads and updates them with the Project API of skill fountain-api.
+The agent loads and updates them with the Project API of skill **fountain-api**.
 
 ## Fountain API
 
 Fountain API docs live at https://fountain.fm/docs.md
 
-Skill fountain-api is the only way to interact with the API.
-A skill or module that needs the API MUST list skill fountain-api in Requirements.
-It MUST also tell the agent to load skill fountain-api before the first request.
-It MUST NOT give instructions about authentication, API keys, or base URLs - skill fountain-api owns those.
+Skill **fountain-api** is the only way to interact with the API.
+A skill or module that needs the API MUST list skill **fountain-api** in Requirements.
+It MUST also tell the agent to load skill **fountain-api** before the first request.
+It MUST NOT give instructions about authentication, API keys, or base URLs - skill **fountain-api** owns those.
 
 In the skills, you MUST NOT refer to individual endpoints, request shapes, or response shapes.
 You MUST refer to the API only by its group (Project, Content, Search, People, Vaults, Publishing, Uploads, Social).
-E.g., you CAN say "Load the latest episode via Publishing API of skill fountain-api".
+E.g., you CAN say "Load the latest episode via Publishing API of skill **fountain-api**".
 
-Skill fountain-api is the only exception.
+Skill **fountain-api** is the only exception.
 It CAN refer to authentication and the structure of the docs.
 It still MUST NOT refer to individual endpoints, request shapes, or response shapes.
 

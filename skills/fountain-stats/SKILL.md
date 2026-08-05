@@ -28,12 +28,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- Skill fountain-api.
+- Skill **fountain-api**.
 - Python 3.11 or later.
 
 ## Process
 
-1. Load skill fountain-api.
+1. Load skill **fountain-api**.
    Fetch the show's posts for the last 7 days and their per-post engagement with the Social API.
 2. Build the snapshot in the shape that `render-report.py` documents.
    Derive each post's editorial metadata (narrative, hook style, clip length) from the post's copy and clip data
@@ -51,7 +51,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    ```
 
 6. Present the report to the user.
-   Call out each failed post and recommend a re-approval and reschedule through skill [fountain-post-scheduler].
+   Call out each failed post and recommend a re-approval and reschedule through skill **[fountain-post-scheduler]**.
 7. Record durable learnings under the Editorial heading of the preferences, succinctly.
    A durable learning holds across days, for example "question hooks beat statement hooks on X".
    One-day noise MUST NOT go in.
