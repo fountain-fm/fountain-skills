@@ -132,13 +132,11 @@ A skill can run on the user's machine, where files are available, or elsewhere, 
 Thus you MUST make each skill as stateless as possible.
 If data is available from an API, the skill MUST load it from the API.
 The skill MUST NOT keep a local copy of that data for a later session.
+A module CAN give a model to another module in the same session.
 
 Outputs are ephemeral.
 A skill MUST NOT tell the agent to keep an output for a later session.
 A skill MUST NOT tell the agent to read an output of an earlier session.
-
-A model that one module gives to another in the same session is not a local copy.
-A model that a skill writes down for a later session is.
 
 Fountain-hosted preferences are the ONLY store for data that later sessions need.
 The agent loads and updates them with the Project API of skill fountain-api.
