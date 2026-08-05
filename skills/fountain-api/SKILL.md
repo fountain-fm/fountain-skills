@@ -29,6 +29,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 1. Read https://fountain.fm/docs.md in each new session.
    This page is an index.
    Read the pages that it links to for the parts of the API that you need.
+   When a skill names a model, read the page of that model before you use it.
 2. Find the project API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`.
 3. Send each request with `FOUNTAIN_API_KEY` as a bearer token in the `Authorization` header.
 
