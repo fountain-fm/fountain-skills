@@ -73,6 +73,7 @@ DEFAULTS = {
         "maxGapMs": 600,  # silence gap that forces a new group
         "sentenceSplit": True,  # a sentence-final word (. ! ?) always closes its group
         "stripFullStops": True,  # drop sentence-final periods from display (? and ! stay)
+        "stripTrailingCommas": True,  # a comma on a group's last word is noise; the caption ends there
         "padMs": 150,  # readability pad after a group's last word
         "maxLines": 1,  # 1 = single-line rule (default); >=2 explicitly allows wrapping
         "speakerLabels": False,  # True = prefix "SPEAKER: " from the words' speaker field;
@@ -379,6 +380,7 @@ def apply_case(text, mode, first_in_group):
 
 SENTENCE_END = re.compile(r'[.!?]["\')\]]*$')
 TRAILING_STOPS = re.compile(r'\.+(["\')\]]*)$')
+TRAILING_COMMA = re.compile(r',(["\')\]]*)$')
 
 
 def group_words(words, grouping):
@@ -403,6 +405,13 @@ def group_words(words, grouping):
                 stripped = TRAILING_STOPS.sub(r"\1", word["text"])
                 if stripped:
                     word["text"] = stripped
+    if grouping["stripTrailingCommas"]:
+        # Only the last word of a group. A comma inside the group still divides
+        # a list on one line, but the caption already ends where the group does.
+        for group in groups:
+            stripped = TRAILING_COMMA.sub(r"\1", group[-1]["text"])
+            if stripped:
+                group[-1]["text"] = stripped
     return groups
 
 

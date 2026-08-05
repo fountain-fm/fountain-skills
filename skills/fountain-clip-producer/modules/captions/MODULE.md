@@ -71,16 +71,11 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 The spec layers from the lowest priority to the highest: defaults, preset, brand kit, per-clip override.
 A misspelled override path is a hard error and never a silent no-op.
-The script validates the resolved spec, and unreadable contrast, flicker, and impossible overshoot are hard
-failures. `--check` runs that validation alone, with no words.
+The script rejects a spec with unreadable contrast, flicker, or impossible overshoot, and `--check` runs
+that validation alone, with no words.
 
-The presets in `assets` are starting points and not cages.
-`clean-editorial` and `bold-social` are static, `tiktok-style` and `karaoke-fill` sweep across each word,
-and `current-word` lights the spoken word alone, which is the common talking-head look.
-`word-pop`, `bounce-in`, `glow-bounce`, and `typewriter` animate one word at a time.
-`impact-loud` and `hormozi` are the loud uppercase styles, and `hormozi` needs 3 to 5 emphasised words.
-`pill-karaoke` puts the active word on a coloured pill, `speaker-duo` gives each speaker a colour and a label,
-and `minimal-light` is small text on a soft box.
+The presets in `assets` are starting points and not cages, and each one carries its own description.
+`current-word` is the common talking-head look, and `hormozi` needs 3 to 5 words marked `"emphasize": true`.
 
 These are the text rules, and the default mode is faithful-clean:
 
@@ -95,14 +90,14 @@ Check the names of people and places, the numbers and the currency, and the name
 Spell a name the way the show notes spell it, because that is what the audience searches for.
 
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style.
-`sentence` lowercases every word first, so it destroys "I", an acronym, and every name,
-and it then capitalises whatever word a group happens to start on, which is rarely a sentence.
-Reach for it only when the transcript arrives with no capitals at all.
+`sentence` lowercases every word first, so it destroys "I" and every name, and then capitalises whatever
+word the group starts on, which is rarely a sentence.
 
 A caption group breaks on a speaker change, a sentence end, a silence, or the word cap, and never inside a clause.
-A social caption carries no full stop, though a question mark and an exclamation mark stay, because they carry tone.
+A social caption drops the full stop and the comma that fall at the end of a group, because the caption ends
+there anyway. A comma inside a group stays, because it still divides a list on one line.
+A question mark and an exclamation mark always stay, because they carry tone.
 
 A vertical clip holds one line by default, and an unintended wrap is a blocking failure: shorten the phrase.
 
-libass renders no colour emoji, so an emoji style cannot go through the ASS path.
-Put the emoji in an overlay instead of shipping a monochrome box.
+libass renders no colour emoji, so put an emoji in an overlay rather than ship a monochrome box.
