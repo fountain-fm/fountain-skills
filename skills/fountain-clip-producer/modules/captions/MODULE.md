@@ -91,16 +91,15 @@ Correct the errors of the machine transcript, because they render exactly as the
 Check the names, the numbers, and the currency, and spell each name the way the show notes do.
 
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style.
-`sentence` lowercases every word first, so it destroys "I" and every name, and then capitalises whatever
-word the group starts on, which is rarely a sentence.
+`sentence` lowercases every word first, so it destroys "I" and every name.
 
 A caption group breaks on a speaker change, a sentence end, a silence, or the safe width, and never inside a clause.
-The script measures each word in the font and the case it will render in, then packs a group until the next
-word would not fit, so `font.size` is the control and `grouping.maxWords` is only a ceiling for the rhythm.
-A style that shows one word at a time is not packed, because the group is never on screen at once.
+The script measures each word in the font and case it will render in, then packs until the next will not fit,
+so `font.size` is the control and `grouping.maxWords` only a ceiling.
+A style that shows one word at a time is not packed.
 A social caption drops the full stop and the comma at the end of a group, though a comma inside one stays
 because it divides a list. A question mark and an exclamation mark stay, because they carry tone.
 
-A vertical clip holds one line by default, and an unintended wrap is a blocking failure: shorten the phrase.
+A vertical clip holds one line by default, and an unintended wrap is a blocking failure.
 
 libass renders no colour emoji, so put an emoji in an overlay rather than ship a monochrome box.
