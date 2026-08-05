@@ -91,9 +91,7 @@ These are the rules for a delivered crop:
 - The face sits a little away from the centre, on the side it looks away from, so it looks into the frame.
 - No edge clips the face, and the head keeps room above it.
 
-You MUST NOT deliver a crop segment that nobody looked at.
-
-You MUST NOT letterbox unless the user asks for it, because black bars shrink the subject.
+You MUST NOT deliver a crop segment that nobody looked at, and you MUST NOT letterbox unless the user asks.
 
 The script reports no face on a wide two-shot and on screen content, and a 9:16 crop fails both:
 one lands between two people, and the other cuts off the thing the clip exists to show.
