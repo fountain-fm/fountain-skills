@@ -40,7 +40,7 @@ With:
    Resolve the show with the Search API if you have only a name.
    The Search API gives a bare id, and the Content API needs the prefixed form, so add the type prefix.
    List the show's episodes with the Content API and remove the duplicates by `_guid`.
-2. Find the show's `ProjectVault` with the Project API, and bring it up to date with the Vaults API.
+2. Read the project's vault ids with the Project API, then load and update the `ProjectVault` with the Vaults API.
    Use one vault for the whole archive, and give it a name that shows its scope.
    An episode needs an analyzed transcript before it can join, and the Content API meters that work.
    Read the remaining credits with the Project API and get the user's approval before a bulk backfill.

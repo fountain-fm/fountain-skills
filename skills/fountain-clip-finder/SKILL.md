@@ -36,8 +36,8 @@ A draft publishes nothing until the user approves it.
 A post targets one channel, and the platform of that channel decides how the text reads.
 One clip on two channels is therefore two posts, each with its own text.
 
-The API marks `context` and `source` optional, but this skill MUST write both.
-Fountain shows a post as a candidate only when it holds them.
+The API marks `source` optional, but this skill MUST write it.
+Fountain shows a post as a candidate only when it holds `source`, and only then can a renderer cut the clip.
 Module **copy** writes `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 

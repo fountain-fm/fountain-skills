@@ -33,7 +33,7 @@ This module therefore also builds a time map, which module **boundaries** uses t
 
 ## Process
 
-1. Write `ids` from the segments of the moment: the episode and its parent show.
+1. Write `ids` from the segments of the moment, which name the episode in `content` and the show in `parent`.
 2. Read `info.video` of the episode from the `ContentHit` that module **discovery** loaded.
    Load the episode with the Content API when you do not hold it.
 3. Use `info.video` as `media`, and stop here for that episode.
