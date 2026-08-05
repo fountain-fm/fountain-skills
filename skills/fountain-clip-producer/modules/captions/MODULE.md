@@ -46,6 +46,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 4. Measure the width of each line that the script emits, and fill in the fit report:
 
    ```bash
+   # label renders the text at the real font and size, and "%w" prints the width it took.
    magick -background none -font "/path/to/Font-Bold.otf" -pointsize 72 \
      label:"the line to measure" -format "%w" info:
    ```
@@ -56,9 +57,11 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 6. Burn the captions in:
 
    ```bash
+   # The subtitles filter hands the file to libass, which reads the styles and the animation from it.
+   # -c:a copy leaves the audio untouched, because this pass changes the picture alone.
    ffmpeg -hide_banner -y -i clip-vertical.mp4 \
-     -vf "subtitles=captions.ass" \  # libass reads the styles and the animation from the file
-   -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
+     -vf "subtitles=captions.ass" \
+     -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
      clip-vertical-captioned.mp4
    ```
 
@@ -91,8 +94,7 @@ Correct the errors of the machine transcript, because they render exactly as the
 Check the names of people and places, the numbers and the currency, and the names of companies and guests.
 Spell a name the way the show notes spell it, because that is what the audience searches for.
 
-A caption group breaks on a speaker change, on a sentence end, on a silence, or on the word cap.
-It never merges across a speaker change or a sentence end, and it never breaks inside a clause.
+A caption group breaks on a speaker change, a sentence end, a silence, or the word cap, and never inside a clause.
 A social caption carries no full stop, though a question mark and an exclamation mark stay, because they carry tone.
 
 A vertical clip holds one line by default, and an unintended wrap is a blocking failure: shorten the phrase.

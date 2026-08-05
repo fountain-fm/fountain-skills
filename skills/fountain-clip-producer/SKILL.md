@@ -7,13 +7,8 @@ description: Render an approved clip post into a finished, platform-ready video 
 
 This skill turns an approved post into a video file.
 It decides nothing about the moment or the span, because the caller settles those before it runs.
-Module **media** cuts the landscape master that every other module builds on.
-Module **trims** can shorten that master, when the user asks to lose the pauses and the filler.
-Module **framing** crops it to the target shape, and module **shots** decides when that crop
-changes person in a two-person shot.
-Module **captions**, module **fonts**, and module **overlays** put the text and the layers on it.
-Module **brand** holds the look of the show.
-Module **preflight** checks the machine first, and module **qa** gates the delivery last.
+Module **media** cuts the landscape master, and every module after it works from that one file.
+The rest shape the picture, put the words and the layers on it, and gate the delivery on one report.
 
 ## Input
 
@@ -32,6 +27,7 @@ Optional:
 - A landscape master, and one export for each shape that the request asks for.
 - A `SocialPostUpload` on `content.uploads` of the post, when the user asks to attach the video.
 - A clip manifest, a crop plan, a caption plan, an overlay plan, and a QA report.
+- A removal report, when module **trims** cut the clip.
 
 ## Housekeeping
 

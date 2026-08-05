@@ -21,6 +21,7 @@ The words say who speaks, and this module turns that into a cut list with the ge
 
 - A crop plan, with one segment for each held shot and the crop box of that shot.
 - The render commands, because the segments are cut apart and joined again.
+- The vertical export, joined from those segments, in place of the single crop of module **framing**.
 - A warning for each rule that the footage broke.
 
 ## Requirements
@@ -46,13 +47,19 @@ The words say who speaks, and this module turns that into a cut list with the ge
    ```
 
 4. Read every warning before you render, because each one names a cut that will look wrong.
-5. Render each segment on its own, and join them:
+5. Render each segment on its own, with the commands that `--emit-commands` printed.
+6. List the segments in order, then join them:
 
    ```bash
+   # The concat demuxer reads one "file ..." line for each segment, in play order.
+   printf "file '%s'\n" seg-*.mp4 > segments.txt
+   
+   # -f concat joins the list, -safe 0 accepts the paths, and -c copy avoids a second encode
+   # because every segment already carries the same codec and size.
    ffmpeg -hide_banner -y -f concat -safe 0 -i segments.txt -c copy clip-vertical.mp4
    ```
 
-6. Watch each cut at full speed, and confirm that the head size and the eye line hold across it.
+7. Watch each cut at full speed, and confirm that the head size and the eye line hold across it.
 
 ## Additional notes
 

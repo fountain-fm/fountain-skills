@@ -39,9 +39,10 @@ The fit measurement and the burn must therefore see the same font.
 3. Point libass at the font files directly when a show carries its own fonts:
 
    ```bash
+   # fontsdir makes libass read this folder before it asks the system for a font.
    ffmpeg -hide_banner -y -i clip-vertical.mp4 \
-     -vf "subtitles=captions.ass:fontsdir=./fonts" \  # read this folder before the system fonts
-   -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
+     -vf "subtitles=captions.ass:fontsdir=./fonts" \
+     -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
      clip-vertical-captioned.mp4
    ```
 

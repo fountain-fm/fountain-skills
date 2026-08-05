@@ -59,4 +59,4 @@ They do not hold a font file or a logo file.
 Ask the user where those files are, and record that location one time.
 A kit that names a font which is not in that location is a blocking gap, and never a fall-through to a system font.
 
-You MUST be succinct in the preferences, and record the values rather than a description of them.
+Record the values themselves in the preferences, and not a description of them.

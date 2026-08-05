@@ -14,8 +14,9 @@ Nothing reaches the user until that gate reports a pass.
 
 - The clean master, and the final export.
 - The expected width, height, frame rate, and duration.
-- The crop plan and the visual QA report of module **framing**.
-- The caption fit report of module **captions**.
+- The crop plan and the visual QA report of module **framing**, and the contact sheet.
+- The caption fit report of module **captions**, when the export carries captions.
+- The removal report of module **trims**, when the clip was cut.
 
 ## Output
 
@@ -38,12 +39,14 @@ Nothing reaches the user until that gate reports a pass.
    ```bash
    scripts/validate-clip.py \
      --clean-master clip-vertical.mp4 --final clip-vertical-captioned.mp4 \
-     --caption-fit-report caption-fit-report.json --visual-report visual-qa-report.json \
+     --caption-fit-report caption-fit-report.json \
+     --visual-report visual-qa-report.json --contact-sheet contact-sheet.jpg \
      --expected-width 1080 --expected-height 1920 --expected-fps 30 \
      --expected-duration "$DURATION" --report qa-report.json
    ```
 
-   Leave out the two report flags for an export that carries no captions.
+   Leave out `--caption-fit-report` for an export that carries no captions.
+   Keep `--visual-report`, because module **framing** asks for it on every vertical export.
 
 4. Add `--caption-layer` only when the render used a prepared transparent layer.
    That layer is the one case with a separate file, and it needs its own frame rate and alpha checks.

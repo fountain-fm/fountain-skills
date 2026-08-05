@@ -45,9 +45,17 @@ Module **captions** takes its revised word list, so the words and the picture ne
    ```
 
 4. Read every warning, and take each held-back removal to the user on its own.
-5. Render each kept span, and join them:
+5. Render each kept span of the plan, all with the same settings, then join them:
 
    ```bash
+   # Re-encode each span, because a stream copy would move the cut to the nearest keyframe.
+   ffmpeg -hide_banner -y -i clip-landscape-master.mp4 -ss "$KEEP_START" -to "$KEEP_END" \
+     -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k seg-00.mp4
+   
+   # The concat demuxer reads one "file ..." line for each span, in play order.
+   printf "file '%s'\n" seg-*.mp4 > segments.txt
+   
+   # -c copy is safe here, because every span was just encoded the same way.
    ffmpeg -hide_banner -y -f concat -safe 0 -i segments.txt -c copy clip-landscape-trimmed.mp4
    ```
 

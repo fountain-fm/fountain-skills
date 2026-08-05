@@ -42,6 +42,7 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 3. Take a preview thumbnail when the request asks for one:
 
    ```bash
+   # -ss seeks to the chosen moment, and -frames:v 1 writes that single frame.
    ffmpeg -hide_banner -y -ss "$T" -i clip-final.mp4 -frames:v 1 thumbnail.jpg
    ```
 

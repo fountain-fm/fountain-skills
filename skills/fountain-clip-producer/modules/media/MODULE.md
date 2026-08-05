@@ -36,30 +36,36 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    # Read the programs first, then cut the one whose video is the resolution you want.
    ffprobe -v error -show_entries program=program_id:stream=width,height,codec_type -of json "$MEDIA_URL"
    
-   ffmpeg -hide_banner -y \
-     -ss "$ROUGH_START" -i "$MEDIA_URL" \  # one seek, on the master, so audio and video move together
-   -map 0:p:1:v:0 -map 0:p:1:a:0 \         # program 1 pairs the video with its own audio group
-   -t "$ROUGH_DURATION" \                  # fetch only the span, and never the whole episode
-   -c:v libx264 -preset veryfast -crf 18 \
-     -c:a aac -b:a 192k -movflags +faststart \
-     clip-rough.mp4
+   # -ss before -i seeks the master one time, so the video and its audio group move together.
+   # -map takes program 1, which pairs that video with its own audio.
+   # -t fetches the span alone, and never the whole episode.
+   # -crf 18 and the aac bitrate keep the master good enough for every module after this one.
+   ffmpeg -hide_banner -y -ss "$ROUGH_START" -i "$MEDIA_URL" \
+     -map 0:p:1:v:0 -map 0:p:1:a:0 -t "$ROUGH_DURATION" \
+     -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k \
+     -movflags +faststart clip-rough.mp4
    ```
 
 3. Fetch a watch-page URL with yt-dlp instead, and take only the padded window:
 
    ```bash
+   # -f takes the best video under 1080p and pairs it with the best audio.
+   # --download-sections fetches the window alone, and never the whole episode.
+   # --force-keyframes-at-cuts lands near the cut, though not exactly on it.
    yt-dlp -f "bestvideo[height<=1080]+bestaudio" \
-     --download-sections "*$ROUGH_START-$ROUGH_END" \  # fetch the window, and never the whole episode
-   --force-keyframes-at-cuts \                         # land near the cut, though not exactly on it
-   -o clip-rough.mp4 "$MEDIA_URL"
+     --download-sections "*$ROUGH_START-$ROUGH_END" \
+     --force-keyframes-at-cuts \
+     -o clip-rough.mp4 "$MEDIA_URL"
    ```
 
 4. Re-trim the rough cut locally, because neither step 2 nor step 3 is frame-accurate:
 
    ```bash
+   # -ss and -to on a local file give the exact span, measured on the rough cut.
+   # The re-encode is what makes this pass frame-accurate, so do not copy the streams.
    ffmpeg -hide_banner -y -i clip-rough.mp4 \
-     -ss "$TS_START_LOCAL" -to "$TS_END_LOCAL" \  # exact span, measured on the rough file
-   -c:v libx264 -crf 18 -c:a aac -movflags +faststart \
+     -ss "$TS_START_LOCAL" -to "$TS_END_LOCAL" \
+     -c:v libx264 -crf 18 -c:a aac -movflags +faststart \
      clip-landscape-master.mp4
    ```
 
