@@ -70,8 +70,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 ## Additional notes
 
 The spec layers from the lowest priority to the highest: defaults, preset, brand kit, per-clip override.
-A misspelled override path is a hard error and never a silent no-op.
-The script rejects unreadable contrast, flicker, or impossible overshoot, and `--check` runs it alone.
+A misspelled override path is a hard error, and `--check` rejects unreadable contrast or flicker on its own.
 
 The presets in `assets` are starting points, each carries its own description, and `hormozi` wants
 3 to 5 words marked `"emphasize": true`.
@@ -87,8 +86,8 @@ These are the text rules, and the default mode is faithful-clean:
 - Keep the jokes, the strong language, and the quoted words, and never turn a sentence into a different claim.
 - Drop a dangling fragment when the clip ends before the speaker finishes.
 
-Correct the errors of the machine transcript, because they render exactly as they arrive.
-Check the names, the numbers, and the currency, and spell each name the way the show notes do.
+Correct the machine transcript, because it renders as it arrives: check the names, the numbers and the
+currency, and spell each name the way the show notes do.
 
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style.
 `sentence` lowercases every word first, so it destroys "I" and every name.
@@ -97,9 +96,7 @@ A caption group breaks on a speaker change, a sentence end, a silence, or the sa
 The script measures each word in the font and case it will render in, then packs until the next will not fit,
 so `font.size` is the control and `grouping.maxWords` only a ceiling.
 A style that shows one word at a time is not packed.
-A social caption drops the full stop and the comma at the end of a group, though a comma inside one stays
-because it divides a list. A question mark and an exclamation mark stay, because they carry tone.
-
-A vertical clip holds one line by default, and an unintended wrap is a blocking failure.
+A social caption drops the full stop and the comma that end a group, though a comma inside one stays.
+A question mark and an exclamation mark stay, because they carry tone.
 
 libass renders no colour emoji, so put an emoji in an overlay rather than ship a monochrome box.
