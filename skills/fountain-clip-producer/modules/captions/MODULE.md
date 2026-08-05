@@ -71,8 +71,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 The spec layers from the lowest priority to the highest: defaults, preset, brand kit, per-clip override.
 A misspelled override path is a hard error and never a silent no-op.
-The script rejects a spec with unreadable contrast, flicker, or impossible overshoot, and `--check` runs
-that validation alone, with no words.
+The script rejects unreadable contrast, flicker, or impossible overshoot, and `--check` runs it alone.
 
 The presets in `assets` are starting points and not cages, and each one carries its own description.
 `current-word` is the common talking-head look, and `hormozi` needs 3 to 5 words marked `"emphasize": true`.
@@ -81,22 +80,23 @@ These are the text rules, and the default mode is faithful-clean:
 
 - Remove filler and a repeated false start, when that does not change the meaning.
   This is safe by default because the audio still carries the word, which is why module **trims** is not.
+- Judge "like" and "I mean" one at a time, because each is filler about half the time.
+  Delete the word and read the line again: keep it when the line now says something else.
+  "Like" before a quote or a number always stays, because it reports speech or hedges a figure.
 - Keep a repetition that carries emphasis, rhythm, or contrast.
 - Keep the jokes, the strong language, and the quoted words, and never turn a sentence into a different claim.
 - Drop a dangling fragment when the clip ends before the speaker finishes.
 
 Correct the errors of the machine transcript, because they render exactly as they arrive.
-Check the names of people and places, the numbers and the currency, and the names of companies and guests.
-Spell a name the way the show notes spell it, because that is what the audience searches for.
+Check the names, the numbers, and the currency, and spell each name the way the show notes do.
 
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style.
 `sentence` lowercases every word first, so it destroys "I" and every name, and then capitalises whatever
 word the group starts on, which is rarely a sentence.
 
 A caption group breaks on a speaker change, a sentence end, a silence, or the word cap, and never inside a clause.
-A social caption drops the full stop and the comma that fall at the end of a group, because the caption ends
-there anyway. A comma inside a group stays, because it still divides a list on one line.
-A question mark and an exclamation mark always stay, because they carry tone.
+A social caption drops the full stop and the comma at the end of a group, though a comma inside one stays
+because it divides a list. A question mark and an exclamation mark stay, because they carry tone.
 
 A vertical clip holds one line by default, and an unintended wrap is a blocking failure: shorten the phrase.
 
