@@ -43,7 +43,6 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
    ```
 
    The script returns `crop_x` directly, already clamped to the frame.
-   Add `--track` when the face moves inside the shot, and it returns `crop_x_expr` to follow the face.
    It stops when it finds two separated faces, because one crop then lands between them.
    Measure both with `--speakers 2`, and give the anchors to module **shots** to plan the cuts.
 
@@ -51,9 +50,9 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 4. Apply the crop, and switch it on the cut times when the clip holds more than one segment:
 
    ```bash
-   # crop takes a 9:16 window whose x is the tracked expression, scale fits the shape, fps steadies it.
+   # crop takes a 9:16 window whose x holds until a cut, scale fits the shape, fps steadies it.
    ffmpeg -hide_banner -y -i clip-landscape-master.mp4 \
-     -vf "crop=608:1080:'$CROP_X_EXPR':0,scale=1080:1920,fps=30" \
+     -vf "crop=608:1080:'if(lt(t,$CUT_A),$SEG1_X,$SEG2_X)':0,scale=1080:1920,fps=30" \
      -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k -movflags +faststart \
      clip-vertical.mp4
    ```
@@ -93,10 +92,12 @@ These are the rules for a delivered crop:
 
 You MUST NOT deliver a crop segment that nobody looked at, and you MUST NOT letterbox unless the user asks.
 
+The crop holds still inside a shot and changes only on a cut, even when the face wanders inside it.
+A crop that drifts while the speaker talks reads as a pan across a still frame, and the viewer sees it.
+
 The script reports no face on a wide two-shot and on screen content, and a 9:16 crop fails both:
 one lands between two people, and the other cuts off the thing the clip exists to show.
-Stop before the render, and say why the crop fails and what is lost.
-Offer a letterbox, a blurred fill from module **overlays**, a crop that follows the speaker from
+Stop, say what is lost, and offer a letterbox, a blurred fill from module **overlays**, a crop from
 module **shots**, or a different span, and render nothing until the user chooses.
 
 The detector misfires on dark footage and on low contrast, so the contact sheet and your own eyes decide there.

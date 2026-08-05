@@ -111,7 +111,6 @@ def detect(video, t0, t1, step, wide):
 
     found = []
     facings = []
-    samples = []
     per_frame = []
     frame_w = frame_h = None
     t = t0
@@ -148,14 +147,13 @@ def detect(video, t0, t1, step, wide):
             if lo_x * frame_w < cx < hi_x * frame_w and MIN_Y * frame_h < cy < MAX_Y * frame_h:
                 found.append((cx, cy, float(h)))
                 facings.append(facing_of.get((x, y, w, h)))
-                samples.append((t, cx))
                 kept.append(cx)
         if kept:
             per_frame.append(sorted(kept))
         t += step
 
     cap.release()
-    return found, facings, samples, per_frame, frame_w, frame_h
+    return found, facings, per_frame, frame_w, frame_h
 
 
 def cooccurrence(per_frame, frame_w):
@@ -187,42 +185,6 @@ def look_offset(facing):
     return 0.5
 
 
-def track(samples, frame_w, crop_width, facing, window=1.0, smooth=5):
-    """Follow the face through the shot instead of holding one crop for it.
-
-    One median per window kills the per-frame jitter of the cascade, and a
-    moving average over the windows keeps the crop gliding rather than ticking.
-    """
-    if not samples:
-        return []
-    buckets = {}
-    for t, cx in samples:
-        buckets.setdefault(int(t / window), []).append(cx)
-    keys = sorted(buckets)
-    medians = [float(np.median(buckets[k])) for k in keys]
-    half = smooth // 2
-    points = []
-    for i, k in enumerate(keys):
-        lo, hi = max(0, i - half), min(len(medians), i + half + 1)
-        eased = sum(medians[lo:hi]) / (hi - lo)
-        crop_x = max(0, min(frame_w - crop_width, eased - look_offset(facing) * crop_width))
-        points.append((round(k * window + window / 2, 2), int(round(crop_x))))
-    return points
-
-
-def crop_expression(points):
-    """The points as one ffmpeg crop-x expression, straight between keyframes."""
-    if not points:
-        return None
-    if len(points) == 1:
-        return str(points[0][1])
-    expr = str(points[-1][1])
-    # Pairwise, so the offset list is deliberately one shorter than the first.
-    for (t0, x0), (t1, x1) in reversed(list(zip(points, points[1:], strict=False))):
-        expr = f"if(lt(t,{t1}),{x0}+({x1 - x0})*(t-{t0})/({t1 - t0}),{expr})"
-    return f"if(lt(t,{points[0][0]}),{points[0][1]},{expr})"
-
-
 def build_anchor(points, frame_w, crop_width, facing=None):
     cxs = [p[0] for p in points]
     face_cx = float(np.median(cxs))
@@ -240,8 +202,8 @@ def build_anchor(points, frame_w, crop_width, facing=None):
     }
 
 
-def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1, tracked=False):
-    found, facings, samples, per_frame, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
+def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
+    found, facings, per_frame, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
     if not found:
         return {"ok": False, "reason": "no faces in constrained region"}
     together = cooccurrence(per_frame, frame_w)
@@ -289,10 +251,6 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1, track
             "cooccurrence": round(together, 3),
             **anchor,
         }
-        if tracked:
-            points = track(samples, frame_w, crop_width, facing)
-            result["track"] = points
-            result["crop_x_expr"] = crop_expression(points)
         return result
 
     if split is None:
@@ -332,11 +290,6 @@ def main():
         help="How many speakers share the frame. Use 2 for a boxed side-by-side layout or a locked-off wide two-shot.",
     )
     parser.add_argument(
-        "--track",
-        action="store_true",
-        help="Follow the face through the shot: emit keyframes and the ffmpeg crop-x expression.",
-    )
-    parser.add_argument(
         "--crop-width",
         type=int,
         default=None,
@@ -346,9 +299,7 @@ def main():
     )
     args = parser.parse_args()
 
-    result = measure(
-        args.video, args.start, args.end, crop_width=args.crop_width, speakers=args.speakers, tracked=args.track
-    )
+    result = measure(args.video, args.start, args.end, crop_width=args.crop_width, speakers=args.speakers)
     print(json.dumps(result, indent=2))
     if not result.get("ok"):
         sys.exit(1)
