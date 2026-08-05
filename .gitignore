@@ -3,8 +3,3 @@
 shared
 tmp
 node_modules
-
-# Local-only skills - present on disk, never committed
-skills/fountain-daily-growth/
-skills/fountain-clip-producer/
-skills/fountain-stats/
