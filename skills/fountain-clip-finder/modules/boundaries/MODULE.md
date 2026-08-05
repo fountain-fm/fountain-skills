@@ -62,7 +62,7 @@ The clip MUST pass the gates below, because a moment with substance can still fa
    For a moment that has a time map, translate the span first, because the span is in another clock:
 
    ```bash
-   echo "$TRANSCRIPT_JSON" | ../media/scripts/build-time-map.py --map map.json --span 812.40 869.10
+   echo "$TRANSCRIPT_JSON" | ../../scripts/build-time-map.py --map "$TIME_MAP" --span 812.40 869.10
    ```
 
    Remove the clip when `aligned` is false, and give the user the note that says why.

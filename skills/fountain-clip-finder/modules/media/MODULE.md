@@ -61,9 +61,11 @@ This module therefore also builds a time map, which module **boundaries** uses t
 8. Build the time map one time for each matched episode, with its `ContentHitTranscript`:
 
    ```bash
-   echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --build "$VIDEO_URL" > map.json
+   TIME_MAP="fountain/outputs/time-map-$CONTENT_ID.json"
+   echo "$TRANSCRIPT_JSON" | ../../scripts/build-time-map.py --build "$VIDEO_URL" > "$TIME_MAP"
    ```
 
+   Name the file for the `content` id of `ids`, because one run can hold several episodes.
    Carry the path forward, because module **boundaries** translates each span with it.
    Read `anchor_coverage`, and mark the episode for removal when it is under 0.5.
 
