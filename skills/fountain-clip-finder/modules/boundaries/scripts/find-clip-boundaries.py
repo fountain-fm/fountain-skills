@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Move a moment to clean clip in and out points, and cut the word-level slice of a final span.
 
-Reads an episode transcript as JSON on stdin.
+Reads a ContentHitTranscript on stdin, and uses `start`, `end`, `text` and `speaker` of each
+TranscriptSegment, plus `word`, `start` and `end` of each TranscriptWord.
 Without `--span` it prints the sentences around the moment and every in/out pair inside the duration range.
-With `--span` it prints the words of that span on stdout, with the times rebased to clip time.
+With `--span` it prints the words of that span on stdout, as TranscriptWord with the times rebased to clip time.
 """
 
 from __future__ import annotations
@@ -12,8 +13,8 @@ import argparse
 import json
 import sys
 
-# The Fountain transcript comes from the episode audio, so its times match the media and the search.
-# The RSS transcript can be offset by minutes when the feed carries a different ad-insertion cut.
+# TranscriptFromFountain comes from the episode audio, so its times match the media and the search.
+# TranscriptFromRSS can be offset by minutes when the feed carries a different ad-insertion cut.
 TRANSCRIPT_SOURCES = ("fountain", "rss")
 
 
@@ -43,36 +44,32 @@ def print_boundaries(segments: list[dict], args: argparse.Namespace, source: str
     window_end = args.moment_end + args.lookahead
     in_window = [s for s in segments if s["end"] > window_start and s["start"] < window_end]
 
-    # An in point is a sentence that starts at or before the moment; an out point is one that ends at or after it.
-    in_candidates = [s for s in in_window if window_start <= s["start"] <= args.moment_start + 2.0]
-    out_candidates = [s for s in in_window if s["end"] >= args.moment_end - 2.0]
+    # A moment runs for minutes, so a clip can start or end anywhere inside it, not only at its edges.
+    in_candidates = [s for s in in_window if window_start <= s["start"] <= args.moment_end]
+    out_candidates = [s for s in in_window if args.moment_start <= s["end"] <= window_end]
 
     print(f"\nSource: {source}")
     print(f"Moment: {args.moment_start:.2f}s - {args.moment_end:.2f}s ({args.moment_end - args.moment_start:.1f}s)\n")
 
-    print(f"=== IN POINTS (last {args.context} sentence starts before the moment) ===")
-    for segment in in_candidates[-args.context :]:
-        index = in_window.index(segment)
-        gap = (segment["start"] - in_window[index - 1]["end"]) if index > 0 else 0.0
-        marker = " <<< MOMENT" if abs(segment["start"] - args.moment_start) < 3 else ""
-        print(f"  [{segment['start']:8.2f}s, gap={gap:.2f}s]  {label(segment)[:90]}{marker}")
-
-    print(f"\n=== OUT POINTS (first {args.context} sentence ends after the moment) ===")
-    for segment in out_candidates[: args.context]:
-        marker = " <<< MOMENT" if abs(segment["end"] - args.moment_end) < 3 else ""
-        print(f"  [ends {segment['end']:8.2f}s]  {label(segment)[:90]}{marker}")
+    print(f"in points: {len(in_candidates)}   out points: {len(out_candidates)}")
 
     print(f"\n=== PAIRS ({args.min_dur:.0f}-{args.max_dur:.0f}s) ===")
     pairs = [
         (start_segment, end_segment, end_segment["end"] - start_segment["start"])
-        for start_segment in in_candidates[-6:]
-        for end_segment in out_candidates[:8]
+        for start_segment in in_candidates
+        for end_segment in out_candidates
         if args.min_dur <= end_segment["end"] - start_segment["start"] <= args.max_dur
     ]
     if not pairs:
         print("  (no pair is inside the duration range - widen --min-dur and --max-dur)")
         return
-    for start_segment, end_segment, duration in sorted(pairs, key=lambda pair: pair[2]):
+    # A long moment yields hundreds of pairs, so show a spread rather than every one.
+    pairs.sort(key=lambda pair: pair[2])
+    if len(pairs) > args.context:
+        step = len(pairs) / args.context
+        pairs = [pairs[int(i * step)] for i in range(args.context)]
+    print(f"  showing {len(pairs)} of the pairs, spread across the duration range\n")
+    for start_segment, end_segment, duration in pairs:
         print(
             f"  [{start_segment['start']:8.2f} - {end_segment['end']:8.2f}] = {duration:.1f}s"
             f'\n    IN:  "{start_segment["text"][:70]}"'
@@ -87,7 +84,7 @@ def print_span_words(segments: list[dict], words: list[dict], start: float, end:
         # Some sources carry the words on each segment instead of one flat list.
         words = [word for segment in segments for word in segment.get("words") or []]
 
-    # The span text is always available; word timings exist only on a Fountain transcript.
+    # The span text is always available; `words` exists only on a TranscriptFromFountain.
     spoken = [s for s in segments if s["end"] > start and s["start"] < end]
     result: dict[str, object] = {
         "start": start,
@@ -100,7 +97,7 @@ def print_span_words(segments: list[dict], words: list[dict], start: float, end:
         ],
     }
     if not result["words"]:
-        print("WARN: this transcript has no word timings - captions need a Fountain transcript", file=sys.stderr)
+        print("WARN: this transcript has no `words` - captions need a TranscriptFromFountain", file=sys.stderr)
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
 

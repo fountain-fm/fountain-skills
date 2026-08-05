@@ -5,21 +5,22 @@ description: Shape a scored moment into a clip - set a clean start and end, appl
 
 ## Overview
 
-A moment marks where the search matched, and not where a sentence starts or stops.
-Only the transcript shows the words around it, so only here can a clip be shaped and judged.
+A moment is a passage of a few minutes, and a clip is a span of about a minute inside it.
+Only the transcript carries sentence-level times, so only here can that span be cut and judged.
 A script offers every clean pair of start and end points inside the duration range, and the agent selects one.
-The clip then MUST pass the gates below, because a moment with substance can still fail as a clip.
+That span is in the clock of the transcript, so this module then places it in `media` with the time map.
+The clip MUST pass the gates below, because a moment with substance can still fail as a clip.
 
 ## Input
 
-- Each moment from module **discovery**, with `content_id`, `moment_start_seconds`, and `moment_end_seconds`.
-- The scores and each flag from module **discovery**.
+- Each moment from module **discovery**, with its scores and each flag.
+- The `SocialPostMediaSource` of each moment from module **media**, and its time map when it has one.
+- The `ContentHitTranscript` of each episode.
 - Optional: `clip_count`, `min_duration_seconds`, `max_duration_seconds`, and trend context from the caller.
 
 ## Output
 
-- `start_time_seconds` and `end_time_seconds` - the clean span.
-- `transcript` - the text of the span, with the speaker labels and word timings the transcript holds.
+- The complete `SocialPostMediaSource` of each clip.
 - The clip scores, added to the scores of module **discovery**.
 - A removal mark on each clip that fails a gate.
 
@@ -30,7 +31,7 @@ The clip then MUST pass the gates below, because a moment with substance can sti
 
 ## Process
 
-1. Load skill **fountain-api** and load the episode transcript with the Content API.
+1. Load skill **fountain-api** and load the `ContentHitTranscript` of the episode with the Content API.
    Load it one time per episode, then use it for each moment of that episode.
 2. Give the transcript to the script and read the pairs it finds:
 
@@ -51,16 +52,24 @@ The clip then MUST pass the gates below, because a moment with substance can sti
    Score timeliness and platform fit 1-5 as well, but only when the caller gives trend context.
 5. Apply the gates below, and remove a clip that fails one.
    Keep the best `clip_count` clips when the caller gives a count, and keep fewer when fewer pass.
-6. Cut the words of the span, and carry them forward with the span and the scores:
+6. Cut the words of the span and write them into `transcript`:
 
    ```bash
    echo "$TRANSCRIPT_JSON" | scripts/find-clip-boundaries.py --span 812.40 869.10
    ```
 
+7. Write the span into `ts_start` and `ts_end`.
+   For a moment that has a time map, translate the span first, because the span is in another clock:
+
+   ```bash
+   echo "$TRANSCRIPT_JSON" | ../media/scripts/build-time-map.py --map map.json --span 812.40 869.10
+   ```
+
+   Remove the clip when `aligned` is false, and give the user the note that says why.
+
 ## Additional notes
 
-Gates.
-A clip MUST pass all of them:
+Gates - a clip MUST pass all of them:
 
 - Direct hook - the first 1 to 3 seconds hold the claim, the question, or the surprising words.
 - No late payoff - a viewer understands why the clip is important in 5 seconds or less.
@@ -68,20 +77,24 @@ A clip MUST pass all of them:
 - Tight duration - the target is 35 to 75 seconds, or the range the caller gives.
   A clip longer than 90 seconds needs a written reason.
 - One idea - a clip is one compact claim, and not a wide topic window.
+- Placed in the media - the two edges of the clip agree on where it sits in `media`.
 
 A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
 Move the cut off a sentence edge when the words are better, and never cut in the middle of a word.
 
 The transcript times mark speech, not silence.
-Give the start a short pause before the first word, and the end a short pause after the last.
+Set `ts_start` a short pause before the first word, and `ts_end` a short pause after the last.
 
-The script prefers the transcript that Fountain generated, because it comes from the episode audio.
-Its times therefore agree with the media.
-A transcript that the feed declares can be off by minutes, because the feed can carry a different advertisement cut.
+The script prefers `fountain`, because that transcript comes from the audio of the episode.
+A `rss` transcript can be off by minutes, because the feed carries a different advertisement cut.
 Such a clip looks correct on paper and holds the wrong words.
+Only `fountain` holds `words`, and captions need them, which the Content API meters.
 
-Only the transcript that Fountain generated holds word timings, and captions need them.
-Tell the user that captions need a generated transcript, which the Content API meters.
+`ts_start` and `ts_end` MUST always be in the clock of `media`.
+A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
+The placement gate therefore reads both edges of the clip, because a break inside it moves the end
+and leaves the start where it was.
+Such a clip cannot be shifted, only removed, and the answer is a different pair of in and out points.
 
-This module does not open the media.
+This module does not open `media`.

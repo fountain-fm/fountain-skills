@@ -3,7 +3,8 @@
 
 Lists the channel one time, then scores every episode against that list on title, guest, and duration.
 A show often rewrites a title for YouTube but keeps the guest name, so the guest is the stronger signal.
-Reads a JSON array of episodes on stdin, prints a JSON array of matches on stdout, and writes no files.
+Reads a JSON array of ContentHit on stdin, and uses `info.title`, `info.published` and `info.duration`
+of each one. Prints a JSON array of matches on stdout, and writes no files.
 """
 
 from __future__ import annotations
@@ -19,8 +20,10 @@ from difflib import SequenceMatcher
 
 STOPWORDS_PATTERN = r"\b(the|a|an|and|with|to|for|of|in|on|is|are|as|your|you|this|that|it|its)\b"
 GUEST_PATTERN = r"\s+(?:with|w/|ft\.?|feat\.?)\s+(.+)$"
-# Two candidates this close in score cannot be separated without their upload dates.
-TIE_SCORE_GAP = 12.0
+# A show repeats a segment title with the same guest, so the date is read for the best few candidates.
+DATE_CHECK_TOP = 4
+# A podcast uploads its video within days of the feed, so a wider gap is a different episode.
+MAX_DATE_DELTA_DAYS = 45
 
 
 @dataclass
@@ -188,17 +191,25 @@ def confidence_tier(score: float, details: dict[str, object]) -> str:
     title_similarity = float(details["title_similarity"])
     duration_delta = details["duration_delta_seconds"]
     date_delta = details["date_delta_days"]
+
+    # A recurring segment repeats its title, its guest and its length, so only the date tells two apart.
+    if date_delta is None or date_delta > MAX_DATE_DELTA_DAYS:
+        return "unmatched"
+
     close_duration = duration_delta is not None and duration_delta <= 240
     loose_duration = duration_delta is not None and duration_delta <= 600
-    # A rewritten title keeps the guest, so the guest plus a close duration is as good as a title match.
-    if details["guest_match"] and close_duration:
-        return "high"
-    if score >= 72 or (title_similarity >= 0.55 and close_duration) or (title_similarity >= 0.78 and loose_duration):
-        return "high"
-    close_date = date_delta is not None and date_delta <= 14
-    same_week = date_delta is not None and date_delta <= 3
+    close_date = date_delta <= 14
+    same_week = date_delta <= 3
     wide_duration = duration_delta is not None and duration_delta <= 900
     near_duration = duration_delta is not None and duration_delta <= 300
+
+    # A rewritten title keeps the guest, so the guest plus a close duration is as good as a title match.
+    if close_date and (details["guest_match"] and close_duration):
+        return "high"
+    if close_date and (
+        score >= 72 or (title_similarity >= 0.55 and close_duration) or (title_similarity >= 0.78 and loose_duration)
+    ):
+        return "high"
     if (
         score >= 58
         or (details["guest_match"] and loose_duration)
@@ -207,17 +218,19 @@ def confidence_tier(score: float, details: dict[str, object]) -> str:
         or (title_similarity >= 0.22 and same_week and near_duration)
     ):
         return "medium"
-    if score >= 48 and date_delta is not None and date_delta <= 10:
+    if score >= 48 and date_delta <= 10:
         return "low"
     return "unmatched"
 
 
-def parse_episode(item: dict) -> Episode:
-    title = item.get("title") or ""
-    duration = item.get("duration_seconds")
+def parse_episode(hit: dict) -> Episode:
+    """Read the three fields of a ContentHit that the match uses, all of them on `info`."""
+    info = hit.get("info") or {}
+    title = info.get("title") or ""
+    duration = info.get("duration")
     return Episode(
         title=title,
-        pub_date_iso=str(item.get("published") or "")[:10],
+        pub_date_iso=str(info.get("published") or "")[:10],
         duration_seconds=int(duration) if duration else None,
         episode_number=parse_episode_number(title),
         guest=parse_guest(title),
@@ -230,10 +243,11 @@ def match_episode(episode: Episode, videos: list[Video]) -> dict[str, object]:
         return {**row, "match_confidence": "unmatched", "note": "the channel listing is empty"}
 
     scored = sorted(((*score_pair(episode, video), video) for video in videos), key=lambda item: -item[0])
-    # Two close candidates need their upload dates, which the flat listing does not carry.
-    if len(scored) > 1 and scored[0][0] - scored[1][0] < TIE_SCORE_GAP:
-        add_upload_dates([scored[0][2], scored[1][2]])
-        scored = sorted(((*score_pair(episode, video), video) for _, _, video in scored[:2]), key=lambda i: -i[0])
+    # The flat listing carries no date, and a high title and guest score is exactly when a
+    # recurring segment matches the wrong year, so always read the date of the best few.
+    best = [video for _, _, video in scored[:DATE_CHECK_TOP]]
+    add_upload_dates(best)
+    scored = sorted(((*score_pair(episode, video), video) for video in best), key=lambda item: -item[0])
 
     best_score, best_details, best_video = scored[0]
     tier = confidence_tier(best_score, best_details)
@@ -260,7 +274,7 @@ def main() -> int:
 
     episodes = json.loads(sys.stdin.read())
     if not isinstance(episodes, list) or not episodes:
-        raise SystemExit("find-episode-video: stdin must hold a non-empty JSON array of episodes")
+        raise SystemExit("find-episode-video: stdin must hold a non-empty JSON array of ContentHit")
 
     videos = list_channel(args.channel, args.listing_size)
     print(f"listed {len(videos)} videos from {args.channel}", file=sys.stderr)

@@ -12,17 +12,17 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 ## Input
 
-- The verified clip: `content_id`, `start_time_seconds`, `end_time_seconds`, and `transcript`.
-- The speaker's confirmed name and synonyms from module **discovery**, when it resolved a person.
+- The `SocialPostMediaSource` of the verified clip.
+- The `CanonicalPerson` of the speaker from module **discovery**, when it resolved a person.
 - The scores from module **discovery** and module **boundaries**, and each flag.
 - The show's platforms, voice notes, and confirmed handles from the preferences.
 - The trend and its sources, when a caller found the clip for a news story.
 
 ## Output
 
-- `title` - a short title in the quote format, for the dashboard and the email digest.
+- `content.title` - a short title in the quote format, for the dashboard and the email digest.
 - `context` - a Markdown note that gives the reason to post the clip.
-- `post_text` - one text per platform the clip suits.
+- `content.text` - one text per `SocialPlatform` the clip suits.
 - The risk flags, with each new flag that the copy itself introduces.
 
 ## Requirements
@@ -50,7 +50,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    - Why the clip is strong, and which score dimension made it win.
    - For a news story only: what happened, why the clip matters now, and at least one source.
 
-4. Write the post text for each platform the clip suits.
+4. Write `content.text` for each `SocialPlatform` the clip suits.
    Match the length, the tone, and the conventions of that platform.
    Write one text per platform, and never reuse one text across platforms.
 5. Name the speaker who is on camera.
@@ -61,7 +61,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 Title rules:
 
-- Copy the quote from the transcript word for word, and do not correct the grammar.
+- Copy the quote from `transcript` word for word, and do not correct the grammar.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.
@@ -91,7 +91,7 @@ Safety pass:
 - Change higher-risk wording into a question, and flag it for the user to clear.
 - Drop copy that you cannot make safe, and do not soften it into something that misleads.
 - Never say that the guest answers today's news unless the recording is later than the event.
-- Never write a quote or a statistic that the transcript does not hold.
+- Never write a quote or a statistic that `transcript` does not hold.
 
 Speaker naming:
 
