@@ -189,7 +189,7 @@ Build it from models where you can, rather than copy fields out of them.
 
 ### Scripts
 
-You MUST NOT write a script that calls the Fountain API.
+A script in a skill MUST NOT call the Fountain API.
 The agent makes each request and gives the response to the script.
 
 A script CAN take a model as input and give a model as output.

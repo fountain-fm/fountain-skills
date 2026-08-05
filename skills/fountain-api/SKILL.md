@@ -39,7 +39,8 @@ You MUST read https://fountain.fm/docs.md in each new session.
 The API can change.
 
 You CAN write a throwaway script, e.g. to do the same request for many items.
-You MUST write it to a temporary location and delete it at the end of the session.
+You CAN write a response to a file, e.g. to give a large transcript to a script.
+You MUST put each in a temporary location and delete it at the end of the session.
 You MUST NOT keep a script that wraps the Fountain API, because the API can change.
 
 If there is no `FOUNTAIN_API_KEY`:
