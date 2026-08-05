@@ -3,7 +3,7 @@
   "description": "Understated white text with a thin outline; no animation. The publish-final default for shows that want captions to read, not perform.",
   "font": {
     "family": "Montserrat",
-    "size": 64,
+    "size": 84,
     "bold": true,
     "case": "verbatim"
   },
@@ -24,7 +24,7 @@
     "marginV": 220
   },
   "grouping": {
-    "maxWords": 3
+    "maxWords": 6
   },
   "animation": {
     "type": "none"

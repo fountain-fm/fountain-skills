@@ -3,7 +3,7 @@
   "description": "Understated small text on a semi-transparent dark box; allows two lines. For high-production footage where captions should support, not perform (the Opus 'minimal clean' look).",
   "font": {
     "family": "Montserrat",
-    "size": 54,
+    "size": 66,
     "bold": false,
     "case": "verbatim"
   },

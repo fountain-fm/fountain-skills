@@ -3,7 +3,7 @@
   "description": "Characters reveal sequentially across each phrase. Dramatic, slower pacing — best for storytelling beats, not dense speech.",
   "font": {
     "family": "Courier Prime",
-    "size": 64,
+    "size": 80,
     "bold": true,
     "case": "verbatim"
   },
@@ -24,7 +24,7 @@
     "marginV": 230
   },
   "grouping": {
-    "maxWords": 3,
+    "maxWords": 5,
     "maxGapMs": 800
   },
   "animation": {

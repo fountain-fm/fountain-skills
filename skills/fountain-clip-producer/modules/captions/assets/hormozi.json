@@ -3,7 +3,7 @@
   "description": "Business-clip standard: heavy uppercase sans, thick stroke, emphasized keywords rotating through yellow/green/red. Mark 3-5 keywords per clip with \"emphasize\": true in the words JSON — the rotation is what makes the style.",
   "font": {
     "family": "Montserrat Black",
-    "size": 62,
+    "size": 84,
     "bold": true,
     "case": "upper"
   },
@@ -25,7 +25,7 @@
     "marginV": 250
   },
   "grouping": {
-    "maxWords": 3
+    "maxWords": 4
   },
   "emphasis": {
     "scalePct": 104,

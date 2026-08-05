@@ -3,7 +3,7 @@
   "description": "Whole phrase on screen; only the word being spoken lights up in the highlight color, then reverts. The dominant talking-head style on Shorts/Reels. No outline by default (shadow only) — style-proof on bright footage before trusting it.",
   "font": {
     "family": "Montserrat",
-    "size": 76,
+    "size": 96,
     "bold": true,
     "case": "verbatim"
   },
@@ -24,7 +24,7 @@
     "marginV": 260
   },
   "grouping": {
-    "maxWords": 3
+    "maxWords": 5
   },
   "animation": {
     "type": "current-word",

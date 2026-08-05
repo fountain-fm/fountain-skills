@@ -51,7 +51,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
      label:"the line to measure" -format "%w" info:
    ```
 
-   A width over the safe width is an overflow, and you MUST fix it before the render.
+   The script already packed each group to fit, so this confirms it rather than finds a surprise.
 
 5. Run module **qa** for a style proof whenever the style is new or changed.
 6. Burn the captions in:
@@ -73,16 +73,16 @@ The spec layers from the lowest priority to the highest: defaults, preset, brand
 A misspelled override path is a hard error and never a silent no-op.
 The script rejects unreadable contrast, flicker, or impossible overshoot, and `--check` runs it alone.
 
-The presets in `assets` are starting points and not cages, and each one carries its own description.
-`current-word` is the common talking-head look, and `hormozi` needs 3 to 5 words marked `"emphasize": true`.
+The presets in `assets` are starting points, each carries its own description, and `hormozi` wants
+3 to 5 words marked `"emphasize": true`.
 
 These are the text rules, and the default mode is faithful-clean:
 
 - Remove filler and a repeated false start, when that does not change the meaning.
   This is safe by default because the audio still carries the word, which is why module **trims** is not.
 - Judge "like" and "I mean" one at a time, because each is filler about half the time.
-  Delete the word and read the line again: keep it when the line now says something else.
-  "Like" before a quote or a number always stays, because it reports speech or hedges a figure.
+  Delete the word and read the line again, and keep it when the line now says something else.
+  "Like" before a quote or a number always stays.
 - Keep a repetition that carries emphasis, rhythm, or contrast.
 - Keep the jokes, the strong language, and the quoted words, and never turn a sentence into a different claim.
 - Drop a dangling fragment when the clip ends before the speaker finishes.
@@ -94,7 +94,10 @@ Keep `font.case` at `verbatim` when the transcript carries real capitals, and us
 `sentence` lowercases every word first, so it destroys "I" and every name, and then capitalises whatever
 word the group starts on, which is rarely a sentence.
 
-A caption group breaks on a speaker change, a sentence end, a silence, or the word cap, and never inside a clause.
+A caption group breaks on a speaker change, a sentence end, a silence, or the safe width, and never inside a clause.
+The script measures each word in the font and the case it will render in, then packs a group until the next
+word would not fit, so `font.size` is the control and `grouping.maxWords` is only a ceiling for the rhythm.
+A style that shows one word at a time is not packed, because the group is never on screen at once.
 A social caption drops the full stop and the comma at the end of a group, though a comma inside one stays
 because it divides a list. A question mark and an exclamation mark stay, because they carry tone.
 

@@ -3,7 +3,7 @@
   "description": "Phrase on screen with word-by-word highlight sweep (yellow -> white as spoken), via karaoke timing computed from real word onsets.",
   "font": {
     "family": "Montserrat",
-    "size": 72,
+    "size": 92,
     "bold": true,
     "case": "verbatim"
   },
@@ -24,7 +24,7 @@
     "marginV": 240
   },
   "grouping": {
-    "maxWords": 3
+    "maxWords": 5
   },
   "animation": {
     "type": "highlight-sweep"

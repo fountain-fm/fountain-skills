@@ -25,6 +25,7 @@ import argparse
 import copy
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -69,7 +70,8 @@ DEFAULTS = {
         "marginV": 240,
     },
     "grouping": {
-        "maxWords": 5,  # per caption group; never merged across speaker turns
+        "maxWords": 5,  # ceiling for rhythm; fitWidth decides the real count
+        "fitWidth": True,  # pack each group up to the safe width at the resolved size
         "maxGapMs": 600,  # silence gap that forces a new group
         "sentenceSplit": True,  # a sentence-final word (. ! ?) always closes its group
         "stripFullStops": True,  # drop sentence-final periods from display (? and ! stay)
@@ -140,6 +142,9 @@ STYLE_FIELDS = [
 ]
 
 WORD_LEVEL_TYPES = {"word-pop", "bounce-in"}
+# These show the whole group at once, so the group is what has to fit the width.
+# A word-level type puts one word on screen at a time, so packing it is meaningless.
+GROUP_ON_SCREEN = {"none", "karaoke-fill", "highlight-sweep", "current-word", "typewriter"}
 ANIMATION_TYPES = {"none", "karaoke-fill", "highlight-sweep", "current-word", "word-pop", "bounce-in", "typewriter"}
 
 
@@ -383,22 +388,117 @@ TRAILING_STOPS = re.compile(r'\.+(["\')\]]*)$')
 TRAILING_COMMA = re.compile(r',(["\')\]]*)$')
 
 
-def group_words(words, grouping):
+def peak_scale(spec):
+    """The largest scale any word reaches, which is the size a group must fit at."""
+    animation, emphasis, kind = spec["animation"], spec["emphasis"], spec["animation"]["type"]
+    scale = 1.0
+    if kind in WORD_LEVEL_TYPES:
+        scale = animation["overshootPct"] / 100
+    elif kind == "current-word":
+        scale = max(1.0, animation["popPct"] / 100, animation["activeScalePct"] / 100)
+    if kind not in WORD_LEVEL_TYPES and kind not in {"karaoke-fill", "highlight-sweep", "typewriter"}:
+        scale = max(scale, emphasis["scalePct"] / 100)
+    return scale
+
+
+def safe_width(spec):
+    return (spec["playResX"] - spec["position"]["marginL"] - spec["position"]["marginR"]) * spec["grouping"]["maxLines"]
+
+
+def resolve_font_file(spec, explicit=None):
+    """The file behind the spec's family, so a width can be measured."""
+    if explicit:
+        return Path(explicit)
+    family, bold = spec["font"]["family"], spec["font"]["bold"]
+    bundled = Path(__file__).resolve().parents[3] / "assets" / "fonts"
+    names = {
+        "Montserrat Black": "Montserrat-Black.ttf",
+        "Anton": "Anton-Regular.ttf",
+        "Courier Prime": "CourierPrime-Regular.ttf",
+        "Montserrat": "Montserrat-Bold.ttf" if bold else "Montserrat-Regular.ttf",
+    }
+    candidate = bundled / names.get(family, "")
+    return candidate if candidate.is_file() else None
+
+
+def measure_widths(words, font_file, point_size, case="verbatim"):
+    """Width of every distinct word, and of a space, at the rendered size.
+
+    Grouping has to know how wide a word will be, and only the font file can
+    say. Each distinct word is measured once, so a clip costs one call per
+    vocabulary item rather than one per word.
+    """
+
+    def render_width(text):
+        proc = subprocess.run(
+            [
+                "magick",
+                "-background",
+                "none",
+                "-font",
+                str(font_file),
+                "-pointsize",
+                str(point_size),
+                f"label:{text}",
+                "-format",
+                "%w",
+                "info:",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        if proc.returncode != 0 or not proc.stdout.strip():
+            return None
+        return int(proc.stdout.strip())
+
+    # Measure the text as it will RENDER: an upper-case style is much wider than
+    # the words it was given, so measuring the raw token under-counts every group.
+    widths = {}
+    for text in sorted({w["text"] for w in words}):
+        measured = render_width(apply_case(text, case, True))
+        if measured is None:
+            return None
+        widths[text] = measured
+    # ImageMagick refuses a label that is only whitespace, so take the space
+    # from the difference between a spaced and an unspaced pair.
+    pair, joined = render_width("n n"), render_width("nn")
+    if pair is None or joined is None:
+        return None
+    widths[" "] = max(0, pair - joined)
+    return widths
+
+
+def group_words(words, grouping, widths=None, budget=None):
     """Chunk words into caption groups: split on speaker turn, sentence end,
     silence gap, or the max-words cap. Never merges across a speaker turn or
     (when sentenceSplit is on) across a sentence boundary."""
-    groups, current = [], []
+    groups, current, width = [], [], 0.0
+    space = widths.get(" ", 0) if widths else 0
     for word in words:
+        wide = widths.get(word["text"], 0) if widths else 0
         if current:
             gap_ms = (word["start"] - current[-1]["end"]) * 1000
             turn = word["speaker"] != current[-1]["speaker"]
             sentence = grouping["sentenceSplit"] and SENTENCE_END.search(current[-1]["text"])
-            if turn or sentence or gap_ms > grouping["maxGapMs"] or len(current) >= grouping["maxWords"]:
+            # The width test is what closes a group when fitWidth is on; maxWords
+            # is only a ceiling, so a caption never grows past a comfortable read.
+            too_wide = budget is not None and (width + space + wide) > budget
+            if turn or sentence or too_wide or gap_ms > grouping["maxGapMs"] or len(current) >= grouping["maxWords"]:
                 groups.append(current)
-                current = []
+                current, width = [], 0.0
+        width += wide if not current else space + wide
         current.append(word)
     if current:
         groups.append(current)
+    if budget is not None and widths:
+        lone = [w["text"] for w in words if widths.get(w["text"], 0) > budget]
+        if lone:
+            print(
+                f"note: {len(lone)} word(s) are wider than the safe width on their own "
+                f"and cannot be packed smaller: {', '.join(sorted(set(lone))[:4])}",
+                file=sys.stderr,
+            )
+
     if grouping["stripFullStops"]:
         for group in groups:
             for word in group:
@@ -740,6 +840,7 @@ def main():
         metavar="dot.path=value",
         help="Per-clip style override, e.g. colors.highlight=#FFD400 or font.size=84. Repeatable.",
     )
+    parser.add_argument("--font-file", help="TTF/OTF to measure with. Defaults to the bundled file for the family.")
     parser.add_argument("--out", help="Output .ass path. Required unless --check.")
     parser.add_argument(
         "--emit-lines",
@@ -788,7 +889,23 @@ def main():
         fail("--words and --out are required unless --check")
 
     words = load_words(args.words)
-    groups = group_words(words, spec["grouping"])
+    widths = budget = None
+    if spec["grouping"]["fitWidth"] and spec["animation"]["type"] in GROUP_ON_SCREEN:
+        font_file = resolve_font_file(spec, args.font_file)
+        if font_file:
+            widths = measure_widths(
+                words, font_file, round(spec["font"]["size"] * peak_scale(spec)), spec["font"]["case"]
+            )
+            if widths:
+                budget = safe_width(spec)
+            else:
+                print("note: could not measure text, so groups fall back to the word cap", file=sys.stderr)
+        else:
+            print(
+                f"note: no font file for '{spec['font']['family']}', so groups fall back to the word cap",
+                file=sys.stderr,
+            )
+    groups = group_words(words, spec["grouping"], widths, budget)
     events, fit_lines = build_events(groups, spec)
     Path(args.out).write_text(build_ass(spec, events))
     if args.emit_lines:

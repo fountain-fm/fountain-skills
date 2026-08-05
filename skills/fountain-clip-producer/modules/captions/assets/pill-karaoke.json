@@ -3,7 +3,7 @@
   "description": "Current-word highlight rendered as a colored pill behind the active word (approximated with a thick rounded border), slightly scaled. The Opus-Clip 'Karaoke' look.",
   "font": {
     "family": "Montserrat",
-    "size": 74,
+    "size": 92,
     "bold": true,
     "case": "verbatim"
   },
@@ -24,7 +24,7 @@
     "marginV": 250
   },
   "grouping": {
-    "maxWords": 3
+    "maxWords": 5
   },
   "animation": {
     "type": "current-word",
