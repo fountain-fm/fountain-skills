@@ -68,6 +68,10 @@ Significant chunks of isolatable logic CAN be exported to a module.
 You MUST refer to skills and modules by name (e.g. module **face-detection**).
 You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md").
 
+You MUST NOT name the skills that invoke this skill, because a skill does not choose its caller.
+Say "the caller" when you must speak about it, and never give its schedule or its steps.
+You CAN name a skill that the output goes to, because that tells the agent what to do next.
+
 You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 
 #### H2 (##) headings
