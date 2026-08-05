@@ -32,6 +32,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 1. Take the word timings from the `fountain` source of the transcript, which carries a flat `TranscriptWord` list.
    The sentence-level segments are too coarse for a caption.
+   Use the rebased list of module **trims** instead, when that module cut the clip.
    Stop and report to the user when the request asks for captions and no word timings arrive.
 2. Clean the text before you set any timing, under the faithful-clean rules below.
 3. Compile the spec and the words into the ASS file:
@@ -67,8 +68,8 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 The spec layers from the lowest priority to the highest: defaults, preset, brand kit, per-clip override.
 A misspelled override path is a hard error and never a silent no-op.
-The script validates the resolved spec, and unreadable contrast, flicker, and impossible overshoot are hard failures.
-`--check` runs that validation alone, with no words.
+The script validates the resolved spec, and unreadable contrast, flicker, and impossible overshoot are hard
+failures. `--check` runs that validation alone, with no words.
 
 The presets in `assets` are starting points and not cages.
 `clean-editorial` and `bold-social` are static, `tiktok-style` and `karaoke-fill` sweep across each word,
@@ -81,6 +82,7 @@ and `minimal-light` is small text on a soft box.
 These are the text rules, and the default mode is faithful-clean:
 
 - Remove filler and a repeated false start, when that does not change the meaning.
+  This is safe by default because the audio still carries the word, which is why module **trims** is not.
 - Keep a repetition that carries emphasis, rhythm, or contrast.
 - Keep the jokes, the strong language, and the quoted words, and never turn a sentence into a different claim.
 - Drop a dangling fragment when the clip ends before the speaker finishes.
@@ -93,11 +95,7 @@ A caption group breaks on a speaker change, on a sentence end, on a silence, or 
 It never merges across a speaker change or a sentence end, and it never breaks inside a clause.
 A social caption carries no full stop, though a question mark and an exclamation mark stay, because they carry tone.
 
-A vertical clip holds one line by default, and an unintended second line is a blocking failure.
-Shorten the phrase rather than let it wrap.
+A vertical clip holds one line by default, and an unintended wrap is a blocking failure: shorten the phrase.
 
 libass renders no colour emoji, so an emoji style cannot go through the ASS path.
 Put the emoji in an overlay instead of shipping a monochrome box.
-
-A font name can fail to resolve without an error, which changes both the look and the measured width.
-Pass an absolute path to the font file when `magick -list font` comes back empty.

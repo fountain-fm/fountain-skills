@@ -8,7 +8,8 @@ description: Render an approved clip post into a finished, platform-ready video 
 This skill turns an approved post into a video file.
 It decides nothing about the moment or the span, because the caller settles those before it runs.
 Module **media** cuts the landscape master that every other module builds on.
-Module **framing** crops that master to the target shape, and module **shots** decides when that crop
+Module **trims** can shorten that master, when the user asks to lose the pauses and the filler.
+Module **framing** crops it to the target shape, and module **shots** decides when that crop
 changes person in a two-person shot.
 Module **captions**, module **fonts**, and module **overlays** put the text and the layers on it.
 Module **brand** holds the look of the show.
@@ -51,14 +52,16 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Do the least work that the tier asks for.
 2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
-4. Run module **framing** to crop that master to each shape that the request asks for.
+4. Run module **trims** to survey the pauses and the filler, and report what it found.
+   Cut only when the user asks, because the cut moves every time after it.
+5. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
-5. Run module **brand** to load the look of the show, for a clean final or a publish final.
-6. Run module **captions** when the request asks for captions, and module **fonts** with it.
-7. Run module **overlays** when the request asks for a layer.
-8. Run module **qa** as the blocking gate.
+6. Run module **brand** to load the look of the show, for a clean final or a publish final.
+7. Run module **captions** when the request asks for captions, and module **fonts** with it.
+8. Run module **overlays** when the request asks for a layer.
+9. Run module **qa** as the blocking gate.
    Deliver nothing until it reports a pass.
-9. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
+10. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
 
 ## Additional notes
 

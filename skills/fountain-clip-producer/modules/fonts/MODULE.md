@@ -58,5 +58,8 @@ because the font is most of what makes the clip look like that show.
 
 A font that resolves by name can still render badly for other reasons, so the still is the real check.
 
+ImageMagick can fail a family name without an error, which changes the measured width as well as the look.
+Pass it an absolute path to the font file when `magick -list font` comes back empty.
+
 Title cards, lower thirds, and on-screen labels follow these same rules.
 They take `fontfile=` with the drawtext filter, or they come in as a prepared image.
