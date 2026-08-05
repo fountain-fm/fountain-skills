@@ -341,7 +341,29 @@ def load_words(path):
         )
     if not words:
         fail(f"no usable words in {path}")
+    nudged = enforce_monotonic(words)
+    if nudged:
+        print(f"note: moved {nudged} word time(s) that ran backwards in {path}", file=sys.stderr)
     return words
+
+
+def enforce_monotonic(words, min_dur=0.04):
+    """Push each word to start no earlier than the one before it ended.
+
+    ASR output is not always ordered: a word can start before its predecessor
+    finishes. Two caption events then cover the same instant and the viewer
+    sees both at once. The word order carries the sentence, so the times move
+    and the words never do. Returns how many were moved.
+    """
+    nudged, cursor = 0, 0.0
+    for word in words:
+        start = max(word["start"], cursor)
+        end = max(word["end"], start + min_dur)
+        if start != word["start"] or end != word["end"]:
+            nudged += 1
+        word["start"], word["end"] = start, end
+        cursor = end
+    return nudged
 
 
 def apply_case(text, mode, first_in_group):

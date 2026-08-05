@@ -94,6 +94,11 @@ Correct the errors of the machine transcript, because they render exactly as the
 Check the names of people and places, the numbers and the currency, and the names of companies and guests.
 Spell a name the way the show notes spell it, because that is what the audience searches for.
 
+Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style.
+`sentence` lowercases every word first, so it destroys "I", an acronym, and every name,
+and it then capitalises whatever word a group happens to start on, which is rarely a sentence.
+Reach for it only when the transcript arrives with no capitals at all.
+
 A caption group breaks on a speaker change, a sentence end, a silence, or the word cap, and never inside a clause.
 A social caption carries no full stop, though a question mark and an exclamation mark stay, because they carry tone.
 
