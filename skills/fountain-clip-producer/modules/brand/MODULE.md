@@ -1,13 +1,14 @@
 ---
 name: brand
-description: Hold the look of a show, so that every clip for it looks the same across sessions.
+description: Hold the colours, fonts, and assets of a show, so that every clip for it looks the same.
 ---
 
 ## Overview
 
 A brand kit is what makes the clips of a show look like that show every time.
 The user does not describe the style again in each session.
-The kit sits between a caption preset and the per-clip overrides, and it also names the fonts and the logo.
+The kit sits between a caption preset and the per-clip overrides.
+It carries the colours of the show, its fonts, its text case, and the location of its logo.
 The values live in the preferences, because only the preferences survive a session.
 
 ## Input
