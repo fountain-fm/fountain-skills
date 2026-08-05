@@ -5,7 +5,7 @@ This housekeeping file is the same for every Fountain skill. It is enough to rea
 Preferences are the Fountain-skills-related user preferences.
 They are the ONLY store for user data that later sessions need.
 
-You MUST load the preferences with the Project API of skill fountain-api at the start of each session.
+You MUST load the preferences with the Project API of skill **fountain-api** at the start of each session.
 When the user gives a new preference, you MUST record it with the Project API in the same turn.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
@@ -62,4 +62,4 @@ You MUST NOT make an output for a later session to read.
 
 ## Fountain API
 
-Skill fountain-api is the ONLY way to interact with the Fountain API.
+Skill **fountain-api** is the ONLY way to interact with the Fountain API.
