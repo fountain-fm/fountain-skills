@@ -43,6 +43,7 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
    ```
 
    The script returns `crop_x` directly, already clamped to the frame.
+   Add `--track` when the face moves inside the shot, and it returns `crop_x_expr` to follow the face.
    It stops when it finds two separated faces, because one crop then lands between them.
    Measure both with `--speakers 2`, and give the anchors to module **shots** to plan the cuts.
 
@@ -50,9 +51,9 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 4. Apply the crop, and switch it on the cut times when the clip holds more than one segment:
 
    ```bash
-   # crop takes a 9:16 window whose x follows the cut times, scale fits the shape, fps steadies it.
+   # crop takes a 9:16 window whose x is the tracked expression, scale fits the shape, fps steadies it.
    ffmpeg -hide_banner -y -i clip-landscape-master.mp4 \
-     -vf "crop=608:1080:'if(between(t,$CUT_A,$CUT_B),$HOST_X,$GUEST_X)':0,scale=1080:1920,fps=30" \
+     -vf "crop=608:1080:'$CROP_X_EXPR':0,scale=1080:1920,fps=30" \
      -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k -movflags +faststart \
      clip-vertical.mp4
    ```

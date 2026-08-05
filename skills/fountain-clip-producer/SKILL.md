@@ -13,7 +13,7 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 ## Input
 
 - The `SocialPostMediaSource` of an approved `SocialPost`, which names the file and the span.
-- The `TranscriptWord` list of that span, when the request asks for captions.
+- The `TranscriptWord` list of that span, which the `fountain` source of the transcript carries.
   Module **shots** also needs the speaker of each word, for a shot that holds two people.
 - A delivery tier, which the words of the request imply.
 
@@ -46,6 +46,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Load skill **fountain-api**, and read the delivery tier from the request.
    Do the least work that the tier asks for.
+   Confirm that the episode carries a `fountain` transcript, and stop when it carries only `rss`.
 2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
@@ -69,6 +70,12 @@ There are three delivery tiers, and each one adds to the tier before it:
 - A publish final adds the captions, the overlays, and the full gate.
 
 You MUST NOT raise the tier on your own, because captions and polish are requested work.
+
+A clip needs the `fountain` transcript of its episode, and never the `rss` one alone.
+The `rss` transcript is timed against the feed, which carries a different advertisement cut, so its clock
+can sit minutes away from the file this skill opens.
+A span measured on it looks right on paper and holds the wrong words, and no render finds that out.
+Ask the user to generate the transcript, because the Content API meters that work and the spend is theirs.
 
 The span is settled before this skill runs.
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
