@@ -13,8 +13,14 @@ fi
 ./scripts/sync-housekeeping.sh
 
 shopt -s nullglob
-housekeeping_files=(skills/*/HOUSEKEEPING.md)
-[[ ${#housekeeping_files[@]} -gt 0 ]] && git add -- "${housekeeping_files[@]}"
+# Stage only the copies git tracks, because git add fails on a path the .gitignore covers.
+housekeeping_files=()
+for housekeeping_file in skills/*/HOUSEKEEPING.md; do
+  git check-ignore -q "$housekeeping_file" || housekeeping_files+=("$housekeeping_file")
+done
+if [[ ${#housekeeping_files[@]} -gt 0 ]]; then
+  git add -- "${housekeeping_files[@]}"
+fi
 
 staged_files=()
 while IFS= read -r staged_file; do
