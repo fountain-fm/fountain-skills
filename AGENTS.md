@@ -153,7 +153,7 @@ The docs have two parts: `## Endpoints` and `## Models`.
 Skill **fountain-api** is the only way to interact with the API.
 A skill or module that needs the API MUST list skill **fountain-api** in Requirements.
 It MUST also tell the agent to load skill **fountain-api** before the first request.
-It MUST NOT give instructions about authentication, API keys, or base URLs - skill **fountain-api** owns those.
+It MUST NOT give instructions about authentication - skill **fountain-api** owns that.
 
 ### Endpoints
 
