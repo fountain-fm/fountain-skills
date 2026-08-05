@@ -29,6 +29,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 1. Read https://fountain.fm/docs.md in each new session.
    This page is an index.
    Read the pages that it links to for the parts of the API that you need.
+   When a skill names a model, read the page of that model before you use it.
 2. Find the project API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`.
 3. Send each request with `FOUNTAIN_API_KEY` as a bearer token in the `Authorization` header.
 
@@ -38,7 +39,8 @@ You MUST read https://fountain.fm/docs.md in each new session.
 The API can change.
 
 You CAN write a throwaway script, e.g. to do the same request for many items.
-You MUST write it to a temporary location and delete it at the end of the session.
+You CAN write a response to a file, e.g. to give a large transcript to a script.
+You MUST put each in a temporary location and delete it at the end of the session.
 You MUST NOT keep a script that wraps the Fountain API, because the API can change.
 
 If there is no `FOUNTAIN_API_KEY`:

@@ -69,7 +69,8 @@ You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 #### H2 (##) headings
 
 - Overview (REQUIRED) - short description of how the skill works, do not repeat `description`, max 500 characters
-- Input (REQUIRED) - list of what the skill requires: combination of variables (e.g. `start_time_seconds`) and/or unstructured user input
+- Input (REQUIRED) - list of what the skill requires: combination of variables (e.g. `clip_count`), API models,
+  and/or unstructured user input
 - Output (REQUIRED) - list of what the skill produces
 - Housekeeping (REQUIRED) - "You MUST read HOUSEKEEPING.md if you haven't already".
   This section is the same in every skill.
@@ -103,7 +104,7 @@ You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detec
 #### H2 (##) headings
 
 - Overview (REQUIRED) - short description of how the module works, do not repeat `description`, max 500 characters
-- Input (REQUIRED) - list of what the module requires: combination of variables (e.g. `start_time_seconds`)
+- Input (REQUIRED) - list of what the module requires: combination of variables (e.g. `clip_count`), API models,
   and/or unstructured agent input
 - Output (REQUIRED) - list of what the module produces
 - Requirements (OPTIONAL) - list of skills and software requirements (e.g. skill fountain-api or python).
@@ -131,6 +132,7 @@ A skill can run on the user's machine, where files are available, or elsewhere, 
 Thus you MUST make each skill as stateless as possible.
 If data is available from an API, the skill MUST load it from the API.
 The skill MUST NOT keep a local copy of that data for a later session.
+A module CAN give a model to another module in the same session.
 
 Outputs are ephemeral.
 A skill MUST NOT tell the agent to keep an output for a later session.
@@ -142,21 +144,56 @@ The agent loads and updates them with the Project API of skill fountain-api.
 ## Fountain API
 
 Fountain API docs live at https://fountain.fm/docs.md
+The docs have two parts: `## Endpoints` and `## Models`.
 
 Skill fountain-api is the only way to interact with the API.
 A skill or module that needs the API MUST list skill fountain-api in Requirements.
 It MUST also tell the agent to load skill fountain-api before the first request.
 It MUST NOT give instructions about authentication - skill fountain-api owns that.
 
-In the skills, you MUST NOT refer to individual endpoints, request shapes, or response shapes.
+### Endpoints
+
+You MUST NOT refer to an endpoint, a path, a method, a request body, or a query parameter.
 You MUST refer to the API only by its group (Project, Content, Search, People, Vaults, Publishing, Uploads, Social).
 E.g., you CAN say "Load the latest episode via Publishing API of skill fountain-api".
 
 Skill fountain-api is the only exception.
 It CAN refer to authentication and the structure of the docs.
-It still MUST NOT refer to individual endpoints, request shapes, or response shapes.
+It still MUST NOT refer to an endpoint.
 
-You MUST NOT write scripts for interacting with the Fountain API.
+### Models
+
+Models are the shared vocabulary of the API, and you CAN name them.
+A model CAN be an Input or an Output of a skill or a module.
+
+Before you describe a concept, look for it in the Models part of the docs.
+If a model is close to the concept, you MUST use that model, and you MUST NOT define your own.
+E.g., the source of a clip is a `SocialPostMediaSource`, and never a new object with the same five fields.
+
+You MUST keep the name of the model and the names of its fields, and you MUST NOT rename or re-case them.
+You MUST refer to a model by its name, and you MUST NOT restate its fields.
+You CAN name a field when you say something that the docs do not.
+E.g., "Set `ts_start` a short pause before the first word", or "Drop an episode when `info.video` is absent".
+
+### Your own models
+
+A concept that no model is close to belongs to the skill or the module that introduces it.
+Give it a name when a skill or a module passes it on, and define it one time where you introduce it.
+E.g., a moment is a group of `TranscriptSearchSegment` less than 30 seconds apart.
+
+Write the name in lowercase prose, so that a reader can tell it from a model.
+You MUST NOT give it the name of a model, or a name that is close to one.
+Build it from models where you can, rather than copy fields out of them.
+
+### Scripts
+
+A script in a skill MUST NOT call the Fountain API.
+The agent makes each request and gives the response to the script.
+
+A script CAN take a model as input and give a model as output.
+It MUST name each model that it reads, in its docstring or in its CLI help.
+It MUST read only the fields that it uses.
+
 You MUST NOT suggest idiosyncratic ways of interacting with the API.
 If something is not working, you MUST investigate and suggest potential solutions before writing the skill.
 E.g., if you encounter Cloudflare 1010 block, you MUST report back to us to fix it.
