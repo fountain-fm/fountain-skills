@@ -82,7 +82,8 @@ You MUST cut, and you MUST NOT slide from one speaker to the other.
 The background does not move in this footage, so a slide shows the audience that one frame is behind both shots.
 
 An exchange too quick to cut is a real outcome, and the plan then holds one shot and says so.
-Use a two-shot or a letterbox for that clip rather than force a cut list onto it.
+Offer the user a two-shot or a letterbox for that clip rather than force a cut list onto it.
+Neither one is yours to choose, because both change how the clip reads.
 
 This module needs the speaker of each word, and it stops when the transcript carries none.
 That is a gap in the transcript and not a fault of the render, so no new render fixes it.

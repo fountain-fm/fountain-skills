@@ -76,6 +76,9 @@ When the start or the end of a rendered clip reads wrong, report that to the use
 Loudness is requested work too.
 Normalise only when the user asks, or when the source is clearly quiet against the platform norm.
 
+A letterbox is requested work as well, and black bars are never your decision.
+When a segment holds no clean crop, module **framing** stops and asks rather than pad the frame.
+
 To change a clip that this skill already made, read the manifest and the QA report first.
 Reuse the master, the crop plan, and the caption assets that are still correct.
 Touch only the output of the module that changes, and write it under a new name.

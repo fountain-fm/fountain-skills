@@ -40,6 +40,12 @@ MULTI_MIN_X, MULTI_MAX_X = 0.04, 0.96
 MIN_CLUSTER_GAP = 0.18
 MIN_CLUSTER_SUPPORT = 0.15
 
+# ...and only when the two faces are actually on screen TOGETHER this often.
+# A multicam edit shows each person alone on their own camera, so pooling the
+# faces across time finds two clusters there too -- but that footage wants a
+# crop per segment from this module, not a cut list from module speakers.
+MIN_COOCCURRENCE = 0.25
+
 
 def iou(a, b):
     ax, ay, aw, ah = a
@@ -90,6 +96,7 @@ def detect(video, t0, t1, step, wide):
     lo_x, hi_x = (MULTI_MIN_X, MULTI_MAX_X) if wide else (MIN_X, MAX_X)
 
     found = []
+    per_frame = []
     frame_w = frame_h = None
     t = t0
     while t < t1:
@@ -109,14 +116,27 @@ def detect(video, t0, t1, step, wide):
         for x, y, w, h in profile.detectMultiScale(flipped, 1.1, 8, minSize=(min_side, min_side)):
             raw.append((frame_w - x - w, y, w, h))
 
+        kept = []
         for x, y, w, h in suppress([tuple(f) for f in raw]):
             cx, cy = x + w / 2, y + h / 2
             if lo_x * frame_w < cx < hi_x * frame_w and MIN_Y * frame_h < cy < MAX_Y * frame_h:
                 found.append((cx, cy, float(h)))
+                kept.append(cx)
+        if kept:
+            per_frame.append(sorted(kept))
         t += step
 
     cap.release()
-    return found, frame_w, frame_h
+    return found, per_frame, frame_w, frame_h
+
+
+def cooccurrence(per_frame, frame_w):
+    """Share of sampled frames that hold two faces at once, far enough apart to
+    be two people rather than one head detected twice."""
+    if not per_frame:
+        return 0.0
+    together = sum(1 for row in per_frame if len(row) > 1 and (row[-1] - row[0]) >= MIN_CLUSTER_GAP * frame_w)
+    return together / len(per_frame)
 
 
 def build_anchor(points, frame_w, crop_width):
@@ -132,9 +152,10 @@ def build_anchor(points, frame_w, crop_width):
 
 
 def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
-    found, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
+    found, per_frame, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
     if not found:
         return {"ok": False, "reason": "no faces in constrained region"}
+    together = cooccurrence(per_frame, frame_w)
 
     if crop_width is None:
         # Derive from the source's actual resolution rather than assuming one --
@@ -151,7 +172,9 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
         centroids, labels = cluster_1d(xs, 2)
         gap = abs(centroids[1] - centroids[0]) / frame_w
         support = min((labels == 0).sum(), (labels == 1).sum()) / len(xs)
-        if gap >= MIN_CLUSTER_GAP and support >= MIN_CLUSTER_SUPPORT:
+        # The co-occurrence test is what separates a real two-shot from a
+        # multicam edit, where each person is alone on their own camera.
+        if gap >= MIN_CLUSTER_GAP and support >= MIN_CLUSTER_SUPPORT and together >= MIN_COOCCURRENCE:
             split = (centroids, labels)
 
     if speakers == 1:
@@ -163,11 +186,19 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
                 "wide two-shot. Re-run with --speakers 2 and plan the cut list with module shots; "
                 "a single crop here lands between the faces.",
                 "cluster_cx": [round(float(c), 1) for c in sorted(centroids)],
+                "cooccurrence": round(together, 3),
                 "frameW": frame_w,
                 "frameH": frame_h,
             }
         anchor = build_anchor(found, frame_w, crop_width)
-        return {"ok": True, "frameW": frame_w, "frameH": frame_h, "cropW": crop_width, **anchor}
+        return {
+            "ok": True,
+            "frameW": frame_w,
+            "frameH": frame_h,
+            "cropW": crop_width,
+            "cooccurrence": round(together, 3),
+            **anchor,
+        }
 
     if split is None:
         return {

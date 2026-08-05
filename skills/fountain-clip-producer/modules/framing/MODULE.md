@@ -7,8 +7,7 @@ description: Crop the landscape master to the target shape, and keep the active 
 
 A vertical clip shows the person who speaks, and not the microphone, the table, or the empty room.
 ffmpeg cannot find a face on its own, so this module measures the face and then crops to it.
-It cuts a true full-frame crop of the video, and it never puts a wide frame on a taller decorated canvas.
-Screen content is the one exception, and it takes a letterbox.
+It cuts a true full-frame crop of the video, and it stops and asks the user when no clean crop exists.
 
 ## Input
 
@@ -66,7 +65,7 @@ Screen content is the one exception, and it takes a letterbox.
      -vf "drawbox=x=$CROP_X+$CROP_W/2-2:y=0:w=4:h=ih:color=lime@1:t=fill" center-check.jpg
    ```
 
-6. Letterbox a screen-content segment rather than crop it:
+6. Stop when a segment holds no clean crop, and render this letterbox only after the user asks for it:
 
    ```bash
    # scale fits the whole width and keeps every pixel, and pad centres it in the taller shape.
@@ -93,11 +92,12 @@ These are the rules for a delivered crop:
 
 You MUST NOT deliver a crop segment that nobody looked at.
 
-Screen content is a slide, a chart, an article, or a shared screen, and the script then reports no face.
-A 9:16 crop of it is a failed export, because it cuts off the thing the clip exists to show.
-Confirm on a still that the text is readable, because some screen content does not work as a vertical clip.
+You MUST NOT letterbox unless the user asks for it, because black bars shrink the subject.
+
+The script reports no face on a wide two-shot and on screen content, and a 9:16 crop fails both:
+one lands between two people, and the other cuts off the thing the clip exists to show.
+Stop before the render, and say why the crop fails and what is lost.
+Offer a letterbox, a blurred fill from module **overlays**, a crop that follows the speaker from
+module **shots**, or a different span, and render nothing until the user chooses.
 
 The detector misfires on dark footage and on low contrast, so the contact sheet and your own eyes decide there.
-
-When no clean crop of talking-head footage is possible, stop before the render.
-Record why the crop fails, what is lost, and which layout you propose, and get the user to approve it.
