@@ -43,6 +43,8 @@ Screen content is the one exception, and it takes a letterbox.
    ```
 
    The script returns `crop_x` directly, already clamped to the frame.
+   It stops when it finds two separated faces, because one crop then lands between them.
+   Measure both with `--speakers 2`, and give the anchors to module **speakers** to plan the cuts.
 
 3. Write the crop plan, with the span, the speaker, the crop box, the face centre, and the reason for each row.
 4. Apply the crop, and switch it on the cut times when the clip holds more than one segment:
@@ -82,9 +84,7 @@ These are the rules for a delivered crop:
 
 - Every sampled frame holds a face and an upper body.
 - The face of the active speaker is in the horizontal centre.
-- The face size and the eye line stay steady across a speaker change.
 - No edge clips the face, and the head keeps room above it.
-- A wide shot crops to the side of the person who speaks, and never to the gap between two people.
 
 A frame that is mostly background, table, or empty room is a failed export.
 You MUST NOT deliver a crop segment that nobody looked at.
