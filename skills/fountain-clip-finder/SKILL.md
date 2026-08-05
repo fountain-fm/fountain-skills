@@ -68,10 +68,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 A skill name in square brackets is planned but not in this repository yet.
 
-The four modules run in cost order, so that cheap judgment runs before slow work.
-Scoring is free, and the video check reads the `ContentHit` that the search already loaded.
-Only an episode that falls through to YouTube pays for a transcript and a caption download.
-Each module therefore removes work from the next one, and you MUST NOT change that order.
+Each module removes work from the next one, so you MUST run the four in the order above.
 
 `ts_start` and `ts_end` are always in the time of `media`, and never in the time of another file.
 A YouTube cut of an episode does not run to the clock of the transcript, so module **media** maps the two.
