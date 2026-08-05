@@ -160,7 +160,7 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
             return {
                 "ok": False,
                 "reason": "two separated face clusters found -- this looks like a side-by-side or "
-                "wide two-shot. Re-run with --speakers 2 and plan the cut list with module speakers; "
+                "wide two-shot. Re-run with --speakers 2 and plan the cut list with module shots; "
                 "a single crop here lands between the faces.",
                 "cluster_cx": [round(float(c), 1) for c in sorted(centroids)],
                 "frameW": frame_w,

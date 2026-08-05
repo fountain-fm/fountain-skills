@@ -1,6 +1,6 @@
 ---
-name: speakers
-description: Decide when the crop changes speaker in a two-person shot, and make the cut read as a second camera.
+name: shots
+description: Decide which shot the clip holds when one frame carries two people, and keep the cuts continuous.
 ---
 
 ## Overview
@@ -34,7 +34,7 @@ The words say who speaks, and this module turns that into a cut list with the ge
 2. Plan the cut list:
 
    ```bash
-   scripts/plan-speaker-crops.py --anchors anchors.json --words words.json \
+   scripts/plan-shots.py --anchors anchors.json --words words.json \
      --duration 50.48 --emit-commands --out crop-plan.json
    ```
 
@@ -42,7 +42,7 @@ The words say who speaks, and this module turns that into a cut list with the ge
    The plan guesses that the first speaker is on the left, so check one still and correct it:
 
    ```bash
-   scripts/plan-speaker-crops.py … --map "A=right,B=left"
+   scripts/plan-shots.py … --map "A=right,B=left"
    ```
 
 4. Read every warning before you render, because each one names a cut that will look wrong.

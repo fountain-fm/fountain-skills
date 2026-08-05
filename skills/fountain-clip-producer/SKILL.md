@@ -8,7 +8,7 @@ description: Render an approved clip post into a finished, platform-ready video 
 This skill turns an approved post into a video file.
 It decides nothing about the moment or the span, because the caller settles those before it runs.
 Module **media** cuts the landscape master that every other module builds on.
-Module **framing** crops that master to the target shape, and module **speakers** decides when that crop
+Module **framing** crops that master to the target shape, and module **shots** decides when that crop
 changes person in a two-person shot.
 Module **captions**, module **fonts**, and module **overlays** put the text and the layers on it.
 Module **brand** holds the look of the show.
@@ -18,7 +18,7 @@ Module **preflight** checks the machine first, and module **qa** gates the deliv
 
 - The `SocialPostMediaSource` of an approved `SocialPost`, which names the file and the span.
 - The `TranscriptWord` list of that span, when the request asks for captions.
-  Module **speakers** also needs the speaker of each word, for a shot that holds two people.
+  Module **shots** also needs the speaker of each word, for a shot that holds two people.
 - A delivery tier, which the words of the request imply.
 
 Optional:
@@ -52,7 +52,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
 4. Run module **framing** to crop that master to each shape that the request asks for.
-   Run module **speakers** with it when one shot holds two people and the crop must follow who speaks.
+   Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
 5. Run module **brand** to load the look of the show, for a clean final or a publish final.
 6. Run module **captions** when the request asks for captions, and module **fonts** with it.
 7. Run module **overlays** when the request asks for a layer.

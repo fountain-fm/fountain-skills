@@ -44,7 +44,7 @@ Screen content is the one exception, and it takes a letterbox.
 
    The script returns `crop_x` directly, already clamped to the frame.
    It stops when it finds two separated faces, because one crop then lands between them.
-   Measure both with `--speakers 2`, and give the anchors to module **speakers** to plan the cuts.
+   Measure both with `--speakers 2`, and give the anchors to module **shots** to plan the cuts.
 
 3. Write the crop plan, with the span, the speaker, the crop box, the face centre, and the reason for each row.
 4. Apply the crop, and switch it on the cut times when the clip holds more than one segment:
