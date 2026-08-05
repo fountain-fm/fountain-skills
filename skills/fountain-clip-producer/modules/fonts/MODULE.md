@@ -17,7 +17,7 @@ The fit measurement and the burn must therefore see the same font.
 
 ## Output
 
-- A pass or a fail for each named font, inside the preflight report of module **qa**.
+- A pass or a fail for each named font, inside the report of module **preflight**.
 - The `fontsdir` path to use for the render, when the fonts come as files.
 
 ## Requirements
@@ -27,7 +27,7 @@ The fit measurement and the burn must therefore see the same font.
 
 ## Process
 
-1. Give the font names to the preflight of module **qa**, which fails the gate before a render starts.
+1. Give the font names to module **preflight**, which fails before a render starts.
 2. Check one font by hand while you debug a preflight failure:
 
    ```bash

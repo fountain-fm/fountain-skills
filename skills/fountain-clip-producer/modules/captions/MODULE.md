@@ -51,7 +51,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
    A width over the safe width is an overflow, and you MUST fix it before the render.
 
-5. Burn a style proof of a few seconds whenever the style is new or changed, and check the stills.
+5. Run module **qa** for a style proof whenever the style is new or changed.
 6. Burn the captions in:
 
    ```bash

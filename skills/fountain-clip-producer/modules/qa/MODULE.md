@@ -1,48 +1,39 @@
 ---
 name: qa
-description: Check the environment before a render, and gate every delivery on one pass or fail report.
+description: Prove a style on a short render, and gate every delivery on one pass or fail report.
 ---
 
 ## Overview
 
-This module runs twice.
-Before the first render it confirms that the machine can do what the request asks for.
-After the last render it composes the checks of the other modules with whole-clip checks into one gate.
+This module looks at rendered pictures, and it does that twice.
+A style proof checks a new look on a few seconds, before the cost of a full render.
+The delivery gate then composes the checks of the other modules with whole-clip checks into one report.
 Nothing reaches the user until that gate reports a pass.
 
 ## Input
 
-- The landscape master, and the final export.
+- The clean master, and the final export.
 - The expected width, height, frame rate, and duration.
-- The font families of the resolved style, for the preflight.
-- The crop plan and the visual QA report of module **framing**, and the fit report of module **captions**.
+- The crop plan and the visual QA report of module **framing**.
+- The caption fit report of module **captions**.
 
 ## Output
 
-- A preflight report, which names the renderer to use and each missing tool.
+- A style proof, and the stills taken from it.
 - A QA report, with a `pass` or a `fail` status and the reason for each failed check.
 
 ## Requirements
 
 - ffmpeg and ffprobe.
-- Python 3.11 or later, with OpenCV.
-- ImageMagick, for a captioned render.
+- Python 3.11 or later.
 
 ## Process
 
-1. Run the preflight before the first render:
-
-   ```bash
-   scripts/render-preflight.py --media clip-landscape-master.mp4 \
-     --require-magick --require-visual-qa --fonts "Montserrat Bold" --json
-   ```
-
-   Drop the last three flags for an export that carries no captions.
-
-2. Read the renderer that the report names, and record it in the caption plan.
-3. Use the ffmpeg binary that the report names for a caption burn.
-   The report searches for a build that carries libass when the one on the PATH does not.
-4. Run the gate after the last render:
+1. Burn a style proof whenever a style is new or changed.
+   Render a few seconds that span one full caption group, with the real style on real footage.
+2. Inspect a still of the proof at a word onset, at mid-animation, and at rest.
+   Repeat until the look is right, because a full render with a broken style is waste.
+3. Run the gate after the last render:
 
    ```bash
    scripts/validate-clip.py \
@@ -52,8 +43,10 @@ Nothing reaches the user until that gate reports a pass.
      --expected-duration "$DURATION" --report qa-report.json
    ```
 
-   Leave out the last two report flags for an export that carries no captions.
+   Leave out the two report flags for an export that carries no captions.
 
+4. Add `--caption-layer` only when the render used a prepared transparent layer.
+   That layer is the one case with a separate file, and it needs its own frame rate and alpha checks.
 5. Report the failed checks and the next repair step when the gate fails.
    You MUST NOT present the file as finished.
 
@@ -71,11 +64,9 @@ The gate blocks every tier above a rough cut, and it asks for all of this:
 Each production module runs its own checks as it works, and this module does not repeat them.
 It adds the checks that only make sense across the whole clip.
 
-Burn a style proof whenever a style is new or changed.
-That means the first use of a preset on a show, an override that changes the look, or an edited kit.
-Render a few seconds that span one full caption group, and inspect a still at a word onset, mid-animation, and at rest.
-The proof is cheap and a full render with a broken style is not.
-The spec validation and the fit report catch the measurable faults, and the proof catches the ones of judgment.
+A style is new or changed when a show uses a preset for the first time, when an override changes the look,
+or when the kit of the show changes.
 A repeat render of a style that the user already approved needs no new proof.
 
-Cache the preflight result, and run it again only when the environment or the kind of output changes.
+The spec validation and the fit report catch the faults that a machine can measure.
+The proof catches the ones of judgment, such as a look that is valid and still wrong for the show.

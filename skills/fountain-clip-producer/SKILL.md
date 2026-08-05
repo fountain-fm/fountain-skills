@@ -10,7 +10,8 @@ It decides nothing about the moment or the span, because the caller settles thos
 Module **media** cuts the landscape master that every other module builds on.
 Module **framing** crops that master to the target shape.
 Module **captions**, module **fonts**, and module **overlays** put the text and the layers on it.
-Module **brand** holds the look of the show, and module **qa** gates the delivery.
+Module **brand** holds the look of the show.
+Module **preflight** checks the machine first, and module **qa** gates the delivery last.
 
 ## Input
 
@@ -46,13 +47,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Load skill **fountain-api**, and read the delivery tier from the request.
    Do the least work that the tier asks for.
-2. Run module **qa** to check the environment before the first render.
+2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
 4. Run module **framing** to crop that master to each shape that the request asks for.
 5. Run module **brand** to load the look of the show, for a clean final or a publish final.
 6. Run module **captions** when the request asks for captions, and module **fonts** with it.
 7. Run module **overlays** when the request asks for a layer.
-8. Run module **qa** again as the blocking gate.
+8. Run module **qa** as the blocking gate.
    Deliver nothing until it reports a pass.
 9. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
 
