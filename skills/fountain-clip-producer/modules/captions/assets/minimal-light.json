@@ -1,0 +1,10 @@
+{
+  "name": "minimal-light",
+  "description": "Understated small text on a semi-transparent dark box; allows two lines. For high-production footage where captions should support, not perform (the Opus 'minimal clean' look).",
+  "font": { "family": "Helvetica Neue", "size": 54, "bold": false, "case": "verbatim" },
+  "colors": { "primary": "#FFFFFF", "highlight": "#FFD400", "outline": "#000000", "box": "#00000073" },
+  "border": { "style": "box", "outline": 3, "shadow": 0 },
+  "position": { "alignment": "bottom-center", "marginL": 90, "marginR": 90, "marginV": 210 },
+  "grouping": { "maxWords": 6, "maxLines": 2 },
+  "animation": { "type": "none", "leadMs": 100 }
+}

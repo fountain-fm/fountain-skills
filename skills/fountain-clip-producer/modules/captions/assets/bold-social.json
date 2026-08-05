@@ -1,0 +1,10 @@
+{
+  "name": "bold-social",
+  "description": "Larger text, heavier outline, higher contrast than clean-editorial; still static.",
+  "font": { "family": "Montserrat Bold", "size": 76, "bold": true, "case": "verbatim" },
+  "colors": { "primary": "#FFFFFF", "highlight": "#FFD400", "outline": "#000000" },
+  "border": { "style": "outline", "outline": 5, "shadow": 0 },
+  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 220 },
+  "grouping": { "maxWords": 5 },
+  "animation": { "type": "none" }
+}

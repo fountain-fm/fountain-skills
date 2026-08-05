@@ -1,0 +1,16 @@
+{
+  "name": "glow-bounce",
+  "description": "High-energy uppercase words popping in one at a time with a soft warm glow instead of a hard outline (the Beasty/Devin look). Emphasized words go green.",
+  "font": { "family": "Montserrat Bold", "size": 84, "bold": true, "case": "upper" },
+  "colors": { "primary": "#FFE100", "highlight": "#2BFF57", "outline": "#7A3D00" },
+  "border": { "style": "outline", "outline": 4, "shadow": 0, "blur": 6 },
+  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 250 },
+  "animation": {
+    "type": "word-pop",
+    "appearMs": 120,
+    "settleMs": 100,
+    "overshootPct": 114,
+    "entryPct": 55,
+    "leadMs": 60
+  }
+}

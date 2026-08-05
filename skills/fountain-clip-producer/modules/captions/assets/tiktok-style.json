@@ -1,0 +1,10 @@
+{
+  "name": "tiktok-style",
+  "description": "Phrase on screen with word-by-word highlight sweep (yellow -> white as spoken), via karaoke timing computed from real word onsets.",
+  "font": { "family": "Montserrat Bold", "size": 72, "bold": true, "case": "verbatim" },
+  "colors": { "primary": "#FFFFFF", "highlight": "#FFFF00", "outline": "#000000" },
+  "border": { "style": "outline", "outline": 4, "shadow": 0 },
+  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 240 },
+  "grouping": { "maxWords": 5 },
+  "animation": { "type": "highlight-sweep" }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "audiogram-artwork",
+  "description": "The full audiogram package for audio-only clips: episode artwork up top, episode title beneath it, waveform, progress bar. Requires two per-clip overrides: layers.0.asset (the artwork image) and layers.1.text (the episode or clip title).",
+  "layers": [
+    { "type": "image", "asset": "REPLACE-WITH-ARTWORK.png", "width": 640, "position": "top-center", "marginV": 280 },
+    {
+      "type": "title",
+      "text": "REPLACE WITH EPISODE TITLE",
+      "size": 48,
+      "position": "top-center",
+      "marginV": 1000,
+      "start": 0,
+      "end": null,
+      "fadeInMs": 0,
+      "fadeOutMs": 0
+    },
+    {
+      "type": "audiogram",
+      "width": 900,
+      "height": 140,
+      "color": "#FFFFFFE6",
+      "waveMode": "filled",
+      "position": "bottom-center",
+      "marginV": 560
+    },
+    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+  ]
+}

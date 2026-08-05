@@ -1,0 +1,8 @@
+{
+  "name": "pip-card",
+  "description": "Picture-in-picture card layout: the footage scaled down with rounded corners on a solid background — the quote-card aesthetic. Override layers.0.background with the brand's background color.",
+  "layers": [
+    { "type": "blurFill", "scale": 0.86, "background": "#101216", "cornerRadius": 40 },
+    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+  ]
+}

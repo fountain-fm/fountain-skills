@@ -1,0 +1,10 @@
+{
+  "name": "clean-editorial",
+  "description": "Understated white text with a thin outline; no animation. The publish-final default for shows that want captions to read, not perform.",
+  "font": { "family": "Inter", "size": 64, "bold": true, "case": "verbatim" },
+  "colors": { "primary": "#FFFFFF", "highlight": "#FFD400", "outline": "#000000" },
+  "border": { "style": "outline", "outline": 3, "shadow": 0 },
+  "position": { "alignment": "bottom-center", "marginL": 80, "marginR": 80, "marginV": 220 },
+  "grouping": { "maxWords": 6 },
+  "animation": { "type": "none" }
+}

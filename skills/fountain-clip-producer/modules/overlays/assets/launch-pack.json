@@ -1,0 +1,31 @@
+{
+  "name": "launch-pack",
+  "description": "The full promo package for a launch clip: opening hook headline, then the guest lower third as the hook fades, plus a progress bar throughout. Override layers.0.text and layers.1.lines per clip; the show logo comes from the brand kit's standing layers.",
+  "layers": [
+    {
+      "type": "title",
+      "text": "REPLACE WITH THE CLIP HOOK",
+      "size": 64,
+      "position": "top-center",
+      "marginV": 300,
+      "start": 0,
+      "end": 2.5,
+      "fadeInMs": 200,
+      "fadeOutMs": 300
+    },
+    {
+      "type": "lowerThird",
+      "lines": ["GUEST NAME", "Role, Affiliation"],
+      "size": 44,
+      "secondarySize": 30,
+      "position": "bottom-left",
+      "marginH": 70,
+      "marginV": 560,
+      "start": 2.5,
+      "end": 7.5,
+      "fadeInMs": 400,
+      "fadeOutMs": 400
+    },
+    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "bounce-in",
+  "description": "One word at a time rising from below with an overshoot settle. Softer energy than word-pop.",
+  "font": { "family": "Montserrat Bold", "size": 78, "bold": true, "case": "verbatim" },
+  "colors": { "primary": "#FFFFFF", "highlight": "#FFD400", "outline": "#000000" },
+  "border": { "style": "outline", "outline": 5, "shadow": 0 },
+  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 250 },
+  "animation": { "type": "bounce-in", "appearMs": 150, "settleMs": 120, "overshootPct": 110, "riseHeight": 130 }
+}

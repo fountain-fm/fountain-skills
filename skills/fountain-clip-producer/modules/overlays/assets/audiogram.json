@@ -1,0 +1,15 @@
+{
+  "name": "audiogram",
+  "description": "Waveform motion for audio-only sources, in the band above the caption zone, plus a progress bar.",
+  "layers": [
+    {
+      "type": "audiogram",
+      "width": 900,
+      "height": 140,
+      "color": "#FFFFFFE6",
+      "position": "bottom-center",
+      "marginV": 560
+    },
+    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+  ]
+}

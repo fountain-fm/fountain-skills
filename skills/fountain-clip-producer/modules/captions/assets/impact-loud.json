@@ -1,0 +1,10 @@
+{
+  "name": "impact-loud",
+  "description": "Maximum-energy style: huge yellow uppercase words popping in one at a time with a heavy outline. Use sparingly; three words on screen is already loud.",
+  "font": { "family": "Impact", "size": 96, "bold": true, "case": "upper" },
+  "colors": { "primary": "#FFD400", "highlight": "#FF3B30", "outline": "#000000" },
+  "border": { "style": "outline", "outline": 7, "shadow": 0 },
+  "position": { "alignment": "bottom-center", "marginL": 60, "marginR": 60, "marginV": 260 },
+  "grouping": { "maxWords": 3 },
+  "animation": { "type": "word-pop", "appearMs": 110, "settleMs": 110, "overshootPct": 118, "entryPct": 50 }
+}
