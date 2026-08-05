@@ -24,7 +24,7 @@
     "marginV": 230
   },
   "grouping": {
-    "maxWords": 5,
+    "maxWords": 3,
     "maxGapMs": 800
   },
   "animation": {

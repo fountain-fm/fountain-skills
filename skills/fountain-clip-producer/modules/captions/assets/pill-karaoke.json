@@ -24,7 +24,7 @@
     "marginV": 250
   },
   "grouping": {
-    "maxWords": 4
+    "maxWords": 3
   },
   "animation": {
     "type": "current-word",
