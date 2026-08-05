@@ -168,34 +168,33 @@ It still MUST NOT refer to an endpoint.
 Models are the shared vocabulary of the API, and you CAN name them.
 A model CAN be an Input or an Output of a skill or a module.
 
-If the API has a model for a thing, you MUST use the name of the model and the names of its fields.
-You MUST NOT rename them, re-case them, or improve them.
+Before you describe a concept, look for it in the Models part of the docs.
+If a model is close to the concept, you MUST use that model, and you MUST NOT define your own.
 E.g., the source of a clip is a `SocialPostMediaSource`, and never a new object with the same five fields.
 
-A concept that the API does not have is the skill's own.
-You MUST define it where you introduce it.
+You MUST keep the name of the model and the names of its fields, and you MUST NOT rename or re-case them.
+You MUST refer to a model by its name, and you MUST NOT restate its fields.
+You CAN name a field when you say something that the docs do not.
+E.g., "Set `ts_start` a short pause before the first word", or "Drop an episode when `info.video` is absent".
+
+### Your own models
+
+A concept that no model is close to belongs to the skill or the module that introduces it.
+Give it a name when a skill or a module passes it on, and define it one time where you introduce it.
+E.g., a moment is a group of `TranscriptSearchSegment` less than 30 seconds apart.
+
+Write the name in lowercase prose, so that a reader can tell it from a model.
 You MUST NOT give it the name of a model, or a name that is close to one.
-
-#### Depth
-
-You MUST name a model, and you MUST NOT restate its fields.
-The docs define the fields, and a copy inside a skill goes stale without a sign.
-
-You CAN name one field when you say something that the docs do not.
-E.g., "Set `ts_start` a short pause before the first word".
-E.g., "Drop an episode when `info.video` is absent".
-
-Before you name a field, ask this: is the line still worth writing to a reader who has the model page open?
+Build it from models where you can, rather than copy fields out of them.
 
 ### Scripts
 
 You MUST NOT write a script that calls the Fountain API.
-The agent makes each request itself with skill fountain-api.
+The agent makes each request and gives the response to the script.
 
 A script CAN take a model as input and give a model as output.
 It MUST name each model that it reads, in its docstring or in its CLI help.
 It MUST read only the fields that it uses.
-It MUST fail with a message that names the model and the missing field.
 
 You MUST NOT suggest idiosyncratic ways of interacting with the API.
 If something is not working, you MUST investigate and suggest potential solutions before writing the skill.
