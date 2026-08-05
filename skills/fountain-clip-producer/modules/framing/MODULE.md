@@ -87,7 +87,7 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 These are the rules for a delivered crop:
 
 - Every sampled frame holds a face and an upper body, and mostly background or empty room is a failed export.
-- The face of the active speaker is in the horizontal centre.
+- The face sits a little away from the centre, on the side it looks away from, so it looks into the frame.
 - No edge clips the face, and the head keeps room above it.
 
 You MUST NOT deliver a crop segment that nobody looked at.

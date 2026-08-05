@@ -40,6 +40,11 @@ MULTI_MIN_X, MULTI_MAX_X = 0.04, 0.96
 MIN_CLUSTER_GAP = 0.18
 MIN_CLUSTER_SUPPORT = 0.15
 
+# A speaker angled toward the other chair needs room in front of the face, or
+# they read as looking out of the frame. This is the share of the crop width
+# the face sits away from centre, and it matches the default of module shots.
+LOOK_ROOM = 0.06
+
 # ...and only when the two faces are actually on screen TOGETHER this often.
 # A multicam edit shows each person alone on their own camera, so pooling the
 # faces across time finds two clusters there too -- but that footage wants a
@@ -58,11 +63,20 @@ def iou(a, b):
     return overlap / float(aw * ah + bw * bh - overlap)
 
 
+FRONTAL, PROFILE = 0, 1
+
+
 def suppress(faces, thresh=0.4):
     """The frontal, profile and flipped-profile passes all fire on the same
-    face, so collapse overlapping boxes before anything counts them."""
+    face, so collapse overlapping boxes before anything counts them.
+
+    Each face arrives as (rank, box). A frontal box beats a profile one on the
+    same face, and only then does the larger box win. Ranking by area alone
+    picks the profile box, which is wider and sits off to the side of the head,
+    and that drags the measured centre far enough to miscentre the crop.
+    """
     kept = []
-    for face in sorted(faces, key=lambda f: f[2] * f[3], reverse=True):
+    for _, face in sorted(faces, key=lambda f: (f[0], -f[1][2] * f[1][3])):
         if all(iou(face, other) < thresh for other in kept):
             kept.append(face)
     return kept
@@ -96,6 +110,7 @@ def detect(video, t0, t1, step, wide):
     lo_x, hi_x = (MULTI_MIN_X, MULTI_MAX_X) if wide else (MIN_X, MAX_X)
 
     found = []
+    facings = []
     per_frame = []
     frame_w = frame_h = None
     t = t0
@@ -108,26 +123,37 @@ def detect(video, t0, t1, step, wide):
         frame_h, frame_w = gray.shape
         min_side = int(frame_h * 0.18)
 
-        raw = []
-        for cascade in (frontal, profile):
-            raw.extend(cascade.detectMultiScale(gray, 1.1, 8, minSize=(min_side, min_side)))
+        raw = [(FRONTAL, tuple(f)) for f in frontal.detectMultiScale(gray, 1.1, 8, minSize=(min_side, min_side))]
+        raw += [(PROFILE, tuple(f)) for f in profile.detectMultiScale(gray, 1.1, 8, minSize=(min_side, min_side))]
         # The profile cascade only sees left-facing heads; flip to catch the rest.
         flipped = cv2.flip(gray, 1)
+        flipped_boxes = set()
         for x, y, w, h in profile.detectMultiScale(flipped, 1.1, 8, minSize=(min_side, min_side)):
-            raw.append((frame_w - x - w, y, w, h))
+            box = (frame_w - x - w, y, w, h)
+            flipped_boxes.add(box)
+            raw.append((PROFILE, box))
 
+        # Which pass caught the head also says which way it points: the profile
+        # cascade only fires on one side, so the flipped pass means the subject
+        # faces the other way. That is what sets the look room below.
+        facing_of = {
+            box: ("right" if rank == PROFILE and box in flipped_boxes else "left")
+            for rank, box in raw
+            if rank == PROFILE
+        }
         kept = []
-        for x, y, w, h in suppress([tuple(f) for f in raw]):
+        for x, y, w, h in suppress(raw):
             cx, cy = x + w / 2, y + h / 2
             if lo_x * frame_w < cx < hi_x * frame_w and MIN_Y * frame_h < cy < MAX_Y * frame_h:
                 found.append((cx, cy, float(h)))
+                facings.append(facing_of.get((x, y, w, h)))
                 kept.append(cx)
         if kept:
             per_frame.append(sorted(kept))
         t += step
 
     cap.release()
-    return found, per_frame, frame_w, frame_h
+    return found, facings, per_frame, frame_w, frame_h
 
 
 def cooccurrence(per_frame, frame_w):
@@ -139,20 +165,41 @@ def cooccurrence(per_frame, frame_w):
     return together / len(per_frame)
 
 
-def build_anchor(points, frame_w, crop_width):
+def dominant_facing(facings):
+    """Which way the head points across the segment, or None when it mostly
+    faced the camera and no profile pass ever claimed it."""
+    seen = [f for f in facings if f]
+    if not seen:
+        return None
+    right = seen.count("right")
+    if right * 2 == len(seen):
+        return None
+    return "right" if right * 2 > len(seen) else "left"
+
+
+def build_anchor(points, frame_w, crop_width, facing=None):
     cxs = [p[0] for p in points]
+    face_cx = float(np.median(cxs))
+    # Look room: a head pointing right needs the space on its right, so it sits
+    # left of the crop centre. A head facing the camera stays centred.
+    offset = 0.5
+    if facing == "right":
+        offset = 0.5 - LOOK_ROOM
+    elif facing == "left":
+        offset = 0.5 + LOOK_ROOM
     return {
-        "face_cx": round(float(np.median(cxs)), 1),
+        "face_cx": round(face_cx, 1),
         "face_cy": round(float(np.median([p[1] for p in points])), 1),
         "face_h": round(float(np.median([p[2] for p in points])), 1),
         "frames": len(points),
-        "crop_x": int(round(max(0, min(frame_w - crop_width, float(np.median(cxs)) - crop_width / 2)))),
+        "facing": facing or "camera",
+        "crop_x": int(round(max(0, min(frame_w - crop_width, face_cx - offset * crop_width)))),
         "x_spread": round(float(np.percentile(cxs, 90) - np.percentile(cxs, 10)), 1),
     }
 
 
 def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
-    found, per_frame, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
+    found, facings, per_frame, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
     if not found:
         return {"ok": False, "reason": "no faces in constrained region"}
     together = cooccurrence(per_frame, frame_w)
@@ -190,7 +237,7 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
                 "frameW": frame_w,
                 "frameH": frame_h,
             }
-        anchor = build_anchor(found, frame_w, crop_width)
+        anchor = build_anchor(found, frame_w, crop_width, dominant_facing(facings))
         return {
             "ok": True,
             "frameW": frame_w,
@@ -210,7 +257,7 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
 
     _, labels = split
     groups = [[p for p, lab in zip(found, labels, strict=True) if lab == j] for j in (0, 1)]
-    anchors = [build_anchor(g, frame_w, crop_width) for g in groups if g]
+    anchors = [build_anchor(g, frame_w, crop_width) for g in groups if g]  # module shots sets its own look room
     anchors.sort(key=lambda a: a["face_cx"])
     for i, anchor in enumerate(anchors):
         anchor["position"] = "left" if i == 0 else "right"
