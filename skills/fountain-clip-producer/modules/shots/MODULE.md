@@ -87,3 +87,10 @@ Neither one is yours to choose, because both change how the clip reads.
 
 This module needs the speaker of each word, and it stops when the transcript carries none.
 That is a gap in the transcript and not a fault of the render, so no new render fixes it.
+
+No speaker labels does not always mean no crop.
+Read the words of the refused segment first, because a frame that holds two people often holds one voice.
+When they carry one uninterrupted utterance, a single crop is right after all, and only the seat is open.
+An edit cuts to the person who starts to speak, so when the next speaker's first word lands on the cut,
+the shot after it holds that speaker, and the seat that matches it is not the one talking in the wide shot.
+Match the seat on a still of each, and stop when the words change speaker inside the segment.

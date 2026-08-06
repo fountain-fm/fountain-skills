@@ -30,10 +30,10 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 1. Open `media` and read what kind of source it is.
    A local file and an HLS playlist are cuttable directly, and a watch-page URL is not.
-2. Cut an HLS source from the master playlist, with one `-ss` and an explicit program map:
+2. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
 
    ```bash
-   # Read the programs first, and take the id of the tallest video. Never assume an order.
+   # -show_entries lists every program with the size of its video, which is what names the tallest.
    ffprobe -v error -show_entries program=program_id:stream=width,height,codec_type -of json "$MEDIA_URL"
    
    # -ss before -i seeks the master one time, so the video and its audio group move together.
@@ -80,7 +80,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 6. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
    Measure the inset and crop to the camera area before any other module runs.
-7. Run ffprobe on the master, and confirm that the duration, the resolution, and the audio stream are right.
+7. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
 
 ## Additional notes
 

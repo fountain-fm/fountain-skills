@@ -78,6 +78,10 @@ can sit minutes away from the file this skill opens.
 A span measured on it looks right on paper and holds the wrong words, and no render finds that out.
 Ask the user to generate the transcript, because the Content API meters that work and the spend is theirs.
 
+Always cut from the tallest rendition the source offers.
+A vertical crop keeps about a third of the width, so a 720p source delivers a 1080x1920 file that holds
+405x720 of real picture, and module **qa** fails it.
+
 The span is settled before this skill runs.
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
 
