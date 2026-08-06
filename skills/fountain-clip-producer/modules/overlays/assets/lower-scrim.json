@@ -1,0 +1,13 @@
+{
+  "name": "lower-scrim",
+  "description": "A soft black gradient over the lower third so captions stay legible on bright footage. It fades to nothing by the middle of the frame, so the speaker is untouched.",
+  "layers": [
+    {
+      "type": "scrim",
+      "height": 620,
+      "opacity": 0.85,
+      "position": "bottom",
+      "curve": 1.6
+    }
+  ]
+}

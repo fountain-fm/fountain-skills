@@ -92,6 +92,15 @@ LAYER_DEFAULTS = {
         "marginH": 40,
         "marginV": 40,
     },
+    "scrim": {
+        # a soft dark band so bright footage cannot swallow the caption under it
+        "type": "scrim",
+        "height": 620,
+        "color": "#000000",
+        "opacity": 0.85,
+        "position": "bottom",  # bottom | top
+        "curve": 1.6,  # >1 keeps the middle clearer and darkens only near the edge
+    },
     "progressBar": {
         "type": "progressBar",
         "height": 12,
@@ -256,6 +265,11 @@ def validate(layers, duration):
             )
         if kind == "audiogram" and layer["waveMode"] not in WAVE_MODES:
             fail(f"{ctx}: waveMode '{layer['waveMode']}' is not one of {sorted(WAVE_MODES)}")
+        if kind == "scrim":
+            if layer["position"] not in {"bottom", "top"}:
+                fail(f"layers[{i}] (scrim): position '{layer['position']}' is not bottom or top")
+            if not 0 < layer["opacity"] <= 1:
+                fail(f"layers[{i}] (scrim): opacity {layer['opacity']} is not between 0 and 1")
         if kind == "blurFill":
             if not 0.3 <= layer["scale"] <= 1.0:
                 fail(f"{ctx}: scale {layer['scale']} outside [0.3, 1.0]")
@@ -436,6 +450,20 @@ def build_command(layers, args):
                 f"{chain}drawbox=x=0:y=ih-{layer['height']}:w='iw*t/{duration}':"
                 f"h={layer['height']}:color={ff_color(layer['color'], 'progress color')}:t=fill{out}"
             )
+            chain = out
+        elif kind == "scrim":
+            band, out = f"[scrim{label_n}]", next_label()
+            alpha = round(layer["opacity"] * 255)
+            raw = str(layer["color"]).lstrip("#")
+            r, g, b = (int(raw[j : j + 2], 16) for j in (0, 2, 4))
+            # geq paints the alpha ramp itself; the gradients source only gives a hard band.
+            ramp = "Y/H" if layer["position"] == "bottom" else "(1-Y/H)"
+            graph.append(
+                f"color=c=black:s={args.width}x{layer['height']}:d={duration},format=rgba,"
+                f"geq=r={r}:g={g}:b={b}:a='{alpha}*pow({ramp}\,{layer['curve']})'{band}"
+            )
+            y = "H-h" if layer["position"] == "bottom" else "0"
+            graph.append(f"{chain}{band}overlay=0:{y}{out}")
             chain = out
         elif kind == "audiogram":
             wave = f"[wave{label_n}]"
