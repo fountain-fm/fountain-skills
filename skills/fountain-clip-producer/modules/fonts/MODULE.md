@@ -55,6 +55,11 @@ No font is on every machine.
 The web-safe faces belong to Microsoft, so a Linux box carries none of them, and a container often
 carries no font at all. The skill therefore ships the fonts it names rather than trust the machine.
 
+A download at render time would not do instead.
+Module **captions** measures the width of each word against the file itself, so a family that shifts by one
+release changes every measurement and a line that fitted starts to overflow.
+The bundled file is the one those measurements were taken against.
+
 Never substitute a lookalike font without a word to the user.
 Ask for the files when a show uses a licensed font, and say which font you used and why.
 
