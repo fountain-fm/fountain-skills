@@ -47,7 +47,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Load skill **fountain-api**, and read the delivery tier from the request.
    Do the least work that the tier asks for.
-   Confirm that the episode carries a `fountain` transcript, and stop when it carries only `rss`.
+   Generate the `fountain` transcript with the Content API when the episode carries only `rss`, then wait for it.
 2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
@@ -75,14 +75,15 @@ You MUST NOT raise the tier on your own, because polish is requested work.
 Captions on a portrait export are not a raise, and a square or a landscape export still waits to be asked.
 
 A clip needs the `fountain` transcript of its episode, and never the `rss` one alone.
-The `rss` transcript is timed against the feed, which carries a different advertisement cut, so its clock
-can sit minutes away from the file this skill opens.
-A span measured on it looks right on paper and holds the wrong words, and no render finds that out.
-Ask the user to generate the transcript, because the Content API meters that work and the spend is theirs.
+The `rss` transcript is timed against the feed and its different advertisement cut, so its clock can sit
+minutes away from this file: a span measured on it looks right on paper and holds the wrong words.
 
-Always cut from the tallest rendition the source offers.
-A vertical crop keeps about a third of the width, so a 720p source delivers a 1080x1920 file that holds
-405x720 of real picture, and module **qa** fails it.
+Generating one is metered, and it is yours to start without asking.
+Say what it cost and what remains as soon as the job is queued, and never after the render.
+The job is queued, so poll until it completes, and stop when it fails or the episode is early-access.
+
+Always cut from the tallest rendition the source offers, because a vertical crop keeps about a third of
+the width: a 720p source gives 405x720 of real picture in a 1080x1920 file, and module **qa** fails it.
 
 The span is settled before this skill runs.
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
