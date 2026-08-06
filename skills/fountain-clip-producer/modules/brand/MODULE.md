@@ -54,9 +54,11 @@ The size and the margins usually need one correction, because a reference screen
 
 Any change to a kit calls for a new style proof before the next full render.
 
-The preferences hold text, so they hold the style values, the names of the fonts, and the location of the assets.
-They do not hold a font file or a logo file.
-Ask the user where those files are, and record that location one time.
-A kit that names a font which is not in that location is a blocking gap, and never a fall-through to a system font.
+The preferences hold text, so they hold the style values, the names of the fonts, and where each asset is.
+They cannot hold the font file or the logo file itself.
+Record a URL when the show has one, because a URL survives a new machine and a session that runs elsewhere.
+Record a path when it does not, and know that the path is true for that one machine.
+Ask again and record the new location when a recorded one no longer resolves, and never fall through to a
+system font or a silently missing layer.
 
 Record the values themselves in the preferences, and not a description of them.

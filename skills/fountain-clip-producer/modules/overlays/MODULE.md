@@ -28,8 +28,9 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 ## Process
 
 1. Read the standing layers of the show from module **brand**.
-   Use preset `show-logo` or `sponsor-logo` when the show has no kit, and point `asset` at the real file,
+   Use preset `show-logo` or `sponsor-logo` when the show has no kit, and point `asset` at the real image,
    because each ships a placeholder so that it renders from its defaults.
+   An `asset` can be a file on this machine or an `http` URL, which ffmpeg opens for itself.
 2. Compile the layers into the render command:
 
    ```bash

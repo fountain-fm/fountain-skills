@@ -135,6 +135,16 @@ HORIZONTAL = {"left", "center", "right"}
 VERTICAL = {"top", "middle", "bottom"}
 
 
+def is_remote(value):
+    """A URL ffmpeg opens itself, rather than a file on this machine."""
+    return str(value).startswith(("http://", "https://"))
+
+
+def asset_suffix(value):
+    """The file extension of an asset, ignoring any query a URL carries."""
+    return Path(str(value).split("?", 1)[0].split("#", 1)[0]).suffix.lower()
+
+
 def fail(msg):
     print(f"error: {msg}", file=sys.stderr)
     sys.exit(1)
@@ -213,7 +223,7 @@ def resolve_layers(spec, kit, kit_dir):
             layer = dict(layer)
             # kit asset/font paths resolve relative to the kit directory
             for field in ("asset", "fontFile"):
-                if layer.get(field) and not Path(layer[field]).is_absolute():
+                if layer.get(field) and not is_remote(layer[field]) and not Path(layer[field]).is_absolute():
                     layer[field] = str(kit_dir / layer[field])
             layers.append(layer)
     layers.extend(spec.get("layers", []))
@@ -250,7 +260,7 @@ def validate(layers, duration):
         if kind == "image":
             if not layer["asset"]:
                 fail(f"{ctx}: 'asset' is required")
-            if not Path(layer["asset"]).exists():
+            if not is_remote(layer["asset"]) and not Path(layer["asset"]).exists():
                 fail(f"{ctx}: asset not found: {layer['asset']}")
             if not 0 < layer["opacity"] <= 1:
                 fail(f"{ctx}: opacity {layer['opacity']} outside (0, 1]")
@@ -396,11 +406,11 @@ def build_command(layers, args):
     for layer in layers:
         kind = layer["type"]
         if kind == "image":
-            is_video = Path(layer["asset"]).suffix.lower() in VIDEO_EXTS
+            is_video = asset_suffix(layer["asset"]) in VIDEO_EXTS
             if not is_video:
                 in_flags = "-loop 1"
             elif layer["loop"]:
-                in_flags = "-ignore_loop 0" if layer["asset"].lower().endswith(".gif") else "-stream_loop -1"
+                in_flags = "-ignore_loop 0" if asset_suffix(layer["asset"]) == ".gif" else "-stream_loop -1"
             else:
                 in_flags = ""
             inputs.append((in_flags, layer["asset"]))
@@ -460,7 +470,7 @@ def build_command(layers, args):
             ramp = "Y/H" if layer["position"] == "bottom" else "(1-Y/H)"
             graph.append(
                 f"color=c=black:s={args.width}x{layer['height']}:d={duration},format=rgba,"
-                f"geq=r={r}:g={g}:b={b}:a='{alpha}*pow({ramp}\,{layer['curve']})'{band}"
+                rf"geq=r={r}:g={g}:b={b}:a='{alpha}*pow({ramp}\,{layer['curve']})'{band}"
             )
             y = "H-h" if layer["position"] == "bottom" else "0"
             graph.append(f"{chain}{band}overlay=0:{y}{out}")
@@ -565,7 +575,7 @@ def main():
     for layer in spec.get("layers", []):
         for field in ("asset", "fontFile"):
             value = layer.get(field)
-            if value and not Path(value).is_absolute() and not Path(value).exists():
+            if value and not is_remote(value) and not Path(value).is_absolute() and not Path(value).exists():
                 beside = spec_path.parent / value
                 if beside.is_file():
                     layer[field] = str(beside)
