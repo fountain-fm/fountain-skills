@@ -1,15 +1,15 @@
 {
   "name": "guest-intro",
-  "description": "Restrained lower third introducing the guest (name + role), faded in after the hook and out well before the end. Override layers.0.lines and fontFile per clip/show.",
+  "description": "A restrained lower third, held clear of the caption band by sitting on the vertical centre.",
   "layers": [
     {
       "type": "lowerThird",
       "lines": ["GUEST NAME", "Role, Affiliation"],
       "size": 44,
       "secondarySize": 30,
-      "position": "bottom-left",
+      "position": "middle-left",
       "marginH": 70,
-      "marginV": 560,
+      "marginV": 0,
       "start": 2.0,
       "end": 7.0,
       "fadeInMs": 400,

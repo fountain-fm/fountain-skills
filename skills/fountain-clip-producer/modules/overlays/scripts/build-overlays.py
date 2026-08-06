@@ -531,6 +531,16 @@ def main():
     spec = json.loads(spec_path.read_text())
     for raw in args.override:
         apply_override(spec, raw)
+    # A preset that ships its own asset names it beside itself, so resolve a
+    # relative path against the preset rather than against the caller's cwd.
+    # An override always wins, because it is applied above.
+    for layer in spec.get("layers", []):
+        for field in ("asset", "fontFile"):
+            value = layer.get(field)
+            if value and not Path(value).is_absolute() and not Path(value).exists():
+                beside = spec_path.parent / value
+                if beside.is_file():
+                    layer[field] = str(beside)
 
     layers = resolve_layers(spec, kit, kit_dir)
     if not layers:

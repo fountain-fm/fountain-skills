@@ -5,11 +5,13 @@
     {
       "type": "watermark",
       "text": "@yourshow",
-      "size": 30,
-      "color": "#FFFFFFB3",
+      "size": 44,
+      "color": "#FFFFFF",
       "position": "top-left",
       "marginH": 40,
-      "marginV": 40
+      "marginV": 40,
+      "borderW": 4,
+      "borderColor": "#000000"
     }
   ]
 }

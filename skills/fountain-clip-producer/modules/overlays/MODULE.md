@@ -28,6 +28,8 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 ## Process
 
 1. Read the standing layers of the show from module **brand**.
+   Use preset `show-logo` or `sponsor-logo` when the show has no kit, and point `asset` at the real file,
+   because each ships a placeholder so that it renders from its defaults.
 2. Compile the layers into the render command:
 
    ```bash
