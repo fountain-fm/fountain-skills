@@ -24,7 +24,8 @@ It reports the environment, and it never looks at a rendered file.
 ## Requirements
 
 - ffmpeg and ffprobe.
-- Python 3.11 or later, with OpenCV 4.8 or later.
+- Python 3.11 or later.
+- OpenCV 4.8 or later, importable from that same Python.
 - ImageMagick, for a captioned render.
 
 ## Process

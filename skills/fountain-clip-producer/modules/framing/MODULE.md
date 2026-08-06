@@ -23,7 +23,8 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 ## Requirements
 
 - ffmpeg and ffprobe.
-- Python 3.11 or later, with OpenCV 4.8 or later, which is the first release that carries `FaceDetectorYN`.
+- Python 3.11 or later.
+- OpenCV 4.8 or later, importable from that same Python, and the first release to carry `FaceDetectorYN`.
 - The YuNet model in `assets/models`, which the skill ships and the script finds on its own.
 
 ## Process
@@ -91,8 +92,8 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 
 You MUST NOT deliver a crop segment that nobody looked at, and you MUST NOT letterbox unless the user asks.
 
-The crop holds still inside a shot and changes only on a cut, even when the face wanders inside it.
-A crop that drifts while the speaker talks reads as a pan across a still frame, and the viewer sees it.
+The crop holds still inside a shot and changes only on a cut, even when the face wanders inside it, because
+a crop that drifts while the speaker talks reads as a pan across a still frame and the viewer sees it.
 
 A 9:16 crop fails a wide two-shot and screen content alike, and the script refuses both and names which,
 because it sees two faces on the first and none on the second.
