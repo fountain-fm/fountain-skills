@@ -67,7 +67,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 There are three delivery tiers, and each one adds to the tier before it.
 The tier is how this skill does the least work the request asks for, and it decides whether the gate runs:
 
-- A rough cut is a fast file for review, with no captions and no gate.
+- A rough cut is the landscape master alone: a fast file for review, with no crop, no captions, no gate.
 - A clean final is publishable, and a portrait export carries captions, because it is watched with the sound off.
   This is the tier for "produce this clip", when the request names neither captions nor packaging.
 - A publish final adds the overlays, the packaging, and the full gate.
