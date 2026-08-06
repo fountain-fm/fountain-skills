@@ -6,10 +6,10 @@ description: Run a daily trend-to-content loop - find trends, build a reviewed c
 ## Overview
 
 This skill is the standing loop that turns today's news into a reviewed batch of scheduled posts.
-It reads the news, maps trends to the show's own narratives, and assembles the strongest clips into a pack.
-The operator reviews the pack, and only approved posts move to scheduling.
-Module **trend-discovery**, module **pack-assembly**, and module **feedback-capture** do the phase work.
-Skill **[fountain-stats]** closes the loop: its learnings feed the next run through the preferences.
+Module **trend-discovery** maps trends to the show's own narratives.
+Module **pack-assembly** briefs skill **fountain-clip-finder** and **fountain-clip-producer** to build the pack.
+The operator reviews the pack, and module **feedback-capture** writes the lessons into the preferences.
+Skill **[fountain-stats]** closes the loop: its learnings feed the next run.
 
 ## Input
 
@@ -18,7 +18,7 @@ Skill **[fountain-stats]** closes the loop: its learnings feed the next run thro
 
 ## Output
 
-- `fountain/outputs/daily-growth/<show-slug>/pack-<date>.md` - the day's clip pack.
+- `fountain/outputs/daily-growth/<show>/pack-<date>.md` - the day's clip pack, where `<show>` is the show title.
 - One draft `SocialPost` for each proposed clip, with its rendered video attached.
 - Scheduled posts, created through skill **[fountain-post-scheduler]**.
 - Updated preferences after the review.
@@ -29,7 +29,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- News and social trend search tools.
+- A web search tool, to find news published in the last 48 hours.
+  Optional: a social trend search tool, such as one for X, when the machine has one.
 - Skill **fountain-api**.
 - Skills **fountain-clip-finder** and **fountain-clip-producer**.
 - Skill **[fountain-post-scheduler]**.

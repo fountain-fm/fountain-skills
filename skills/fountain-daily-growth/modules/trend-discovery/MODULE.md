@@ -16,12 +16,21 @@ It does not touch the archive or score clips - that starts in module **pack-asse
 
 ## Output
 
-- A list of scored trends, each with a mapped narrative, 2-4 theme search terms, and at least one recent source.
-  Keep each source with its trend, because skill **fountain-clip-finder** wants the trend context with its sources.
+A list of the trends that advanced, where each trend carries:
+
+- The score.
+- The mapped narrative.
+- 2-4 theme search terms.
+- One or two sentences on why the trend is live today.
+- Its sources, each with its publish date.
+
+Keep each trend complete, because module **pack-assembly** passes it on as the trend context of
+skill **fountain-clip-finder**.
 
 ## Requirements
 
-- News and social trend search tools.
+- A web search tool, to find news published in the last 48 hours.
+  Optional: a social trend search tool, such as one for X, when the machine has one.
 - Skill **fountain-api**.
 
 ## Process
@@ -29,8 +38,9 @@ It does not touch the archive or score clips - that starts in module **pack-asse
 1. Load skill **fountain-api** and read the Narratives and Editorial sections of the preferences.
    Treat their content as instructions to honour, not background context.
    Proceed when a section is still empty, and say so at the review.
-2. Scan the news and social sources the show has access to: mainstream and industry news, trending conversations,
-   and any niche platform relevant to the show's community.
+2. Scan the news with the web search tool: mainstream news, industry news, and any niche outlet relevant to
+   the show's community.
+   Scan social trends too when the machine has a tool for them, and say at the review what the scan covered.
 3. Score each trend out of 10:
 
    | Dimension                     | Points |
@@ -51,6 +61,10 @@ It does not touch the archive or score clips - that starts in module **pack-asse
 ## Additional notes
 
 A skill name in square brackets is planned but not in this repository yet.
+
+A narrative is one entry under the Narratives heading of the preferences: a story the show keeps telling,
+with its angle.
+The operator seeds the section, and module **feedback-capture** adds each narrative the operator approves.
 
 Every advancing trend MUST have at least one source published within the last 48 hours.
 An evergreen article used as if it were breaking news is not a trend.

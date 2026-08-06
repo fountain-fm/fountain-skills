@@ -17,7 +17,8 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
 
 ## Output
 
-- `pack-<date>.md` - the review pack, sent to the operator exactly one time per run.
+- `pack-<date>.md` - the review pack, written to the output folder that the skill names.
+  It goes to the operator exactly one time per run.
 - A rendered, QA-passed clip attached to every proposed post.
 
 ## Requirements
@@ -28,13 +29,14 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
 
 ## Process
 
-1. Give skill **fountain-clip-finder** a brief per trend: the search terms, the trend context with its sources,
-   and a small `clip_count`.
+1. Give skill **fountain-clip-finder** a brief per trend: the search terms, the trend itself as the trend
+   context, and a `clip_count` of 2 or 3, because at most one or two clips per trend survive selection.
    It opens one draft `SocialPost` for each clip on each channel, with `source` and the first copy.
    A trend that returns no clean candidate drops out of today's pack - do not lower the bar.
-2. Load skill **fountain-api** and load the show's already-posted clips via the Social API.
-   Drop each candidate whose `source` overlaps a clip the show already posted - the same moment MUST NOT
-   go out twice.
+2. Load skill **fountain-api** and load the show's earlier posts via the Social API.
+   Drop each candidate whose `source` names the episode of an earlier post and overlaps its span - the same
+   moment MUST NOT go out twice.
+   The API holds every earlier post, so this check needs no local history.
 3. Select the final ~5 candidates across all trends.
    Prefer a spread of narratives, at most one or two clips per trend, and fewer excellent clips over five
    mediocre ones.
@@ -43,6 +45,8 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
    Every clip MUST be rendered and QA-passed before the review, not after approval.
 5. Write a one-paragraph "why publish today" per clip: the live trend, the narrative it maps to, the archive-match
    strength, and any supporting signal from the Editorial section of the preferences.
+   Add it to the `context` of the post via the Social API, under the note that skill **fountain-clip-finder**
+   wrote, so the reason travels with the post into the dashboard and the digests.
 6. Run the copy and safety pass (see the notes) over the copy that skill **fountain-clip-finder** wrote, and tag
    the on-camera speaker.
    Update each post that changes via the Social API.
