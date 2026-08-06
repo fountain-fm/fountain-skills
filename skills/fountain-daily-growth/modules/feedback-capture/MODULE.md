@@ -9,7 +9,6 @@ This module makes the loop learn without local state.
 It distills why the operator approved, edited, or rejected each item, and writes the durable lessons into
 the preferences.
 Module **trend-discovery** reads those lessons on the next run.
-It does not log posts - the posts and their metadata live in the API.
 
 ## Input
 
@@ -43,3 +42,4 @@ One-day noise MUST NOT go into the preferences.
 "Reject: never use price predictions in copy" is a durable lesson.
 
 You MUST NOT keep a local log of posts, packs, or feedback for a later session.
+The posts and their metadata live in the API.
