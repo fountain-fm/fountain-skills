@@ -96,7 +96,7 @@ Avoid general discussion, long setup, hosts who agree with each other, and abstr
 
 Mark a moment higher-risk for an unverified claim, a legal or defamation risk, an election or geopolitics
 claim, a claim about a named person, a price prediction, investment advice, or a quote a trim can mislead with.
-Carry the flag and the reason forward, because the caller does the last safety check.
+Carry the flag and the reason forward, because module **copy** runs the last safety check on the words.
 
 Record the scores, so that a later reader can audit the ranking.
 

@@ -41,7 +41,8 @@ Fountain shows a post as a candidate only when it holds `source`, and only then 
 Module **copy** writes `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 
-Skill **fountain-clip-producer** works from `source`, and attaches the video to the post.
+The posts then wait in the Social API, and nothing here invokes the next stage:
+skill **fountain-clip-producer** works from `source`, and attaches the video to the post.
 
 ## Housekeeping
 
