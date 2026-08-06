@@ -92,6 +92,17 @@ def main():
     parser.add_argument("--expected-height", type=int, required=True)
     parser.add_argument("--expected-fps", type=float, required=True)
     parser.add_argument("--expected-duration", type=float, required=True)
+    parser.add_argument(
+        "--landscape-master",
+        help="clip-landscape-master.mp4 from module media. Its height is the real detail behind the export.",
+    )
+    parser.add_argument(
+        "--max-upscale",
+        type=float,
+        default=2.0,
+        help="Largest allowed ratio of delivered height to clean-master height. 2.0 passes a 1080p source "
+        "for a 1920-tall delivery and fails a 720p one.",
+    )
     parser.add_argument("--contact-sheet")
     parser.add_argument("--visual-report", help="visual_qa_report.json produced by the framing module")
     parser.add_argument("--report", required=True)
@@ -129,6 +140,26 @@ def main():
                 "expected": [args.expected_width, args.expected_height],
             },
         )
+        # A vertical crop keeps the whole height of the landscape master, so
+        # that height is the real detail behind the delivered one. The container
+        # reports 1080x1920 either way, which is how a 720p source shipped as
+        # 1080p until this check existed. The clean master is already vertical,
+        # so it cannot answer this -- only the landscape one can.
+        if args.landscape_master:
+            landscape_video = video_stream(ffprobe(args.landscape_master)) or {}
+            source_height = landscape_video.get("height") or 0
+            upscale = (args.expected_height / source_height) if source_height else None
+            add_check(
+                checks,
+                "source_resolution",
+                upscale is not None and upscale <= args.max_upscale,
+                {
+                    "sourceHeight": source_height,
+                    "finalHeight": args.expected_height,
+                    "upscale": round(upscale, 2) if upscale else None,
+                    "maxUpscale": args.max_upscale,
+                },
+            )
         add_check(
             checks,
             "final_fps",

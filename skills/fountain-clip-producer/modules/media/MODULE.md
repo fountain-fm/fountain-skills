@@ -33,15 +33,15 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 2. Cut an HLS source from the master playlist, with one `-ss` and an explicit program map:
 
    ```bash
-   # Read the programs first, then cut the one whose video is the resolution you want.
+   # Read the programs first, and take the id of the tallest video. Never assume an order.
    ffprobe -v error -show_entries program=program_id:stream=width,height,codec_type -of json "$MEDIA_URL"
    
    # -ss before -i seeks the master one time, so the video and its audio group move together.
-   # -map takes program 1, which pairs that video with its own audio.
+   # -map takes the chosen program, which pairs that video with its own audio.
    # -t fetches the span alone, and never the whole episode.
    # -crf 18 and the aac bitrate keep the master good enough for every module after this one.
    ffmpeg -hide_banner -y -ss "$ROUGH_START" -i "$MEDIA_URL" \
-     -map 0:p:1:v:0 -map 0:p:1:a:0 -t "$ROUGH_DURATION" \
+     -map "0:p:$PROGRAM:v:0" -map "0:p:$PROGRAM:a:0" -t "$ROUGH_DURATION" \
      -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k \
      -movflags +faststart clip-rough.mp4
    ```
@@ -93,7 +93,9 @@ Two seeks then land at two real positions, and ffmpeg muxes them with a constant
 That reads as lip-sync drift of several seconds, it is constant for the whole clip, and a quick look misses it.
 
 A bare master playlist with no map makes ffmpeg take the lowest bandwidth, which is often 360p.
-Standardise on 720p unless the request needs more, because a 1080p HLS re-encode is much slower.
+Take the tallest rendition the master offers, because a vertical crop keeps only about a third of the width:
+a 720p source gives 405x720 real pixels for a 1080x1920 delivery, and 1080p gives 608x1080.
+A cut of the tallest rendition costs seconds, and no later module can put back what this one did not fetch.
 
 To confirm sync on an HLS source, cut a short reference and compare the audio envelopes.
 Use a window of at least ±5 seconds, because a narrow window reports a small wrong offset and hides a large one.

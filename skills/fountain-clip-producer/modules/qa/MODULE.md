@@ -12,7 +12,7 @@ Nothing reaches the user until that gate reports a pass.
 
 ## Input
 
-- The clean master, and the final export.
+- The clean master, the final export, and the landscape master of module **media**.
 - The expected width, height, frame rate, and duration.
 - The crop plan and the visual QA report of module **framing**, and the contact sheet.
 - The caption fit report of module **captions**, when the export carries captions.
@@ -39,6 +39,7 @@ Nothing reaches the user until that gate reports a pass.
    ```bash
    scripts/validate-clip.py \
      --clean-master clip-vertical.mp4 --final clip-vertical-captioned.mp4 \
+     --landscape-master clip-landscape-master.mp4 \
      --caption-fit-report caption-fit-report.json \
      --visual-report visual-qa-report.json --contact-sheet contact-sheet.jpg \
      --expected-width 1080 --expected-height 1920 --expected-fps 30 \
@@ -59,6 +60,7 @@ The gate blocks every tier above a rough cut, and it asks for all of this:
 
 - The final file exists and is not empty.
 - The width, the height, the frame rate, the duration, and the audio stream match what was expected.
+- The landscape master is tall enough for the export, because a container says 1080x1920 whatever it holds.
 - No render pass and no caption pass introduced a black interval.
 - A contact sheet exists, and somebody looked at it.
 - The crop plan records a decision for each scene cut.
