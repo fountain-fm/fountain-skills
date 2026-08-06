@@ -1,16 +1,18 @@
 ---
 name: trend-discovery
-description: Scan news and social sources, score trends, and translate the strongest into theme search terms.
+description: Scan the news, score the trends, and translate the strongest into theme search terms.
 ---
 
 ## Overview
 
 A trend is ready when it has a score, a mapped narrative, and 2-4 search terms for skill **fountain-clip-finder**.
 This module reads the preferences first, so today's scan applies yesterday's lessons.
-It does not touch the archive or score clips - that starts in module **pack-assembly**.
+It does not touch the archive or score clips.
+That work starts when module **pack-assembly** briefs skill **fountain-clip-finder**.
 
 ## Input
 
+- `show` - the show the loop runs for.
 - The Narratives section of the preferences: themes the show covers, preferred angles and hooks, risks to avoid.
 - The Editorial section of the preferences, including the learnings of skill **[fountain-stats]**.
 

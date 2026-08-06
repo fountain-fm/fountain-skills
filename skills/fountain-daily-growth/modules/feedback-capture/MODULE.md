@@ -8,7 +8,7 @@ description: Turn the operator's review feedback into durable entries in the pre
 This module makes the loop learn without local state.
 It distills why the operator approved, edited, or rejected each item, and writes the durable lessons into
 the preferences.
-Module **trend-discovery** and skill **[fountain-stats]** read those lessons on the next run.
+Module **trend-discovery** reads those lessons on the next run.
 It does not log posts - the posts and their metadata live in the API.
 
 ## Input
@@ -34,8 +34,6 @@ It does not log posts - the posts and their metadata live in the API.
 4. When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 
 ## Additional notes
-
-A skill name in square brackets is planned but not in this repository yet.
 
 An outcome with no reason teaches nothing - ask the operator for the reason when it is unclear.
 

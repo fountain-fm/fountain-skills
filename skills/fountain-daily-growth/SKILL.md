@@ -19,8 +19,8 @@ Skill **[fountain-stats]** closes the loop: its learnings feed the next run.
 ## Output
 
 - `fountain/outputs/daily-growth/<show>/pack-<date>.md` - the day's clip pack, where `<show>` is the show title.
-- One draft `SocialPost` for each proposed clip, with its rendered video attached.
-- Scheduled posts, created through skill **[fountain-post-scheduler]**.
+- One draft `SocialPost` for each proposed clip on each channel, with its rendered video attached.
+- The approved posts, scheduled through skill **[fountain-post-scheduler]**.
 - Updated preferences after the review.
 
 ## Housekeeping
@@ -48,7 +48,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 A skill name in square brackets is planned but not in this repository yet.
 
-You MUST NOT approve, schedule, or publish a post, because only the operator decides that.
+You MUST NOT approve a post, and you MUST NOT schedule or publish one that the operator has not approved.
 
 This skill owns everything upstream of scheduling.
 Finding and rendering clips is the job of skill **fountain-clip-finder** and skill **fountain-clip-producer**.
@@ -59,7 +59,6 @@ Run skill **[fountain-stats]** earlier in the day, so fresh learnings exist to a
 
 When a dependency fails, degrade honestly:
 
-- No trend data - build the pack from news sources alone and say so at the review.
 - No clean candidate for a trend - drop the trend, do not force a match.
 - A render or scheduling failure - report it, keep the assets, and never claim a post was scheduled that was not.
 

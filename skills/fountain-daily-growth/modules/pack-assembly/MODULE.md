@@ -1,6 +1,6 @@
 ---
 name: pack-assembly
-description: Turn verified clip candidates into a rendered, safety-checked daily clip pack for operator review.
+description: Turn scored trends into a rendered, safety-checked daily clip pack for operator review.
 ---
 
 ## Overview
@@ -12,8 +12,9 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
 
 ## Input
 
+- `show` - the show the loop runs for.
 - Scored, translated trends from module **trend-discovery**, each with its sources.
-- The show's platforms, clip shapes, and voice notes from the preferences.
+- The show's platforms, clip shapes, and voice notes, from the Editorial and Other sections of the preferences.
 
 ## Output
 
@@ -51,7 +52,7 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
    the on-camera speaker.
    Update each post that changes via the Social API.
 7. Assemble and send the pack one time.
-   Each entry MUST include: working title, episode reference, thumbnail and preview links, duration, speaker and
+   Each entry MUST include: working title, episode reference, a preview link, duration, speaker and
    confirmed handle, narrative, the "why publish today" paragraph, the full clip transcript, per-platform copy,
    clip path, QA status, posting window in the audience timezone, and an approve / edit / reject prompt.
 8. After the operator's review, build a brief per approved item and invoke skill **[fountain-post-scheduler]**.
@@ -75,8 +76,8 @@ Safety pass:
 Speaker tagging:
 
 - Tag whoever is on camera - verify it, because multi-host shows often cut to a reaction shot.
-- Use only that platform's confirmed handle from the episode's show notes or the handle library in
-  the preferences.
+- Use only that platform's confirmed handle from the episode's show notes or the handle library in the
+  Other section of the preferences.
 - Credit by name when no handle is confirmed for that platform - never guess or reuse a handle across platforms.
 
 Approval:
@@ -86,5 +87,9 @@ Approval:
 - Capture the reason behind every rejection - an outcome with no reason teaches nothing (see module
   **feedback-capture**).
 
-Host a thumbnail and a preview link for every clip so the operator can review without local file access.
-Upload only finished, QA-passed clips - a preview URL is typically public the moment it exists.
+The upload on the post is the preview: it lets the operator review without local file access.
+Attach only finished, QA-passed clips, because an upload is typically public the moment it exists.
+
+A candidate that the pack passes over stays a draft in the dashboard, because the API has no way to retire
+a post.
+List the passed-over drafts at the end of the pack, so the operator is not surprised by them.
