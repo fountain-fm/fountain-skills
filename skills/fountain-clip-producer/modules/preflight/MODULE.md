@@ -24,7 +24,7 @@ It reports the environment, and it never looks at a rendered file.
 ## Requirements
 
 - ffmpeg and ffprobe.
-- Python 3.11 or later, with OpenCV.
+- Python 3.11 or later, with OpenCV 4.8 or later.
 - ImageMagick, for a captioned render.
 
 ## Process
@@ -33,10 +33,11 @@ It reports the environment, and it never looks at a rendered file.
 
    ```bash
    scripts/render-preflight.py --media clip-landscape-master.mp4 \
-     --require-magick --require-visual-qa --fonts "Montserrat Bold" --json
+     --require-magick --require-visual-qa --fonts "Montserrat,Anton" --json
    ```
 
    Drop the last three flags for an export that carries no captions.
+   Name the family alone, because a weight in the name matches nothing and reads as a missing font.
 
 2. Stop and report to the user when the report names a missing tool.
    Say which tool is absent and how to install it, because this is a fault of the machine and not of the clip.
@@ -44,6 +45,7 @@ It reports the environment, and it never looks at a rendered file.
    The order of preference is ASS, then drawtext, then a prepared transparent layer.
 4. Burn the captions with the binary that the report names, and not always with the one on the PATH.
 5. Confirm that each named font resolves to itself, and read module **fonts** when one falls back.
+   A family that the skill ships passes without a system install, because libass is given that directory.
 6. Cache the report, and run this module again only when the machine or the kind of output changes.
 
 ## Additional notes
@@ -54,6 +56,7 @@ When it finds one, the ASS path stays open and the report names that binary.
 A build without libass is a reason to use the other binary, and never a reason to drop to a lesser renderer.
 
 The report also names the Python interpreter that carries OpenCV, which module **framing** needs for its scripts.
+An interpreter older than OpenCV 4.8 carries no `FaceDetectorYN`, and that is a missing tool rather than a warning.
 
 A prepared transparent layer is the last choice, and it needs its own checks in module **qa**.
 Reach for it only when no build on the machine can burn an ASS file.

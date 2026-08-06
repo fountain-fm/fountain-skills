@@ -11,29 +11,38 @@ Each anchor carries face_h as well as face_cx/face_cy, because matching
 apparent head size between speakers is what stops two crops of one frame from
 reading as two crops of one frame.
 
+Detection uses the YuNet model the skill bundles, and not a Haar cascade. A
+cascade misses a head that is turned, lit from one side, or far from the
+camera -- exactly the head on the far side of a wide two-shot -- and it misses
+it silently, which reads as a one-speaker frame.
+
 Usage:
     extract-face-framing.py <video> [start_seconds] [end_seconds]
-                            [--speakers N] [--crop-width N]
+                            [--speakers N] [--crop-width N] [--model PATH]
 """
 
 import argparse
 import json
 import sys
+from pathlib import Path
 
 import cv2
 import numpy as np
 
-# The Haar cascade throws false positives on bookshelves, posters, mics, and
-# torsos when run unconstrained. Restricting detection to the plausible face
-# region (central 20-80% horizontally, upper 8-62% vertically) filters those
-# out and is what makes the median face center reliable.
-MIN_X, MAX_X = 0.20, 0.80
-MIN_Y, MAX_Y = 0.08, 0.62
+# YuNet scores every box, so the plausible-face region only has to reject the
+# confident-but-irrelevant: a face on a poster, a monitor, or a wall photo.
+# It is deliberately wide, because a wide two-shot puts a head near the edge
+# and a guard that clips one of them hides the two-shot from the split test.
+MIN_X, MAX_X = 0.04, 0.96
+MIN_Y, MAX_Y = 0.04, 0.72
 
-# A boxed side-by-side layout puts each speaker nearer the frame edge than a
-# single-camera shot ever does, so the horizontal guard has to open up when
-# more than one speaker is expected.
-MULTI_MIN_X, MULTI_MAX_X = 0.04, 0.96
+# A head smaller than this share of the frame is scenery rather than a speaker.
+MIN_FACE_H = 0.05
+
+# The detector's own thresholds. 0.6 keeps a head turned far enough that only
+# one eye is visible, and still refuses the background.
+SCORE_THRESHOLD = 0.6
+NMS_THRESHOLD = 0.3
 
 # Two clusters count as genuinely separate speakers only when they are this
 # far apart (as a fraction of frame width) and both are seen this often.
@@ -46,40 +55,50 @@ MIN_CLUSTER_SUPPORT = 0.15
 LOOK_ROOM = 0.06
 
 # ...and only when the two faces are actually on screen TOGETHER this often.
-# A multicam edit shows each person alone on their own camera, so pooling the
-# faces across time finds two clusters there too -- but that footage wants a
-# crop per segment from this module, not a cut list from module speakers.
+# Pooling faces across time finds two clusters on any footage that cuts between
+# two people, and those are one crop each rather than a shared frame to split.
 MIN_COOCCURRENCE = 0.25
 
 
-def iou(a, b):
-    ax, ay, aw, ah = a
-    bx, by, bw, bh = b
-    x0, y0 = max(ax, bx), max(ay, by)
-    x1, y1 = min(ax + aw, bx + bw), min(ay + ah, by + bh)
-    if x1 <= x0 or y1 <= y0:
-        return 0.0
-    overlap = (x1 - x0) * (y1 - y0)
-    return overlap / float(aw * ah + bw * bh - overlap)
+# A nose this far off the midpoint between the eyes, measured in eye-widths,
+# means the head is turned rather than facing the camera.
+TURN_RATIO = 0.15
+
+MODEL_NAME = "face-detection-yunet-2023mar.onnx"
 
 
-FRONTAL, PROFILE = 0, 1
+def find_model(explicit=None):
+    """Locate the bundled detector. The skill ships it beside the fonts, so
+    walk up from this script rather than depend on a working directory."""
+    if explicit:
+        path = Path(explicit)
+        if not path.is_file():
+            sys.exit(f"detector model not found: {path}")
+        return str(path)
+    for parent in Path(__file__).resolve().parents:
+        candidate = parent / "assets" / "models" / MODEL_NAME
+        if candidate.is_file():
+            return str(candidate)
+    sys.exit(f"detector model {MODEL_NAME} not found in any assets/models above this script")
 
 
-def suppress(faces, thresh=0.4):
-    """The frontal, profile and flipped-profile passes all fire on the same
-    face, so collapse overlapping boxes before anything counts them.
+def facing_from_landmarks(landmarks):
+    """Which way the head points, from the eyes and the nose.
 
-    Each face arrives as (rank, box). A frontal box beats a profile one on the
-    same face, and only then does the larger box win. Ranking by area alone
-    picks the profile box, which is wider and sits off to the side of the head,
-    and that drags the measured centre far enough to miscentre the crop.
+    A head turned toward the right of frame carries its nose right of the
+    midpoint between the eyes. Measuring the shift in eye-widths keeps the
+    test the same for a near face and a far one.
     """
-    kept = []
-    for _, face in sorted(faces, key=lambda f: (f[0], -f[1][2] * f[1][3])):
-        if all(iou(face, other) < thresh for other in kept):
-            kept.append(face)
-    return kept
+    right_eye, left_eye, nose = landmarks[0], landmarks[1], landmarks[2]
+    eye_span = abs(left_eye[0] - right_eye[0])
+    if eye_span < 1:
+        return None
+    ratio = (nose[0] - (right_eye[0] + left_eye[0]) / 2) / eye_span
+    if ratio > TURN_RATIO:
+        return "right"
+    if ratio < -TURN_RATIO:
+        return "left"
+    return None
 
 
 def cluster_1d(values, k, iters=25):
@@ -97,7 +116,7 @@ def cluster_1d(values, k, iters=25):
     return centroids, labels
 
 
-def detect(video, t0, t1, step, wide):
+def detect(video, t0, t1, step, model):
     """Sample the segment and return every surviving face as (cx, cy, h)."""
     cap = cv2.VideoCapture(video)
     fps = cap.get(cv2.CAP_PROP_FPS) or 30
@@ -105,10 +124,7 @@ def detect(video, t0, t1, step, wide):
     if t1 is None:
         t1 = duration
 
-    frontal = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    profile = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_profileface.xml")
-    lo_x, hi_x = (MULTI_MIN_X, MULTI_MAX_X) if wide else (MIN_X, MAX_X)
-
+    detector = None
     found = []
     facings = []
     per_frame = []
@@ -119,35 +135,26 @@ def detect(video, t0, t1, step, wide):
         ok, frame = cap.read()
         if not ok:
             break
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        frame_h, frame_w = gray.shape
-        min_side = int(frame_h * 0.18)
+        frame_h, frame_w = frame.shape[:2]
+        if detector is None:
+            # The input size is fixed at build time, so the detector is built
+            # once the first frame has told us what it actually is.
+            detector = cv2.FaceDetectorYN.create(model, "", (frame_w, frame_h), SCORE_THRESHOLD, NMS_THRESHOLD)
 
-        raw = [(FRONTAL, tuple(f)) for f in frontal.detectMultiScale(gray, 1.1, 8, minSize=(min_side, min_side))]
-        raw += [(PROFILE, tuple(f)) for f in profile.detectMultiScale(gray, 1.1, 8, minSize=(min_side, min_side))]
-        # The profile cascade only sees left-facing heads; flip to catch the rest.
-        flipped = cv2.flip(gray, 1)
-        flipped_boxes = set()
-        for x, y, w, h in profile.detectMultiScale(flipped, 1.1, 8, minSize=(min_side, min_side)):
-            box = (frame_w - x - w, y, w, h)
-            flipped_boxes.add(box)
-            raw.append((PROFILE, box))
-
-        # Which pass caught the head also says which way it points: the profile
-        # cascade only fires on one side, so the flipped pass means the subject
-        # faces the other way. That is what sets the look room below.
-        facing_of = {
-            box: ("right" if rank == PROFILE and box in flipped_boxes else "left")
-            for rank, box in raw
-            if rank == PROFILE
-        }
+        # YuNet runs its own non-maximum suppression, and returns one row per
+        # face: box, then five landmarks, then the score.
+        _, faces = detector.detect(frame)
         kept = []
-        for x, y, w, h in suppress(raw):
+        for row in faces if faces is not None else []:
+            x, y, w, h = row[:4]
             cx, cy = x + w / 2, y + h / 2
-            if lo_x * frame_w < cx < hi_x * frame_w and MIN_Y * frame_h < cy < MAX_Y * frame_h:
-                found.append((cx, cy, float(h)))
-                facings.append(facing_of.get((x, y, w, h)))
-                kept.append(cx)
+            if not (MIN_X * frame_w < cx < MAX_X * frame_w and MIN_Y * frame_h < cy < MAX_Y * frame_h):
+                continue
+            if h < MIN_FACE_H * frame_h:
+                continue
+            found.append((float(cx), float(cy), float(h)))
+            facings.append(facing_from_landmarks(row[4:14].reshape(5, 2)))
+            kept.append(float(cx))
         if kept:
             per_frame.append(sorted(kept))
         t += step
@@ -185,12 +192,12 @@ def look_offset(facing):
     return 0.5
 
 
-def build_anchor(points, frame_w, crop_width, facing=None):
+def build_anchor(points, frame_w, crop_width, facing=None, look_room=True):
     cxs = [p[0] for p in points]
     face_cx = float(np.median(cxs))
     # Look room: a head pointing right needs the space on its right, so it sits
     # left of the crop centre. A head facing the camera stays centred.
-    offset = look_offset(facing)
+    offset = look_offset(facing) if look_room else 0.5
     return {
         "face_cx": round(face_cx, 1),
         "face_cy": round(float(np.median([p[1] for p in points])), 1),
@@ -202,10 +209,10 @@ def build_anchor(points, frame_w, crop_width, facing=None):
     }
 
 
-def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
-    found, facings, per_frame, frame_w, frame_h = detect(video, t0, t1, step, wide=speakers > 1)
+def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1, model=None):
+    found, facings, per_frame, frame_w, frame_h = detect(video, t0, t1, step, find_model(model))
     if not found:
-        return {"ok": False, "reason": "no faces in constrained region"}
+        return {"ok": False, "reason": "no faces in the plausible face region"}
     together = cooccurrence(per_frame, frame_w)
 
     if crop_width is None:
@@ -233,9 +240,10 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
             centroids, _ = split
             return {
                 "ok": False,
-                "reason": "two separated face clusters found -- this looks like a side-by-side or "
-                "wide two-shot. Re-run with --speakers 2 and plan the cut list with module shots; "
-                "a single crop here lands between the faces.",
+                "reason": "two separated face clusters share the frame, so a single crop over this "
+                "span lands between the faces. When the source cuts, measure each scene-cut segment "
+                "on its own. When it never cuts, re-run with --speakers 2 and plan the cut list "
+                "with module shots.",
                 "cluster_cx": [round(float(c), 1) for c in sorted(centroids)],
                 "cooccurrence": round(together, 3),
                 "frameW": frame_w,
@@ -262,8 +270,15 @@ def measure(video, t0=0.0, t1=None, step=0.4, crop_width=None, speakers=1):
         }
 
     _, labels = split
-    groups = [[p for p, lab in zip(found, labels, strict=True) if lab == j] for j in (0, 1)]
-    anchors = [build_anchor(g, frame_w, crop_width) for g in groups if g]  # module shots sets its own look room
+    pairs = list(zip(found, facings, strict=True))
+    groups = [[pf for pf, lab in zip(pairs, labels, strict=True) if lab == j] for j in (0, 1)]
+    # The anchor reports which way each head points, but leaves the look room to
+    # module shots, which sizes its own crops and applies its own offset.
+    anchors = [
+        build_anchor([p for p, _ in g], frame_w, crop_width, dominant_facing([f for _, f in g]), look_room=False)
+        for g in groups
+        if g
+    ]
     anchors.sort(key=lambda a: a["face_cx"])
     for i, anchor in enumerate(anchors):
         anchor["position"] = "left" if i == 0 else "right"
@@ -297,9 +312,21 @@ def main():
         "derived from the source's actual detected height -- only "
         "override this for a non-standard target aspect ratio.",
     )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help="Path to the YuNet ONNX model. Defaults to the copy the skill bundles in assets/models.",
+    )
     args = parser.parse_args()
 
-    result = measure(args.video, args.start, args.end, crop_width=args.crop_width, speakers=args.speakers)
+    result = measure(
+        args.video,
+        args.start,
+        args.end,
+        crop_width=args.crop_width,
+        speakers=args.speakers,
+        model=args.model,
+    )
     print(json.dumps(result, indent=2))
     if not result.get("ok"):
         sys.exit(1)

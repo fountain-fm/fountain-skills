@@ -23,7 +23,8 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 ## Requirements
 
 - ffmpeg and ffprobe.
-- Python 3.11 or later, with OpenCV.
+- Python 3.11 or later, with OpenCV 4.8 or later, which is the first release that carries `FaceDetectorYN`.
+- The YuNet model in `assets/models`, which the skill ships and the script finds on its own.
 
 ## Process
 
@@ -43,8 +44,8 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
    ```
 
    The script returns `crop_x` directly, already clamped to the frame.
-   It stops when it finds two separated faces, because one crop then lands between them.
-   Measure both with `--speakers 2`, and give the anchors to module **shots** to plan the cuts.
+   It stops when two faces share the frame, because one crop then lands between them.
+   Measure each scene-cut segment alone, or run `--speakers 2` on static footage and give module **shots** the anchors.
 
 3. Write the crop plan, with the span, the speaker, the crop box, the face centre, and the reason for each row.
 4. Apply the crop, and switch it on the cut times when the clip holds more than one segment:
@@ -75,16 +76,14 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
      clip-vertical.mp4
    ```
 
-7. Make a contact sheet that samples every 2 seconds, and a full-size frame at each crop change.
-8. Sample the export for frames that hold no person:
+7. Make a contact sheet every 2 seconds and a full-size frame at each crop change, then sample the export
+   for frames that hold no person:
 
    ```bash
    scripts/visual-person-qa.py --video clip-vertical.mp4 --interval 2 --report visual-qa-report.json
    ```
 
 ## Additional notes
-
-These are the rules for a delivered crop:
 
 - Every sampled frame holds a face and an upper body, and mostly background or empty room is a failed export.
 - The face sits a little away from the centre, on the side it looks away from, so it looks into the frame.
@@ -95,9 +94,10 @@ You MUST NOT deliver a crop segment that nobody looked at, and you MUST NOT lett
 The crop holds still inside a shot and changes only on a cut, even when the face wanders inside it.
 A crop that drifts while the speaker talks reads as a pan across a still frame, and the viewer sees it.
 
-The script reports no face on a wide two-shot and on screen content, and a 9:16 crop fails both:
-one lands between two people, and the other cuts off the thing the clip exists to show.
-Stop, say what is lost, and offer a letterbox, a blurred fill from module **overlays**, a crop from
-module **shots**, or a different span, and render nothing until the user chooses.
+A 9:16 crop fails a wide two-shot and screen content alike, and the script refuses both and names which,
+because it sees two faces on the first and none on the second.
+Say what is lost, and offer a letterbox, a blurred fill from module **overlays**, a crop from module
+**shots**, or a different span, and render nothing until the user chooses.
 
-The detector misfires on dark footage and on low contrast, so the contact sheet and your own eyes decide there.
+The detector holds a turned head and a backlit one, but it is weakest on dark footage and low contrast,
+so the contact sheet and your own eyes decide there.

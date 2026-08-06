@@ -2,7 +2,8 @@
 """Validate that the current environment can actually render what's being
 asked for, before spending time on a full render. Checks ffmpeg/ffprobe
 presence, required filters, which caption renderer is available, and which
-python interpreter has cv2 for the framing module's visual-person-qa.py.
+python interpreter carries a cv2 new enough for the framing module's
+face detection and visual-person-qa.py.
 """
 
 import argparse
@@ -45,7 +46,25 @@ def ffmpeg_encoders(ffmpeg):
     return proc.stdout
 
 
-def check_font(name):
+def bundled_families(fonts_dir):
+    """Family names of the fonts the skill ships, read from the files themselves.
+
+    libass is handed this directory with fontsdir, so a family it holds needs
+    no system install and must not be reported as missing.
+    """
+    families = {}
+    for path in sorted(Path(fonts_dir).glob("*.[to]t[fc]")):
+        try:
+            proc = run(["fc-scan", "--format", "%{family}", str(path)])
+        except OSError:
+            return families
+        if proc.returncode == 0:
+            for family in proc.stdout.split(","):
+                families.setdefault(family.strip().lower(), str(path))
+    return families
+
+
+def check_font(name, bundled=None):
     """Resolve a font family name the same way libass will at render time.
 
     fc-match falls back to a default family instead of erroring when a font
@@ -58,6 +77,8 @@ def check_font(name):
     the entire preflight run inside main()'s single try/except, silently
     skipping every check that comes after the font loop (e.g. --media).
     """
+    if bundled and name.strip().lower() in bundled:
+        return {"requested": name, "resolved": name, "matched": True, "source": bundled[name.strip().lower()]}
     try:
         proc = run(["fc-match", name])
     except OSError as exc:
@@ -120,13 +141,18 @@ def main():
     parser.add_argument(
         "--require-visual-qa",
         action="store_true",
-        help="Fail if no python with cv2 is found for framing's visual-person-qa.py.",
+        help="Fail if no python with cv2 4.8+ is found for framing's face detection and visual-person-qa.py.",
     )
     parser.add_argument(
         "--fonts",
         help="Comma-separated font family names a caption preset "
         "needs (see the fonts module) — fails if any resolves to a "
         "fallback family instead of the requested one.",
+    )
+    parser.add_argument(
+        "--fonts-dir",
+        default=str(Path(__file__).resolve().parents[3] / "assets" / "fonts"),
+        help="Directory of bundled fonts that libass is given with fontsdir. Defaults to the skill's own.",
     )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
@@ -188,23 +214,25 @@ def main():
 
         # Find a python interpreter with cv2 for framing's visual-person-qa.py
         # and extract-face-framing.py. Check the current interpreter first,
-        # then a project .venv if one exists nearby.
+        # then a project .venv if one exists nearby. FaceDetectorYN arrived in
+        # OpenCV 4.8, and an older build imports cleanly but cannot detect.
         candidates = [sys.executable]
         for venv in (Path.cwd() / ".venv", Path(__file__).resolve().parents[3] / ".venv"):
             venv_python = venv / "bin" / "python"
             if venv_python.exists():
                 candidates.append(str(venv_python))
         for candidate in candidates:
-            proc = run([candidate, "-c", "import cv2"])
+            proc = run([candidate, "-c", "import cv2; cv2.FaceDetectorYN"])
             if proc.returncode == 0:
                 report["visual_qa_python"] = candidate
                 break
         if report["visual_qa_python"] is None and args.require_visual_qa:
-            report["missing"].append("python with cv2 (for framing's visual-person-qa.py)")
+            report["missing"].append("python with cv2 4.8+ (for framing's face detection and visual QA)")
 
         if args.fonts:
+            bundled = bundled_families(args.fonts_dir) if Path(args.fonts_dir).is_dir() else {}
             for name in [f.strip() for f in args.fonts.split(",") if f.strip()]:
-                result = check_font(name)
+                result = check_font(name, bundled)
                 report["fonts"].append(result)
                 if not result["matched"]:
                     detail = result.get("error") or f"resolved to {result['resolved'] or 'nothing'}"
