@@ -3,6 +3,11 @@
 person is detected — used as evidence for the framing QA gate, not the sole
 authority (a human contact-sheet check is authoritative when the detector is
 known to be unreliable for the footage).
+
+Face detection uses the same YuNet model as extract-face-framing.py. A cascade
+loses a head in profile, which is what a correctly framed two-shot speaker is
+for the whole shot, so it failed the very crops the framing module had just
+measured as good.
 """
 
 import argparse
@@ -12,46 +17,34 @@ from pathlib import Path
 
 import cv2
 
-
-def load_cascade(name):
-    path = Path(cv2.data.haarcascades) / name
-    cascade = cv2.CascadeClassifier(str(path))
-    if cascade.empty():
-        raise RuntimeError(f"failed to load cascade: {path}")
-    return cascade
+MODEL_NAME = "face-detection-yunet-2023mar.onnx"
+SCORE_THRESHOLD = 0.6
+NMS_THRESHOLD = 0.3
 
 
-def detect_faces(gray, cascades, min_size, min_area):
+def find_model(explicit=None):
+    """Locate the bundled detector by walking up from this script."""
+    if explicit:
+        if not Path(explicit).is_file():
+            raise RuntimeError(f"detector model not found: {explicit}")
+        return str(explicit)
+    for parent in Path(__file__).resolve().parents:
+        candidate = parent / "assets" / "models" / MODEL_NAME
+        if candidate.is_file():
+            return str(candidate)
+    raise RuntimeError(f"detector model {MODEL_NAME} not found in any assets/models above this script")
+
+
+def detect_faces(detector, frame, min_size, min_area):
+    _, faces = detector.detect(frame)
     detections = []
-    equalized = cv2.equalizeHist(gray)
-    for label, cascade in cascades:
-        rects = cascade.detectMultiScale(equalized, scaleFactor=1.05, minNeighbors=3, minSize=min_size)
-        for x, y, w, h in rects:
-            if w * h < min_area:
-                continue
-            detections.append({"type": label, "x": int(x), "y": int(y), "w": int(w), "h": int(h), "area": int(w * h)})
-
-    # Profile cascade only detects one facing direction; flip the frame to
-    # also catch the mirrored case, then map coordinates back.
-    flipped = cv2.flip(equalized, 1)
-    width = gray.shape[1]
-    for label, cascade in cascades:
-        if label != "profile_face":
+    for row in faces if faces is not None else []:
+        x, y, w, h = (int(v) for v in row[:4])
+        if w < min_size or w * h < min_area:
             continue
-        rects = cascade.detectMultiScale(flipped, scaleFactor=1.05, minNeighbors=3, minSize=min_size)
-        for x, y, w, h in rects:
-            if w * h < min_area:
-                continue
-            detections.append(
-                {
-                    "type": "profile_face_flipped",
-                    "x": int(width - x - w),
-                    "y": int(y),
-                    "w": int(w),
-                    "h": int(h),
-                    "area": int(w * h),
-                }
-            )
+        detections.append(
+            {"type": "face", "x": x, "y": y, "w": w, "h": h, "area": w * h, "score": round(float(row[14]), 3)}
+        )
     return detections
 
 
@@ -89,13 +82,11 @@ def main():
     parser.add_argument("--min-face-width-ratio", type=float, default=0.035)
     parser.add_argument("--min-face-area-ratio", type=float, default=0.01)
     parser.add_argument("--report", required=True)
+    parser.add_argument("--model", default=None, help="Path to the YuNet ONNX model. Defaults to the bundled copy.")
     args = parser.parse_args()
 
-    cascades = [
-        ("frontal_face", load_cascade("haarcascade_frontalface_default.xml")),
-        ("frontal_face_alt", load_cascade("haarcascade_frontalface_alt2.xml")),
-        ("profile_face", load_cascade("haarcascade_profileface.xml")),
-    ]
+    model = find_model(args.model)
+    detector = None
 
     cap = cv2.VideoCapture(args.video)
     if not cap.isOpened():
@@ -118,8 +109,9 @@ def main():
         height, width = frame.shape[:2]
         min_face = max(32, int(width * args.min_face_width_ratio))
         min_area = int(width * height * args.min_face_area_ratio)
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = detect_faces(gray, cascades, (min_face, min_face), min_area)
+        if detector is None:
+            detector = cv2.FaceDetectorYN.create(model, "", (width, height), SCORE_THRESHOLD, NMS_THRESHOLD)
+        faces = detect_faces(detector, frame, min_face, min_area)
         # Only fall back to the (slower, coarser) full-body detector when no
         # face was found — most frames resolve on the face check alone.
         people = detect_people_hog(frame) if not faces else []
