@@ -33,8 +33,10 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 2. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
 
    ```bash
-   # -show_entries lists every program with the size of its video, which is what names the tallest.
-   ffprobe -v error -show_entries program=program_id:stream=width,height,codec_type -of json "$MEDIA_URL"
+   # -show_entries lists each program with the size of its video, and the tallest of them wins.
+   PROGRAM=$(ffprobe -v error -show_entries program=program_id:stream=width,height,codec_type \
+     -of json "$MEDIA_URL" | python3 -c "import json,sys; ps=json.load(sys.stdin)['programs']; \
+     print(max((max((s.get('height') or 0) for s in p['streams']), p['program_id']) for p in ps)[1])")
    
    # -ss before -i seeks the master one time, so the video and its audio group move together.
    # -map takes the chosen program, which pairs that video with its own audio.
@@ -50,8 +52,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
    ```bash
    # -f takes the best video under 1080p and pairs it with the best audio.
-   # --download-sections fetches the window alone, and never the whole episode.
-   # --force-keyframes-at-cuts lands near the cut, though not exactly on it.
+   # --download-sections fetches the window alone, and --force-keyframes-at-cuts lands near the cut.
    yt-dlp -f "bestvideo[height<=1080]+bestaudio" \
      --download-sections "*$ROUGH_START-$ROUGH_END" \
      --force-keyframes-at-cuts \
@@ -93,9 +94,8 @@ Two seeks then land at two real positions, and ffmpeg muxes them with a constant
 That reads as lip-sync drift of several seconds, it is constant for the whole clip, and a quick look misses it.
 
 A bare master playlist with no map makes ffmpeg take the lowest bandwidth, which is often 360p.
-Take the tallest rendition the master offers, because a vertical crop keeps only about a third of the width:
-a 720p source gives 405x720 real pixels for a 1080x1920 delivery, and 1080p gives 608x1080.
-A cut of the tallest rendition costs seconds, and no later module can put back what this one did not fetch.
+A vertical crop keeps about a third of the width, so 720p gives 405x720 of real picture for a 1080x1920
+delivery, and 1080p gives 608x1080. No later module puts back what this one did not fetch.
 
 To confirm sync on an HLS source, cut a short reference and compare the audio envelopes.
 Use a window of at least ±5 seconds, because a narrow window reports a small wrong offset and hides a large one.

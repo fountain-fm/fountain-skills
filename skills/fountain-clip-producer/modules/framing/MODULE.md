@@ -51,10 +51,10 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 4. Apply the crop, and switch it on the cut times when the clip holds more than one segment:
 
    ```bash
-   # crop takes a 9:16 window whose x holds until a cut, scale fits the shape, fps steadies it.
+   # crop uses the cropW and frameH the script measured, scale fits the shape, fps steadies it.
    ffmpeg -hide_banner -y -i clip-landscape-master.mp4 \
-     -vf "crop=608:1080:'if(lt(t,$CUT_A),$SEG1_X,$SEG2_X)':0,scale=1080:1920,fps=30" \
-     -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k -movflags +faststart \
+     -vf "crop=$CROP_W:$FRAME_H:'if(lt(t,$CUT_A),$SEG1_X,$SEG2_X)':0,scale=1080:1920,fps=30" \
+     -pix_fmt yuv420p -c:v libx264 -preset veryfast -crf 18 -c:a aac -b:a 192k -movflags +faststart \
      clip-vertical.mp4
    ```
 
