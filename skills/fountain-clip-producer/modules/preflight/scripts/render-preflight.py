@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 REQUIRED_FILTERS = {
-    "core": {"crop", "scale", "overlay", "fps", "format", "loudnorm"},
+    "core": {"crop", "scale", "overlay", "fps", "format"},
     "subtitle": {"ass", "subtitles"},
     "text": {"drawtext"},
 }

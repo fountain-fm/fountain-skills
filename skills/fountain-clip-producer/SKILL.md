@@ -87,8 +87,7 @@ width: the height of that rendition is the real resolution of the clip, and modu
 
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
 
-Loudness is requested work: normalise when the user asks, or when the source is clearly quiet.
-A letterbox is requested work as well, and black bars are never your decision.
+A letterbox is requested work, and black bars are never your decision.
 
 To change a clip this skill already made, read the manifest and the QA report first, and reuse the master,
 the crop plan, and the caption assets that are still correct. Write each new output under a new name.
