@@ -445,7 +445,11 @@ def build_command(layers, args):
             color = ff_color(layer["color"], "audiogram color")
             if filt == "showwaves":
                 graph.append(
-                    f"[0:a]showwaves=s={layer['width']}x{layer['height']}:mode={mode}:colors={color}:rate=30{wave}"
+                    # draw=full paints a solid wave; the default trace is a hairline that
+                    # disappears over footage. sqrt lifts speech, which sits low on a
+                    # linear scale and otherwise reads as a flat line.
+                    f"[0:a]showwaves=s={layer['width']}x{layer['height']}:mode={mode}"
+                    f":draw=full:scale=sqrt:colors={color}:rate=30{wave}"
                 )
             else:
                 graph.append(
@@ -454,7 +458,7 @@ def build_command(layers, args):
             graph.append(f"{chain}{wave}overlay=x={x}:y={y}{out}")
             chain = out
 
-    cmd = ["ffmpeg", "-hide_banner", "-y"]
+    cmd = [args.ffmpeg, "-hide_banner", "-y"]
     for flags, path in inputs:
         if flags:
             cmd.extend(flags.split())
@@ -506,6 +510,11 @@ def main():
     parser.add_argument("--width", type=int, default=1080)
     parser.add_argument("--height", type=int, default=1920)
     parser.add_argument("--emit-plan", help="Write the fully resolved layer list (record this in the clip manifest).")
+    parser.add_argument(
+        "--ffmpeg",
+        default="ffmpeg",
+        help="ffmpeg binary to use. A stock build often lacks drawtext, so pass the one module preflight names.",
+    )
     parser.add_argument("--run", action="store_true", help="Execute the ffmpeg command instead of printing it.")
     args = parser.parse_args()
 
