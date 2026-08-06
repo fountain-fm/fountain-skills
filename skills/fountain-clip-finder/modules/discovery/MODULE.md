@@ -6,7 +6,7 @@ description: Search a show's transcripts for real moments, and score each one fo
 ## Overview
 
 Discovery decides whether a moment is worth clipping, and not yet how to cut it.
-A moment is a group of `TranscriptSearchSegment` less than 30 seconds apart, which is one continuous passage.
+A moment is a group of transcript segments less than 30 seconds apart, which is one continuous passage.
 A moment runs for a few minutes, so it is longer than a clip and too coarse to cut on.
 Discovery works from the segments alone, so it can look at many moments at one time.
 Module **media** then removes what has no video, and module **boundaries** shapes the rest.
@@ -66,9 +66,9 @@ With:
 
 ## Additional notes
 
-The vault route searches the whole archive at one time and returns `mentions` and `topics`, which a request
-about a person filters on, and joining an episode to it costs a credit for the analysis. The direct route
-reads raw transcripts, so it has neither field, needs no vault, and suits a few recent episodes.
+The vault route returns `TranscriptSearchSegment` with `mentions` and `topics`, which a request about a
+person filters on, and joining an episode to it costs a credit for the analysis. The direct route reads
+`TranscriptSegment` from the Content API, so it has neither field, needs no vault, and suits recent episodes.
 
 Spending a credit is yours to start without asking, and you MUST say what it cost and what remains as soon
 as the job is queued, and never at the end of the run.
