@@ -19,7 +19,6 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
 ## Output
 
 - `pack-<date>.md` - the review pack, written to the output folder that the skill names.
-  It goes to the operator exactly one time per run.
 - A rendered, QA-passed clip attached to every proposed post.
 
 ## Requirements
@@ -45,8 +44,7 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
    Every clip MUST be rendered and QA-passed before the review, not after approval.
 5. Write a one-paragraph "why publish today" per clip: the live trend, the narrative it maps to, the archive-match
    strength, and any supporting signal from the Editorial section of the preferences.
-   Add it to the `context` of the post via the Social API, under the note that skill **fountain-clip-finder**
-   wrote, so the reason travels with the post into the dashboard and the digests.
+   Add it to the `context` of the post via the Social API, under the note that skill **fountain-clip-finder** wrote.
 6. Run the copy and safety pass (see the notes) over the copy that skill **fountain-clip-finder** wrote, and tag
    the on-camera speaker.
    Update each post that changes via the Social API.
@@ -68,8 +66,7 @@ Safety pass:
 - Soften higher-risk wording to a questioning framing, and never schedule one until the operator explicitly cleared it.
 - Drop anything that cannot be made safe - do not soften it into something misleading.
 - Never claim the guest responds to today's news unless the clip was recorded after the event.
-- Never let a trimmed quote change what the speaker meant.
-- Never fabricate guest quotes or statistics.
+- Never let a trimmed quote change what the speaker meant, and never fabricate quotes or statistics.
 
 Speaker tagging:
 
@@ -85,6 +82,9 @@ Posting windows:
 - Load the posts that already hold a `meta.scheduled` time via the Social API, and space new ones around them.
   Two posts on one channel MUST NOT share a window.
 - The operator can veto a window at the review, because the pack entry carries it.
+- An approval can land after its window has passed.
+  Shift to the next window that obeys these rules and note the change.
+  When a day or more has passed, ask the operator again before you schedule - a pack is a claim about today.
 
 Approval:
 
