@@ -14,7 +14,7 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 
 - The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
 - The `TranscriptWord` list of that span, which the `fountain` source of the transcript carries.
-  Module **shots** also needs the speaker of each word, for a shot that holds two people.
+  Module **shots** wants the speaker of each word too, which `TranscriptWord` does not define.
 - A delivery tier, which the words of the request imply.
 
 Optional:
