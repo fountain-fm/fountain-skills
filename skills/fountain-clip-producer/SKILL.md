@@ -55,7 +55,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
 6. Run module **brand** to load the look of the show, for a clean final or a publish final.
-7. Run module **captions** when the request asks for captions, and module **fonts** with it.
+7. Run module **captions** on every portrait export, and on another shape when the request asks for it.
+   Run module **fonts** with it.
 8. Run module **overlays** when the request asks for a layer.
 9. Run module **qa** as the blocking gate.
    Deliver nothing until it reports a pass.
@@ -66,11 +67,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 There are three delivery tiers, and each one adds to the tier before it:
 
 - A rough cut is a fast file for review, with no captions and no gate.
-- A clean final is publishable and carries no captions.
+- A clean final is publishable, and a portrait export carries captions, because it is watched with the sound off.
   This is the tier for "produce this clip", when the request names neither captions nor packaging.
-- A publish final adds the captions, the overlays, and the full gate.
+- A publish final adds the overlays, the packaging, and the full gate.
 
-You MUST NOT raise the tier on your own, because captions and polish are requested work.
+You MUST NOT raise the tier on your own, because polish is requested work.
+Captions on a portrait export are not a raise, and a square or a landscape export still waits to be asked.
 
 A clip needs the `fountain` transcript of its episode, and never the `rss` one alone.
 The `rss` transcript is timed against the feed, which carries a different advertisement cut, so its clock
@@ -85,11 +87,9 @@ A vertical crop keeps about a third of the width, so a 720p source delivers a 10
 The span is settled before this skill runs.
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
 
-Loudness is requested work too.
-Normalise only when the user asks, or when the source is clearly quiet against the platform norm.
+Loudness is requested work: normalise when the user asks, or when the source is clearly quiet.
 
 A letterbox is requested work as well, and black bars are never your decision.
-When a segment holds no clean crop, module **framing** stops and asks rather than pad the frame.
 
 To change a clip that this skill already made, read the manifest and the QA report first.
 Reuse the master, the crop plan, and the caption assets that are still correct.

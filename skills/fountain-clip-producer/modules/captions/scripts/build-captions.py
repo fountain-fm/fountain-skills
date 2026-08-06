@@ -825,7 +825,9 @@ def resolve_style(style_arg):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
-        "--style", required=True, help="Preset name (from modules/captions/assets/) or path to a style spec JSON."
+        "--style",
+        default="bold-social",
+        help="Preset name (from modules/captions/assets/) or path to a style spec JSON. Defaults to bold-social.",
     )
     parser.add_argument("--words", help="Word-timings JSON for the clip span. Required unless --check.")
     parser.add_argument(
