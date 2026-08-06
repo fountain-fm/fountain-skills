@@ -1,0 +1,17 @@
+{
+  "name": "handle-watermark",
+  "description": "Persistent small @handle text for the whole clip. Override layers.0.text with the show's handle — better yet, put this layer in the brand kit's standing layers so it's always on.",
+  "layers": [
+    {
+      "type": "watermark",
+      "text": "@yourshow",
+      "size": 44,
+      "color": "#FFFFFF",
+      "position": "top-left",
+      "marginH": 40,
+      "marginV": 40,
+      "borderW": 4,
+      "borderColor": "#000000"
+    }
+  ]
+}

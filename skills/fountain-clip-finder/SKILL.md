@@ -41,7 +41,7 @@ Fountain shows a post as a candidate only when it holds `source`, and only then 
 Module **copy** writes `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 
-Skill **[fountain-clip-producer]** works from `source`, and attaches the video after the user approves the post.
+Skill **fountain-clip-producer** works from `source`, and attaches the video to the post.
 
 ## Housekeeping
 
@@ -66,8 +66,6 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
-A skill name in square brackets is planned but not in this repository yet.
-
 Each module removes work from the next one, so you MUST run the four in the order above.
 
 `ts_start` and `ts_end` are always in the time of `media`, and never in the time of another file.
@@ -75,7 +73,7 @@ A YouTube cut of an episode does not run to the clock of the transcript, so modu
 
 This skill never makes a video file.
 It finds the moment, sets the span, and writes the words, and `source` holds all of that.
-Skill **[fountain-clip-producer]** renders from the post after the user approves it.
+Skill **fountain-clip-producer** renders from the post, and it does not wait for the user to approve one.
 Give the posts to that skill when the user asks for a video, and do not try to render one here.
 
 You MUST NOT approve, schedule, or publish a post, because only the user decides that.

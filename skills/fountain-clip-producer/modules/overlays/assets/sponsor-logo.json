@@ -1,0 +1,19 @@
+{
+  "name": "sponsor-logo",
+  "description": "A sponsor lockup that appears for a few seconds and leaves, sized larger than the show mark because it has to be read once. The bundled image is a placeholder.",
+  "layers": [
+    {
+      "type": "image",
+      "asset": "placeholder-sponsor.png",
+      "width": 420,
+      "opacity": 1.0,
+      "position": "bottom-center",
+      "marginH": 60,
+      "marginV": 300,
+      "start": 1.5,
+      "end": 6.5,
+      "fadeInMs": 400,
+      "fadeOutMs": 400
+    }
+  ]
+}

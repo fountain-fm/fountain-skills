@@ -1,0 +1,22 @@
+{
+  "name": "headline-bar",
+  "description": "Hook headline on a solid bar at the top (the news-clip look: dark text on a white block), plus a progress bar. Override layers.0.text per clip; set boxColor/color from the brand kit's palette.",
+  "layers": [
+    {
+      "type": "title",
+      "text": "REPLACE WITH THE CLIP HOOK",
+      "size": 56,
+      "color": "#111111",
+      "borderW": 0,
+      "boxColor": "#FFFFFF",
+      "boxPad": 18,
+      "position": "top-center",
+      "marginV": 260,
+      "start": 0,
+      "end": 3.0,
+      "fadeInMs": 150,
+      "fadeOutMs": 250
+    },
+    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+  ]
+}

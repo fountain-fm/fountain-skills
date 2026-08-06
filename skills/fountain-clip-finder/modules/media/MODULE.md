@@ -98,4 +98,4 @@ A low `anchor_coverage` means the captions and the transcript disagree, which us
 
 The map is an ephemeral output, and you MUST build it again in a later session.
 
-Skill **[fountain-clip-producer]** opens `media` at render time, so it confirms there that the video is real.
+Skill **fountain-clip-producer** opens `media` at render time, so it confirms there that the video is real.

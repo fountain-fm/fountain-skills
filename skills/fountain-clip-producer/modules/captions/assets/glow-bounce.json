@@ -1,0 +1,35 @@
+{
+  "name": "glow-bounce",
+  "description": "High-energy uppercase words popping in one at a time behind a soft warm halo rather than a hard outline. The halo has to be near-black to separate from bright footage; a bright glow only reads on a dark background.",
+  "font": {
+    "family": "Montserrat",
+    "size": 84,
+    "bold": true,
+    "case": "upper"
+  },
+  "colors": {
+    "primary": "#FFE100",
+    "highlight": "#2BFF57",
+    "outline": "#1A0A00"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 5,
+    "shadow": 0,
+    "blur": 8
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 60,
+    "marginR": 60,
+    "marginV": 250
+  },
+  "animation": {
+    "type": "word-pop",
+    "appearMs": 120,
+    "settleMs": 100,
+    "overshootPct": 114,
+    "entryPct": 55,
+    "leadMs": 60
+  }
+}

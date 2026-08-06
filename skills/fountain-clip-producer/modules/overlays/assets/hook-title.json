@@ -1,0 +1,18 @@
+{
+  "name": "hook-title",
+  "description": "Opening hook headline over the first seconds plus a retention progress bar. Override layers.0.text with the clip's hook; point layers.0.fontFile at the brand kit's font.",
+  "layers": [
+    {
+      "type": "title",
+      "text": "REPLACE WITH THE CLIP HOOK",
+      "size": 64,
+      "position": "top-center",
+      "marginV": 300,
+      "start": 0,
+      "end": 2.5,
+      "fadeInMs": 200,
+      "fadeOutMs": 300
+    },
+    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+  ]
+}

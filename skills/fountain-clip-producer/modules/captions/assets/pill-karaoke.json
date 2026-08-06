@@ -1,0 +1,35 @@
+{
+  "name": "pill-karaoke",
+  "description": "Current-word highlight rendered as a colored pill behind the active word (approximated with a thick rounded border), slightly scaled. The Opus-Clip 'Karaoke' look.",
+  "font": {
+    "family": "Montserrat",
+    "size": 92,
+    "bold": true,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#5B4DFF",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 4,
+    "shadow": 0
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 70,
+    "marginR": 70,
+    "marginV": 250
+  },
+  "grouping": {
+    "maxWords": 5
+  },
+  "animation": {
+    "type": "current-word",
+    "highlightMode": "box",
+    "activeScalePct": 104,
+    "leadMs": 80
+  }
+}

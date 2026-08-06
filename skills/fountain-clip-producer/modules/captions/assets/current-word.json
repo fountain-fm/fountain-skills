@@ -1,0 +1,34 @@
+{
+  "name": "current-word",
+  "description": "Whole phrase on screen; only the word being spoken lights up in the highlight color, then reverts. The dominant talking-head style on Shorts/Reels. No outline by default (shadow only) — style-proof on bright footage before trusting it.",
+  "font": {
+    "family": "Montserrat",
+    "size": 96,
+    "bold": true,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#F21E1B",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 0,
+    "shadow": 2
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 70,
+    "marginR": 70,
+    "marginV": 260
+  },
+  "grouping": {
+    "maxWords": 5
+  },
+  "animation": {
+    "type": "current-word",
+    "appearMs": 120,
+    "popPct": 106
+  }
+}

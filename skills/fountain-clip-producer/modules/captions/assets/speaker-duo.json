@@ -1,0 +1,38 @@
+{
+  "name": "speaker-duo",
+  "description": "Two-speaker podcast style: each speaker gets their own caption color (BBC convention: white then yellow) and a name label, so silent-autoplay viewers can follow who's talking. Override colors.speakers / grouping.speakerLabels with the show's real speaker ids and names.",
+  "font": {
+    "family": "Montserrat",
+    "size": 86,
+    "bold": true,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#FFE100",
+    "outline": "#000000",
+    "speakers": {
+      "A": "#FFFFFF",
+      "B": "#FFE45C"
+    }
+  },
+  "border": {
+    "style": "outline",
+    "outline": 4,
+    "shadow": 0
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 70,
+    "marginR": 70,
+    "marginV": 240
+  },
+  "grouping": {
+    "maxWords": 5,
+    "speakerLabels": true
+  },
+  "animation": {
+    "type": "none",
+    "leadMs": 80
+  }
+}

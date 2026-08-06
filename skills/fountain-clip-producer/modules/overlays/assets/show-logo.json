@@ -1,0 +1,16 @@
+{
+  "name": "show-logo",
+  "description": "The show's mark held in a corner for the whole clip. Point asset at the show's own file, or let module brand supply it as a standing layer. The bundled image is a placeholder.",
+  "layers": [
+    {
+      "type": "image",
+      "asset": "placeholder-logo.png",
+      "width": 120,
+      "opacity": 0.85,
+      "position": "top-right",
+      "marginH": 44,
+      "marginV": 44,
+      "fadeInMs": 300
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "typewriter",
+  "description": "Characters reveal sequentially across each phrase. Dramatic, slower pacing — best for storytelling beats, not dense speech.",
+  "font": {
+    "family": "Courier Prime",
+    "size": 80,
+    "bold": true,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#FFD400",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 3,
+    "shadow": 0
+  },
+  "position": {
+    "alignment": "bottom-center",
+    "marginL": 80,
+    "marginR": 80,
+    "marginV": 230
+  },
+  "grouping": {
+    "maxWords": 5,
+    "maxGapMs": 800
+  },
+  "animation": {
+    "type": "typewriter",
+    "msPerChar": 45
+  }
+}
