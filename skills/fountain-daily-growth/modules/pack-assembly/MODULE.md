@@ -52,7 +52,7 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
    the on-camera speaker.
    Update each post that changes via the Social API.
 7. Assemble and send the pack one time.
-   Each entry MUST include: working title, episode reference, a preview link, duration, speaker and
+   Each entry MUST include: working title, episode reference, the post id, duration, speaker and
    confirmed handle, narrative, the "why publish today" paragraph, the full clip transcript, per-platform copy,
    clip path, QA status, posting window in the audience timezone, and an approve / edit / reject prompt.
 8. After the operator's review, build a brief per approved item and invoke skill **[fountain-post-scheduler]**.
@@ -87,8 +87,9 @@ Approval:
 - Capture the reason behind every rejection - an outcome with no reason teaches nothing (see module
   **feedback-capture**).
 
-The upload on the post is the preview: it lets the operator review without local file access.
-Attach only finished, QA-passed clips, because an upload is typically public the moment it exists.
+The upload on the post is the preview: the dashboard shows a candidate post with its media.
+So the pack names each post by its id rather than hosting files, and the operator reviews from anywhere.
+Attach only finished, QA-passed clips - never a work-in-progress render.
 
 A candidate that the pack passes over stays a draft in the dashboard, because the API has no way to retire
 a post.
