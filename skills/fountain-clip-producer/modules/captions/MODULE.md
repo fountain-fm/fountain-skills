@@ -49,7 +49,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
    ```bash
    # label renders the text at the real font and size, and "%w" prints the width it took.
-   magick -background none -font assets/fonts/Montserrat-Bold.ttf -pointsize 72 \
+   magick -background none -font assets/fonts/montserrat-bold.ttf -pointsize 72 \
      label:"the line to measure" -format "%w" info:
    ```
 

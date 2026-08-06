@@ -36,7 +36,8 @@ It reports the environment, and it never looks at a rendered file.
      --require-magick --require-visual-qa --fonts "Montserrat,Anton" --json
    ```
 
-   Drop the last three flags for an export that carries no captions.
+   Drop `--require-magick` and `--fonts` for an export that carries no captions, and keep
+   `--require-visual-qa`, because module **framing** needs that interpreter on every export.
    Name the family alone, because a weight in the name matches nothing and reads as a missing font.
 
 2. Stop and report to the user when the report names a missing tool.

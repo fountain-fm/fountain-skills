@@ -40,7 +40,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - ffmpeg and ffprobe, from the Homebrew `ffmpeg-full` formula.
   The default `ffmpeg` formula carries no libass, no drawtext, and no fontconfig, so it cannot burn a caption.
 - ImageMagick, to measure the width of caption text.
-  The fonts that the presets name, and the face detection model, ship in `assets`, so no machine installs one.
+  The fonts that the presets name, and the face detection model, ship in `assets`, so no machine installs them.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
 
 ## Process
@@ -85,7 +85,6 @@ The job is queued, so poll until it completes, and stop when it fails or the epi
 Always cut from the tallest rendition the source offers, because a vertical crop keeps about a third of
 the width: a 720p source gives 405x720 of real picture in a 1080x1920 file, and module **qa** fails it.
 
-The span is settled before this skill runs.
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
 
 Loudness is requested work: normalise when the user asks, or when the source is clearly quiet.

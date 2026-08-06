@@ -5,7 +5,7 @@ description: Remove dead air and filler from a clip, after the user asks for it 
 
 ## Overview
 
-A clip is often shorter than its span deserves.
+A clip is often longer than its span deserves.
 This module finds the pauses and the filler, says what removing them would save, and cuts them when the
 user agrees.
 It removes time, so every module after it works on a shorter clock.

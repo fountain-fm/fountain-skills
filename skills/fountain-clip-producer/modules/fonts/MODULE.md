@@ -23,7 +23,7 @@ The fit measurement and the burn must therefore see the same font.
 
 ## Requirements
 
-- ffmpeg with libass and fontconfig, from the Homebrew `ffmpeg-full` formula.
+- ffmpeg with libass, from the Homebrew `ffmpeg-full` formula.
 - fontconfig, for `fc-match`.
 
 ## Process

@@ -412,10 +412,10 @@ def resolve_font_file(spec, explicit=None):
     family, bold = spec["font"]["family"], spec["font"]["bold"]
     bundled = Path(__file__).resolve().parents[3] / "assets" / "fonts"
     names = {
-        "Montserrat Black": "Montserrat-Black.ttf",
-        "Anton": "Anton-Regular.ttf",
-        "Courier Prime": "CourierPrime-Regular.ttf",
-        "Montserrat": "Montserrat-Bold.ttf" if bold else "Montserrat-Regular.ttf",
+        "Montserrat Black": "montserrat-black.ttf",
+        "Anton": "anton-regular.ttf",
+        "Courier Prime": "courier-prime-regular.ttf",
+        "Montserrat": "montserrat-bold.ttf" if bold else "montserrat-regular.ttf",
     }
     candidate = bundled / names.get(family, "")
     return candidate if candidate.is_file() else None
