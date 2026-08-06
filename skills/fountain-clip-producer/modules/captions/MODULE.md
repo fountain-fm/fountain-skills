@@ -25,7 +25,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 ## Requirements
 
-- ffmpeg with libass, from the Homebrew `ffmpeg-full` formula.
+- ffmpeg built with libass. On macOS that is the Homebrew `ffmpeg-full` formula, and not the default one.
 - ImageMagick, to measure text width.
 - Python 3.11 or later.
 

@@ -22,7 +22,7 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 
 ## Requirements
 
-- ffmpeg with drawtext and fontconfig, from the Homebrew `ffmpeg-full` formula.
+- ffmpeg built with drawtext and fontconfig. On macOS that is the Homebrew `ffmpeg-full` formula.
 - Python 3.11 or later.
 
 ## Process

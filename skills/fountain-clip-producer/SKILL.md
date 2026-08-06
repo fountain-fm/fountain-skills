@@ -39,8 +39,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, for the face detection of module **framing**.
   Its model, and the fonts that the presets name, ship in `assets`, so no machine installs either.
-- ffmpeg and ffprobe, from the Homebrew `ffmpeg-full` formula.
-  The default `ffmpeg` formula carries no libass, no drawtext, and no fontconfig, so it cannot burn a caption.
+- ffmpeg and ffprobe, built with libass, drawtext, and fontconfig, or no caption can be burned.
+  A stock build often carries none of them, and on macOS the Homebrew `ffmpeg-full` formula is the one that does.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
 

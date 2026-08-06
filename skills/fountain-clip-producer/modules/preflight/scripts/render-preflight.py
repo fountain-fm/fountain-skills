@@ -91,14 +91,24 @@ def check_font(name, bundled=None):
     return {"requested": name, "resolved": resolved, "matched": matched}
 
 
+# Where a second ffmpeg build tends to sit, per platform. A stock build is
+# sometimes compiled without libass while a capable sibling is already
+# installed, so finding it beats reporting the filter missing.
+SIBLING_FFMPEG = (
+    "/opt/homebrew/opt/ffmpeg*/bin/ffmpeg",  # macOS, Apple silicon Homebrew
+    "/usr/local/opt/ffmpeg*/bin/ffmpeg",  # macOS, Intel Homebrew
+    "/usr/local/bin/ffmpeg*",  # a static build dropped in by hand
+    "/usr/bin/ffmpeg*",  # a distribution package
+    "/snap/bin/ffmpeg*",  # Ubuntu snap
+    "/var/lib/flatpak/exports/bin/ffmpeg*",  # flatpak
+    "/opt/ffmpeg*/bin/ffmpeg",  # an unpacked release build
+)
+
+
 def find_subtitle_capable_ffmpeg(exclude):
-    """When the selected ffmpeg lacks libass, look for another installed build
-    that has it (e.g. a Homebrew `ffmpeg-full` or versioned keg) rather than
-    just reporting the filter missing — stock `ffmpeg` bottles are sometimes
-    built without libass while a capable sibling sits on the same machine.
-    """
+    """Find another ffmpeg on this machine that can burn subtitles."""
     candidates = []
-    for pattern in ("/opt/homebrew/opt/ffmpeg*/bin/ffmpeg", "/usr/local/opt/ffmpeg*/bin/ffmpeg"):
+    for pattern in SIBLING_FFMPEG:
         candidates.extend(sorted(Path("/").glob(pattern.lstrip("/"))))
     for candidate in candidates:
         candidate = str(candidate)

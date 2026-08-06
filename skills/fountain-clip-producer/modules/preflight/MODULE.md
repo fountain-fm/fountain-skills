@@ -51,8 +51,8 @@ It reports the environment, and it never looks at a rendered file.
 
 ## Additional notes
 
-The default Homebrew `ffmpeg` formula carries no libass, so it cannot burn a styled caption.
-The report therefore looks for another build on the machine, such as the `ffmpeg-full` keg.
+A stock ffmpeg is often built without libass, so it cannot burn a styled caption.
+The report therefore looks for another build on the machine, wherever the platform keeps them.
 When it finds one, the ASS path stays open and the report names that binary.
 A build without libass is a reason to use the other binary, and never a reason to drop to a lesser renderer.
 
