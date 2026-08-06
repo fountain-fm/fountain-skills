@@ -90,7 +90,8 @@ The script prefers `fountain`, because that transcript comes from the audio of t
 A `rss` transcript can be off by minutes, because the feed carries a different advertisement cut.
 Such a clip looks correct on paper and holds the wrong words.
 A `fountain` transcript fills `segments` and `words` only once its `status` is complete.
-Captions need word timings, and only `fountain` carries a flat `words` list, which the Content API meters.
+Captions need word timings, and only `fountain` carries a flat `words` list.
+A missing one is not a blocker here, because skill **fountain-clip-producer** generates it before it renders.
 
 `ts_start` and `ts_end` MUST always be in the clock of `media`.
 A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
