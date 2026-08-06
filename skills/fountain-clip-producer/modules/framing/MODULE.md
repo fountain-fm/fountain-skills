@@ -95,8 +95,7 @@ You MUST NOT deliver a crop segment that nobody looked at, and you MUST NOT lett
 The crop holds still inside a shot and changes only on a cut, even when the face wanders inside it, because
 a crop that drifts while the speaker talks reads as a pan across a still frame and the viewer sees it.
 
-A 9:16 crop fails a wide two-shot and screen content alike, and the script refuses both and names which,
-because it sees two faces on the first and none on the second.
+A 9:16 crop fails a wide two-shot and screen content alike, and the script refuses both and names which.
 Say what is lost, and offer a letterbox, a blurred fill from module **overlays**, a crop from module
 **shots**, or a different span, and render nothing until the user chooses.
 
