@@ -1,18 +1,18 @@
 ---
 name: fountain-clip-producer
-description: Render an approved clip post into a finished, platform-ready video with framing, captions, and overlays.
+description: Render a clip post into a finished, platform-ready video with framing, captions, and overlays.
 ---
 
 ## Overview
 
-This skill turns an approved post into a video file.
+This skill turns the clip that a post carries into a video file.
 It decides nothing about the moment or the span, because the caller settles those before it runs.
 Module **media** cuts the landscape master, and every module after it works from that one file.
 The rest shape the picture, put the words and the layers on it, and gate the delivery on one report.
 
 ## Input
 
-- The `SocialPostMediaSource` of an approved `SocialPost`, which names the file and the span.
+- The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
 - The `TranscriptWord` list of that span, which the `fountain` source of the transcript carries.
   Module **shots** also needs the speaker of each word, for a shot that holds two people.
 - A delivery tier, which the words of the request imply.
@@ -82,19 +82,20 @@ Generating one is metered, and it is yours to start without asking.
 Say what it cost and what remains as soon as the job is queued, and never after the render.
 The job is queued, so poll until it completes, and stop when it fails or the episode is early-access.
 
-Always cut from the tallest rendition the source offers, because a vertical crop keeps about a third of
-the width: a 720p source gives 405x720 of real picture in a 1080x1920 file, and module **qa** fails it.
+Always cut from the tallest rendition, because a 9:16 crop keeps the whole height and about a third of the
+width: the height of that rendition is the real resolution of the clip, and module **qa** fails a big upscale.
 
 When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
 
 Loudness is requested work: normalise when the user asks, or when the source is clearly quiet.
-
 A letterbox is requested work as well, and black bars are never your decision.
 
-To change a clip that this skill already made, read the manifest and the QA report first.
-Reuse the master, the crop plan, and the caption assets that are still correct.
-Touch only the output of the module that changes, and write it under a new name.
-A caption change MUST NOT force a new crop.
+To change a clip this skill already made, read the manifest and the QA report first, and reuse the master,
+the crop plan, and the caption assets that are still correct. Write each new output under a new name.
+Touch only the output of the module that changes, and a caption change MUST NOT force a new crop.
+
+A post does not have to be approved before this skill runs, and rendering one approves nothing.
+You MUST NOT approve, schedule, or publish a post, because only the user decides that.
 
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
 
