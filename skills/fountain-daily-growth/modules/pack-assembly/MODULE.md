@@ -78,6 +78,14 @@ Speaker tagging:
   Other section of the preferences.
 - Credit by name when no handle is confirmed for that platform - never guess or reuse a handle across platforms.
 
+Posting windows:
+
+- Choose each window from the Editorial section of the preferences: the times the operator ruled out, and
+  the times that worked or failed on that channel.
+- Load the posts that already hold a `meta.scheduled` time via the Social API, and space new ones around them.
+  Two posts on one channel MUST NOT share a window.
+- The operator can veto a window at the review, because the pack entry carries it.
+
 Approval:
 
 - Partial approval is normal - track approve / edit / reject per numbered item, not per pack.

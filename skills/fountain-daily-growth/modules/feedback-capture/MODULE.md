@@ -28,7 +28,8 @@ It does not log posts - the posts and their metadata live in the API.
 1. After the review session, distill the reason behind each approve, edit, and reject.
    Capture why the operator decided, not just the outcome.
 2. Keep only the lessons that hold beyond today.
-   Examples: a banned phrase, a preferred hook style, a rejected topic, a newly confirmed platform handle.
+   Examples: a banned phrase, a preferred hook style, a rejected topic, a posting time to avoid,
+   a newly confirmed platform handle.
 3. Write each lesson under the matching heading of the preferences, succinctly.
    Record a narrative the operator approved in the Narratives section.
 4. When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
