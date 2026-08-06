@@ -36,11 +36,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 ## Requirements
 
 - Skill **fountain-api**.
-- Python 3.11 or later, with OpenCV 4.8 or later for the face detection of module **framing**.
+- Python 3.11 or later.
+- OpenCV 4.8 or later, importable from that same Python, for the face detection of module **framing**.
+  Its model, and the fonts that the presets name, ship in `assets`, so no machine installs either.
 - ffmpeg and ffprobe, from the Homebrew `ffmpeg-full` formula.
   The default `ffmpeg` formula carries no libass, no drawtext, and no fontconfig, so it cannot burn a caption.
 - ImageMagick, to measure the width of caption text.
-  The fonts that the presets name, and the face detection model, ship in `assets`, so no machine installs them.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
 
 ## Process
@@ -58,8 +59,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 7. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
 8. Run module **overlays** when the request asks for a layer.
-9. Run module **qa** as the blocking gate.
-   Deliver nothing until it reports a pass.
+9. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
 10. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
 
 ## Additional notes
