@@ -1,6 +1,6 @@
 {
   "name": "glow-bounce",
-  "description": "High-energy uppercase words popping in one at a time with a soft warm glow instead of a hard outline (the Beasty/Devin look). Emphasized words go green.",
+  "description": "High-energy uppercase words popping in one at a time behind a soft warm halo rather than a hard outline. The halo has to be near-black to separate from bright footage; a bright glow only reads on a dark background.",
   "font": {
     "family": "Montserrat",
     "size": 84,
@@ -10,13 +10,13 @@
   "colors": {
     "primary": "#FFE100",
     "highlight": "#2BFF57",
-    "outline": "#7A3D00"
+    "outline": "#1A0A00"
   },
   "border": {
     "style": "outline",
-    "outline": 4,
+    "outline": 5,
     "shadow": 0,
-    "blur": 6
+    "blur": 8
   },
   "position": {
     "alignment": "bottom-center",
