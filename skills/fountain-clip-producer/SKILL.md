@@ -64,15 +64,16 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
-There are three delivery tiers, and each one adds to the tier before it.
-The tier is how this skill does the least work the request asks for, and it decides whether the gate runs:
+There are three delivery tiers, each adding to the one before, and the request implies which one.
+The user names the work they want, not the tier, so read it from their words:
 
-- A rough cut is the landscape master alone: a fast file for review, with no crop, no captions, no gate.
-- A clean final is publishable, and a portrait export carries captions, because it is watched with the sound off.
-  This is the tier for "produce this clip", when the request names neither captions nor packaging.
-- A publish final adds the overlays, the packaging, and the full gate.
+- A rough cut is the landscape master alone, with no crop, no captions and no gate.
+  Read it from words about checking a span rather than making a clip.
+- A clean final is publishable, and a portrait export carries captions, because it is watched muted.
+  Read it from "produce this clip", when the request names neither captions nor packaging.
+- A publish final adds the overlays and the packaging, and the request names one of them.
 
-You MUST NOT raise the tier on your own, because polish is requested work.
+Ask when the words fit none of the three, and you MUST NOT raise the tier on your own: polish is requested work.
 Captions on a portrait export are not a raise, and a square or a landscape export still waits to be asked.
 
 A clip needs the `fountain` transcript of its episode, and never the `rss` one alone.
@@ -86,16 +87,15 @@ The job is queued, so poll until it completes, and stop when it fails or the epi
 Always cut from the tallest rendition, because a 9:16 crop keeps the whole height and about a third of the
 width: the height of that rendition is the real resolution of the clip, and module **qa** fails a big upscale.
 
-When the start or the end of a rendered clip reads wrong, report that to the user rather than move the span here.
-
-A letterbox is requested work, and black bars are never your decision.
+When the start or the end of a rendered clip reads wrong, report it rather than move the span here.
+A letterbox is requested work too, and black bars are never your decision.
 
 To change a clip this skill already made, read the manifest and the QA report first, and reuse the master,
 the crop plan, and the caption assets that are still correct. Write each new output under a new name.
 Touch only the output of the module that changes, and a caption change MUST NOT force a new crop.
 
-A post does not have to be approved before this skill runs, and rendering one approves nothing.
-You MUST NOT approve, schedule, or publish a post, because only the user decides that.
+A post does not have to be approved before this skill runs, and rendering one approves nothing: you MUST
+NOT approve, schedule, or publish a post, because only the user decides that.
 
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
 
