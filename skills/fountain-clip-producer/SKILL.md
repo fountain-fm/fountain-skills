@@ -64,7 +64,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
-There are three delivery tiers, and each one adds to the tier before it:
+There are three delivery tiers, and each one adds to the tier before it.
+The tier is how this skill does the least work the request asks for, and it decides whether the gate runs:
 
 - A rough cut is a fast file for review, with no captions and no gate.
 - A clean final is publishable, and a portrait export carries captions, because it is watched with the sound off.
