@@ -26,7 +26,6 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
 
 - Skill **fountain-api**.
 - Skills **fountain-clip-finder** and **fountain-clip-producer**.
-- Skill **[fountain-post-scheduler]**.
 
 ## Process
 
@@ -55,12 +54,11 @@ It does not re-score archive matches or re-verify clip boundaries - skill **foun
    Each entry MUST include: working title, episode reference, the post id, duration, speaker and
    confirmed handle, narrative, the "why publish today" paragraph, the full clip transcript, per-platform copy,
    clip path, QA status, posting window in the audience timezone, and an approve / edit / reject prompt.
-8. After the operator's review, build a brief per approved item and invoke skill **[fountain-post-scheduler]**.
-   Never construct a brief for anything not approved, and only for the platforms approved.
+8. After the operator's review, schedule each approved post via the Social API, at the posting window from
+   its pack entry.
+   Never schedule anything not approved, and only on the platforms approved.
 
 ## Additional notes
-
-A skill name in square brackets is planned but not in this repository yet.
 
 Safety pass:
 

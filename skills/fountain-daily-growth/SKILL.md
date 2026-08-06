@@ -20,7 +20,7 @@ Skill **[fountain-stats]** closes the loop: its learnings feed the next run.
 
 - `fountain/outputs/daily-growth/<show>/pack-<date>.md` - the day's clip pack, where `<show>` is the show title.
 - One draft `SocialPost` for each proposed clip on each channel, with its rendered video attached.
-- The approved posts, scheduled through skill **[fountain-post-scheduler]**.
+- The approved posts, scheduled via the Social API.
 - Updated preferences after the review.
 
 ## Housekeeping
@@ -33,7 +33,6 @@ You MUST read HOUSEKEEPING.md if you haven't already.
   Optional: a social trend search tool, such as one for X, when the machine has one.
 - Skill **fountain-api**.
 - Skills **fountain-clip-finder** and **fountain-clip-producer**.
-- Skill **[fountain-post-scheduler]**.
 - Skill **[fountain-stats]**, for the learnings that feed each run.
 
 ## Process
@@ -41,7 +40,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 1. Run module **trend-discovery** to score today's trends and translate the strongest into theme search terms.
 2. Run module **pack-assembly** to turn those trends into a rendered, safety-checked clip pack.
 3. Present the pack to the operator and collect approve / edit / reject per item.
-4. Schedule only the approved posts through skill **[fountain-post-scheduler]**.
+4. Schedule only the approved posts via the Social API, at the posting window the pack names.
 5. Run module **feedback-capture** to write what the operator taught you into the preferences.
 
 ## Additional notes
@@ -50,10 +49,12 @@ A skill name in square brackets is planned but not in this repository yet.
 
 You MUST NOT approve a post, and you MUST NOT schedule or publish one that the operator has not approved.
 
-This skill owns everything upstream of scheduling.
+This skill owns the loop, the pack, and the scheduling of what the operator approves.
 Finding and rendering clips is the job of skill **fountain-clip-finder** and skill **fountain-clip-producer**.
-Scheduling and timing are the job of skill **[fountain-post-scheduler]**.
 Analytics and reports are the job of skill **[fountain-stats]** - do not re-implement them here.
+
+The API stores a schedule but does not yet publish at that time on its own.
+Say so when you schedule, and never report a post as live until its `meta.status` is `PUBLISHED`.
 
 Run skill **[fountain-stats]** earlier in the day, so fresh learnings exist to apply.
 
