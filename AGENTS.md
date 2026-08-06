@@ -35,7 +35,9 @@ fountain-skills
         ├───scripts // skill-wide scripts
         │       def.py
         ├───assets // skill-wide non-script assets
-        │       example-ghi.srt
+        │   │   example-ghi.srt
+        │   └───licences // one licence for each bundled third-party work
+        │           mit-stu.txt
         └───modules // parts of a skill
             └───jkl // module name
                 │   MODULE.md // module
@@ -50,6 +52,17 @@ fountain-skills
 File names MUST be in kebab-case.extension, except SKILL.md and MODULE.md.
 
 Skill names MUST start with `fountain-`.
+
+### Bundled assets
+
+A skill CAN bundle a third-party asset, such as a font or a model, when no machine can be trusted to have it.
+It MUST NOT bundle one whose licence does not allow redistribution.
+
+The licence of each bundled work MUST ship in `assets/licences`, as one file for each work.
+A licence MUST NOT sit in the directory that holds the asset, because a loader often reads every file in
+that directory and a text file breaks it.
+
+Put the version of the asset in its file name, so that a later reader can compare it against the source.
 
 ## SKILL.md
 
