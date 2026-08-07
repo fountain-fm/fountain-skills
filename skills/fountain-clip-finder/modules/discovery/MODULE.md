@@ -57,8 +57,9 @@ With:
    Carry the `CanonicalPerson` forward, because module **copy** names the speaker.
 7. Join the segments of one episode that touch or overlap, because a passage often returns as two.
    The result is a moment: one continuous passage to judge.
-8. Load the show's posts with the Social API, drafts included - the record of what went out or still waits.
-   Mark a moment `already-clipped` when it overlaps the `source` of any of them by more than half.
+8. Load the posts of these moments' episodes with the Social API, in every lifecycle state.
+   Ask per episode and never for the whole show, because a post from another episode cannot overlap.
+   Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
    Compare only with a `source` whose `media` is the `enclosure` of the segments, because the two clocks
    agree only then.
    Advance a marked moment only when the caller or the lessons ask for a new cut.
@@ -99,5 +100,3 @@ claim, a claim about a named person, a price prediction, investment advice, or a
 Carry the flag and the reason forward, because module **copy** runs the last safety check on the words.
 
 Record the scores, so that a later reader can audit the ranking.
-
-Work out `already-clipped` on each run, and never keep a local list that goes stale the moment a post goes out.
