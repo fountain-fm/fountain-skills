@@ -32,6 +32,30 @@ from pathlib import Path
 DEFAULTS = {
     "playResX": 1080,
     "playResY": 1920,
+    # Tokens the ASR lowercases that must render in their canonical case. Conservative
+    # by default - only strings that are not English words - because "us" is both a
+    # pronoun and a country. A brand kit extends this with the show's own vocabulary.
+    # An ambiguous token rides as a phrase ("the fed" -> "the Fed"), never bare.
+    "casing": {
+        "ai": "AI",
+        "btc": "BTC",
+        "eth": "ETH",
+        "etf": "ETF",
+        "gdp": "GDP",
+        "cpi": "CPI",
+        "kyc": "KYC",
+        "atm": "ATM",
+        "fbi": "FBI",
+        "nsa": "NSA",
+        "irs": "IRS",
+        "llc": "LLC",
+        "wifi": "Wi-Fi",
+        "wi-fi": "Wi-Fi",
+        "usb": "USB",
+        "gpu": "GPU",
+        "cpu": "CPU",
+        "url": "URL",
+    },
     "font": {
         "family": "Arial",
         "size": 72,
@@ -153,15 +177,22 @@ def fail(msg):
     sys.exit(1)
 
 
+OPEN_DICTS = {"casing"}  # vocabulary maps: new keys are the point, not a typo
+
+
 def deep_merge(base, incoming, path=""):
     """Merge incoming onto base, rejecting keys that don't exist in base —
-    a typo'd override must error, not silently style nothing."""
+    a typo'd override must error, not silently style nothing. Vocabulary
+    dicts (OPEN_DICTS) accept new keys freely."""
     for key, value in incoming.items():
         where = f"{path}.{key}" if path else key
         if not path and key in META_KEYS:
             continue
         if key not in base:
-            fail(f"unknown style field '{where}' (check spelling against the spec schema)")
+            if path not in OPEN_DICTS:
+                fail(f"unknown style field '{where}' (check spelling against the spec schema)")
+            base[key] = value
+            continue
         if isinstance(base[key], dict) and isinstance(value, dict):
             deep_merge(base[key], value, where)
         else:
@@ -372,20 +403,136 @@ def enforce_monotonic(words, min_dur=0.04):
     return nudged
 
 
-def apply_case(text, mode, first_in_group):
+def apply_case(text, mode, capitalize=False):
     if mode == "upper":
         return text.upper()
     if mode == "lower":
         return text.lower()
     if mode == "sentence":
-        lowered = text.lower()
-        return lowered[0].upper() + lowered[1:] if first_in_group else lowered
+        # A token carrying two or more capitals (AI, CEO, U.S.) keeps them: they are information.
+        if len(re.findall(r"[A-Z]", text)) >= 2 and not re.search(r"[a-z]", text):
+            return text
+        lowered = re.sub(r"\bi\b", "I", text.lower())
+        if capitalize:
+            for j, ch in enumerate(lowered):
+                if ch.isalpha():
+                    return lowered[:j] + ch.upper() + lowered[j + 1 :]
+        return lowered
     return text
 
 
 SENTENCE_END = re.compile(r'[.!?]["\')\]]*$')
 TRAILING_STOPS = re.compile(r'\.+(["\')\]]*)$')
 TRAILING_COMMA = re.compile(r',(["\')\]]*)$')
+FILLER_WORD = re.compile(r"^(?:u+m+|u+h+|erm+|hm+m*)[,.!?]*$", re.IGNORECASE)
+DANGLING_TAIL = {"and", "but", "or", "so", "because"}
+NUM_COMMA = re.compile(r"^(\d+),$")
+
+
+def faithful_clean(words):
+    """Default text hygiene: drop pure fillers, join a spoken number range on an
+    en dash, strip token-final commas, and never end the clip on a dangling
+    conjunction. The audio still carries every removed word - that is what
+    makes each of these safe, and why anything more stays editorial judgment."""
+    out, removed, i = [], 0, 0
+    while i < len(words):
+        w = words[i]
+        t = w["text"]
+        if FILLER_WORD.match(t):
+            removed += 1
+            i += 1
+            continue
+        m = NUM_COMMA.match(t)
+        if m and i + 1 < len(words) and re.match(r"^\d", words[i + 1]["text"]):
+            nxt = words[i + 1]
+            w = dict(w, text=f"{m.group(1)}\u2013{nxt['text']}", end=nxt["end"])
+            removed += 1
+            i += 2
+        else:
+            stripped = TRAILING_COMMA.sub(r"\1", t)
+            if stripped and stripped != t:
+                w = dict(w, text=stripped)
+            i += 1
+        out.append(w)
+    while out and out[-1]["text"].rstrip(".!?").lower() in DANGLING_TAIL:
+        out.pop()
+        removed += 1
+    words[:] = out
+    return removed
+
+
+FILLER_CANDIDATES = {"like", "right"}
+FILLER_BIGRAMS = {("you", "know"), ("kind", "of"), ("sort", "of"), ("i", "mean")}
+RIGHT_KEEPERS = {"now", "there", "here", "away", "side", "hand", "answer", "thing", "one", "amount"}
+LIKE_QUOTATIVE = {"was", "is", "it's", "i'm", "be", "being", "felt", "feels", "looks", "sounds", "seems"}
+
+
+def flag_filler_candidates(words):
+    """Name every filler candidate and remove none: deletion is editorial
+    judgment (see the module), but a candidate nobody lists is a candidate
+    nobody judges. Suppresses the obvious keeps to hold the noise down."""
+    hits = []
+    for i, w in enumerate(words):
+        t = re.sub(r"[^a-z']", "", w["text"].lower())
+        prev = re.sub(r"[^a-z']", "", words[i - 1]["text"].lower()) if i else ""
+        nxt = re.sub(r"[^a-z']", "", words[i + 1]["text"].lower()) if i + 1 < len(words) else ""
+        if t == "like":
+            before_num = i + 1 < len(words) and re.match(r"^[\d$\"]", words[i + 1]["text"])
+            if prev in LIKE_QUOTATIVE or before_num or nxt == "that" or prev == "i":
+                continue
+            hits.append((w["start"], "like"))
+        elif t == "right":
+            if nxt in RIGHT_KEEPERS or prev in {"the", "all"}:
+                continue
+            hits.append((w["start"], "right"))
+        elif i + 1 < len(words) and (t, nxt) in FILLER_BIGRAMS:
+            hits.append((w["start"], f"{t} {nxt}"))
+    if hits:
+        preview = ", ".join(f"'{k}' at {s:.1f}s" for s, k in hits[:8])
+        more = f" (+{len(hits) - 8} more)" if len(hits) > 8 else ""
+        print(
+            f"filler-review: {len(hits)} candidate(s) to judge, none removed: {preview}{more}",
+            file=sys.stderr,
+        )
+    return hits
+
+
+def mark_sentence_starts(words):
+    """Sentence case capitalizes at sentence starts, never at bare group starts."""
+    for i, w in enumerate(words):
+        w["capitalize"] = i == 0 or bool(SENTENCE_END.search(words[i - 1]["text"]))
+
+
+def apply_casing(words, casing):
+    """Restore canonical case the ASR lost: "ai" -> "AI", "wifi" -> "Wi-Fi",
+    "the fed" -> "the Fed". A cased word is protected from the case mode, or
+    sentence case would immediately lower "Fed" again. Phrase keys match on
+    consecutive tokens, so an ambiguous word never matches bare."""
+
+    def core(text):
+        return re.sub(r"[^A-Za-z'-]", "", text).lower()
+
+    singles = {k: v for k, v in casing.items() if " " not in k}
+    phrases = {tuple(k.split()): v.split() for k, v in casing.items() if " " in k}
+    fixed = 0
+    for i, w in enumerate(words):
+        c = core(w["text"])
+        for key, vals in phrases.items():
+            if c == key[0] and i + len(key) <= len(words):
+                cores = [core(words[i + j]["text"]) for j in range(len(key))]
+                if tuple(cores) == key:
+                    for j, val in enumerate(vals):
+                        ww = words[i + j]
+                        before = ww["text"]
+                        ww["text"] = re.sub(r"[A-Za-z'-]+", val, ww["text"], count=1)
+                        if ww["text"] != before:
+                            ww["protect_case"] = True
+                    fixed += 1
+        if c in singles:
+            w["text"] = re.sub(r"[A-Za-z'-]+", singles[c], w["text"], count=1)
+            w["protect_case"] = True
+            fixed += 1
+    return fixed
 
 
 def peak_scale(spec):
@@ -649,11 +796,15 @@ def build_events(groups, spec):
                 f"\\t(0,{appear},\\fscx{over}\\fscy{over})"
                 f"\\t({appear},{appear + settle},\\fscx100\\fscy100)}}"
             )
-        flat = [w for g in groups for w in ((g[0], True),) + tuple((w, False) for w in g[1:])]
-        for i, (word, first) in enumerate(flat):
-            text = apply_case(word["text"], case_mode, first)
+        flat = [w for g in groups for w in g]
+        for i, word in enumerate(flat):
+            text = (
+                word["text"]
+                if word.get("protect_case")
+                else apply_case(word["text"], case_mode, word.get("capitalize", False))
+            )
             start = word["start"]
-            next_start = flat[i + 1][0]["start"] if i + 1 < len(flat) else None
+            next_start = flat[i + 1]["start"] if i + 1 < len(flat) else None
             end = next_start if next_start is not None else word["end"] + pad_s
             end = max(end, start + 0.15)  # minimum readable display...
             if next_start is not None:  # ...but never overlap the next word (stacked captions)
@@ -671,7 +822,10 @@ def build_events(groups, spec):
         return events, fit_lines
 
     for gi, group in enumerate(groups):
-        cased = [apply_case(w["text"], case_mode, i == 0) for i, w in enumerate(group)]
+        cased = [
+            w["text"] if w.get("protect_case") else apply_case(w["text"], case_mode, w.get("capitalize", False))
+            for w in group
+        ]
         start, end = group[0]["start"], group[-1]["end"] + pad_s
         if gi + 1 < len(groups):  # the pad must never overlap the next group (stacked captions)
             end = min(end, groups[gi + 1][0]["start"])
@@ -891,6 +1045,12 @@ def main():
         fail("--words and --out are required unless --check")
 
     words = load_words(args.words)
+    removed = faithful_clean(words)
+    if removed:
+        print(f"note: faithful-clean dropped or joined {removed} word(s)", file=sys.stderr)
+    apply_casing(words, spec["casing"])
+    flag_filler_candidates(words)
+    mark_sentence_starts(words)
     widths = budget = None
     if spec["grouping"]["fitWidth"] and spec["animation"]["type"] in GROUP_ON_SCREEN:
         font_file = resolve_font_file(spec, args.font_file)
@@ -899,7 +1059,8 @@ def main():
                 words, font_file, round(spec["font"]["size"] * peak_scale(spec)), spec["font"]["case"]
             )
             if widths:
-                budget = safe_width(spec)
+                # libass advances run a few percent wider than the measure, so pack with headroom
+                budget = safe_width(spec) * 0.94
             else:
                 print("note: could not measure text, so groups fall back to the word cap", file=sys.stderr)
         else:

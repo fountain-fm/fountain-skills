@@ -14,7 +14,8 @@ This module therefore also builds a time map, which module **boundaries** uses t
 ## Input
 
 - The scored moments from module **discovery**, and the `ContentHit` of each episode.
-- The show's YouTube channel from the preferences, for the episodes that need it.
+- Where the show publishes its video, from the Accounts section of the preferences, for the episodes
+  that need it.
 - The `ContentHitTranscript` of each episode that resolves to YouTube.
 
 ## Output
@@ -39,7 +40,8 @@ This module therefore also builds a time map, which module **boundaries** uses t
 3. Use `info.video` as `media`, and stop here for that episode.
    The Content API gives it only when the episode has video, so its presence is the answer.
    Fountain cuts that file and the audio from one recording, so the clocks agree and no map is needed.
-4. Read the show's YouTube channel from the Other section of the preferences.
+4. Read where the show publishes its video, usually a YouTube channel, from the Accounts section of the
+   preferences.
    Ask the user one time when the preferences do not name a channel, then record the answer with the Project API.
    Do this only when an episode reaches this step.
 5. Run the match one time for every episode that has no video:

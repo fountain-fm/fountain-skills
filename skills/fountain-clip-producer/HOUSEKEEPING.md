@@ -19,8 +19,17 @@ You MUST use only these headings:
 
 - Narratives - stories and angles that the user wants for clips and posts.
 - Editorial - tone, structure, and rules for what to make and when to publish it.
-- Captions - caption style, e.g. font, position, and case.
+- Brand - the show's look: caption style, fonts, logos, and colours.
+- Accounts - what the API cannot name: the handle to tag a person by, and where a show's video lives.
+- Reporting - how the user wants their reports and emails: preset customizations of skill **fountain-reports**.
+- Automation - the switches of the daily loop, e.g. auto-render.
 - Other - all other preferences.
+
+Write a heading only when it has an entry.
+An absent heading means the same as an empty one, and this list is the place that names what can exist.
+
+Empty preferences mean a new project, so follow the first contact steps of skill **fountain-reports**.
+When you rely on a built-in default because no setting names a choice, say so in passing.
 
 ## Fountain assets
 

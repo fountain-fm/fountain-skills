@@ -15,7 +15,8 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 - The `SocialPostMediaSource` of the verified clip.
 - The `CanonicalPerson` of the speaker from module **discovery**, when it resolved a person.
 - The scores from module **discovery** and module **boundaries**, and each flag.
-- The show's platforms, voice notes, and confirmed handles from the preferences.
+- The show's connected channels, via the Social API.
+- Voice notes from the Editorial section and confirmed handles from the Accounts section of the preferences.
 - The trend and its sources, when a caller found the clip for a news story.
 
 ## Output
@@ -54,7 +55,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    Match the length, the tone, and the conventions of that platform.
    Write one text per platform, and never reuse one text across platforms.
 5. Name the speaker who is on camera.
-   Read the handle from the Other section of the preferences, or from the episode show notes with the Content API.
+   Read the handle from the Accounts section of the preferences, or from the episode show notes with the Content API.
 6. Run the safety pass over every text before you return it.
 
 ## Additional notes

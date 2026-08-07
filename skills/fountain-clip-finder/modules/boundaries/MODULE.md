@@ -98,5 +98,6 @@ A YouTube cut runs behind the transcript by an amount that changes at every adve
 The placement gate therefore reads both edges of the clip, because a break inside it moves the end
 and leaves the start where it was.
 Such a clip cannot be shifted, only removed, and the answer is a different pair of in and out points.
+Never end a span on a dangling conjunction - cut before the "and", because a caption must not end on one.
 
 This module does not open `media`.
