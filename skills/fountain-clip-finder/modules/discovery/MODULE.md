@@ -43,6 +43,8 @@ With:
 2. Choose the route under the rules below: a request about a person takes the vault, and the rest take either.
 3. Take the vault route by reading the project's vault ids with the Project API, then loading and updating
    the `ProjectVault` with the Vaults API. Use one vault for the archive, and name it for its scope.
+   Top up the archive vault first: add the episodes it misses from step 1, and say the credit cost.
+   A vault nobody tops up goes stale, and a stale archive silently narrows every search.
 4. Take the direct route instead by loading the transcript of each episode in scope with the Content API.
    Name the episodes the request needs, because this route reads one at a time.
 5. Search what the route returned.
@@ -66,30 +68,28 @@ With:
 
 ## Additional notes
 
-The vault route returns `TranscriptSearchSegment` with `mentions` and `topics`, which a request about a
-person filters on, and joining an episode to it costs a credit for the analysis. The direct route reads
-`TranscriptSegment` from the Content API, so it has neither field, needs no vault, and suits recent episodes.
+The vault route returns `TranscriptSearchSegment` with `mentions` and `topics`, and joining an episode
+costs a credit for the analysis. The direct route reads `TranscriptSegment` from the Content API:
+it has neither field, needs no vault, and suits a request that names its episodes.
 
-Spending a credit is yours to start without asking, and you MUST say what it cost and what remains as soon
-as the job is queued, and never at the end of the run.
+Spending a credit is yours to start without asking: say what it cost and what remains as soon as the job
+is queued, and never at the end of the run.
 
 Keep every filter on the segments, and group them only when no filter is left.
 A filter that runs after the group takes words out of the middle of a moment.
 
 A transcript search finds words and not tone, so the score decides a kind of moment and the query does not.
 
-A segment runs for a few minutes, so judge whether that passage holds something worth clipping, and leave
-the exact cut to module **boundaries**.
-A moment that returns as several touching segments is a longer run on the theme, which is a signal in itself.
+Judge whether the passage holds something worth clipping, and leave the exact cut to module **boundaries**.
+A moment of several touching segments is a longer run on the theme, which is a signal in itself.
 
-The bar here is lower than the bar of module **boundaries**, and that is deliberate: this pass removes only
-what is clearly weak, a moment can improve when it is shaped, and some of them fail in the later modules.
+The bar here is lower than in module **boundaries**, deliberately: remove only what is clearly weak,
+because a moment can improve when it is shaped, and some fail in the later modules.
 
 A posted clip that was cut from another file cannot be compared here, because its `ts_start` is in the
 clock of that file. Such a clip is rare, and the cost of missing one is a repeat rather than a wrong clip.
 
-Do not force a match: the speaker MUST discuss the theme directly, and you MUST remove a quote that you
-must bend to fit the topic. Give an honest explanation when nothing you found has substance.
+Do not force a match - the speaker MUST discuss the theme directly - and say honestly when nothing has substance.
 
 Prefer surprising statistics, contrarian opinions, strong predictions, myth debunking, and confessions.
 Avoid general discussion, long setup, hosts who agree with each other, and abstract talk with no takeaway.
