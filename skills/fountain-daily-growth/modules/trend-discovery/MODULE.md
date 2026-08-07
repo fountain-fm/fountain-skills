@@ -29,8 +29,8 @@ At most 5 briefs, one per advancing trend, where each brief carries:
 
 ## Requirements
 
-- A web search tool, to find news published in the last 48 hours.
-  Optional: a social trend search tool, such as one for X, when the machine has one.
+- An HTTP client, e.g. curl, for the Google News RSS route.
+- Optional: a web search tool, and a social trend search tool such as one for X, when the machine has them.
 - Skill **fountain-api**.
 
 ## Process
@@ -38,9 +38,16 @@ At most 5 briefs, one per advancing trend, where each brief carries:
 1. Load skill **fountain-api** and read the Narratives and Editorial sections of the preferences.
    Treat their content as instructions to honour, not background context.
    Proceed when a section is still empty, and say so plainly.
-2. Scan the news with the web search tool: mainstream news, industry news, and any niche outlet relevant to
-   the show's community.
-   Scan social trends too when the machine has a tool for them, and say what the scan covered.
+2. Scan the news, one query per subject the show covers:
+
+   ```bash
+   curl -s "https://news.google.com/rss/search?q=<subject>+after:<48h ago>+before:<tomorrow>&hl=en-US&gl=US&ceid=US:en"
+   ```
+
+   Each item carries its title, its publisher and its date, so the 48-hour rule holds by construction.
+   Widen the scan with a web search tool or a social trend tool when the machine has one, and say what
+   the scan covered.
+
 3. Score each trend out of 10:
 
    | Dimension                     | Points |

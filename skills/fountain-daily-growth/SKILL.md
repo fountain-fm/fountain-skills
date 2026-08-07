@@ -28,8 +28,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- A web search tool, to find news published in the last 48 hours.
-  Optional: a social trend search tool, such as one for X, when the machine has one.
+- An HTTP client, e.g. curl, for the Google News RSS route of module **trend-discovery**.
+- Optional: a web search tool, and a social trend search tool such as one for X, when the machine has them.
 - Skill **fountain-api**.
 - Skill **fountain-clip-finder**.
 - Skill **fountain-reports**.
