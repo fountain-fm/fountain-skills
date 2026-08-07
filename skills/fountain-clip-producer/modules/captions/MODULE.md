@@ -77,19 +77,18 @@ length, and it animates nothing that can go wrong.
 The presets in `assets` are starting points, each carries its own description, and `hormozi` wants 3 to 5
 words marked `"emphasize": true`.
 
-These are the text rules, and the default mode is faithful-clean:
+These are the text rules, and the default mode is faithful-clean.
+The script owns the mechanical ones - all safe because the audio still carries every word:
+it drops "um" and "uh", strips commas, joins a spoken number range on an en dash, uppercases the
+acronym list (extend it in the brand kit), and never lets a clip end on a dangling conjunction.
+Sentence case capitalizes at sentence starts only, keeps "I", and keeps a token's own capitals.
+The judgment calls stay yours:
 
-- Remove filler and a repeated false start, when that does not change the meaning.
-  This is safe by default because the audio still carries the word, which is why module **trims** is not.
-- Judge "like" and "I mean" one at a time, because each is filler about half the time.
-  Delete the word and read the line again, and keep it when the line now says something else.
-  "Like" before a quote or a number always stays.
-- Keep a repetition that carries emphasis, rhythm, or contrast.
-- Keep the jokes, the strong language, and the quoted words, and never turn a sentence into a different claim.
-- Drop a dangling fragment when the clip ends before the speaker finishes.
-
-Correct the machine transcript, because it renders as it arrives: check the names, the numbers and the
-currency, and spell each name the way the show notes do.
+- Remove a false start - the abandoned fragment before a restart - when that does not change the meaning.
+- Judge "like" and "I mean" one at a time: delete the word, read the line again, and keep it when the line
+  now says something else. "Like" before a quote or a number always stays.
+- Keep a repetition that carries emphasis, and never turn a sentence into a different claim.
+- Correct the machine transcript: names, numbers, currency, spelled the way the show notes do.
 
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style:
 `sentence` lowercases every word first, so it destroys "I" and every name.

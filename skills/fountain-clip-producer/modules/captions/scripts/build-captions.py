@@ -32,6 +32,10 @@ from pathlib import Path
 DEFAULTS = {
     "playResX": 1080,
     "playResY": 1920,
+    # Tokens the ASR writes in lowercase that must render uppercase. Conservative
+    # by default - only strings that are not English words - because "us" is both
+    # a pronoun and a country. A brand kit extends this with the show's own vocabulary.
+    "acronyms": ["ai", "btc", "eth", "etf", "gdp", "cpi", "kyc", "atm", "fbi", "nsa", "irs", "llc"],
     "font": {
         "family": "Arial",
         "size": 72,
@@ -372,20 +376,80 @@ def enforce_monotonic(words, min_dur=0.04):
     return nudged
 
 
-def apply_case(text, mode, first_in_group):
+def apply_case(text, mode, capitalize=False):
     if mode == "upper":
         return text.upper()
     if mode == "lower":
         return text.lower()
     if mode == "sentence":
-        lowered = text.lower()
-        return lowered[0].upper() + lowered[1:] if first_in_group else lowered
+        # A token carrying two or more capitals (AI, CEO, U.S.) keeps them: they are information.
+        if len(re.findall(r"[A-Z]", text)) >= 2 and not re.search(r"[a-z]", text):
+            return text
+        lowered = re.sub(r"\bi\b", "I", text.lower())
+        if capitalize:
+            for j, ch in enumerate(lowered):
+                if ch.isalpha():
+                    return lowered[:j] + ch.upper() + lowered[j + 1 :]
+        return lowered
     return text
 
 
 SENTENCE_END = re.compile(r'[.!?]["\')\]]*$')
 TRAILING_STOPS = re.compile(r'\.+(["\')\]]*)$')
 TRAILING_COMMA = re.compile(r',(["\')\]]*)$')
+FILLER_WORD = re.compile(r"^(?:u+m+|u+h+|erm+|hm+m*)[,.!?]*$", re.IGNORECASE)
+DANGLING_TAIL = {"and", "but", "or", "so", "because"}
+NUM_COMMA = re.compile(r"^(\d+),$")
+
+
+def faithful_clean(words):
+    """Default text hygiene: drop pure fillers, join a spoken number range on an
+    en dash, strip token-final commas, and never end the clip on a dangling
+    conjunction. The audio still carries every removed word - that is what
+    makes each of these safe, and why anything more stays editorial judgment."""
+    out, removed, i = [], 0, 0
+    while i < len(words):
+        w = words[i]
+        t = w["text"]
+        if FILLER_WORD.match(t):
+            removed += 1
+            i += 1
+            continue
+        m = NUM_COMMA.match(t)
+        if m and i + 1 < len(words) and re.match(r"^\d", words[i + 1]["text"]):
+            nxt = words[i + 1]
+            w = dict(w, text=f"{m.group(1)}\u2013{nxt['text']}", end=nxt["end"])
+            removed += 1
+            i += 2
+        else:
+            stripped = TRAILING_COMMA.sub(r"\1", t)
+            if stripped and stripped != t:
+                w = dict(w, text=stripped)
+            i += 1
+        out.append(w)
+    while out and out[-1]["text"].rstrip(".!?").lower() in DANGLING_TAIL:
+        out.pop()
+        removed += 1
+    words[:] = out
+    return removed
+
+
+def mark_sentence_starts(words):
+    """Sentence case capitalizes at sentence starts, never at bare group starts."""
+    for i, w in enumerate(words):
+        w["capitalize"] = i == 0 or bool(SENTENCE_END.search(words[i - 1]["text"]))
+
+
+def normalize_acronyms(words, acronyms):
+    """Uppercase the tokens the ASR lowercased, e.g. "ai" -> "AI"."""
+    table = {a.lower() for a in acronyms}
+    fixed = 0
+    for w in words:
+        core = re.sub(r"[^A-Za-z]", "", w["text"]).lower()
+        if core in table:
+            w["text"] = re.sub(r"[A-Za-z]+", core.upper(), w["text"], count=1)
+            fixed += 1
+    return fixed
 
 
 def peak_scale(spec):
@@ -649,11 +713,11 @@ def build_events(groups, spec):
                 f"\\t(0,{appear},\\fscx{over}\\fscy{over})"
                 f"\\t({appear},{appear + settle},\\fscx100\\fscy100)}}"
             )
-        flat = [w for g in groups for w in ((g[0], True),) + tuple((w, False) for w in g[1:])]
-        for i, (word, first) in enumerate(flat):
-            text = apply_case(word["text"], case_mode, first)
+        flat = [w for g in groups for w in g]
+        for i, word in enumerate(flat):
+            text = apply_case(word["text"], case_mode, word.get("capitalize", False))
             start = word["start"]
-            next_start = flat[i + 1][0]["start"] if i + 1 < len(flat) else None
+            next_start = flat[i + 1]["start"] if i + 1 < len(flat) else None
             end = next_start if next_start is not None else word["end"] + pad_s
             end = max(end, start + 0.15)  # minimum readable display...
             if next_start is not None:  # ...but never overlap the next word (stacked captions)
@@ -671,7 +735,7 @@ def build_events(groups, spec):
         return events, fit_lines
 
     for gi, group in enumerate(groups):
-        cased = [apply_case(w["text"], case_mode, i == 0) for i, w in enumerate(group)]
+        cased = [apply_case(w["text"], case_mode, w.get("capitalize", False)) for w in group]
         start, end = group[0]["start"], group[-1]["end"] + pad_s
         if gi + 1 < len(groups):  # the pad must never overlap the next group (stacked captions)
             end = min(end, groups[gi + 1][0]["start"])
@@ -891,6 +955,11 @@ def main():
         fail("--words and --out are required unless --check")
 
     words = load_words(args.words)
+    removed = faithful_clean(words)
+    if removed:
+        print(f"note: faithful-clean dropped or joined {removed} word(s)", file=sys.stderr)
+    normalize_acronyms(words, spec["acronyms"])
+    mark_sentence_starts(words)
     widths = budget = None
     if spec["grouping"]["fitWidth"] and spec["animation"]["type"] in GROUP_ON_SCREEN:
         font_file = resolve_font_file(spec, args.font_file)
@@ -899,7 +968,8 @@ def main():
                 words, font_file, round(spec["font"]["size"] * peak_scale(spec)), spec["font"]["case"]
             )
             if widths:
-                budget = safe_width(spec)
+                # libass advances run a few percent wider than the measure, so pack with headroom
+                budget = safe_width(spec) * 0.94
             else:
                 print("note: could not measure text, so groups fall back to the word cap", file=sys.stderr)
         else:
