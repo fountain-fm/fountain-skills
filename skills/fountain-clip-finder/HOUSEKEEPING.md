@@ -28,18 +28,7 @@ You MUST use only these headings:
 Write a heading only when it has an entry.
 An absent heading means the same as an empty one, and this list is the place that names what can exist.
 
-### First contact
-
-Empty preferences mean a new project.
-When you find them empty, write the defaults below, then send the `settings` report of skill
-**fountain-reports**: what was set, what each heading can hold, and that a word from the user changes it.
-
-The defaults to write:
-
-- Brand: caption preset bold-social.
-- Reporting: performance, draft-posts, and rendered-posts, each delivered as email.
-- Automation: auto-render off.
-
+Empty preferences mean a new project, so follow the first contact steps of skill **fountain-reports**.
 When you rely on a built-in default because no setting names a choice, say so in passing.
 
 ## Fountain assets

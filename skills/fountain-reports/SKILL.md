@@ -52,7 +52,18 @@ The presets:
 - `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
 - `rendered-posts` - the rendered posts: headline, one card per post, the dashboard link.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
-  Sent at first contact (see HOUSEKEEPING.md), or whenever the user asks what their settings are.
+  Sent at first contact, or whenever the user asks what their settings are.
+
+First contact, for a caller that finds the preferences empty:
+
+1. Write the defaults: caption preset bold-social under Brand, each report delivered as email under
+   Reporting, and auto-render off under Automation.
+2. Mark each one `(default)`, and drop that mark when the user confirms or changes the value.
+   The mark is what lets a later reader, and the origin of a `setting-row`, tell a default from a choice.
+3. Send the `settings` report, which says what was set and what else each heading holds.
+
+The defaults only make the settings visible and editable, because every skill already defaults the same
+way with no entry at all.
 
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
