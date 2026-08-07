@@ -19,11 +19,12 @@ The posts are the record, and the preferences are the memory - nothing else pers
 ## Output
 
 - Updated Editorial and Narratives sections of the preferences.
-- The daily performance email: the numbers, the diagnosis, and any warning, sent via the Project API.
+- The daily performance email, sent as the `daily-performance` preset of skill **fountain-reports**.
 
 ## Requirements
 
 - Skill **fountain-api**.
+- Skill **fountain-reports**.
 
 ## Process
 
@@ -41,8 +42,8 @@ The posts are the record, and the preferences are the memory - nothing else pers
    When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 6. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
    That is an operational failure to surface, not a weak post to learn from.
-7. Assemble the day's report as markdown - the numbers, the diagnosis, the warnings - and email it to
-   the operator via the Project API.
+7. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports**, and send the
+   `daily-performance` preset as email.
 
 ## Additional notes
 

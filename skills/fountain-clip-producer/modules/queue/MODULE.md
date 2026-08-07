@@ -23,6 +23,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
 ## Requirements
 
 - Skill **fountain-api**.
+- Skill **fountain-reports**.
 
 ## Process
 
@@ -33,8 +34,8 @@ auto-render setting, and hands each eligible post to the process of the skill.
    With auto-render on, keep them all - rendering a draft the operator later rejects wastes only CPU.
 3. Run the process of the skill once per post, in the shape its platform needs, and attach the video.
 4. Continue past a failed render: report it, leave its draft for the next run, and finish the rest.
-5. When this run attached media and no draft now waits, email the operator via the Project API:
-   a short markdown note that links the dashboard review page.
+5. When this run attached media and no draft now waits, send the `daily-pack` preset of skill
+   **fountain-reports** as email - one email for the whole batch, with the dashboard review link.
    Send it only on a run that attached something, or every idle poll repeats the email.
 6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
 
