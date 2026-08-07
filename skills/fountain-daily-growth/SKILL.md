@@ -41,9 +41,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 3. Hand each brief to skill **fountain-clip-finder**, and do not read its result.
    The chain continues without this skill: the drafts wait in the Social API, and the operator decides
    in the Fountain dashboard.
-4. List today's drafts via the Social API and send the `editorial-pack` report of skill
-   **fountain-reports** as email, so the operator can review the words before any render.
-   This step reads the queue, not the result: the drafts go on unchanged, and the email says they exist.
+4. Read the auto-render setting from the Automation section of the preferences.
+   With auto-render off, list today's drafts via the Social API and send the `editorial-pack` report of
+   skill **fountain-reports** as email - the words, and the plain statement that approving is what
+   makes a clip render.
+   With auto-render on, send nothing here: the render machine sends the one pack email with the media
+   in it, and the operator reviews finished clips.
+   This step reads the queue, not the result: the drafts go on unchanged either way.
 
 ## Additional notes
 
