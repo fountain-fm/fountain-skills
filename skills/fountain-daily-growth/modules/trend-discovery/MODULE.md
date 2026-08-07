@@ -63,8 +63,8 @@ At most 5 briefs, one per advancing trend, where each brief carries:
 
 A narrative is one entry under the Narratives heading of the preferences: a story the show keeps telling,
 with its angle.
-The operator seeds the section.
-Propose a new narrative by writing it there marked as proposed, and let the operator keep or cut it.
+The user seeds the section.
+Propose a new narrative by writing it there marked as proposed, and let the user keep or cut it.
 
 Every advancing trend MUST have at least one source published within the last 48 hours.
 An evergreen article used as if it were breaking news is not a trend.
@@ -78,5 +78,5 @@ Drop a trend at this stage only when the show has clearly never touched the subj
 The test for a good translation: would the guest directly discuss this theme, not just something adjacent?
 A stretch at translation time becomes a forced archive match downstream - drop it now.
 
-`clip_count` stays at 1 or 2 because every draft the chain makes waits in the dashboard until the operator
+`clip_count` stays at 1 or 2 because every draft the chain makes waits in the dashboard until the user
 decides, and a small queue of strong candidates beats a long queue of maybes.

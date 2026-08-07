@@ -18,7 +18,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
 ## Output
 
 - A rendered, attached video on each eligible draft.
-- A run report, said plainly: what rendered, what failed, what remains.
+- What rendered, what failed, and what remains, said plainly.
 
 ## Requirements
 
@@ -31,17 +31,17 @@ auto-render setting, and hands each eligible post to the process of the skill.
    Off is the default when the show has no entry.
 2. List the show's posts via the Social API, and keep the drafts that miss their media.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
-   With auto-render on, keep them all - rendering a draft the operator later rejects wastes only CPU.
+   With auto-render on, keep them all - rendering a draft the user later rejects wastes only CPU.
 3. Run the process of the skill once per post, in the shape its platform needs, and attach the video.
 4. Continue past a failed render and finish the rest.
    Record each failure on the post itself: a renderer note in its `context` via the Social API, with
    the reason and the attempt count.
    Retry on later runs while the count is under 3.
    At 3, stop retrying - the draft needs a person, not a fourth attempt.
-5. When this run attached media and every draft is done or given up, send the `rendered-posts` preset of
-   skill **fountain-reports** as email - one email for the whole batch, with the given-up drafts
-   listed under warnings, so a failure never hides.
-   Send it only on a run that attached something, or every idle poll repeats the email.
+5. When this run attached media and every draft is done or given up, give the batch to skill
+   **fountain-reports** as the `rendered-posts` report - one report for the whole batch, the given-up
+   drafts under warnings so a failure never hides, delivery decided by the Reporting section.
+   Report only on a run that attached something, or every idle poll repeats it.
 6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
 
 ## Additional notes

@@ -61,7 +61,7 @@ With:
    Mark a moment `already-clipped` when it overlaps the `source` of any of them by more than half.
    Compare only with a `source` whose `media` is the `enclosure` of the segments, because the two clocks
    agree only then.
-   Advance a marked moment only when the caller or the learnings ask for a new cut.
+   Advance a marked moment only when the caller or the lessons ask for a new cut.
 9. Score each moment 1-10 for controversy, insight, engagement, and relevance.
    Use `topics` and `mentions` when the route returned them, because they show discussion, not a passing word.
    Remove any moment under 24 of 40, then rank what remains and give it to module **media**.

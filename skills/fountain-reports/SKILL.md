@@ -1,6 +1,6 @@
 ---
 name: fountain-reports
-description: Build the reports the operator reads - compose components into a preset, then email or print it.
+description: Build the reports the user reads - compose components into a preset, then email or print it.
 ---
 
 ## Overview
@@ -8,19 +8,20 @@ description: Build the reports the operator reads - compose components into a pr
 This skill owns how a report looks, so no caller invents its own format.
 A report is a preset: an ordered list of components, where each component is a markdown template that
 data fills.
-The caller names the preset and gives the data; this skill composes the report, then emails it via the
-Project API or prints it in the chat when the operator is reading there.
-The operator customizes a preset once, in the preferences, and every later report honours it.
+The caller names the preset and gives the data; this skill composes the report and delivers it the
+way the Reporting section asks - email, printed, combined with a later report, or not at all.
+The user customizes a preset once, in the preferences, and every later report honours it.
 
 ## Input
 
-- The preset name, and the surface: email or printed.
+- The preset name.
 - The data that the preset's components need, from the caller.
+- Optional: the surface, when the user is present and asks to read the report here.
 - Report customizations from the Reporting section of the preferences, when the show has any.
 
 ## Output
 
-- A sent email via the Project API, or the same report printed in the chat.
+- The report, delivered as the Reporting section asks - email is the default.
 
 ## Housekeeping
 
@@ -34,11 +35,14 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Load skill **fountain-api** and read the report customizations from the Reporting section of the
    preferences.
-   A customization can drop a component, reorder them, or change the subject line of a preset.
+   A customization can drop a component, reorder them, change a subject line, or change the delivery.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.
    Drop a component whose data the caller did not give, and say so after the send.
-4. Email the composed markdown via the Project API, or print it when the surface is the chat.
+4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
+   into a report sent later in the same run, or not at all.
+   Email is the default, and a user who is present and asked to read it here wins over the section.
+   Say plainly when a report was composed but not sent.
 
 ## Additional notes
 
@@ -51,8 +55,11 @@ The presets:
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
 
-The printed surface serves the review in the chat: the operator reads the same `rendered-posts` that
+The printed surface serves the review in the chat: the user reads the same `rendered-posts` that
 the email carries, so the two never disagree.
+
+Combining joins reports, not machines: a report can wait only for one sent later in the same run,
+because nothing holds a pending report between machines.
 
 A component is small and single-purpose.
 A new kind of email is a new preset over the same components, and a missing block is a new component -

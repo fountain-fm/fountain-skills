@@ -19,7 +19,7 @@ Each brief goes to skill **fountain-clip-finder**, and nothing comes back - the 
 
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, with a `clip_count` of 1 or 2.
-- The draft-posts email, sent one time when the day's drafts exist.
+- The draft-posts report, made one time when the day's drafts exist.
 - Updated preferences: the lessons of module **performance-review**, and any proposed narrative.
 
 ## Housekeeping
@@ -39,14 +39,14 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 1. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
 2. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
 3. Hand each brief to skill **fountain-clip-finder**, and do not read its result.
-   The chain continues without this skill: the drafts wait in the Social API, and the operator decides
+   The chain continues without this skill: the drafts wait in the Social API, and the user decides
    in the Fountain dashboard.
 4. Read the auto-render setting from the Automation section of the preferences.
-   With auto-render off, list today's drafts via the Social API and send the `draft-posts` report of
-   skill **fountain-reports** as email - the words, and the plain statement that approving is what
-   makes a clip render.
+   With auto-render off, list today's drafts and give them to skill **fountain-reports** as the
+   `draft-posts` report - the words, and the plain statement that approving is what makes a clip
+   render. Delivery is that skill's decision, from the Reporting section.
    With auto-render on, send nothing here: the render machine sends the one rendered-posts email with
-   the media in it, and the operator reviews finished clips.
+   the media in it, and the user reviews finished clips.
    This step reads the queue, not the result: the drafts go on unchanged either way.
 
 ## Additional notes
