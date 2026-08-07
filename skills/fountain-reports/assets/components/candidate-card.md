@@ -1,4 +1,4 @@
-<!-- Data: one card per rendered draft - title, duration, platform, why_now, transcript, flags. -->
+<!-- Data: one card per draft, rendered or not - title, duration, platform, why_now, transcript, flags. -->
 <!-- why_now is the "Why this clip" note the post already carries; transcript is source.transcript, -->
 <!-- quoted whole so the operator reads the exact words that go out; flags lists each risk flag, or "none". -->
 

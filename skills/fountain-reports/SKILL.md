@@ -45,6 +45,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 The presets:
 
 - `daily-performance` - the morning numbers: headline, stats table, winners and losers, warnings.
+- `editorial-pack` - today's drafts before any render: the words, one card per draft, the dashboard link.
 - `daily-pack` - today's rendered candidates: headline, one card per post, the dashboard link.
 
 The printed surface serves the review in the chat: the operator reads the same `daily-pack` that the

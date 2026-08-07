@@ -19,6 +19,7 @@ Each brief goes to skill **fountain-clip-finder**, and nothing comes back - the 
 
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, with a `clip_count` of 1 or 2.
+- The editorial-pack email, sent one time when the day's drafts exist.
 - Updated preferences: the lessons of module **performance-review**, and any proposed narrative.
 
 ## Housekeeping
@@ -31,6 +32,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
   Optional: a social trend search tool, such as one for X, when the machine has one.
 - Skill **fountain-api**.
 - Skill **fountain-clip-finder**.
+- Skill **fountain-reports**.
 
 ## Process
 
@@ -39,6 +41,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 3. Hand each brief to skill **fountain-clip-finder**, and do not read its result.
    The chain continues without this skill: the drafts wait in the Social API, and the operator decides
    in the Fountain dashboard.
+4. List today's drafts via the Social API and send the `editorial-pack` report of skill
+   **fountain-reports** as email, so the operator can review the words before any render.
+   This step reads the queue, not the result: the drafts go on unchanged, and the email says they exist.
 
 ## Additional notes
 
