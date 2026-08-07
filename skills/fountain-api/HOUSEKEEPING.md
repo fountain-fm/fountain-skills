@@ -25,6 +25,9 @@ You MUST use only these headings:
 - Automation - the switches of the daily loop, e.g. auto-render.
 - Other - all other preferences.
 
+Write a heading only when it has an entry.
+An absent heading means the same as an empty one, and this list is the place that names what can exist.
+
 ## Fountain assets
 
 If a local file system is available, you MUST store Fountain-related assets in `fountain`:
