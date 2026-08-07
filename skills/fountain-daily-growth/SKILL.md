@@ -7,7 +7,8 @@ description: Read yesterday's results and today's news, then brief fountain-clip
 
 This skill is the head of the daily content chain, and it runs the same two looks every morning.
 Module **performance-review** looks backward: it turns the numbers of yesterday's posts into lessons in the preferences.
-Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs for skill **fountain-clip-finder**.
+Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs
+for skill **fountain-clip-finder**.
 
 ## Input
 
@@ -18,7 +19,7 @@ Module **trend-discovery** looks forward: it scores today's news and shapes the 
 
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, with a `clip_count` of 1 or 2.
-- The draft-posts report, made one time when the day's drafts exist.
+- The draft-posts report, one time when the day's drafts exist and auto-render is off.
 - Updated preferences: the lessons of module **performance-review**, and any proposed narrative.
 
 ## Housekeeping
@@ -37,20 +38,18 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
 2. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
-3. Hand each brief to skill **fountain-clip-finder**, and do not read its result.
-   The chain continues without this skill: the drafts wait in the Social API, and the user decides
-   in the Fountain dashboard.
+3. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
+   continues without this skill.
 4. Read the auto-render setting from the Automation section of the preferences.
-   With auto-render off, list today's drafts and give them to skill **fountain-reports** as the
-   `draft-posts` report - the words, and the plain statement that approving is what makes a clip
-   render. Delivery is that skill's decision, from the Reporting section.
-   With auto-render on, send nothing here: the render machine sends the one rendered-posts email with
-   the media in it, and the user reviews finished clips.
-   This step reads the queue, not the result: the drafts go on unchanged either way.
+   With auto-render off, list today's drafts and send them as the `draft-posts` report of skill
+   **fountain-reports**: the words, and the plain statement that approving is what makes a clip render.
+   With auto-render on, skip the report - the render machine sends rendered-posts with the media in it.
+   Either way this step reads the queue, not the result, and the drafts go on unchanged.
 
 ## Additional notes
 
-You MUST NOT approve, schedule, or publish a post - approval lives in the Fountain dashboard, not in a skill.
+You MUST NOT approve, schedule, or publish a post on your own.
+Those are the user's decisions, made in the dashboard or given to you in words.
 
 This skill owns the two morning looks and nothing downstream.
 Finding moments and writing the copy is the job of skill **fountain-clip-finder**.

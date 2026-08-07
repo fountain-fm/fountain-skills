@@ -5,11 +5,11 @@ description: Read yesterday's posts and their numbers fresh from the API, and wr
 
 ## Overview
 
-This module is how the loop learns without local state.
+This module turns yesterday's outcomes into tomorrow's instructions.
 It loads the recent posts and their engagement fresh from the API, compares each post against the show's
 own baseline, reads the user's decisions from the post metadata, and writes what holds beyond today
 into the preferences.
-The posts are the record, and the preferences are the memory - nothing else persists.
+The posts are the record, and the preferences are the memory.
 
 ## Input
 
@@ -60,5 +60,3 @@ Diagnose a pattern of untouched drafts, not any single one.
 
 A reason the user already gave at a review is already in the preferences - do not re-derive it from
 the outcomes, and do not write it twice.
-
-You MUST NOT keep a local log of posts, numbers, or lessons for a later session.

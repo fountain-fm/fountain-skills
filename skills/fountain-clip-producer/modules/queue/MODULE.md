@@ -6,7 +6,7 @@ description: Work the render queue - find the drafts that wait for media, and re
 ## Overview
 
 This module is the consumer end of the drafts-as-queue handoff.
-A scheduler on the render machine starts it; the module itself owns no schedule and keeps no state.
+A scheduler on the render machine starts it; the module itself owns no schedule.
 Each run asks the Social API one question - which drafts miss their media - filters them by the
 auto-render setting, and hands each eligible post to the process of the skill.
 
