@@ -20,7 +20,7 @@ You MUST use only these headings:
 - Narratives - stories and angles that the user wants for clips and posts.
 - Editorial - tone, structure, and rules for what to make and when to publish it.
 - Brand - the show's look: caption style, fonts, logos, and colours.
-- Accounts - the show's channels and each confirmed handle, per platform.
+- Accounts - what the API cannot name: the handle to tag a person by, and where a show's video lives.
 - Reporting - how the user wants their reports and emails: preset customizations of skill **fountain-reports**.
 - Automation - the switches of the daily loop, e.g. auto-render.
 - Other - all other preferences.
