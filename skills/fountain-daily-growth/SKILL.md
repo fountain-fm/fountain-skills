@@ -5,8 +5,9 @@ description: Read yesterday's results and today's news, then brief fountain-clip
 
 ## Overview
 
-This skill is the head of the daily content chain, and it runs the same two looks every morning.
-Module **performance-review** looks backward: it turns the numbers of yesterday's posts into lessons in the preferences.
+This skill is the head of the daily content chain, and it runs two modules in order.
+Module **performance-review** looks backward: it turns the numbers of yesterday's posts into lessons
+in the preferences.
 Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs
 for skill **fountain-clip-finder**.
 
