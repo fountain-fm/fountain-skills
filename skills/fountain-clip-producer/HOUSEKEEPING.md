@@ -20,6 +20,7 @@ You MUST use only these headings:
 - Narratives - stories and angles that the user wants for clips and posts.
 - Editorial - tone, structure, and rules for what to make and when to publish it.
 - Captions - caption style, e.g. font, position, and case.
+- Reporting - how the user wants their reports and emails: preset customizations of skill **fountain-reports**.
 - Other - all other preferences.
 
 ## Fountain assets

@@ -16,7 +16,7 @@ The operator customizes a preset once, in the preferences, and every later repor
 
 - The preset name, and the surface: email or printed.
 - The data that the preset's components need, from the caller.
-- Report customizations from the Other section of the preferences, when the show has any.
+- Report customizations from the Reporting section of the preferences, when the show has any.
 
 ## Output
 
@@ -32,7 +32,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Load skill **fountain-api** and read the report customizations from the Other section of the preferences.
+1. Load skill **fountain-api** and read the report customizations from the Reporting section of the
+   preferences.
    A customization can drop a component, reorder them, or change the subject line of a preset.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.
