@@ -85,8 +85,9 @@ Sentence case capitalizes at sentence starts only, keeps "I", and keeps a token'
 The judgment calls stay yours:
 
 - Remove a false start - the abandoned fragment before a restart - when that does not change the meaning.
-- Judge "like" and "I mean" one at a time: delete the word, read the line again, and keep it when the line
-  now says something else. "Like" before a quote or a number always stays.
+- The script names each filler candidate (like, right, you know, kind of, sort of, I mean), removing none.
+  Delete only when the sentence keeps its claim; keep the verb, the comparison, the quotative "it's like",
+  a fixed "like that", anything before a quote or a number. A trailing tag "right" always goes.
 - Keep a repetition that carries emphasis, and never turn a sentence into a different claim.
 - Correct the machine transcript: names, numbers, currency, spelled the way the show notes do.
 

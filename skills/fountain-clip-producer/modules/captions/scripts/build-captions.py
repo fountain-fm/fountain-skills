@@ -434,6 +434,42 @@ def faithful_clean(words):
     return removed
 
 
+FILLER_CANDIDATES = {"like", "right"}
+FILLER_BIGRAMS = {("you", "know"), ("kind", "of"), ("sort", "of"), ("i", "mean")}
+RIGHT_KEEPERS = {"now", "there", "here", "away", "side", "hand", "answer", "thing", "one", "amount"}
+LIKE_QUOTATIVE = {"was", "is", "it's", "i'm", "be", "being", "felt", "feels", "looks", "sounds", "seems"}
+
+
+def flag_filler_candidates(words):
+    """Name every filler candidate and remove none: deletion is editorial
+    judgment (see the module), but a candidate nobody lists is a candidate
+    nobody judges. Suppresses the obvious keeps to hold the noise down."""
+    hits = []
+    for i, w in enumerate(words):
+        t = re.sub(r"[^a-z']", "", w["text"].lower())
+        prev = re.sub(r"[^a-z']", "", words[i - 1]["text"].lower()) if i else ""
+        nxt = re.sub(r"[^a-z']", "", words[i + 1]["text"].lower()) if i + 1 < len(words) else ""
+        if t == "like":
+            before_num = i + 1 < len(words) and re.match(r"^[\d$\"]", words[i + 1]["text"])
+            if prev in LIKE_QUOTATIVE or before_num or nxt == "that" or prev == "i":
+                continue
+            hits.append((w["start"], "like"))
+        elif t == "right":
+            if nxt in RIGHT_KEEPERS or prev in {"the", "all"}:
+                continue
+            hits.append((w["start"], "right"))
+        elif i + 1 < len(words) and (t, nxt) in FILLER_BIGRAMS:
+            hits.append((w["start"], f"{t} {nxt}"))
+    if hits:
+        preview = ", ".join(f"'{k}' at {s:.1f}s" for s, k in hits[:8])
+        more = f" (+{len(hits) - 8} more)" if len(hits) > 8 else ""
+        print(
+            f"filler-review: {len(hits)} candidate(s) to judge, none removed: {preview}{more}",
+            file=sys.stderr,
+        )
+    return hits
+
+
 def mark_sentence_starts(words):
     """Sentence case capitalizes at sentence starts, never at bare group starts."""
     for i, w in enumerate(words):
@@ -959,6 +995,7 @@ def main():
     if removed:
         print(f"note: faithful-clean dropped or joined {removed} word(s)", file=sys.stderr)
     normalize_acronyms(words, spec["acronyms"])
+    flag_filler_candidates(words)
     mark_sentence_starts(words)
     widths = budget = None
     if spec["grouping"]["fitWidth"] and spec["animation"]["type"] in GROUP_ON_SCREEN:
