@@ -16,6 +16,7 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 - The `TranscriptWord` list of that span, which the `fountain` source of the transcript carries.
   Module **shots** wants the speaker of each word too, which `TranscriptWord` does not define.
 - A delivery tier, which the words of the request imply.
+- Or a queue run: module **queue** reads the drafts that wait for media, and derives the inputs above.
 
 Optional:
 
@@ -80,22 +81,21 @@ A clip needs the `fountain` transcript of its episode, and never the `rss` one a
 The `rss` transcript is timed against the feed and its different advertisement cut, so its clock can sit
 minutes away from this file: a span measured on it looks right on paper and holds the wrong words.
 
-Generating one is metered, and it is yours to start without asking.
-Say what it cost and what remains as soon as the job is queued, and never after the render.
-The job is queued, so poll until it completes, and stop when it fails or the episode is early-access.
+Generating one is metered and yours to start without asking: say the cost as soon as the job is queued.
+Poll until it completes, and stop when it fails or the episode is early-access.
 
-Always cut from the tallest rendition, because a 9:16 crop keeps the whole height and about a third of the
-width: the height of that rendition is the real resolution of the clip, and module **qa** fails a big upscale.
+Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
+so that height is the real resolution of the clip, and module **qa** fails a big upscale.
 
-When the start or the end of a rendered clip reads wrong, report it rather than move the span here.
-A letterbox is requested work too, and black bars are never your decision.
+When a rendered span reads wrong, report it rather than move it here - and a letterbox is requested work too.
 
-To change a clip this skill already made, read the manifest and the QA report first, and reuse the master,
-the crop plan, and the caption assets that are still correct. Write each new output under a new name.
+To change a clip this skill already made, read the manifest and the QA report first, reuse what is still
+correct, and write each new output under a new name.
 Touch only the output of the module that changes, and a caption change MUST NOT force a new crop.
 
 A post does not have to be approved before this skill runs, and rendering one approves nothing: you MUST
 NOT approve, schedule, or publish a post, because only the user decides that.
+The auto-render setting decides which drafts a queue run picks up - module **queue** defines it.
 
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
 
