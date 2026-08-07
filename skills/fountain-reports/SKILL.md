@@ -44,12 +44,15 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 The presets:
 
-- `daily-performance` - the morning numbers: headline, stats table, winners and losers, warnings.
-- `editorial-pack` - today's drafts before any render: the words, one card per draft, the dashboard link.
-- `daily-pack` - today's rendered candidates: headline, one card per post, the dashboard link.
+- `performance` - the numbers for a window: headline, stats table, winners and losers, warnings.
+- `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
+- `rendered-posts` - the rendered posts: headline, one card per post, the dashboard link.
 
-The printed surface serves the review in the chat: the operator reads the same `daily-pack` that the
-email carries, so the two never disagree.
+A preset is named for the state it reports, never for the occasion or the skill that sends it,
+so any head of the chain reuses it unchanged.
+
+The printed surface serves the review in the chat: the operator reads the same `rendered-posts` that
+the email carries, so the two never disagree.
 
 A component is small and single-purpose.
 A new kind of email is a new preset over the same components, and a missing block is a new component -

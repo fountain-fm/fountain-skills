@@ -1,4 +1,4 @@
-<!-- Preset: today's drafted clips before any render - the words, ready for an early review. -->
+<!-- Preset: the drafted posts before any render - the words, ready for an early review. -->
 
 Subject: {show} - {count} clips drafted, review the words
 

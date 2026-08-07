@@ -38,7 +38,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
    the reason and the attempt count.
    Retry on later runs while the count is under 3.
    At 3, stop retrying - the draft needs a person, not a fourth attempt.
-5. When this run attached media and every draft is done or given up, send the `daily-pack` preset of
+5. When this run attached media and every draft is done or given up, send the `rendered-posts` preset of
    skill **fountain-reports** as email - one email for the whole batch, with the given-up drafts
    listed under warnings, so a failure never hides.
    Send it only on a run that attached something, or every idle poll repeats the email.

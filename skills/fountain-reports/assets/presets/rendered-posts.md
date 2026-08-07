@@ -1,4 +1,4 @@
-<!-- Preset: today's rendered candidates, sent when the render queue drains, or printed at a chat review. -->
+<!-- Preset: the rendered posts, sent when the render queue drains, or printed at a chat review. -->
 
 Subject: {show} - {count} clips ready for review
 
