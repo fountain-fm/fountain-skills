@@ -33,7 +33,10 @@ auto-render setting, and hands each eligible post to the process of the skill.
    With auto-render on, keep them all - rendering a draft the operator later rejects wastes only CPU.
 3. Run the process of the skill once per post, in the shape its platform needs, and attach the video.
 4. Continue past a failed render: report it, leave its draft for the next run, and finish the rest.
-5. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
+5. When this run attached media and no draft now waits, email the operator via the Project API:
+   a short markdown note that links the dashboard review page.
+   Send it only on a run that attached something, or every idle poll repeats the email.
+6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
 
 ## Additional notes
 
@@ -43,5 +46,5 @@ mid-batch loses nothing, and the next run picks up the remainder.
 The transcript of an episode can be missing on the first clip of a show.
 Generating it is metered, and the skill says the cost when it queues the job.
 
-When every draft of the day carries its media, say so in the report.
-Telling the operator by email waits on an email send that the API does not offer yet.
+A machine that was asleep sends the ready email late rather than never: the first run after waking
+drains the queue and then sends it, so no cloud sweeper exists.

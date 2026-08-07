@@ -19,7 +19,7 @@ The posts are the record, and the preferences are the memory - nothing else pers
 ## Output
 
 - Updated Editorial and Narratives sections of the preferences.
-- Operational warnings, said plainly: a post in `ERROR`, or a stored schedule that never fired.
+- The daily performance email: the numbers, the diagnosis, and any warning, sent via the Project API.
 
 ## Requirements
 
@@ -41,6 +41,8 @@ The posts are the record, and the preferences are the memory - nothing else pers
    When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 6. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
    That is an operational failure to surface, not a weak post to learn from.
+7. Assemble the day's report as markdown - the numbers, the diagnosis, the warnings - and email it to
+   the operator via the Project API.
 
 ## Additional notes
 
@@ -54,5 +56,8 @@ A show with one post has a weak baseline - say so instead of forcing a diagnosis
 Untouched drafts are a signal with more than one reading: a rejected candidate and an unseen one look
 the same.
 Diagnose a pattern of untouched drafts, not any single one.
+
+A reason the operator already gave at a review is already in the preferences - do not re-derive it from
+the outcomes, and do not write it twice.
 
 You MUST NOT keep a local log of posts, numbers, or lessons for a later session.
