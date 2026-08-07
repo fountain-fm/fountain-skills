@@ -51,6 +51,8 @@ The presets:
 - `performance` - the numbers for a window: headline, stats table, winners and losers, warnings.
 - `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
 - `rendered-posts` - the rendered posts: headline, one card per post, the dashboard link.
+- `settings` - the current settings, each with its origin, and the tour of the headings.
+  Sent at first contact (see HOUSEKEEPING.md), or whenever the user asks what their settings are.
 
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
