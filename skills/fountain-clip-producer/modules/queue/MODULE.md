@@ -12,8 +12,9 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 ## Input
 
-- `show` - the show whose queue this machine works.
-- The auto-render setting, from the Automation section of the preferences.
+- The Automation section of the preferences: the shows this machine works, and the auto-render setting
+  of each.
+- Optional: `show`, to work one show instead of all of them.
 
 ## Output
 
@@ -27,9 +28,10 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 ## Process
 
-1. Load skill **fountain-api** and read the auto-render setting from the Automation section of the preferences.
-   Off is the default when the show has no entry.
-2. List the show's posts via the Social API, and keep the drafts that miss their media.
+1. Load skill **fountain-api** and read the Automation section of the preferences.
+   Work every show it names, unless the caller named one.
+   Off is the default auto-render when a show has no entry.
+2. List each show's posts via the Social API, and keep the drafts that miss their media.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
    With auto-render on, keep them all - rendering a draft the user later rejects wastes only CPU.
 3. Run the process of the skill once per post, in the shape its platform needs, and attach the video.
@@ -45,6 +47,9 @@ auto-render setting, and hands each eligible post to the process of the skill.
 6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
 
 ## Additional notes
+
+The queue asks per show because the Social API lists posts by their source, and names no wider set.
+A show reaches this machine by having an Automation entry, which the first run of the loop writes for it.
 
 Progress lives on the posts themselves: an attached upload is the only "done" mark, so a run that dies
 mid-batch loses nothing, and the next run picks up the remainder.
