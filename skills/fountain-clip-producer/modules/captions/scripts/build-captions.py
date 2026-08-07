@@ -32,10 +32,30 @@ from pathlib import Path
 DEFAULTS = {
     "playResX": 1080,
     "playResY": 1920,
-    # Tokens the ASR writes in lowercase that must render uppercase. Conservative
-    # by default - only strings that are not English words - because "us" is both
-    # a pronoun and a country. A brand kit extends this with the show's own vocabulary.
-    "acronyms": ["ai", "btc", "eth", "etf", "gdp", "cpi", "kyc", "atm", "fbi", "nsa", "irs", "llc"],
+    # Tokens the ASR lowercases that must render in their canonical case. Conservative
+    # by default - only strings that are not English words - because "us" is both a
+    # pronoun and a country. A brand kit extends this with the show's own vocabulary.
+    # An ambiguous token rides as a phrase ("the fed" -> "the Fed"), never bare.
+    "casing": {
+        "ai": "AI",
+        "btc": "BTC",
+        "eth": "ETH",
+        "etf": "ETF",
+        "gdp": "GDP",
+        "cpi": "CPI",
+        "kyc": "KYC",
+        "atm": "ATM",
+        "fbi": "FBI",
+        "nsa": "NSA",
+        "irs": "IRS",
+        "llc": "LLC",
+        "wifi": "Wi-Fi",
+        "wi-fi": "Wi-Fi",
+        "usb": "USB",
+        "gpu": "GPU",
+        "cpu": "CPU",
+        "url": "URL",
+    },
     "font": {
         "family": "Arial",
         "size": 72,
@@ -157,15 +177,22 @@ def fail(msg):
     sys.exit(1)
 
 
+OPEN_DICTS = {"casing"}  # vocabulary maps: new keys are the point, not a typo
+
+
 def deep_merge(base, incoming, path=""):
     """Merge incoming onto base, rejecting keys that don't exist in base —
-    a typo'd override must error, not silently style nothing."""
+    a typo'd override must error, not silently style nothing. Vocabulary
+    dicts (OPEN_DICTS) accept new keys freely."""
     for key, value in incoming.items():
         where = f"{path}.{key}" if path else key
         if not path and key in META_KEYS:
             continue
         if key not in base:
-            fail(f"unknown style field '{where}' (check spelling against the spec schema)")
+            if path not in OPEN_DICTS:
+                fail(f"unknown style field '{where}' (check spelling against the spec schema)")
+            base[key] = value
+            continue
         if isinstance(base[key], dict) and isinstance(value, dict):
             deep_merge(base[key], value, where)
         else:
@@ -476,14 +503,34 @@ def mark_sentence_starts(words):
         w["capitalize"] = i == 0 or bool(SENTENCE_END.search(words[i - 1]["text"]))
 
 
-def normalize_acronyms(words, acronyms):
-    """Uppercase the tokens the ASR lowercased, e.g. "ai" -> "AI"."""
-    table = {a.lower() for a in acronyms}
+def apply_casing(words, casing):
+    """Restore canonical case the ASR lost: "ai" -> "AI", "wifi" -> "Wi-Fi",
+    "the fed" -> "the Fed". A cased word is protected from the case mode, or
+    sentence case would immediately lower "Fed" again. Phrase keys match on
+    consecutive tokens, so an ambiguous word never matches bare."""
+
+    def core(text):
+        return re.sub(r"[^A-Za-z'-]", "", text).lower()
+
+    singles = {k: v for k, v in casing.items() if " " not in k}
+    phrases = {tuple(k.split()): v.split() for k, v in casing.items() if " " in k}
     fixed = 0
-    for w in words:
-        core = re.sub(r"[^A-Za-z]", "", w["text"]).lower()
-        if core in table:
-            w["text"] = re.sub(r"[A-Za-z]+", core.upper(), w["text"], count=1)
+    for i, w in enumerate(words):
+        c = core(w["text"])
+        for key, vals in phrases.items():
+            if c == key[0] and i + len(key) <= len(words):
+                cores = [core(words[i + j]["text"]) for j in range(len(key))]
+                if tuple(cores) == key:
+                    for j, val in enumerate(vals):
+                        ww = words[i + j]
+                        before = ww["text"]
+                        ww["text"] = re.sub(r"[A-Za-z'-]+", val, ww["text"], count=1)
+                        if ww["text"] != before:
+                            ww["protect_case"] = True
+                    fixed += 1
+        if c in singles:
+            w["text"] = re.sub(r"[A-Za-z'-]+", singles[c], w["text"], count=1)
+            w["protect_case"] = True
             fixed += 1
     return fixed
 
@@ -751,7 +798,11 @@ def build_events(groups, spec):
             )
         flat = [w for g in groups for w in g]
         for i, word in enumerate(flat):
-            text = apply_case(word["text"], case_mode, word.get("capitalize", False))
+            text = (
+                word["text"]
+                if word.get("protect_case")
+                else apply_case(word["text"], case_mode, word.get("capitalize", False))
+            )
             start = word["start"]
             next_start = flat[i + 1]["start"] if i + 1 < len(flat) else None
             end = next_start if next_start is not None else word["end"] + pad_s
@@ -771,7 +822,10 @@ def build_events(groups, spec):
         return events, fit_lines
 
     for gi, group in enumerate(groups):
-        cased = [apply_case(w["text"], case_mode, w.get("capitalize", False)) for w in group]
+        cased = [
+            w["text"] if w.get("protect_case") else apply_case(w["text"], case_mode, w.get("capitalize", False))
+            for w in group
+        ]
         start, end = group[0]["start"], group[-1]["end"] + pad_s
         if gi + 1 < len(groups):  # the pad must never overlap the next group (stacked captions)
             end = min(end, groups[gi + 1][0]["start"])
@@ -994,7 +1048,7 @@ def main():
     removed = faithful_clean(words)
     if removed:
         print(f"note: faithful-clean dropped or joined {removed} word(s)", file=sys.stderr)
-    normalize_acronyms(words, spec["acronyms"])
+    apply_casing(words, spec["casing"])
     flag_filler_candidates(words)
     mark_sentence_starts(words)
     widths = budget = None

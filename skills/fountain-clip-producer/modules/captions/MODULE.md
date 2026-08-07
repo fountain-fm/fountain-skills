@@ -78,10 +78,10 @@ The presets in `assets` are starting points, each carries its own description, a
 words marked `"emphasize": true`.
 
 These are the text rules, and the default mode is faithful-clean.
-The script owns the mechanical ones - all safe because the audio still carries every word:
-it drops "um" and "uh", strips commas, joins a spoken number range on an en dash, uppercases the
-acronym list (extend it in the brand kit), and never lets a clip end on a dangling conjunction.
-Sentence case capitalizes at sentence starts only, keeps "I", and keeps a token's own capitals.
+The script owns the mechanical ones - safe because the audio still carries every word: it drops "um" and
+"uh", strips commas, joins a number range on an en dash, never lets a clip end on a dangling conjunction,
+and applies the casing map (ai -> AI, wifi -> Wi-Fi; kit-extended, an ambiguous token rides as a phrase:
+"the fed" -> "the Fed"). Sentence case capitalizes only at sentence starts, keeping "I" and existing capitals.
 The judgment calls stay yours:
 
 - Remove a false start - the abandoned fragment before a restart - when that does not change the meaning.
@@ -89,7 +89,7 @@ The judgment calls stay yours:
   Delete only when the sentence keeps its claim; keep the verb, the comparison, the quotative "it's like",
   a fixed "like that", anything before a quote or a number. A trailing tag "right" always goes.
 - Keep a repetition that carries emphasis, and never turn a sentence into a different claim.
-- Correct the machine transcript: names, numbers, currency, spelled the way the show notes do.
+- Correct any remaining name, number, or currency the way the show notes spell it.
 
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style:
 `sentence` lowercases every word first, so it destroys "I" and every name.
