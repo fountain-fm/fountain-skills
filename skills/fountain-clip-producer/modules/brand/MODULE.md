@@ -29,7 +29,7 @@ The values live in the preferences, because only the preferences survive a sessi
 ## Process
 
 1. Load the preferences with the Project API of skill **fountain-api**, and read the kit of the show.
-   The Captions section holds the caption style, and the Other section holds the rest.
+   The Brand section holds all of it: the caption style, and the assets around it.
 2. Produce the clip without a kit when the show has none, because a preset and an override work alone.
 3. Write the kit values into a kit file for this session, and give that file to the two scripts that read it.
    Build the file again in a later session, because the preferences are the store and the file is not.

@@ -13,7 +13,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
 ## Input
 
 - `show` - the show whose queue this machine works.
-- The auto-render setting, from the Other section of the preferences.
+- The auto-render setting, from the Automation section of the preferences.
 
 ## Output
 
@@ -27,7 +27,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 ## Process
 
-1. Load skill **fountain-api** and read the auto-render setting from the Other section of the preferences.
+1. Load skill **fountain-api** and read the auto-render setting from the Automation section of the preferences.
    Off is the default when the show has no entry.
 2. List the show's posts via the Social API, and keep the drafts that miss their media.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
