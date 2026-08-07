@@ -33,9 +33,14 @@ auto-render setting, and hands each eligible post to the process of the skill.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
    With auto-render on, keep them all - rendering a draft the operator later rejects wastes only CPU.
 3. Run the process of the skill once per post, in the shape its platform needs, and attach the video.
-4. Continue past a failed render: report it, leave its draft for the next run, and finish the rest.
-5. When this run attached media and no draft now waits, send the `daily-pack` preset of skill
-   **fountain-reports** as email - one email for the whole batch, with the dashboard review link.
+4. Continue past a failed render and finish the rest.
+   Record each failure on the post itself: a renderer note in its `context` via the Social API, with
+   the reason and the attempt count.
+   Retry on later runs while the count is under 3.
+   At 3, stop retrying - the draft needs a person, not a fourth attempt.
+5. When this run attached media and every draft is done or given up, send the `daily-pack` preset of
+   skill **fountain-reports** as email - one email for the whole batch, with the given-up drafts
+   listed under warnings, so a failure never hides.
    Send it only on a run that attached something, or every idle poll repeats the email.
 6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
 
@@ -43,6 +48,8 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 Progress lives on the posts themselves: an attached upload is the only "done" mark, so a run that dies
 mid-batch loses nothing, and the next run picks up the remainder.
+The failure count lives there too, in the renderer note, so it survives any machine and the dashboard
+shows the reason beside the post.
 
 The transcript of an episode can be missing on the first clip of a show.
 Generating it is metered, and the skill says the cost when it queues the job.

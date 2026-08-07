@@ -4,4 +4,5 @@ Subject: {show} - {count} clips ready for review
 
 1. headline
 2. candidate-card, one per post
-3. dashboard-link
+3. warnings, when a draft was given up
+4. dashboard-link
