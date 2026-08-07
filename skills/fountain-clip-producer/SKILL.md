@@ -93,9 +93,9 @@ To change a clip this skill already made, read the manifest and the QA report fi
 correct, and write each new output under a new name.
 Touch only the output of the module that changes, and a caption change MUST NOT force a new crop.
 
-A post does not have to be approved before this skill runs, and rendering one approves nothing: you MUST
-NOT approve, schedule, or publish a post, because only the user decides that.
-The auto-render setting decides which drafts a queue run picks up - module **queue** defines it.
+A post does not have to be approved before this skill runs, and rendering one approves nothing.
+You MUST NOT approve, schedule, or publish a post on your own.
+Those are the user's decisions, made in the dashboard or given to you in words.
 
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
 

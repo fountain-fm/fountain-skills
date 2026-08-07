@@ -5,11 +5,10 @@ description: Find the strongest clip moments in a show, write the post copy, and
 
 ## Overview
 
-This skill takes a brief and searches the podcast transcripts for moments that could become a strong clip.
-Four modules narrow down the selection.
-Module **discovery** scores the moments, and module **media** resolves the file each one is cut from.
-Module **boundaries** sets the span of each clip, and module **copy** writes the words around it.
-A draft holds the result and publishes nothing, so the user decides what goes out.
+This skill searches a show's transcripts for the moments that could become a strong clip.
+Four modules narrow the field: module **discovery** scores the moments, module **media** resolves the file
+each one is cut from, module **boundaries** sets the span, and module **copy** writes the words around it.
+Each clip becomes a draft post, so the user decides what goes out.
 
 ## Input
 
@@ -31,7 +30,6 @@ Optional:
 
 One draft `SocialPost` for each clip on each connected `SocialChannel`, ranked by the clip score of
 module **boundaries**.
-A draft publishes nothing until the user approves it.
 
 A post targets one channel, and the platform of that channel decides how the text reads.
 One clip on two channels is therefore two posts, each with its own text.
@@ -41,8 +39,8 @@ Fountain shows a post as a candidate only when it holds `source`, and only then 
 Module **copy** writes `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 
-The posts then wait in the Social API, and nothing here invokes the next stage:
-skill **fountain-clip-producer** works from `source`, and attaches the video to the post.
+The posts then wait in the Social API, and nothing here invokes the next stage: skill
+**fountain-clip-producer** works from `source` and attaches the video to the post.
 
 ## Housekeeping
 
@@ -72,11 +70,10 @@ Each module removes work from the next one, so you MUST run the four in the orde
 `ts_start` and `ts_end` are always in the time of `media`, and never in the time of another file.
 A YouTube cut of an episode does not run to the clock of the transcript, so module **media** maps the two.
 
-This skill never makes a video file.
-It finds the moment, sets the span, and writes the words, and `source` holds all of that.
-Skill **fountain-clip-producer** renders from the post, and it does not wait for the user to approve one.
-Give the posts to that skill when the user asks for a video, and do not try to render one here.
+This skill never makes a video file: it finds the moment, sets the span, and writes the words, and
+`source` holds all of that.
 
-You MUST NOT approve, schedule, or publish a post, because only the user decides that.
+You MUST NOT approve, schedule, or publish a post on your own.
+Those are the user's decisions, made in the dashboard or given to you in words.
 
 Give few strong clips rather than many weak ones, and say plainly when the show holds none.
