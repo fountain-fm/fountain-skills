@@ -24,6 +24,11 @@ This module therefore also builds a time map, which module **boundaries** uses t
   Module **boundaries** sets the three remaining fields, so it is complete only after that module.
 - A time map for each moment that resolves to YouTube - the file that translates one clock into the other.
 - A confidence tier for each moment that needed a YouTube match.
+- A preview link for each moment, which opens the video at the moment so the user can watch it.
+  Fountain video: `https://fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the
+  seconds in the clock of the transcript, which is the clock of that file.
+  A YouTube match: `https://www.youtube.com/watch?v=<id>&t=<seconds>s`, with the seconds translated
+  through the time map, because that file runs to its own clock.
 - A removal mark on each moment that has no usable video.
 
 ## Requirements
@@ -63,7 +68,7 @@ This module therefore also builds a time map, which module **boundaries** uses t
 8. Build the time map one time for each matched episode, with its `ContentHitTranscript`:
 
    ```bash
-   TIME_MAP="fountain/outputs/time-map-$CONTENT_ID.json"
+   TIME_MAP="fountain/outputs/$SHOW/workings/time-map-$CONTENT_ID.json"
    echo "$TRANSCRIPT_JSON" | ../../scripts/build-time-map.py --build "$VIDEO_URL" > "$TIME_MAP"
    ```
 

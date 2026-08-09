@@ -61,7 +61,15 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Run module **fonts** with it.
 8. Run module **overlays** when the request asks for a layer.
 9. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
-10. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
+10. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
+    that the person it credits is the one who says it.
+    The caller wrote both unseen: the transcript names no speaker, and it starts each word where the
+    one before it ended, so a pause sits inside the word that follows and a word can read as spoken
+    before it is.
+    Take the speaker from the camera and from a cutaway that shows a closed mouth.
+    Correct the title, the text and the context with the Social API when the credit is wrong, and say
+    that you did - those fields are editable and `source` is not.
+11. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
 
 ## Additional notes
 
@@ -86,6 +94,8 @@ Poll until it completes, and stop when it fails or the episode is early-access.
 
 Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
 so that height is the real resolution of the clip, and module **qa** fails a big upscale.
+Deliver the shape the tallest rendition can hold when it cannot reach the target, e.g. 720x1280 from a
+720p master, and say so - a true smaller resolution passes the gate and an upscale does not.
 
 When a rendered span reads wrong, report it rather than move it here - and a letterbox is requested work too.
 

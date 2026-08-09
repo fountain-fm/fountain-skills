@@ -87,6 +87,8 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 ## Additional notes
 
 - Every sampled frame holds a face and an upper body, and mostly background or empty room is a failed export.
+- A frame the detector calls empty is not a miss when you open it and find the speaker.
+  Say which frame you opened and what you saw, because a detector error MUST NOT block a clean clip.
 - The face sits a little away from the centre, on the side it looks away from, so it looks into the frame.
 - No edge clips the face, and the head keeps room above it.
 

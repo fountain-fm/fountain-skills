@@ -46,8 +46,11 @@ You MUST NOT keep a script that wraps the Fountain API, because the API can chan
 If there is no `FOUNTAIN_API_KEY`:
 
 - Ask the user to create a project API key at https://fountain.fm/studio/api.
-- Ask the user to copy the agent instructions from that page and to paste them to you.
-  These instructions give you a safe way to store the key - a one-time link that you pipe into `.env`.
+- Ask the user to save the key to `.env` themselves, so that it never passes through you.
+  Give them the name `FOUNTAIN_API_KEY`, and tell them the file to write it to.
+
+Retry a failed upload one time before you report it.
+A presigned upload can answer 400 to a request that is correct, and take the same request on the retry.
 
 If a request fails with an authentication error, make sure that the key starts with `fountain_`.
 If the prefix is different, the key can be for a different service, and you MUST tell the user.

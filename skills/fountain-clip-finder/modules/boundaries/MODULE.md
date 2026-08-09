@@ -52,6 +52,7 @@ The clip MUST pass the gates below, because a moment with substance can still fa
    Score timeliness and platform fit 1-5 as well, but only when the caller gives trend context.
 5. Apply the gates below, and remove a clip that fails one.
    Keep the best `clip_count` clips when the caller gives a count, and keep fewer when fewer pass.
+   Returning fewer is the right answer and never a shortfall to make up.
 6. Cut the words of the span and write them into `transcript`:
 
    ```bash
@@ -83,20 +84,26 @@ A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
 Move the cut off a sentence edge when the words are better, and never cut in the middle of a word.
 
-The transcript times mark speech, not silence.
-Set `ts_start` a short pause before the first word, and `ts_end` a short pause after the last.
+The transcript times mark speech and not silence, so set `ts_start` a short pause before the first
+word, and `ts_end` a short pause after the last.
+Keep each pause inside the silence.
+`ts_start` MUST NOT reach the word before it, and `ts_end` MUST NOT stop before the last word ends,
+or reach the word after it.
+A clip that opens on the tail of a word, or stops inside one, is a failed cut.
+The clock starts each word where the one before it ended, so a pause sits inside the word that follows
+and a start time is not evidence that the word was spoken.
+An edge therefore proves only that it missed a word, and never which words the clip holds.
+Skill **fountain-clip-producer** settles that on the render.
 
 The script prefers `fountain`, because that transcript comes from the audio of the episode.
-A `rss` transcript can be off by minutes, because the feed carries a different advertisement cut.
-Such a clip looks correct on paper and holds the wrong words.
-A `fountain` transcript fills `segments` and `words` only once its `status` is complete.
-Captions need word timings, and only `fountain` carries a flat `words` list.
+A `rss` transcript can be off by minutes, because the feed carries a different advertisement cut,
+so the clip looks correct on paper and holds the wrong words.
+Only `fountain` carries the flat `words` list that captions need, and only once its `status` is complete.
 A missing one is not a blocker here, because skill **fountain-clip-producer** generates it before it renders.
 
 `ts_start` and `ts_end` MUST always be in the clock of `media`.
 A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
-The placement gate therefore reads both edges of the clip, because a break inside it moves the end
-and leaves the start where it was.
+The placement gate therefore reads both edges, because a break inside the clip moves the end alone.
 Such a clip cannot be shifted, only removed, and the answer is a different pair of in and out points.
 Never end a span on a dangling conjunction - cut before the "and", because a caption must not end on one.
 

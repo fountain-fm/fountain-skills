@@ -38,11 +38,13 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
    ```text
    "<quote>" — <person> on <topic>
-   "Nobody wants to say it out loud" — Eric Voskuil on Bitcoin custody
+   "Nobody wants to say it out loud" — <person> on <topic>
    ```
 
    The quote is at most 40 characters, and the full title is at most 90 characters.
    `<person>` is the speaker, named as the show credits them.
+   The transcript names nobody, so the guest is a guess whenever the host may have said the line.
+   Say which words you are unsure of, and skill **fountain-clip-producer** settles it on the video.
    `<topic>` is 1 to 4 words that say what the quote is about.
 
 3. Write the context note in Markdown, 300 to 1200 characters, under the heading `## Why this clip`:
@@ -63,6 +65,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 Title rules:
 
 - Copy the quote from `transcript` word for word, and do not correct the grammar.
+  Correct a word heard wrong in `transcript` before the post exists, because `source` is write-once.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.
