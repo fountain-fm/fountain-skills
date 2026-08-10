@@ -23,8 +23,9 @@ At most 5 briefs, one per advancing trend, where each brief carries:
 - The score.
 - The mapped narrative.
 - 2-4 theme search terms.
-- One or two sentences on why the trend is live today.
-- Its sources, each with its publish date.
+- One or two sentences on what happened and why the trend is live today.
+- Its sources, each with its headline, its publisher, its publish date and its link.
+  Every item of the scan carries a link, so a source without one has been thrown away.
 - A `clip_count`, which is this trend's share of the day's clip budget.
 
 ## Requirements
