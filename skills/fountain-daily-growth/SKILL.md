@@ -53,9 +53,6 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
-You MUST NOT approve, schedule, or publish a post on your own.
-Those are the user's decisions, made in the dashboard or given to you in words.
-
 This skill owns the two morning looks and nothing downstream.
 Finding moments and writing the copy is the job of skill **fountain-clip-finder**.
 Rendering is the job of skill **fountain-clip-producer**, which picks the drafts up from the Social API.

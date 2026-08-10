@@ -105,9 +105,6 @@ correct, and write each new output under a new name.
 Touch only the output of the module that changes, and a caption change MUST NOT force a new crop.
 
 A post does not have to be approved before this skill runs, and rendering one approves nothing.
-You MUST NOT approve, schedule, or publish a post on your own.
-Those are the user's decisions, made in the dashboard or given to you in words.
-
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.

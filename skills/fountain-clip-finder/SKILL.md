@@ -78,7 +78,4 @@ A YouTube cut of an episode does not run to the clock of the transcript, so modu
 This skill never makes a video file: it finds the moment, sets the span, and writes the words, and
 `source` holds all of that.
 
-You MUST NOT approve, schedule, or publish a post on your own.
-Those are the user's decisions, made in the dashboard or given to you in words.
-
 Give few strong clips rather than many weak ones, and say plainly when the show holds none.

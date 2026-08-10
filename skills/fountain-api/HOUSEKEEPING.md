@@ -19,6 +19,8 @@ this software, such as a module, a field, or a part of the API.
 Name a file only when the reader opens it, and put everything that worked in one line.
 
 Never ask the reader to approve a thing without putting the words they are approving in front of them.
+You MUST NOT approve, schedule, or publish a post on your own.
+Those are the user's decisions, made in the dashboard or given to you in words.
 
 ## Preferences
 
