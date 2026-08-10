@@ -25,10 +25,11 @@ Optional:
 
 ## Output
 
-- A landscape master, and one export for each shape that the request asks for.
+- The finished work: a landscape master, and one export for each shape that the request asks for.
+  The master is finished work and not a working, because the user keeps it and cuts from it again.
 - A `SocialPostUpload` on `content.uploads` of the post, when the user asks to attach the video.
-- A clip manifest, a crop plan, a caption plan, an overlay plan, and a QA report.
-- A removal report, when module **trims** cut the clip.
+- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, and a removal
+  report when module **trims** cut the clip.
 
 ## Housekeeping
 
