@@ -34,6 +34,9 @@ An entry you derive from the show goes stale as the show changes, so weigh the r
 the old ones whenever you write one, and not only under Narratives.
 Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
 A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
+You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
+The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
+Name the show and let each run read the preferences for itself.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
 
