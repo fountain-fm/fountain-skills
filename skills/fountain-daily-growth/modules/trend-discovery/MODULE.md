@@ -47,7 +47,10 @@ At most 5 briefs, one per advancing trend, where each brief carries:
    ```
 
    Each item carries its title, its publisher and its date, so the 48-hour rule holds by construction.
-   Then scan the day's biggest stories in the field of the show, and not only its subjects.
+   The `hl`, `gl` and `ceid` values above return news for the United States in English, so set them for
+   the audience the show writes for, and say which you used.
+   Then run the same query one more time on the subject of the whole show, which is the level that is
+   too broad to be a narrative and right for a catch-all.
    A scan built from the narratives finds only what the show already returns to, and the story it
    cannot find that way is the one the archive answers one time and no rival can.
    Widen the scan with a web search tool or a social trend tool when the machine has one, and say what
