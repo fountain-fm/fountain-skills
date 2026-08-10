@@ -37,6 +37,10 @@ A write replaces the whole document, so you MUST carry every entry and mark you 
 You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
 The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
 Name the show and let each run read the preferences for itself.
+A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
+and say which line it overrode - a brief written before today cannot know what the user has since said.
+Say it too when the run fired at a time the preferences do not name, because a schedule lives in the
+scheduler and the two drift with nothing to show it.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
 
