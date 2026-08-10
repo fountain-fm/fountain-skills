@@ -28,6 +28,9 @@ They are the ONLY store for user data that later sessions need.
 You MUST load the preferences with the Project API of skill **fountain-api** at the start of each session.
 When the user gives a new preference, you MUST record it with the Project API in the same turn.
 You MUST mark a preference that the user did not give as proposed, and let them keep it or cut it.
+An entry you derive from the show goes stale as the show changes, so weigh the recent episodes above
+the old ones whenever you write one, and not only under Narratives.
+Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
 A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
@@ -64,9 +67,12 @@ Write one line for each, in that order.
 Pitch it between the show and one episode: the subject of the whole show fits every story, and the
 subject of one episode fits only that one.
 A narrative earns its place by how often the show returns to it, and never by how good one episode was.
+A subject the show keeps returning to this year is a narrative whatever its share of the decade, and
+one it has stopped covering is not a narrative any more.
+Count the episodes that are about a subject, and not the ones that mention it, because a passing
+mention is not coverage and a keyword search cannot tell the two apart.
 Give few strong narratives rather than many, because a long list makes every trend match something.
 A guest is not a narrative, and neither is a format.
-Mark one you propose, and let the user keep it or cut it.
 
 Bring this section level with the show before you read it, whichever skill you are running.
 It records the newest episode it has read: build it from the episode titles of the Content API when
@@ -123,6 +129,8 @@ You MUST NOT make an output for a later session to read.
 Neither holds a loose file.
 
 Take the name of a show folder from the Accounts section of the preferences, and keep it short.
+Choose one the first time you make that folder, and record it there in the same turn, or the next run
+picks a different name and splits one show in two.
 Name a thing for the episode and then the thing, e.g. `104-best-moment`.
 Use the day the episode came out when the show does not name its episodes.
 
