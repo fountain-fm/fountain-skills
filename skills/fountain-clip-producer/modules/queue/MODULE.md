@@ -30,7 +30,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 1. Load skill **fountain-api** and read the Automation section of the preferences.
    Work every show it names, unless the caller named one.
-   Off is the default auto-render when a show has no entry.
+   On is the default auto-render when a show has no entry.
 2. List each show's posts via the Social API, and keep the drafts that miss their media.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
    With auto-render on, keep them all - rendering a draft the user later rejects wastes only CPU.

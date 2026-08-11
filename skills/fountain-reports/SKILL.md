@@ -57,7 +57,7 @@ The presets:
 First contact, for a caller that finds the preferences empty:
 
 1. Write the defaults: caption preset bold-social under Brand, each report delivered as email under
-   Reporting, and auto-render off under Automation.
+   Reporting, and auto-render on under Automation.
 2. Mark each one `(default)`, and drop that mark when the user confirms or changes the value.
    The mark is what lets a later reader, and the origin of a `setting-row`, tell a default from a choice.
 3. Send the `settings` report, which says what was set and what else each heading holds.
