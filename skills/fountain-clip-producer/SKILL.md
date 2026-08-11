@@ -44,6 +44,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - ffmpeg and ffprobe, built with libass, drawtext, fontconfig and whisper, or no caption can be burned
   and no word can be timed.
   A stock build often carries none of them, and on macOS the Homebrew `ffmpeg-full` formula is the one that does.
+- A whisper.cpp model file, which the whisper filter takes the path of and does nothing without.
+  Module **preflight** finds it, and stops the run when the machine holds none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
 
@@ -55,6 +57,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
+   Use the binary and the model that module **preflight** names, and ask for one word for each segment.
    These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.

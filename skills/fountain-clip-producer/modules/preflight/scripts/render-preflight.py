@@ -124,6 +124,26 @@ def find_capable_ffmpeg(group, exclude):
     return None
 
 
+# Where a whisper.cpp model tends to sit. The ffmpeg whisper filter takes the
+# path of one, and a build with the filter and no model transcribes nothing.
+WHISPER_MODEL = (
+    "opt/homebrew/share/whisper.cpp/models/ggml-*.bin",  # macOS, Apple silicon Homebrew
+    "usr/local/share/whisper.cpp/models/ggml-*.bin",  # macOS, Intel Homebrew
+    "usr/share/whisper.cpp/models/ggml-*.bin",  # a distribution package
+    "opt/whisper.cpp/models/ggml-*.bin",  # an unpacked release build
+)
+
+
+def find_whisper_model(explicit):
+    """Find a whisper.cpp model file, which the whisper filter cannot work without."""
+    if explicit:
+        return str(explicit) if Path(explicit).is_file() else None
+    home = Path.home() / ".cache" / "whisper"
+    candidates = [p for pattern in WHISPER_MODEL for p in sorted(Path("/").glob(pattern))]
+    candidates += sorted(home.glob("ggml-*.bin")) if home.is_dir() else []
+    return str(candidates[0]) if candidates else None
+
+
 def probe(ffprobe, media):
     proc = run(
         [
@@ -152,7 +172,11 @@ def main():
     parser.add_argument(
         "--require-words",
         action="store_true",
-        help="Fail if no ffmpeg carries the whisper filter, which times the words of the clip.",
+        help="Fail if no ffmpeg carries the whisper filter, or if no whisper model file is found.",
+    )
+    parser.add_argument(
+        "--whisper-model",
+        help="Path of the whisper.cpp model to time words with. Searched for when not given.",
     )
     parser.add_argument("--require-magick", action="store_true")
     parser.add_argument(
@@ -235,6 +259,12 @@ def main():
             report["ffmpeg_for_words"] = find_capable_ffmpeg("words", exclude=args.ffmpeg)
             if args.require_words and not report["ffmpeg_for_words"]:
                 report["missing"].append("ffmpeg filter:whisper (no whisper-capable ffmpeg found on this machine)")
+
+        # The filter alone transcribes nothing: it takes a whisper.cpp model file,
+        # and with none it loads its backend and then hangs rather than failing.
+        report["whisper_model"] = find_whisper_model(args.whisper_model)
+        if args.require_words and not report["whisper_model"]:
+            report["missing"].append("whisper model (the whisper filter takes a model file and hangs without one)")
 
         if args.require_magick and not shutil.which("magick"):
             report["missing"].append("magick")

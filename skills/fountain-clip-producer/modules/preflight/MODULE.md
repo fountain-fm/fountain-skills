@@ -63,6 +63,12 @@ A build without libass is a reason to use the other binary, and never a reason t
 The same search finds the build that carries whisper, and the two are usually the same binary.
 There is no lesser renderer for a word timing: without whisper the clip has no words at all.
 
+The whisper filter transcribes nothing on its own, because it takes the path of a whisper.cpp model.
+A build that carries the filter and a machine that holds no model is the dangerous case: ffmpeg loads
+its backend, prints no error, and never returns, so the render hangs instead of failing.
+The report therefore names the model as well as the binary, and `--require-words` fails without one.
+Give the user the model to install when it is absent, and never let the queue spend an attempt on it.
+
 The report also names the Python interpreter that carries OpenCV, which module **framing** needs for its scripts.
 An interpreter older than OpenCV 4.8 carries no `FaceDetectorYN`, and that is a missing tool rather than a warning.
 
