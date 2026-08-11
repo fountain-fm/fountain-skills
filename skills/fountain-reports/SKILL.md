@@ -74,10 +74,6 @@ the email carries, so the two never disagree.
 Combining joins reports, not machines: a report can wait only for one sent later in the same run,
 because nothing holds a pending report between machines.
 
-A preset covers a state, so showing that state is a report however the user asked for it.
-An answer in the chat is not an excuse to write the blocks by hand, and a table of the same data is
-the same invention the preset exists to prevent.
-
 A component is small and single-purpose.
 A new kind of email is a new preset over the same components, and a missing block is a new component -
 never markdown a caller writes by hand, because two callers writing the same block drift apart.
