@@ -47,12 +47,14 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 4. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
    continues without this skill.
 5. Read the auto-render setting from the Automation section of the preferences, where on is the default.
-   With auto-render on, render the day's drafts with skill **fountain-clip-producer** and send them as
-   the `rendered-posts` report of skill **fountain-reports**, so the user reviews the clip and not a
-   description of it.
+   List the day's drafts with the Social API either way, because step 4 hands the briefs on and never
+   reads what came back.
+   With auto-render on, render them with skill **fountain-clip-producer** as a clean final, and send
+   them as the `rendered-posts` report of skill **fountain-reports**, so the user reviews the clip and
+   not a description of it.
    Leave the rendering to a render machine instead when one works this show, and it sends that report.
-   With auto-render off, list today's drafts and send them as the `draft-posts` report: the words alone,
-   and the plain statement that approving is what makes a clip render.
+   With auto-render off, send them as the `draft-posts` report: the words alone, and the plain
+   statement that approving is what makes a clip render.
 
 ## Additional notes
 

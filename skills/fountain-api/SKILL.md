@@ -41,8 +41,8 @@ The API can change.
 The docs can also lag the API, so a thing that no page names can still work.
 Two are absent today, and both were seen to work on 2026-08-11: a post that is not published takes an
 update to `ts_start` and `ts_end`, and the Social API can delete a draft post.
-Use each one when a skill asks for it, and say so if it stops working, because a thing the docs do not
-name can change with no notice.
+Use each one when a skill asks for it, and tell the user if one stops working.
+Delete this note when the docs name them, and do not let it outlive them.
 
 You CAN write a throwaway script, e.g. to do the same request for many items.
 You CAN write a response to a file, e.g. to give a large transcript to a script.

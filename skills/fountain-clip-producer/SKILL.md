@@ -76,8 +76,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     Take the speaker from the camera and from a cutaway that shows a closed mouth.
     Repair what is wrong with the Social API, and say what you changed:
     move `ts_start` or `ts_end` when the clip opens or closes inside a word, or when the quote sits
-    outside the span, then re-cut and write the new words into `transcript` so the two agree;
+    outside the span, then write the new words into `transcript` so the two agree;
     correct the title, the text and the context when the credit is wrong.
+    A moved edge makes the render stale, so go back to step 3 with the new span: the words, the
+    captions and the gate all describe the old cut, and only the gate can say the new one is finished.
     Move an edge only to repair what you can prove, or to make a change the user asked for, and never to
     improve the clip - choosing the moment is the caller's job.
 11. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.

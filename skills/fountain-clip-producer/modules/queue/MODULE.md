@@ -38,6 +38,9 @@ auto-render setting, and hands each eligible post to the process of the skill.
 4. Continue past a failed render and finish the rest.
    Record each failure on the post itself: a renderer note in its `context` via the Social API, with
    the reason and the attempt count.
+   Mark the note as the renderer's, because `context` is where the user reads why the clip is worth
+   making, and remove it when a later run renders the post - a failure that has been fixed is noise
+   in front of the user, and it makes a working clip look broken.
    Retry on later runs while the count is under 3.
    At 3, stop retrying - the draft needs a person, not a fourth attempt.
 5. When this run attached media and every draft is done or given up, give the batch to skill
