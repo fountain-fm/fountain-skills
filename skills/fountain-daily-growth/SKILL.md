@@ -63,8 +63,8 @@ drafts up from the Social API.
 
 Auto-render off means something else has to render, so say which: the user's word in the chat, or a
 render machine that works this show.
-Offer to set up a routine that renders the approved drafts when they want the day to finish without
-them, because a draft that nothing renders is a clip that never exists.
+Offer to set up a scheduled run that renders the approved drafts when they want the day to finish
+without them, because a draft that nothing renders is a clip that never exists.
 
 An empty Editorial section is not a wall: proceed, and say so plainly.
 
