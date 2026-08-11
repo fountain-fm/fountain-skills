@@ -21,7 +21,7 @@ One of these:
 
 Optional:
 
-- `clip_count` - how many clips the caller wants.
+- `clip_count` - the most clips to return, which the show's archive may not fill.
 - `min_duration_seconds` and `max_duration_seconds` - the length to cut to.
 - Trend context with its sources, when the clip must answer a news story.
   This skill does not search the news, so the caller gives the sources.
@@ -54,13 +54,18 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Load skill **fountain-api** and resolve the show.
+1. Load skill **fountain-api**, resolve the show, and list the connected `SocialChannel` with the Social API.
+   Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a
+   draft post on a channel, and there is no other place to keep the work.
+   Continue only when the user asks for the clips without a channel.
 2. Run module **discovery** to search the transcripts, score each moment, and drop the weak ones.
 3. Run module **media** to resolve the file each moment is cut from, and the clock that file runs on.
    Drop a moment when its episode has no video to cut from.
 4. Run module **boundaries** to shape each moment into a clip, and to drop the ones that fail a gate.
 5. Run module **copy** to write `content.title`, `content.text`, and `context`.
 6. Create one draft `SocialPost` for each clip on each channel with the Social API.
+   Creating a post does not carry its text, so write the text with a second call, and check that it
+   landed - a draft with no words looks finished in the dashboard and publishes as an empty post.
 7. Present the posts in rank order, with their scores, their reasons, and each flag.
 
 ## Additional notes
@@ -72,8 +77,5 @@ A YouTube cut of an episode does not run to the clock of the transcript, so modu
 
 This skill never makes a video file: it finds the moment, sets the span, and writes the words, and
 `source` holds all of that.
-
-You MUST NOT approve, schedule, or publish a post on your own.
-Those are the user's decisions, made in the dashboard or given to you in words.
 
 Give few strong clips rather than many weak ones, and say plainly when the show holds none.

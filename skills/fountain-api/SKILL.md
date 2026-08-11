@@ -38,6 +38,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 You MUST read https://fountain.fm/docs.md in each new session.
 The API can change.
 
+The docs can also lag the API, so a thing that no page names can still work.
+Two are absent today, and both were seen to work on 2026-08-11: a post that is not published takes an
+update to `ts_start` and `ts_end`, and the Social API can delete a draft post.
+Use each one when a skill asks for it, and tell the user if one stops working.
+Delete this note when the docs name them, and do not let it outlive them.
+
 You CAN write a throwaway script, e.g. to do the same request for many items.
 You CAN write a response to a file, e.g. to give a large transcript to a script.
 You MUST put each in a temporary location and delete it at the end of the session.
@@ -46,8 +52,11 @@ You MUST NOT keep a script that wraps the Fountain API, because the API can chan
 If there is no `FOUNTAIN_API_KEY`:
 
 - Ask the user to create a project API key at https://fountain.fm/studio/api.
-- Ask the user to copy the agent instructions from that page and to paste them to you.
-  These instructions give you a safe way to store the key - a one-time link that you pipe into `.env`.
+- Ask the user to save the key to `.env` themselves, so that it never passes through you.
+  Give them the name `FOUNTAIN_API_KEY`, and tell them the file to write it to.
+
+Retry a failed upload one time before you report it.
+A presigned upload can answer 400 to a request that is correct, and take the same request on the retry.
 
 If a request fails with an authentication error, make sure that the key starts with `fountain_`.
 If the prefix is different, the key can be for a different service, and you MUST tell the user.

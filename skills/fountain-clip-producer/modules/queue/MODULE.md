@@ -30,7 +30,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 1. Load skill **fountain-api** and read the Automation section of the preferences.
    Work every show it names, unless the caller named one.
-   Off is the default auto-render when a show has no entry.
+   On is the default auto-render when a show has no entry.
 2. List each show's posts via the Social API, and keep the drafts that miss their media.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
    With auto-render on, keep them all - rendering a draft the user later rejects wastes only CPU.
@@ -38,6 +38,9 @@ auto-render setting, and hands each eligible post to the process of the skill.
 4. Continue past a failed render and finish the rest.
    Record each failure on the post itself: a renderer note in its `context` via the Social API, with
    the reason and the attempt count.
+   Mark the note as the renderer's, because `context` is where the user reads why the clip is worth
+   making, and remove it when a later run renders the post - a failure that has been fixed is noise
+   in front of the user, and it makes a working clip look broken.
    Retry on later runs while the count is under 3.
    At 3, stop retrying - the draft needs a person, not a fourth attempt.
 5. When this run attached media and every draft is done or given up, give the batch to skill
@@ -55,9 +58,6 @@ Progress lives on the posts themselves: an attached upload is the only "done" ma
 mid-batch loses nothing, and the next run picks up the remainder.
 The failure count lives there too, in the renderer note, so it survives any machine and the dashboard
 shows the reason beside the post.
-
-The transcript of an episode can be missing on the first clip of a show.
-Generating it is metered, and the skill says the cost when it queues the job.
 
 A machine that was asleep sends the ready email late rather than never: the first run after waking
 drains the queue and then sends it, so no cloud sweeper exists.

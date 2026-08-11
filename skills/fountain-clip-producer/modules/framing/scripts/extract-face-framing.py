@@ -5,7 +5,7 @@ ffmpeg crop offsets needed to centre them.
 With --speakers 1 (default) this reports the single active speaker. With
 --speakers 2 it reports one anchor per speaker, left to right, which is what
 a boxed side-by-side layout or a locked-off wide two-shot needs -- module
-speakers turns those anchors plus the speaker-labelled words into a cut list.
+shots turns those anchors plus the speaker-labelled words into a cut list.
 
 Each anchor carries face_h as well as face_cx/face_cy, because matching
 apparent head size between speakers is what stops two crops of one frame from

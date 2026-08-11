@@ -15,7 +15,7 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 
 - Each moment from module **discovery**, with its scores and each flag.
 - The `SocialPostMediaSource` of each moment from module **media**, and its time map when it has one.
-- The `ContentHitTranscript` of each episode.
+- The `TranscriptSegment` list of each episode, from the Content API.
 - Optional: `clip_count`, `min_duration_seconds`, `max_duration_seconds`, and trend context from the caller.
 
 ## Output
@@ -31,12 +31,12 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 
 ## Process
 
-1. Load skill **fountain-api** and load the `ContentHitTranscript` of the episode with the Content API.
-   Load it one time per episode, then use it for each moment of that episode.
+1. Load skill **fountain-api** and load the transcript of the episode with the Content API.
+   Load it one time per episode, write it to a file, and use that file for each moment of that episode.
 2. Give the transcript to the script and read the pairs it finds:
 
    ```bash
-   echo "$TRANSCRIPT_JSON" | scripts/find-clip-boundaries.py --moment-start 820.06 --moment-end 858.56
+   scripts/find-clip-boundaries.py --moment-start 820.06 --moment-end 858.56 < transcript.json
    ```
 
    Add `--min-dur` and `--max-dur` when the caller gives a duration range.
@@ -52,10 +52,11 @@ The clip MUST pass the gates below, because a moment with substance can still fa
    Score timeliness and platform fit 1-5 as well, but only when the caller gives trend context.
 5. Apply the gates below, and remove a clip that fails one.
    Keep the best `clip_count` clips when the caller gives a count, and keep fewer when fewer pass.
-6. Cut the words of the span and write them into `transcript`:
+   Returning fewer is the right answer and never a shortfall to make up.
+6. Cut the text of the span and write it into `transcript`:
 
    ```bash
-   echo "$TRANSCRIPT_JSON" | scripts/find-clip-boundaries.py --span 812.40 869.10
+   scripts/find-clip-boundaries.py --span 812.40 869.10 < transcript.json
    ```
 
 7. Write the span into `ts_start` and `ts_end`.
@@ -83,20 +84,18 @@ A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
 Move the cut off a sentence edge when the words are better, and never cut in the middle of a word.
 
-The transcript times mark speech, not silence.
-Set `ts_start` a short pause before the first word, and `ts_end` a short pause after the last.
+A segment edge already falls between two words, and the gap to the next segment is silence, so the
+script places each cut inside that gap: a short breath at each end, and never more than half the gap,
+so two clips cut from neighbouring segments cannot overlap.
+An edge therefore needs no checking here, and a clip that opens on the tail of a word is not a cut this
+module can make.
 
-The script prefers `fountain`, because that transcript comes from the audio of the episode.
-A `rss` transcript can be off by minutes, because the feed carries a different advertisement cut.
-Such a clip looks correct on paper and holds the wrong words.
-A `fountain` transcript fills `segments` and `words` only once its `status` is complete.
-Captions need word timings, and only `fountain` carries a flat `words` list.
-A missing one is not a blocker here, because skill **fountain-clip-producer** generates it before it renders.
+The transcript carries no word timings, and captions do not need them from here.
+Skill **fountain-clip-producer** makes them from the clip's own audio at render time.
 
 `ts_start` and `ts_end` MUST always be in the clock of `media`.
 A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
-The placement gate therefore reads both edges of the clip, because a break inside it moves the end
-and leaves the start where it was.
+The placement gate therefore reads both edges, because a break inside the clip moves the end alone.
 Such a clip cannot be shifted, only removed, and the answer is a different pair of in and out points.
 Never end a span on a dangling conjunction - cut before the "and", because a caption must not end on one.
 

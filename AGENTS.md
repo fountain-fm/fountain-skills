@@ -62,7 +62,10 @@ The licence of each bundled work MUST ship in `assets/licences`, as one file for
 A licence MUST NOT sit in the directory that holds the asset, because a loader often reads every file in
 that directory and a text file breaks it.
 
-Put the version of the asset in its file name, so that a later reader can compare it against the source.
+A later reader MUST be able to tell which version of the asset is bundled, so that they can compare it
+against the source.
+Put the version in the file name when the asset does not carry it, e.g. a model blob.
+Leave it out when the asset does, e.g. a font, whose version a font tool reads from the file.
 
 ## SKILL.md
 
@@ -74,7 +77,9 @@ Put the version of the asset in its file name, so that a later reader can compar
 ### Body
 
 Each line MUST be under 120 chars.
-Body MUST be under 100 lines - the shorter the better.
+A skill MUST do one job, and the body MUST be as short as that job allows.
+A body over 100 lines is a signal to check that it is still one job, and never a reason to cut a rule
+that earns its place.
 
 Significant chunks of isolatable logic CAN be exported to a module.
 
@@ -113,14 +118,6 @@ Module is a mini skill - an isolatable chunk of skill logic.
 
 - `name` - module name (REQUIRED)
 - `description` - short description, max 120 chars (REQUIRED)
-
-### Body
-
-Each line MUST be under 120 chars.
-Body MUST be under 100 lines - the shorter the better.
-
-You MUST refer to skills and other modules by name (e.g. module **face-detection**).
-You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detection/MODULE.md").
 
 #### H2 (##) headings
 

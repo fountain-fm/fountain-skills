@@ -7,8 +7,8 @@ and anchors the two clocks against each other across the episode. `--span` then 
 clip span from the saved map, with no further network work, and gives the `ts_start` and `ts_end`
 of a SocialPostMediaSource whose `media` is that video.
 
-Reads a ContentHitTranscript on stdin, and uses `start`, `end` and `text` of each TranscriptSegment,
-plus `word` and `start` of each TranscriptWord.
+Reads a transcript on stdin - `{"segments": [...]}` or a bare list - and uses `start`, `end` and `text`
+of each TranscriptSegment.
 """
 
 from __future__ import annotations
@@ -24,7 +24,6 @@ import tempfile
 from difflib import SequenceMatcher
 
 # The Fountain transcript comes from the episode audio, so its times match the audio and the search.
-TRANSCRIPT_SOURCES = ("fountain", "rss")
 # One anchor every two minutes finds each ad break without reading the whole episode twice.
 ANCHOR_INTERVAL_SECONDS = 120.0
 # A phrase of twelve words is long enough to be unique in an episode and short enough to survive an ASR error.
@@ -51,30 +50,16 @@ def normalize(word: str) -> str:
 
 
 def load_transcript_words(payload: object) -> list[tuple[str, float]]:
-    """Return the transcript as (word, start) pairs, from the word timings or from the segments."""
-    transcript = payload
-    if isinstance(payload, dict):
-        transcript = payload.get("transcript") if isinstance(payload.get("transcript"), dict) else payload
-
+    """Return the transcript as (word, start) pairs, spread across each segment."""
     segments: list[dict] = []
-    words: list[dict] = []
-    if isinstance(transcript, list):
-        segments = transcript
-    elif isinstance(transcript, dict):
-        for source in TRANSCRIPT_SOURCES:
-            entry = transcript.get(source)
-            if isinstance(entry, dict) and entry.get("segments"):
-                segments, words = entry["segments"], entry.get("words") or []
-                break
+    if isinstance(payload, list):
+        segments = payload
+    elif isinstance(payload, dict) and isinstance(payload.get("segments"), list):
+        segments = payload["segments"]
     if not segments:
         raise SystemExit("build-time-map: the transcript holds no segments - generate it first")
 
-    if not words:
-        words = [word for segment in segments for word in segment.get("words") or []]
-    if words:
-        return [(word["word"], float(word["start"])) for word in words]
-
-    # Without word timings, spread the words of each sentence across it. An anchor tolerates that error.
+    # A segment carries no word timings, so spread its words across it. An anchor tolerates that error.
     spread: list[tuple[str, float]] = []
     for segment in segments:
         tokens = segment["text"].split()

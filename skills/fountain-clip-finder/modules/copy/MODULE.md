@@ -13,7 +13,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 ## Input
 
 - The `SocialPostMediaSource` of the verified clip.
-- The `CanonicalPerson` of the speaker from module **discovery**, when it resolved a person.
+- The name the caller asked for, when the request named a person.
 - The scores from module **discovery** and module **boundaries**, and each flag.
 - The show's connected channels, via the Social API.
 - Voice notes from the Editorial section and confirmed handles from the Accounts section of the preferences.
@@ -38,18 +38,23 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
    ```text
    "<quote>" — <person> on <topic>
-   "Nobody wants to say it out loud" — Eric Voskuil on Bitcoin custody
+   "Nobody wants to say it out loud" — <person> on <topic>
    ```
 
    The quote is at most 40 characters, and the full title is at most 90 characters.
    `<person>` is the speaker, named as the show credits them.
+   The transcript names nobody, so the guest is a guess whenever the host may have said the line.
+   Say which words you are unsure of, and skill **fountain-clip-producer** settles it on the video.
    `<topic>` is 1 to 4 words that say what the quote is about.
 
-3. Write the context note in Markdown, 300 to 1200 characters, under the heading `## Why this clip`:
+3. Write the context note in Markdown, 300 to 2000 characters, under the heading `## Why this clip`:
+   Four sources as links spend about a third of that, so the ceiling is for them and not for prose.
 
+   - What happened in the news and why it is live today, when the clip answers a trend.
    - What the clip contains, and the claim the speaker makes.
-   - Why the clip is strong, and which score dimension made it win.
-   - For a news story only: what happened, why the clip matters now, and at least one source.
+   - Why the clip answers that story, and which score dimension made it win.
+   - Each source as a link the reader can open, with its headline, its publisher and its date.
+     A source named without a link cannot be read, and the caller's brief carries the link.
 
 4. Write `content.text` for each `SocialPlatform` the clip suits.
    Match the length, the tone, and the conventions of that platform.
@@ -63,6 +68,8 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 Title rules:
 
 - Copy the quote from `transcript` word for word, and do not correct the grammar.
+  Correct a word heard wrong in `transcript` before the post exists, and on the post when you find it
+  later - the span itself cannot be changed, so only the words can be put right.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.

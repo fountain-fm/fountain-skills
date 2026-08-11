@@ -21,7 +21,8 @@ Nothing reaches the user until that gate reports a pass.
 ## Output
 
 - A style proof, and the stills taken from it.
-- A QA report, with a `pass` or a `fail` status and the reason for each failed check.
+- A QA report, whose `status` field reads `pass` or `fail`, with the reason for each failed check.
+  Read that one field for the verdict, because each check carries a status of its own.
 
 ## Requirements
 
@@ -62,6 +63,11 @@ The gate blocks every tier above a rough cut, and it asks for all of this:
 - The width, the height, the frame rate, the duration, and the audio stream match what was expected.
 - The landscape master is tall enough for the export, because a container says 1080x1920 whatever it holds.
 - No render pass and no caption pass introduced a black interval.
+- The clip opens and closes on a whole word.
+  The first caption starts near the head of the clip, and the last one ends near its tail.
+  Speech with no caption at either edge is the tail of the word before, or the head of the word after,
+  and the clip opens or closes in the middle of it.
+  This one fails the span, and not the render, so report it to the user and name the edge.
 - A contact sheet exists, and somebody looked at it.
 - The crop plan records a decision for each scene cut.
 - The visual QA report reports a pass, when it is present.

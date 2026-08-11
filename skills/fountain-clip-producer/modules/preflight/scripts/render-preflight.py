@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Validate that the current environment can actually render what's being
 asked for, before spending time on a full render. Checks ffmpeg/ffprobe
-presence, required filters, which caption renderer is available, and which
-python interpreter carries a cv2 new enough for the framing module's
+presence, required filters, which caption renderer is available, which
+ffmpeg carries the whisper filter that times the words of the clip, and
+which python interpreter carries a cv2 new enough for the framing module's
 face detection and visual-person-qa.py.
 """
 
@@ -18,6 +19,7 @@ REQUIRED_FILTERS = {
     "core": {"crop", "scale", "overlay", "fps", "format"},
     "subtitle": {"ass", "subtitles"},
     "text": {"drawtext"},
+    "words": {"whisper"},
 }
 
 
@@ -105,8 +107,8 @@ SIBLING_FFMPEG = (
 )
 
 
-def find_subtitle_capable_ffmpeg(exclude):
-    """Find another ffmpeg on this machine that can burn subtitles."""
+def find_capable_ffmpeg(group, exclude):
+    """Find another ffmpeg on this machine that carries a filter of one group."""
     candidates = []
     for pattern in SIBLING_FFMPEG:
         candidates.extend(sorted(Path("/").glob(pattern.lstrip("/"))))
@@ -115,11 +117,51 @@ def find_subtitle_capable_ffmpeg(exclude):
         if candidate == exclude:
             continue
         try:
-            if ffmpeg_filters(candidate).intersection(REQUIRED_FILTERS["subtitle"]):
+            if ffmpeg_filters(candidate).intersection(REQUIRED_FILTERS[group]):
                 return candidate
         except (RuntimeError, OSError):
             continue
     return None
+
+
+# Where a whisper.cpp model tends to sit. The ffmpeg whisper filter takes the
+# path of one, and a build with the filter and no model transcribes nothing.
+# The first entry is where this skill asks the user to put it.
+WHISPER_MODEL = (
+    "~/.cache/whisper/ggml-*.bin",  # where the install line below puts it
+    "/opt/homebrew/share/whisper-cpp/ggml-*.bin",  # macOS, Apple silicon Homebrew
+    "/usr/local/share/whisper-cpp/ggml-*.bin",  # macOS, Intel Homebrew
+    "/opt/homebrew/share/whisper.cpp/models/ggml-*.bin",  # a source build, kept beside its models
+    "/usr/local/share/whisper.cpp/models/ggml-*.bin",
+    "/usr/share/whisper.cpp/models/ggml-*.bin",  # a distribution package
+    "/opt/whisper.cpp/models/ggml-*.bin",  # an unpacked release build
+)
+
+WHISPER_MODEL_DEFAULT = "ggml-base.en.bin"
+WHISPER_MODEL_INSTALL = (
+    "mkdir -p ~/.cache/whisper && curl -L -o ~/.cache/whisper/" + WHISPER_MODEL_DEFAULT + " "
+    "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/" + WHISPER_MODEL_DEFAULT
+)
+
+
+def find_whisper_model(explicit):
+    """Find a whisper.cpp model file, which the whisper filter cannot work without.
+
+    A `for-tests` blob is skipped deliberately: Homebrew's whisper-cpp ships one
+    beside the real model directory, and it transcribes nonsense rather than
+    failing, which reads as a working machine and ruins every caption.
+    """
+    if explicit:
+        return str(explicit) if Path(explicit).is_file() else None
+    found = []
+    for pattern in WHISPER_MODEL:
+        found.extend(sorted(Path(pattern).expanduser().parent.glob(Path(pattern).name)))
+    usable = [p for p in found if "for-tests" not in p.name and p.is_file()]
+    # Prefer the model the skill names, then the largest, which is the most accurate.
+    named = [p for p in usable if p.name == WHISPER_MODEL_DEFAULT]
+    if named:
+        return str(named[0])
+    return str(max(usable, key=lambda p: p.stat().st_size)) if usable else None
 
 
 def probe(ffprobe, media):
@@ -147,6 +189,15 @@ def main():
     parser.add_argument("--ffprobe", default=shutil.which("ffprobe") or "ffprobe")
     parser.add_argument("--media", help="Optional source or clean master to probe.")
     parser.add_argument("--require-subtitles", action="store_true")
+    parser.add_argument(
+        "--require-words",
+        action="store_true",
+        help="Fail if no ffmpeg carries the whisper filter, or if no whisper model file is found.",
+    )
+    parser.add_argument(
+        "--whisper-model",
+        help="Path of the whisper.cpp model to time words with. Searched for when not given.",
+    )
     parser.add_argument("--require-magick", action="store_true")
     parser.add_argument(
         "--require-visual-qa",
@@ -172,6 +223,7 @@ def main():
         "ffprobe": args.ffprobe,
         "ok": False,
         "caption_renderer": None,
+        "ffmpeg_for_words": None,
         "visual_qa_python": None,
         "missing": [],
         "filters": {},
@@ -195,7 +247,7 @@ def main():
 
         alt = None
         if not has_subtitles:
-            alt = find_subtitle_capable_ffmpeg(exclude=args.ffmpeg)
+            alt = find_capable_ffmpeg("subtitle", exclude=args.ffmpeg)
             report["ffmpeg_with_subtitles"] = alt
             if args.require_subtitles and not alt:
                 report["missing"].append(
@@ -218,6 +270,24 @@ def main():
             report["ffmpeg_for_captions"] = args.ffmpeg
         else:
             report["missing"].append("caption renderer:ass/subtitles, drawtext, or qtrle alpha video")
+
+        # Word timings come from whisper on the clip's own audio, so a build
+        # without it stops captions, trims and shots after the master is cut.
+        if "whisper" in filters:
+            report["ffmpeg_for_words"] = args.ffmpeg
+        else:
+            report["ffmpeg_for_words"] = find_capable_ffmpeg("words", exclude=args.ffmpeg)
+            if args.require_words and not report["ffmpeg_for_words"]:
+                report["missing"].append("ffmpeg filter:whisper (no whisper-capable ffmpeg found on this machine)")
+
+        # The filter alone transcribes nothing: it takes a whisper.cpp model file,
+        # and with none it loads its backend and then hangs rather than failing.
+        report["whisper_model"] = find_whisper_model(args.whisper_model)
+        if args.require_words and not report["whisper_model"]:
+            report["missing"].append(
+                "whisper model (the whisper filter takes a model file and hangs without one) - "
+                f"install it one time, about 141 MB: {WHISPER_MODEL_INSTALL}"
+            )
 
         if args.require_magick and not shutil.which("magick"):
             report["missing"].append("magick")

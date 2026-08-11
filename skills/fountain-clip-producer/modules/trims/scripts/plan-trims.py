@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Survey a clip for dead air and filler, and plan the cuts that remove them.
 
-Reads a list of TranscriptWord for the clip span, each optionally carrying the
-"emphasize" and "speaker" fields that TranscriptWord itself does not define.
-Only "word", "start" and "end" are read from TranscriptWord.
+Reads the clip's word timings, each optionally carrying an "emphasize" or a
+"speaker" field. Only "word", "start" and "end" are read.
 
 Two modes, and the default is the cautious one:
 
@@ -175,7 +174,7 @@ def rebase(words, segments):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--words", required=True, help="TranscriptWord list for the span.")
+    parser.add_argument("--words", required=True, help="The clip's word timings.")
     parser.add_argument("--duration", type=float, required=True, help="Clip duration in seconds.")
     parser.add_argument("--media", help="Landscape master, so cuts can be snapped to real silence.")
     parser.add_argument("--apply", action="store_true", help="Plan the cut, not just survey it.")

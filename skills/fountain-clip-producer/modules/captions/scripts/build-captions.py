@@ -7,11 +7,11 @@ animation. Every field can be overridden per-clip with --override dot.path=value
 and a brand kit (--brand-kit) layers show-level defaults between the preset and
 the CLI. Precedence: built-in defaults < preset < brand kit < --override.
 
-The words JSON is a list of TranscriptWord for the clip span, rebased to clip
-time, each optionally carrying "speaker" and "emphasize" which TranscriptWord
-itself does not define: [{"word": "...", "start": 1.23, "end": 1.45,
+The words JSON is the clip's word timings, rebased to clip
+time, each optionally carrying "speaker" and "emphasize":
+[{"word": "...", "start": 1.23, "end": 1.45,
 "speaker": "A"?, "emphasize": true?}, ...] (or wrapped in {"words": [...]}).
-Only "word", "start", and "end" are read from TranscriptWord.
+Only "word", "start", and "end" are read.
 Editorial text cleanup (faithful-clean) happens BEFORE this script — it renders
 the words it is given and never rewrites them beyond the spec's case setting.
 
@@ -1039,7 +1039,10 @@ def main():
 
     if args.check:
         print(f"style spec OK: {spec['name']} ({len(warnings)} warning(s))")
-        return 0
+        # Check alone is check-only; check with a real job carries on and builds it,
+        # or --emit-lines returns nothing and the QA gate fails on the absent file.
+        if not (args.words and args.out):
+            return 0
 
     if not args.words or not args.out:
         fail("--words and --out are required unless --check")

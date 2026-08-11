@@ -13,7 +13,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 ## Input
 
-- The `TranscriptWord` list of the clip span, rebased so that the first word starts at zero.
+- The word timings of the clip, made from its own audio and rebased so the first word starts at zero.
 - The export to caption, usually `clip-vertical.mp4`.
 - Optional: a preset name, a brand kit from module **brand**, and per-clip overrides.
 
@@ -31,8 +31,8 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 ## Process
 
-1. Take the word timings from the `fountain` source of the transcript, which carries a flat `TranscriptWord` list.
-   The sentence-level segments are too coarse for a caption.
+1. Take the word timings that the skill made from the clip's audio with whisper.
+   The sentence-level segments of the episode transcript are too coarse for a caption.
    Use the rebased list of module **trims** instead, when that module cut the clip.
    Stop and report to the user when a portrait export has no word timings, rather than deliver it bare.
 2. Clean the text before you set any timing, under the faithful-clean rules below.

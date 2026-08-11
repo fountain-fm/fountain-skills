@@ -14,7 +14,7 @@ The words say who speaks, and this module turns that into a cut list with the ge
 ## Input
 
 - The anchors of module **framing**, one for each speaker, with `face_cx`, `face_cy`, and `face_h`.
-- The `TranscriptWord` list of the span, where each word carries the speaker that said it.
+- The word timings of the clip, where each word carries the speaker that said it.
 - The duration of the clip, and the target size.
 
 ## Output
@@ -85,8 +85,9 @@ An exchange too quick to cut is a real outcome, and the plan then holds one shot
 Offer the user a two-shot or a letterbox for that clip rather than force a cut list onto it.
 Neither one is yours to choose, because both change how the clip reads.
 
-This module needs the speaker of each word, and it stops when the transcript carries none.
-That is a gap in the transcript and not a fault of the render, so no new render fixes it.
+This module needs the speaker of each word, and nothing supplies one: whisper hears the words and not
+who says them, and the episode transcript names nobody either.
+That is a gap in the words and not a fault of the render, so no new render fixes it.
 
 No speaker labels does not always mean no crop.
 Read the words of the refused segment first, because a frame that holds two people often holds one voice.
