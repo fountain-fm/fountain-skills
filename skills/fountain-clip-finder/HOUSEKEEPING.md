@@ -43,10 +43,7 @@ Each entry MUST stay true to the user and to the show:
 - An entry that states how the API behaves MUST carry the date you saw it behave that way.
   A limit is the kind of fact that gets fixed, so check one again before you let it stop you.
 - A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
-- You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
-  The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
-  Name the show, and let each run read the preferences for itself.
-  A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
+- A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
   and say which line it overrode.
 
 Preferences are stored as Markdown.
