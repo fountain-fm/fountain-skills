@@ -119,16 +119,6 @@ Module is a mini skill - an isolatable chunk of skill logic.
 - `name` - module name (REQUIRED)
 - `description` - short description, max 120 chars (REQUIRED)
 
-### Body
-
-Each line MUST be under 120 chars.
-A module MUST do one job, and the body MUST be as short as that job allows.
-A body over 100 lines is a signal to check that it is still one job, and never a reason to cut a rule
-that earns its place.
-
-You MUST refer to skills and other modules by name (e.g. module **face-detection**).
-You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detection/MODULE.md").
-
 #### H2 (##) headings
 
 - Overview (REQUIRED) - short description of how the module works, do not repeat `description`, max 500 characters
