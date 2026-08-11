@@ -99,7 +99,6 @@ Captions on a portrait export are not a raise, and a square or a landscape expor
 The word timings come from the clip, and never from the episode transcript.
 That transcript carries sentences and no words, and it is the caller's evidence for the span rather than
 this skill's evidence for a caption.
-Time the words with the binary that module **preflight** names, because a stock ffmpeg carries no whisper.
 
 Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
 so that height is the real resolution of the clip, and module **qa** fails a big upscale.

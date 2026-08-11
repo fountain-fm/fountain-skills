@@ -62,7 +62,10 @@ The licence of each bundled work MUST ship in `assets/licences`, as one file for
 A licence MUST NOT sit in the directory that holds the asset, because a loader often reads every file in
 that directory and a text file breaks it.
 
-Put the version of the asset in its file name, so that a later reader can compare it against the source.
+A later reader MUST be able to tell which version of the asset is bundled, so that they can compare it
+against the source.
+Put the version in the file name when the asset does not carry it, e.g. a model blob.
+Leave it out when the asset does, e.g. a font, whose version a font tool reads from the file.
 
 ## SKILL.md
 
