@@ -157,3 +157,7 @@ A user who opens a folder MUST see their work, and MUST NOT see how it was made.
 ## Fountain API
 
 Skill **fountain-api** is the ONLY way to interact with the Fountain API.
+
+A response is often much larger than the part of it you need.
+Write a large response to a file, and read only the part you need.
+A transcript is tens of thousands of tokens, and five of them cost more than the judgement they feed.

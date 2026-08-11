@@ -49,8 +49,7 @@ With:
    caller that, and let module **copy** and skill **fountain-clip-producer** settle the speaker.
 5. Join the segments of one episode that touch or overlap, because a passage often returns as two.
    The result is a moment: one continuous passage to judge.
-   Load the whole transcript with the Content API only when a moment needs the words around it, and
-   write it to a file rather than reading it whole.
+   Load the whole transcript with the Content API only when a moment needs the words around it.
 6. Score each moment 1-10 for controversy, insight, engagement, and relevance.
    Remove any moment under 24 of 40, and rank what remains.
 7. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
