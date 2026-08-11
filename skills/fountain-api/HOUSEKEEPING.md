@@ -33,6 +33,8 @@ You MUST mark a preference that the user did not give as proposed, and let them 
 An entry you derive from the show goes stale as the show changes, so weigh the recent episodes above
 the old ones whenever you write one, and not only under Narratives.
 Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
+An entry that states how the API behaves MUST carry the date you saw it behave that way.
+A limit is the kind of fact that gets fixed, so check one again before you let it stop you.
 A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
 You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
 The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
