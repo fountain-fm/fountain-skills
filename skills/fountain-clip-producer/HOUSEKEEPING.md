@@ -31,20 +31,23 @@ They are the ONLY store for user data that later sessions need.
 
 You MUST load the preferences with the Project API of skill **fountain-api** at the start of each session.
 When the user gives a new preference, you MUST record it with the Project API in the same turn.
-You MUST mark a preference that the user did not give as proposed, and let them keep it or cut it.
-An entry you derive from the show goes stale as the show changes, so weigh the recent episodes above
-the old ones whenever you write one, and not only under Narratives.
-Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
-An entry that states how the API behaves MUST carry the date you saw it behave that way.
-A limit is the kind of fact that gets fixed, so check one again before you let it stop you.
-A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
-You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
-The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
-Name the show and let each run read the preferences for itself.
-A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
-and say which line it overrode - a brief written before today cannot know what the user has since said.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
+
+Each entry MUST stay true to the user and to the show:
+
+- Mark an entry the user did not give as proposed, and let them keep it or cut it.
+- An entry you derive from the show goes stale as the show changes.
+  Weigh the recent episodes above the old ones whenever you write one, and not only under Narratives.
+  Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
+- An entry that states how the API behaves MUST carry the date you saw it behave that way.
+  A limit is the kind of fact that gets fixed, so check one again before you let it stop you.
+- A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
+- You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
+  The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
+  Name the show, and let each run read the preferences for itself.
+  A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
+  and say which line it overrode.
 
 Preferences are stored as Markdown.
 It MUST NOT have frontmatter.
