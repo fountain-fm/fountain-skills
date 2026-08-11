@@ -74,7 +74,9 @@ Put the version of the asset in its file name, so that a later reader can compar
 ### Body
 
 Each line MUST be under 120 chars.
-Body MUST be under 100 lines - the shorter the better.
+A skill MUST do one job, and the body MUST be as short as that job allows.
+A body over 100 lines is a signal to check that it is still one job, and never a reason to cut a rule
+that earns its place.
 
 Significant chunks of isolatable logic CAN be exported to a module.
 
@@ -117,7 +119,9 @@ Module is a mini skill - an isolatable chunk of skill logic.
 ### Body
 
 Each line MUST be under 120 chars.
-Body MUST be under 100 lines - the shorter the better.
+A module MUST do one job, and the body MUST be as short as that job allows.
+A body over 100 lines is a signal to check that it is still one job, and never a reason to cut a rule
+that earns its place.
 
 You MUST refer to skills and other modules by name (e.g. module **face-detection**).
 You MUST NOT refer to skills and other modules by path (e.g. "modules/face-detection/MODULE.md").

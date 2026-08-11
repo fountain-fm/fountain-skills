@@ -56,8 +56,5 @@ mid-batch loses nothing, and the next run picks up the remainder.
 The failure count lives there too, in the renderer note, so it survives any machine and the dashboard
 shows the reason beside the post.
 
-The transcript of an episode can be missing on the first clip of a show.
-Generating it is metered, and the skill says the cost when it queues the job.
-
 A machine that was asleep sends the ready email late rather than never: the first run after waking
 drains the queue and then sends it, so no cloud sweeper exists.

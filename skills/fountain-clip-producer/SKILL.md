@@ -94,16 +94,15 @@ Captions on a portrait export are not a raise, and a square or a landscape expor
 The word timings come from the clip, and never from the episode transcript.
 That transcript carries sentences and no words, and it is the caller's evidence for the span rather than
 this skill's evidence for a caption.
-
-Generating one is metered and yours to start without asking: say the cost as soon as the job is queued.
-Poll until it completes, and stop when it fails or the episode is early-access.
+Time the words with the binary that module **preflight** names, because a stock ffmpeg carries no whisper.
 
 Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
 so that height is the real resolution of the clip, and module **qa** fails a big upscale.
 Deliver the shape the tallest rendition can hold when it cannot reach the target, e.g. 720x1280 from a
 720p master, and say so - a true smaller resolution passes the gate and an upscale does not.
 
-When a rendered span reads wrong, report it rather than move it here - and a letterbox is requested work too.
+A span that reads wrong but that you cannot prove wrong is a report and not a repair, and a letterbox
+is requested work too.
 
 To change a clip this skill already made, read the manifest and the QA report first, reuse what is still
 correct, and write each new output under a new name.

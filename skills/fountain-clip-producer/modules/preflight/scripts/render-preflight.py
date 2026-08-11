@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Validate that the current environment can actually render what's being
 asked for, before spending time on a full render. Checks ffmpeg/ffprobe
-presence, required filters, which caption renderer is available, and which
-python interpreter carries a cv2 new enough for the framing module's
+presence, required filters, which caption renderer is available, which
+ffmpeg carries the whisper filter that times the words of the clip, and
+which python interpreter carries a cv2 new enough for the framing module's
 face detection and visual-person-qa.py.
 """
 
@@ -18,6 +19,7 @@ REQUIRED_FILTERS = {
     "core": {"crop", "scale", "overlay", "fps", "format"},
     "subtitle": {"ass", "subtitles"},
     "text": {"drawtext"},
+    "words": {"whisper"},
 }
 
 
@@ -105,8 +107,8 @@ SIBLING_FFMPEG = (
 )
 
 
-def find_subtitle_capable_ffmpeg(exclude):
-    """Find another ffmpeg on this machine that can burn subtitles."""
+def find_capable_ffmpeg(group, exclude):
+    """Find another ffmpeg on this machine that carries a filter of one group."""
     candidates = []
     for pattern in SIBLING_FFMPEG:
         candidates.extend(sorted(Path("/").glob(pattern.lstrip("/"))))
@@ -115,7 +117,7 @@ def find_subtitle_capable_ffmpeg(exclude):
         if candidate == exclude:
             continue
         try:
-            if ffmpeg_filters(candidate).intersection(REQUIRED_FILTERS["subtitle"]):
+            if ffmpeg_filters(candidate).intersection(REQUIRED_FILTERS[group]):
                 return candidate
         except (RuntimeError, OSError):
             continue
@@ -147,6 +149,11 @@ def main():
     parser.add_argument("--ffprobe", default=shutil.which("ffprobe") or "ffprobe")
     parser.add_argument("--media", help="Optional source or clean master to probe.")
     parser.add_argument("--require-subtitles", action="store_true")
+    parser.add_argument(
+        "--require-words",
+        action="store_true",
+        help="Fail if no ffmpeg carries the whisper filter, which times the words of the clip.",
+    )
     parser.add_argument("--require-magick", action="store_true")
     parser.add_argument(
         "--require-visual-qa",
@@ -172,6 +179,7 @@ def main():
         "ffprobe": args.ffprobe,
         "ok": False,
         "caption_renderer": None,
+        "ffmpeg_for_words": None,
         "visual_qa_python": None,
         "missing": [],
         "filters": {},
@@ -195,7 +203,7 @@ def main():
 
         alt = None
         if not has_subtitles:
-            alt = find_subtitle_capable_ffmpeg(exclude=args.ffmpeg)
+            alt = find_capable_ffmpeg("subtitle", exclude=args.ffmpeg)
             report["ffmpeg_with_subtitles"] = alt
             if args.require_subtitles and not alt:
                 report["missing"].append(
@@ -218,6 +226,15 @@ def main():
             report["ffmpeg_for_captions"] = args.ffmpeg
         else:
             report["missing"].append("caption renderer:ass/subtitles, drawtext, or qtrle alpha video")
+
+        # Word timings come from whisper on the clip's own audio, so a build
+        # without it stops captions, trims and shots after the master is cut.
+        if "whisper" in filters:
+            report["ffmpeg_for_words"] = args.ffmpeg
+        else:
+            report["ffmpeg_for_words"] = find_capable_ffmpeg("words", exclude=args.ffmpeg)
+            if args.require_words and not report["ffmpeg_for_words"]:
+                report["missing"].append("ffmpeg filter:whisper (no whisper-capable ffmpeg found on this machine)")
 
         if args.require_magick and not shutil.which("magick"):
             report["missing"].append("magick")
