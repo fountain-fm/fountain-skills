@@ -47,7 +47,8 @@ With:
 4. For a person, search their name.
    The transcript names nobody, so this finds where a name was said and never who said it - tell the
    caller that, and let module **copy** and skill **fountain-clip-producer** settle the speaker.
-5. Join the segments of one episode that touch or overlap, because a passage often returns as two.
+5. Sort the segments of one episode by time, then join the ones that touch or overlap, because a
+   passage often returns as two and a hit gives them in the order of the score.
    The result is a moment: one continuous passage to judge.
    Load the whole transcript with the Content API only when a moment needs the words around it.
 6. Score each moment 1-10 for controversy, insight, engagement, and relevance.
@@ -62,8 +63,13 @@ With:
 
 ## Additional notes
 
-The search covers the episodes Fountain has indexed, which is the whole show once it is set up.
+The search covers the episodes Fountain has indexed, which is the whole show once the user has set it
+up in the dashboard.
 An episode with no transcript is not in it, so say what the search could not see when one is missing.
+A show that was never set up looks the same as a show with nothing to say: several different searches
+come back empty, or every one of them lands on the same episode.
+Say so, and ask the user to set the show up in the dashboard, rather than reporting that the archive
+holds no moment - a search that reaches one episode of a thousand still answers with a real hit.
 
 Keep every filter on the segments and group them last, because a filter after the group takes words
 out of the middle of a moment.

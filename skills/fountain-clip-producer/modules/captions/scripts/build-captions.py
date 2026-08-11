@@ -1039,7 +1039,10 @@ def main():
 
     if args.check:
         print(f"style spec OK: {spec['name']} ({len(warnings)} warning(s))")
-        return 0
+        # Check alone is check-only; check with a real job carries on and builds it,
+        # or --emit-lines returns nothing and the QA gate fails on the absent file.
+        if not (args.words and args.out):
+            return 0
 
     if not args.words or not args.out:
         fail("--words and --out are required unless --check")

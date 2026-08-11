@@ -21,7 +21,8 @@ Nothing reaches the user until that gate reports a pass.
 ## Output
 
 - A style proof, and the stills taken from it.
-- A QA report, with a `pass` or a `fail` status and the reason for each failed check.
+- A QA report, whose `status` field reads `pass` or `fail`, with the reason for each failed check.
+  Read that one field for the verdict, because each check carries a status of its own.
 
 ## Requirements
 
