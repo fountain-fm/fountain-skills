@@ -45,7 +45,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
   and no word can be timed.
   A stock build often carries none of them, and on macOS the Homebrew `ffmpeg-full` formula is the one that does.
 - A whisper.cpp model file, which the whisper filter takes the path of and does nothing without.
-  Module **preflight** finds it, and stops the run when the machine holds none.
+  `ggml-base.en.bin` in `~/.cache/whisper` is the one this skill looks for first, and it is 141 MB, so
+  the machine installs it one time and the skill does not ship it.
+  Module **preflight** finds it, and gives the user the line that installs it when the machine has none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
 

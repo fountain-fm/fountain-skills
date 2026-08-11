@@ -126,22 +126,42 @@ def find_capable_ffmpeg(group, exclude):
 
 # Where a whisper.cpp model tends to sit. The ffmpeg whisper filter takes the
 # path of one, and a build with the filter and no model transcribes nothing.
+# The first entry is where this skill asks the user to put it.
 WHISPER_MODEL = (
-    "opt/homebrew/share/whisper.cpp/models/ggml-*.bin",  # macOS, Apple silicon Homebrew
-    "usr/local/share/whisper.cpp/models/ggml-*.bin",  # macOS, Intel Homebrew
-    "usr/share/whisper.cpp/models/ggml-*.bin",  # a distribution package
-    "opt/whisper.cpp/models/ggml-*.bin",  # an unpacked release build
+    "~/.cache/whisper/ggml-*.bin",  # where the install line below puts it
+    "/opt/homebrew/share/whisper-cpp/ggml-*.bin",  # macOS, Apple silicon Homebrew
+    "/usr/local/share/whisper-cpp/ggml-*.bin",  # macOS, Intel Homebrew
+    "/opt/homebrew/share/whisper.cpp/models/ggml-*.bin",  # a source build, kept beside its models
+    "/usr/local/share/whisper.cpp/models/ggml-*.bin",
+    "/usr/share/whisper.cpp/models/ggml-*.bin",  # a distribution package
+    "/opt/whisper.cpp/models/ggml-*.bin",  # an unpacked release build
+)
+
+WHISPER_MODEL_DEFAULT = "ggml-base.en.bin"
+WHISPER_MODEL_INSTALL = (
+    "mkdir -p ~/.cache/whisper && curl -L -o ~/.cache/whisper/" + WHISPER_MODEL_DEFAULT + " "
+    "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/" + WHISPER_MODEL_DEFAULT
 )
 
 
 def find_whisper_model(explicit):
-    """Find a whisper.cpp model file, which the whisper filter cannot work without."""
+    """Find a whisper.cpp model file, which the whisper filter cannot work without.
+
+    A `for-tests` blob is skipped deliberately: Homebrew's whisper-cpp ships one
+    beside the real model directory, and it transcribes nonsense rather than
+    failing, which reads as a working machine and ruins every caption.
+    """
     if explicit:
         return str(explicit) if Path(explicit).is_file() else None
-    home = Path.home() / ".cache" / "whisper"
-    candidates = [p for pattern in WHISPER_MODEL for p in sorted(Path("/").glob(pattern))]
-    candidates += sorted(home.glob("ggml-*.bin")) if home.is_dir() else []
-    return str(candidates[0]) if candidates else None
+    found = []
+    for pattern in WHISPER_MODEL:
+        found.extend(sorted(Path(pattern).expanduser().parent.glob(Path(pattern).name)))
+    usable = [p for p in found if "for-tests" not in p.name and p.is_file()]
+    # Prefer the model the skill names, then the largest, which is the most accurate.
+    named = [p for p in usable if p.name == WHISPER_MODEL_DEFAULT]
+    if named:
+        return str(named[0])
+    return str(max(usable, key=lambda p: p.stat().st_size)) if usable else None
 
 
 def probe(ffprobe, media):
@@ -264,7 +284,10 @@ def main():
         # and with none it loads its backend and then hangs rather than failing.
         report["whisper_model"] = find_whisper_model(args.whisper_model)
         if args.require_words and not report["whisper_model"]:
-            report["missing"].append("whisper model (the whisper filter takes a model file and hangs without one)")
+            report["missing"].append(
+                "whisper model (the whisper filter takes a model file and hangs without one) - "
+                f"install it one time, about 141 MB: {WHISPER_MODEL_INSTALL}"
+            )
 
         if args.require_magick and not shutil.which("magick"):
             report["missing"].append("magick")

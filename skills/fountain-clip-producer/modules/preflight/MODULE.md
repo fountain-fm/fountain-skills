@@ -67,7 +67,15 @@ The whisper filter transcribes nothing on its own, because it takes the path of 
 A build that carries the filter and a machine that holds no model is the dangerous case: ffmpeg loads
 its backend, prints no error, and never returns, so the render hangs instead of failing.
 The report therefore names the model as well as the binary, and `--require-words` fails without one.
-Give the user the model to install when it is absent, and never let the queue spend an attempt on it.
+
+The model is not bundled, because it is 141 MB against the 2.3 MB of the face model.
+The report carries the one line that installs it, so give that line to the user and say it is one time
+and about 141 MB.
+Never let the queue spend an attempt on a machine with no model.
+
+A model named `for-tests` is ignored on purpose.
+The Homebrew whisper package ships one, and it transcribes nonsense rather than failing, which reads
+as a machine that works and spoils every caption on it.
 
 The report also names the Python interpreter that carries OpenCV, which module **framing** needs for its scripts.
 An interpreter older than OpenCV 4.8 carries no `FaceDetectorYN`, and that is a missing tool rather than a warning.
