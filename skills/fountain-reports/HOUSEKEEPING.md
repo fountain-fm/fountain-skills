@@ -41,8 +41,6 @@ The copy goes stale the day the user changes their mind, and the copy is what th
 Name the show and let each run read the preferences for itself.
 A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
 and say which line it overrode - a brief written before today cannot know what the user has since said.
-Say it too when the run fired at a time the preferences do not name, because a schedule lives in the
-scheduler and the two drift with nothing to show it.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
 
@@ -83,7 +81,6 @@ one it has stopped covering is not a narrative any more.
 Count the episodes that are about a subject, and not the ones that mention it, because a passing
 mention is not coverage and a keyword search cannot tell the two apart.
 Give few strong narratives rather than many, because a long list makes every trend match something.
-A guest is not a narrative, and neither is a format.
 
 Bring this section level with the show before you read it, whichever skill you are running.
 It records the newest episode it has read: build it from the episode titles of the Content API when
@@ -158,6 +155,5 @@ A user who opens a folder MUST see their work, and MUST NOT see how it was made.
 
 Skill **fountain-api** is the ONLY way to interact with the Fountain API.
 
-A response is often much larger than the part of it you need.
-Write a large response to a file, and read only the part you need.
-A transcript is tens of thousands of tokens, and five of them cost more than the judgement they feed.
+Write a large response to a file and read only the part you need, because a whole transcript is tens
+of thousands of tokens and the part you need is a few hundred.

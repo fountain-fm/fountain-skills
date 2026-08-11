@@ -52,8 +52,6 @@ At most 5 briefs, one per advancing trend, where each brief carries:
    the audience the show writes for, and say which you used.
    Then run the same query one more time on the subject of the whole show, which is the level that is
    too broad to be a narrative and right for a catch-all.
-   A scan built from the narratives finds only what the show already returns to, and the story it
-   cannot find that way is the one the archive answers one time and no rival can.
    Widen the scan with a web search tool or a social trend tool when the machine has one, and say what
    the scan covered.
 
@@ -99,7 +97,6 @@ Drop a trend at this stage only when the show has clearly never touched the subj
 The test for a good translation: would the guest directly discuss this theme, not just something adjacent?
 A stretch at translation time becomes a forced archive match downstream - drop it now.
 
-The budget is for the day and never for one trend, because the user reviews the day.
-Every draft waits in the dashboard until they decide, and each clip becomes one post on each connected
-channel, so a budget of 3 is already 6 posts on two channels.
+The budget is for the day and never for one trend, because the user reviews the day, and a clip becomes
+one post on each connected channel - so a budget of 3 is already 6 posts on two channels.
 `clip_count` is a maximum that the archive may not fill, and fewer strong clips is the better outcome.
