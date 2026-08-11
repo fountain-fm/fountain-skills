@@ -40,6 +40,8 @@ With:
 2. Search the show's transcripts with the Search API, scoping to the show.
    Scope to the episodes instead when the caller names them.
    Each `ContentHitSegments` gives the episode and the segments that matched, with their times.
+   Check that each hit belongs to the show, and drop the ones that do not, because a scope the API
+   does not recognise searches every show on Fountain and answers 200.
 3. Search the theme, not the proper nouns of a headline, and use short keyword queries.
    Also search for disagreement, predictions, surprising statements, and changes of mind.
    For a kind of moment, search the show's recurring subjects, then let that kind lead the score.
