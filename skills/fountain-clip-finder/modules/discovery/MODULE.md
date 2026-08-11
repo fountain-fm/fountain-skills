@@ -27,8 +27,7 @@ With:
 ## Output
 
 - The scored moments, each with its scores and each flag.
-- The `ContentHit` of each episode, because it already names the video of that episode.
-- The `CanonicalPerson` of the speaker, for a request about a person.
+- The `ContentHit` of each episode, which the search returns and which already names the video.
 
 ## Requirements
 
@@ -36,36 +35,25 @@ With:
 
 ## Process
 
-1. Load skill **fountain-api**.
-   Resolve the show with the Search API if you have only a name.
-   The Search API gives a bare id, and the Content API needs the prefixed form, so add the type prefix.
-   List the show's episodes with the Content API and remove the duplicates by `_guid`.
-2. Choose the route under the rules below.
-   A request about a person takes the vault, and so does one that names no episode, because only the
-   vault searches what was said.
-3. Take the vault route by reading the project's vault ids with the Project API, then loading and updating
-   the `ProjectVault` with the Vaults API. Use one vault for the archive, and name it for its scope.
-   Top up the archive vault first: add the episodes it misses from step 1, and say the credit cost.
-   A vault nobody tops up goes stale, and it silently narrows every search.
-4. Take the direct route instead by loading the transcript of each episode in scope with the Content API.
-   Name the episodes the request needs, because this route reads one at a time.
-   Shortlist from the titles and the descriptions of step 1 only when no vault is possible, and say so.
-   Those fields say what an episode is about and never what was said in it, and some shows write
-   almost nothing in them, so this route finds the loud episodes and misses the good moment.
-5. Search what the route returned.
-   Search the theme, not the proper nouns of a headline, and use short keyword queries.
+1. Load skill **fountain-api**, and resolve the show with the Search API when you have only a name.
+   The Search API gives a bare id, and the rest of the API needs the prefixed form, so add the type prefix.
+2. Search the show's transcripts with the Search API, scoping to the show.
+   Scope to the episodes instead when the caller names them.
+   Each `ContentHitSegments` gives the episode and the segments that matched, with their times.
+3. Search the theme, not the proper nouns of a headline, and use short keyword queries.
    Also search for disagreement, predictions, surprising statements, and changes of mind.
    For a kind of moment, search the show's recurring subjects, then let that kind lead the score.
-   For an episode, keep only the segments of that episode.
    Use the quote or the approximate time to choose the moment when the caller gives one.
-6. For a person, resolve them with the Search API, then keep only the segments that name them in `mentions`.
-   Carry the `CanonicalPerson` forward, because module **copy** names the speaker.
-7. Join the segments of one episode that touch or overlap, because a passage often returns as two.
+4. For a person, search their name.
+   The transcript names nobody, so this finds where a name was said and never who said it - tell the
+   caller that, and let module **copy** and skill **fountain-clip-producer** settle the speaker.
+5. Join the segments of one episode that touch or overlap, because a passage often returns as two.
    The result is a moment: one continuous passage to judge.
-8. Score each moment 1-10 for controversy, insight, engagement, and relevance.
-   Use `topics` and `mentions` when the route returned them, because they show discussion, not a passing word.
+   Load the whole transcript with the Content API only when a moment needs the words around it, and
+   write it to a file rather than reading it whole.
+6. Score each moment 1-10 for controversy, insight, engagement, and relevance.
    Remove any moment under 24 of 40, and rank what remains.
-9. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
+7. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
    Ask per episode, and only for the ones that still hold a moment - another episode cannot overlap.
    Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
    Compare only with a `source` whose `media` is the `enclosure` of the segments, because the two clocks
@@ -75,10 +63,8 @@ With:
 
 ## Additional notes
 
-The vault route returns `TranscriptSearchSegment` with `mentions` and `topics`, and joining an episode
-costs a credit. The direct route reads `TranscriptSegment`, which has neither field and needs no vault.
-
-Spending a credit is yours to start without asking, but say what it cost and what remains when it is queued.
+The search covers the episodes Fountain has indexed, which is the whole show once it is set up.
+An episode with no transcript is not in it, so say what the search could not see when one is missing.
 
 Keep every filter on the segments and group them last, because a filter after the group takes words
 out of the middle of a moment.

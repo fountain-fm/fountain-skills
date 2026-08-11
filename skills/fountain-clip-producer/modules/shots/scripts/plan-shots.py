@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Turn speaker-labelled words plus per-speaker face anchors into a cut list.
 
-Reads a list of TranscriptWord for the clip span, each carrying a "speaker"
-field that TranscriptWord itself does not define, and the anchors emitted by
+Reads the clip's word timings, each carrying a "speaker" field that nothing
+in the API supplies, and the anchors emitted by
 module framing's extract-face-framing.py --speakers 2. Writes one segment per
 held shot, with the crop geometry for that speaker.
 
@@ -119,7 +119,7 @@ def geometry(anchor, frame_w, frame_h, face_height, eye_line, look_room):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--anchors", required=True, help="JSON from extract-face-framing.py --speakers 2.")
-    parser.add_argument("--words", required=True, help="TranscriptWord list for the span, with a speaker field.")
+    parser.add_argument("--words", required=True, help="The clip's word timings, with a speaker field.")
     parser.add_argument("--duration", type=float, required=True, help="Clip duration in seconds.")
     parser.add_argument("--out-width", type=int, default=1080)
     parser.add_argument("--out-height", type=int, default=1920)

@@ -14,7 +14,7 @@ The words say who speaks, and this module turns that into a cut list with the ge
 ## Input
 
 - The anchors of module **framing**, one for each speaker, with `face_cx`, `face_cy`, and `face_h`.
-- The `TranscriptWord` list of the span, where each word carries the speaker that said it.
+- The word timings of the clip, where each word carries the speaker that said it.
 - The duration of the clip, and the target size.
 
 ## Output

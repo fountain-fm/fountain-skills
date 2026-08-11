@@ -13,7 +13,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 ## Input
 
 - The `SocialPostMediaSource` of the verified clip.
-- The `CanonicalPerson` of the speaker from module **discovery**, when it resolved a person.
+- The name the caller asked for, when the request named a person.
 - The scores from module **discovery** and module **boundaries**, and each flag.
 - The show's connected channels, via the Social API.
 - Voice notes from the Editorial section and confirmed handles from the Accounts section of the preferences.
@@ -68,7 +68,8 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 Title rules:
 
 - Copy the quote from `transcript` word for word, and do not correct the grammar.
-  Correct a word heard wrong in `transcript` before the post exists, because `source` is write-once.
+  Correct a word heard wrong in `transcript` before the post exists, and on the post when you find it
+  later - the span itself cannot be changed, so only the words can be put right.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.

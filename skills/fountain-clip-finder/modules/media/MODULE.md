@@ -16,7 +16,7 @@ This module therefore also builds a time map, which module **boundaries** uses t
 - The scored moments from module **discovery**, and the `ContentHit` of each episode.
 - Where the show publishes its video, from the Accounts section of the preferences, for the episodes
   that need it.
-- The `ContentHitTranscript` of each episode that resolves to YouTube.
+- The `TranscriptSegment` list of each episode that resolves to YouTube, from the Content API.
 
 ## Output
 
@@ -65,7 +65,7 @@ This module therefore also builds a time map, which module **boundaries** uses t
    - `unmatched` - mark the moment for removal.
 
 7. Write the resolved URL into `media`.
-8. Build the time map one time for each matched episode, with its `ContentHitTranscript`:
+8. Build the time map one time for each matched episode, with its transcript:
 
    ```bash
    TIME_MAP="fountain/outputs/$SHOW/workings/time-map-$CONTENT_ID.json"

@@ -13,13 +13,13 @@ Module **captions** takes its revised word list, so the words and the picture ne
 
 ## Input
 
-- The `TranscriptWord` list of the span, and the duration of the clip.
+- The word timings of the clip, and its duration.
 - `clip-landscape-master.mp4` from module **media**, so a cut can land in real silence.
 
 ## Output
 
 - A removal report, with the length and the words of each cut.
-- The spans to keep, and the `TranscriptWord` list rebased onto the shorter clock.
+- The spans to keep, and the word timings rebased onto the shorter clock.
 - The trimmed master, joined from the kept spans.
 
 ## Requirements

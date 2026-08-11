@@ -13,8 +13,8 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 ## Input
 
 - The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
-- The `TranscriptWord` list of that span, which the `fountain` source of the transcript carries.
-  Module **shots** wants the speaker of each word too, which `TranscriptWord` does not define.
+- The word timings of that span, which this skill makes from the clip's own audio.
+  Module **shots** wants the speaker of each word too, which nothing supplies.
 - A delivery tier, which the words of the request imply.
 - Or a queue run: module **queue** reads the drafts that wait for media, and derives the inputs above.
 
@@ -41,7 +41,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, for the face detection of module **framing**.
   Its model, and the fonts that the presets name, ship in `assets`, so no machine installs either.
-- ffmpeg and ffprobe, built with libass, drawtext, and fontconfig, or no caption can be burned.
+- ffmpeg and ffprobe, built with libass, drawtext, fontconfig and whisper, or no caption can be burned
+  and no word can be timed.
   A stock build often carries none of them, and on macOS the Homebrew `ffmpeg-full` formula is the one that does.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
@@ -50,9 +51,11 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Load skill **fountain-api**, and read the delivery tier from the request.
    Do the least work that the tier asks for.
-   Generate the `fountain` transcript with the Content API when the episode carries only `rss`, then wait for it.
 2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
+   Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
+   first word starts at zero.
+   These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.
 5. Run module **framing** to crop the master to each shape that the request asks for.
@@ -64,12 +67,14 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 9. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
 10. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
     that the person it credits is the one who says it.
-    The caller wrote both unseen: the transcript names no speaker, and it starts each word where the
-    one before it ended, so a pause sits inside the word that follows and a word can read as spoken
-    before it is.
+    The caller wrote both unseen: the transcript carries sentences and names no speaker.
     Take the speaker from the camera and from a cutaway that shows a closed mouth.
-    Correct the title, the text and the context with the Social API when the credit is wrong, and say
-    that you did - those fields are editable and `source` is not.
+    Repair what is wrong with the Social API, and say what you changed:
+    move `ts_start` or `ts_end` when the clip opens or closes inside a word, or when the quote sits
+    outside the span, then re-cut and write the new words into `transcript` so the two agree;
+    correct the title, the text and the context when the credit is wrong.
+    Move an edge only to repair what you can prove, or to make a change the user asked for, and never to
+    improve the clip - choosing the moment is the caller's job.
 11. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
 
 ## Additional notes
@@ -86,9 +91,9 @@ The user names the work they want, not the tier, so read it from their words:
 Ask when the words fit none of the three, and you MUST NOT raise the tier on your own: polish is requested work.
 Captions on a portrait export are not a raise, and a square or a landscape export still waits to be asked.
 
-A clip needs the `fountain` transcript of its episode, and never the `rss` one alone.
-The `rss` transcript is timed against the feed and its different advertisement cut, so its clock can sit
-minutes away from this file: a span measured on it looks right on paper and holds the wrong words.
+The word timings come from the clip, and never from the episode transcript.
+That transcript carries sentences and no words, and it is the caller's evidence for the span rather than
+this skill's evidence for a caption.
 
 Generating one is metered and yours to start without asking: say the cost as soon as the job is queued.
 Poll until it completes, and stop when it fails or the episode is early-access.
