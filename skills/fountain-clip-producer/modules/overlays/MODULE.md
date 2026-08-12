@@ -61,6 +61,8 @@ These are the layer types:
 - `title` is the hook headline, and a box colour turns it into the solid headline bar.
 - `lowerThird` is the guest name and role, or the show and the episode number.
 - `watermark` is small persistent text, such as a handle.
+- `scrim` fades a dark gradient over the lower or the upper third, so that a caption stays legible on
+  bright footage or over a graphic burned into the picture.
 - `progressBar` sweeps a thin bar across the clip.
 - `audiogram` draws a waveform, for a source that carries no video.
 - `blurFill` is the base for footage that is not vertical, and it spans the blurred fill and the card look.
