@@ -53,7 +53,18 @@ If there is no `FOUNTAIN_API_KEY`:
 
 - Ask the user to create a project API key at https://fountain.fm/studio/api.
 - Ask the user to save the key to `.env` themselves, so that it never passes through you.
-  Give them the name `FOUNTAIN_API_KEY`, and tell them the file to write it to.
+  Give them the name `FOUNTAIN_API_KEY`, the file to write it to, and a command that writes it,
+  because a user who is given only the name opens an editor or pastes the key to you, which is what
+  this rule prevents:
+
+  ```bash
+  # read -s keeps the key off the screen and out of the shell history.
+  # Run it where the project is, because the file is written to the current directory.
+  read -rs "?Paste your Fountain key: " k && printf 'FOUNTAIN_API_KEY=%s\n' "$k" > .env && unset k
+  ```
+
+  That command is zsh, and bash takes `read -rsp` instead.
+  The name and the file are enough on their own for a user who runs neither.
 
 Retry a failed upload one time before you report it.
 A presigned upload can answer 400 to a request that is correct, and take the same request on the retry.
