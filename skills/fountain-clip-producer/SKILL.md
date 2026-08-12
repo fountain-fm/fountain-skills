@@ -27,7 +27,7 @@ Optional:
 
 - The finished work: a landscape master, and one export for each shape that the request asks for.
   The master is finished work and not a working, because the user keeps it and cuts from it again.
-- A `SocialPostUpload` on `content.uploads` of the post, when the user asks to attach the video.
+- A `SocialPostUpload` on `content.uploads` of the post, unless the user asked you not to attach it.
 - Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, and a removal
   report when module **trims** cut the clip.
 
@@ -82,7 +82,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     captions and the gate all describe the old cut, and only the gate can say the new one is finished.
     Move an edge only to repair what you can prove, or to make a change the user asked for, and never to
     improve the clip - choosing the moment is the caller's job.
-11. Attach the video to the post with the Uploads API and the Social API, when the user asks for that.
+11. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
+    not to.
 
 ## Additional notes
 
