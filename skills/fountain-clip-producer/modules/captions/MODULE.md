@@ -100,6 +100,12 @@ a word that still runs when the next one starts, and a word longer than two seco
 A list you build by hand MUST refuse them too.
 The long word is the one that ruins a clip, because every later word is pushed past its end.
 
+Hand the script a word list that still carries its punctuation, because the script reads each word's
+own text to find a sentence end: that is what closes a group, and what sentence case capitalises after.
+The script drops a full stop and a trailing comma itself, once it has used them.
+A list that arrives stripped runs two sentences into one caption, and the capital is the only clue the
+reader gets.
+
 A caption group breaks on a speaker change, a sentence end, a silence, or the safe width, and never inside a clause.
 The script measures each word in the font and case it will render in and packs until the next will not fit,
 so `font.size` is the control, `grouping.maxWords` only a ceiling, and a one-word style is not packed at all.
