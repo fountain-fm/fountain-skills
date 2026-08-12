@@ -35,12 +35,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
    The sentence-level segments of the episode transcript are too coarse for a caption.
    Use the rebased list of module **trims** instead, when that module cut the clip.
    Stop and report to the user when a portrait export has no word timings, rather than deliver it bare.
-   Whisper invents a timing, so the script refuses three: a word that starts before the word before
-   it, a word that still runs when the next one starts, and a word longer than two seconds.
-   A list you build by hand MUST refuse them too.
-   The long word is the one that ruins a clip, because every later word is pushed past its end.
-   Make the timings again from the clip's audio when the script refuses a list, and tell the user
-   when the second list is refused as well, rather than caption the clip from times you know are wrong.
+   Make the timings again when the script refuses the list, and tell the user if it refuses them twice.
 2. Clean the text before you set any timing, under the faithful-clean rules below.
 3. Compile the spec and the words into the ASS file:
 
