@@ -172,7 +172,7 @@ It MUST NOT give instructions about authentication - skill **fountain-api** owns
 ### Endpoints
 
 You MUST NOT refer to an endpoint, a path, a method, a request body, or a query parameter.
-You MUST refer to the API only by its group (Project, Content, Search, People, Vaults, Publishing, Uploads, Social).
+You MUST refer to the API only by its group (Project, Content, Search, Publishing, Uploads, Social).
 E.g., you CAN say "Load the latest episode via Publishing API of skill **fountain-api**".
 
 Skill **fountain-api** is the only exception.
