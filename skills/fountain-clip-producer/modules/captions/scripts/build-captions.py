@@ -391,22 +391,17 @@ MAX_SHIFT = 1.0  # a repair this large means the order is wrong, and no repair c
 
 
 def enforce_monotonic(words, min_dur=0.04):
-    """Drop impossible durations, then push each word to start no earlier than the one before it ended.
+    """Cut impossible durations, then push each word to start no earlier than the one before it ended.
 
     ASR output is not always ordered: a word can start before its predecessor
     finishes. Two caption events then cover the same instant and the viewer
     sees both at once. The word order carries the sentence, so the times move
     and the words never do.
 
-    A word that runs for many seconds is the dangerous case, because its end
-    becomes the cursor and every later word is pushed past it - one bad word
-    then desynchronises the whole clip. So an impossible duration is cut back
-    to MAX_WORD_DUR before it can move anything, and its start is left alone,
-    because the start of a runaway word is usually right.
-
-    A word that still has to move further than MAX_SHIFT is not noise. It
-    means the order itself is broken, so this fails rather than render a clip
-    that is quietly wrong. Returns (clamped, nudged).
+    The clamp runs first because a long word's end becomes the cursor, and one
+    bad word would otherwise push every later word past it. A word that must
+    still move further than MAX_SHIFT fails the build instead.
+    Returns (clamped, nudged).
     """
     clamped, nudged, cursor = 0, 0, 0.0
     for i, word in enumerate(words):
