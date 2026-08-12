@@ -65,13 +65,13 @@ With:
 
 ## Additional notes
 
-The search covers the episodes Fountain has indexed, which is the whole show once the user has set it
-up in the dashboard.
-An episode with no transcript is not in it, so say what the search could not see when one is missing.
-A show that was never set up looks the same as a show with nothing to say: several different searches
+The search covers the episodes that hold a transcript, and never the whole show by default.
+Coverage is decided one episode at a time, so a gap sits anywhere and not only in the oldest episodes.
+An episode with no transcript is not in the search, so say which ones the search could not see.
+A show with few transcripts looks the same as a show with nothing to say: several different searches
 come back empty, or every one of them lands on the same episode.
-Say so, and ask the user to set the show up in the dashboard, rather than reporting that the archive
-holds no moment - a search that reaches one episode of a thousand still answers with a real hit.
+Say that, rather than report that the archive holds no moment - a search that reaches one episode of a
+thousand still answers with a real hit, and the user cannot tell the two apart from the result.
 
 Keep every filter on the segments and group them last, because a filter after the group takes words
 out of the middle of a moment.
