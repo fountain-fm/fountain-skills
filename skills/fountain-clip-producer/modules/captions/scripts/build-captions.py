@@ -378,29 +378,48 @@ def load_words(path):
         )
     if not words:
         fail(f"no usable words in {path}")
-    nudged = enforce_monotonic(words)
+    clamped, nudged = enforce_monotonic(words)
+    if clamped:
+        print(f"note: shortened {clamped} word(s) that ran longer than {MAX_WORD_DUR}s in {path}", file=sys.stderr)
     if nudged:
         print(f"note: moved {nudged} word time(s) that ran backwards in {path}", file=sys.stderr)
     return words
 
 
+MAX_WORD_DUR = 2.0  # nobody says one word for longer; a longer one is ASR debris, not speech
+MAX_SHIFT = 1.0  # a repair this large means the order is wrong, and no repair can know the truth
+
+
 def enforce_monotonic(words, min_dur=0.04):
-    """Push each word to start no earlier than the one before it ended.
+    """Cut impossible durations, then push each word to start no earlier than the one before it ended.
 
     ASR output is not always ordered: a word can start before its predecessor
     finishes. Two caption events then cover the same instant and the viewer
     sees both at once. The word order carries the sentence, so the times move
-    and the words never do. Returns how many were moved.
+    and the words never do.
+
+    The clamp runs first because a long word's end becomes the cursor, and one
+    bad word would otherwise push every later word past it. A word that must
+    still move further than MAX_SHIFT fails the build instead.
+    Returns (clamped, nudged).
     """
-    nudged, cursor = 0, 0.0
-    for word in words:
+    clamped, nudged, cursor = 0, 0, 0.0
+    for i, word in enumerate(words):
+        if word["end"] - word["start"] > MAX_WORD_DUR:
+            word["end"] = word["start"] + MAX_WORD_DUR
+            clamped += 1
         start = max(word["start"], cursor)
+        if start - word["start"] > MAX_SHIFT:
+            fail(
+                f"words[{i}] ('{word['text']}') would move {start - word['start']:.2f}s to keep its order, "
+                f"past the {MAX_SHIFT}s limit - make the word timings again from the clip's audio"
+            )
         end = max(word["end"], start + min_dur)
         if start != word["start"] or end != word["end"]:
             nudged += 1
         word["start"], word["end"] = start, end
         cursor = end
-    return nudged
+    return clamped, nudged
 
 
 def apply_case(text, mode, capitalize=False):
