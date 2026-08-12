@@ -106,6 +106,12 @@ Safety pass:
 Speaker naming:
 
 - Confirm who is on camera, because a show with two hosts often cuts to the other person.
+- A handle is confirmed when the episode's show notes give it as a link, or when Accounts holds one
+  the user gave.
+  Never record a guest's handle: read it from the notes of the episode you are clipping, because it
+  belongs to that episode.
+  Record the show's own handle or a host's under Accounts when the notes do not give it and the user
+  does.
 - Credit the speaker by name when no handle is confirmed for that platform.
 - Never guess a handle, and never use one platform's handle on another.
 
