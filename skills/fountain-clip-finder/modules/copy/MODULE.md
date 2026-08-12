@@ -68,8 +68,10 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 Title rules:
 
 - Copy the quote from `transcript` word for word, and do not correct the grammar.
-  Correct a word heard wrong in `transcript` before the post exists, and on the post when you find it
-  later - the span itself cannot be changed, so only the words can be put right.
+  Put a word heard wrong right in `transcript` itself, and not only in the quote you took from it,
+  because the user reads the clip against `transcript` and the two MUST agree.
+  Do it before the post exists, and on the post when you find it later - the span cannot change, so
+  only the words can be put right.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.
