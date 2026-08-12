@@ -95,6 +95,11 @@ The judgment calls stay yours:
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style:
 `sentence` lowercases every word first, so it destroys "I" and every name.
 
+Whisper invents a timing, so the script refuses three: a word that starts before the word before it,
+a word that still runs when the next one starts, and a word longer than two seconds.
+A list you build by hand MUST refuse them too.
+The long word is the one that ruins a clip, because every later word is pushed past its end.
+
 A caption group breaks on a speaker change, a sentence end, a silence, or the safe width, and never inside a clause.
 The script measures each word in the font and case it will render in and packs until the next will not fit,
 so `font.size` is the control, `grouping.maxWords` only a ceiling, and a one-word style is not packed at all.
