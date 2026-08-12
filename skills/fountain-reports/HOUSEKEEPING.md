@@ -43,10 +43,7 @@ Each entry MUST stay true to the user and to the show:
 - An entry that states how the API behaves MUST carry the date you saw it behave that way.
   A limit is the kind of fact that gets fixed, so check one again before you let it stop you.
 - A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
-- You MUST NOT copy a preference into a standing instruction, such as the brief of a scheduled run.
-  The copy goes stale the day the user changes their mind, and the copy is what the run obeys.
-  Name the show, and let each run read the preferences for itself.
-  A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
+- A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
   and say which line it overrode.
 
 Preferences are stored as Markdown.
@@ -68,7 +65,7 @@ You MUST use only these headings:
 - Other - all other preferences.
 
 Write a heading only when it has an entry.
-An absent heading means the same as an empty one, and this list is the place that names what can exist.
+An absent heading means the same as an empty one.
 
 Empty preferences mean a new project, so follow the first contact steps of skill **fountain-reports**.
 When you rely on a built-in default because no setting names a choice, say so in passing.
@@ -81,8 +78,6 @@ Write one line for each, in that order.
 Pitch it between the show and one episode: the subject of the whole show fits every story, and the
 subject of one episode fits only that one.
 A narrative earns its place by how often the show returns to it, and never by how good one episode was.
-A subject the show keeps returning to this year is a narrative whatever its share of the decade, and
-one it has stopped covering is not a narrative any more.
 Count the episodes that are about a subject, and not the ones that mention it, because a passing
 mention is not coverage and a keyword search cannot tell the two apart.
 Give few strong narratives rather than many, because a long list makes every trend match something.
@@ -117,7 +112,6 @@ If data is available from an API, you MUST load it from the API, and you MUST NO
 ### LOG.md
 
 You MUST keep this if a local file system is available.
-It can help with debugging for yourself, the user, and Fountain support.
 
 When you use Fountain skills, record what you do in this file after each turn.
 You MUST NOT read this file in full, just the latest 7 days at the end of the file.
