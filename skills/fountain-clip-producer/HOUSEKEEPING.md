@@ -37,6 +37,8 @@ You MUST NOT keep a local copy for a later session.
 Each entry MUST stay true to the user and to the show:
 
 - Mark an entry the user did not give as proposed, and let them keep it or cut it.
+  Mark a value you chose yourself the same way, under any heading.
+  Without a mark, the next session reads your choice as the user's and keeps it.
 - An entry you derive from the show goes stale as the show changes.
   Weigh the recent episodes above the old ones whenever you write one, and not only under Narratives.
   Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
