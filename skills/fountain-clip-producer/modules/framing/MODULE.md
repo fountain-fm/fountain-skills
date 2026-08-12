@@ -67,7 +67,8 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
      -vf "drawbox=x=$CROP_X+$CROP_W/2-2:y=0:w=4:h=ih:color=lime@1:t=fill" center-check.jpg
    ```
 
-6. Stop when a segment holds no clean crop, and render this letterbox only after the user asks for it:
+6. Stop when a segment holds no clean crop, and offer a span that leaves it out as well as this
+   letterbox, which you render only after the user asks for it:
 
    ```bash
    # scale fits the whole width and keeps every pixel, and pad centres it in the taller shape.
