@@ -39,6 +39,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.
    Drop a component whose data the caller did not give, and say so after the send.
+   A component that needs no data has none to be missing, so only a customization can drop it.
 4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
    into a report sent later in the same run, or not at all.
    Email is the default, and goes to the addresses under Reporting.
