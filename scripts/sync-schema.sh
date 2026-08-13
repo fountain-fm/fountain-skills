@@ -125,10 +125,10 @@ build_skill() {
   description="$(read_frontmatter_field "$skill_path" description)"
   modules="$({
     if [[ -d "$skill_dir/modules" ]]; then
-      find "$skill_dir/modules" -mindepth 2 -maxdepth 2 -name MODULE.md -type f -print |
-        LC_ALL=C sort | while IFS= read -r module_path; do
-          build_module "$module_path"
-        done
+      find "$skill_dir/modules" -mindepth 2 -maxdepth 2 -name MODULE.md -type f -print \
+        | LC_ALL=C sort | while IFS= read -r module_path; do
+        build_module "$module_path"
+      done
     fi
   } | jq --slurp '.')"
   assets="$(collect_assets "$skill_dir/assets" "$skill_dir/scripts")"
