@@ -64,7 +64,9 @@ First contact, for a caller that finds the preferences empty:
    The mark is what lets a later reader, and the origin of a `setting-row`, tell a default from a choice.
 3. Ask the user where their emails go, and record the addresses under Reporting.
    The `settings` report is the first one, so nothing sends without them.
-4. Send the `settings` report, which says what was set and what else each heading holds.
+4. Ask where the show puts its video other than Fountain, and record the answer under Accounts.
+   Record that there is nowhere when the user says so, or every later run asks again.
+5. Send the `settings` report, which says what was set and what else each heading holds.
 
 The defaults only make the settings visible and editable, because every skill already defaults the same
 way with no entry at all.
