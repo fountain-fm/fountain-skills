@@ -41,10 +41,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Drop a component whose data the caller did not give, and say so after the send.
 4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
    into a report sent later in the same run, or not at all.
-   Email is the default, and a user who is present and asked to read it here wins over the section.
-   An email goes to the addresses under Reporting.
-   Ask the user for them when the section holds none, and record them in the same turn.
-   Never send to an address you were not given.
+   Email is the default, and goes to the addresses under Reporting.
+   Ask for them when the section holds none, and record them in the same turn.
+   Print in the chat instead when the user asked to read it there.
    Say plainly when a report was composed but not sent.
 
 ## Additional notes
