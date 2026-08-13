@@ -1,0 +1,406 @@
+{
+  "housekeeping": "assets/HOUSEKEEPING.md",
+  "skills": [
+    {
+      "name": "fountain-api",
+      "description": "Interact with the Fountain API. Load and search content, publish your own podcasts, create social posts.",
+      "skill": "skills/fountain-api/SKILL.md",
+      "modules": [],
+      "assets": []
+    },
+    {
+      "name": "fountain-clip-finder",
+      "description": "Find the strongest clip moments in a show, write the post copy, and open a draft post for each channel.",
+      "skill": "skills/fountain-clip-finder/SKILL.md",
+      "modules": [
+        {
+          "name": "boundaries",
+          "description": "Shape a scored moment into a clip - set a clean start and end, apply the gates, and cut the words.",
+          "module": "skills/fountain-clip-finder/modules/boundaries/MODULE.md",
+          "assets": [
+            {
+              "name": "find-clip-boundaries.py",
+              "path": "skills/fountain-clip-finder/modules/boundaries/scripts/find-clip-boundaries.py"
+            }
+          ]
+        },
+        {
+          "name": "copy",
+          "description": "Write the title, the context note, and the platform post text for a verified clip, and check them for risk.",
+          "module": "skills/fountain-clip-finder/modules/copy/MODULE.md",
+          "assets": []
+        },
+        {
+          "name": "discovery",
+          "description": "Search a show's transcripts for real moments, and score each one for substance and for fit.",
+          "module": "skills/fountain-clip-finder/modules/discovery/MODULE.md",
+          "assets": []
+        },
+        {
+          "name": "media",
+          "description": "Resolve the file each clip is cut from, and map the transcript clock onto the clock of that file.",
+          "module": "skills/fountain-clip-finder/modules/media/MODULE.md",
+          "assets": [
+            {
+              "name": "find-episode-video.py",
+              "path": "skills/fountain-clip-finder/modules/media/scripts/find-episode-video.py"
+            }
+          ]
+        }
+      ],
+      "assets": [
+        {
+          "name": "build-time-map.py",
+          "path": "skills/fountain-clip-finder/scripts/build-time-map.py"
+        }
+      ]
+    },
+    {
+      "name": "fountain-clip-producer",
+      "description": "Render a clip post into a finished, platform-ready video with framing, captions, and overlays.",
+      "skill": "skills/fountain-clip-producer/SKILL.md",
+      "modules": [
+        {
+          "name": "brand",
+          "description": "Hold the colours, fonts, and assets of a show, so that every clip for it looks the same.",
+          "module": "skills/fountain-clip-producer/modules/brand/MODULE.md",
+          "assets": []
+        },
+        {
+          "name": "captions",
+          "description": "Build styled, word-timed captions from a style spec and burn them into the clip.",
+          "module": "skills/fountain-clip-producer/modules/captions/MODULE.md",
+          "assets": [
+            {
+              "name": "bold-social.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/bold-social.json"
+            },
+            {
+              "name": "bounce-in.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/bounce-in.json"
+            },
+            {
+              "name": "clean-editorial.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/clean-editorial.json"
+            },
+            {
+              "name": "current-word.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/current-word.json"
+            },
+            {
+              "name": "glow-bounce.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/glow-bounce.json"
+            },
+            {
+              "name": "hormozi.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/hormozi.json"
+            },
+            {
+              "name": "impact-loud.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/impact-loud.json"
+            },
+            {
+              "name": "karaoke-fill.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/karaoke-fill.json"
+            },
+            {
+              "name": "minimal-light.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/minimal-light.json"
+            },
+            {
+              "name": "pill-karaoke.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/pill-karaoke.json"
+            },
+            {
+              "name": "speaker-duo.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/speaker-duo.json"
+            },
+            {
+              "name": "tiktok-style.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/tiktok-style.json"
+            },
+            {
+              "name": "typewriter.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/typewriter.json"
+            },
+            {
+              "name": "word-pop.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
+            },
+            {
+              "name": "build-captions.py",
+              "path": "skills/fountain-clip-producer/modules/captions/scripts/build-captions.py"
+            }
+          ]
+        },
+        {
+          "name": "fonts",
+          "description": "Make the font that a style names available to the renderer, and substitute one safely when it is absent.",
+          "module": "skills/fountain-clip-producer/modules/fonts/MODULE.md",
+          "assets": []
+        },
+        {
+          "name": "framing",
+          "description": "Crop the landscape master to the target shape, and keep the active speaker in the centre of the frame.",
+          "module": "skills/fountain-clip-producer/modules/framing/MODULE.md",
+          "assets": [
+            {
+              "name": "extract-face-framing.py",
+              "path": "skills/fountain-clip-producer/modules/framing/scripts/extract-face-framing.py"
+            },
+            {
+              "name": "visual-person-qa.py",
+              "path": "skills/fountain-clip-producer/modules/framing/scripts/visual-person-qa.py"
+            }
+          ]
+        },
+        {
+          "name": "media",
+          "description": "Cut the accurate landscape master that every other module of the skill builds on.",
+          "module": "skills/fountain-clip-producer/modules/media/MODULE.md",
+          "assets": [
+            {
+              "name": "verify-content-alignment.py",
+              "path": "skills/fountain-clip-producer/modules/media/scripts/verify-content-alignment.py"
+            }
+          ]
+        },
+        {
+          "name": "overlays",
+          "description": "Composite the layers of a clip - logos, titles, lower thirds, progress bars, and audiograms.",
+          "module": "skills/fountain-clip-producer/modules/overlays/MODULE.md",
+          "assets": [
+            {
+              "name": "audiogram-artwork.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram-artwork.json"
+            },
+            {
+              "name": "audiogram.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram.json"
+            },
+            {
+              "name": "guest-intro.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/guest-intro.json"
+            },
+            {
+              "name": "handle-watermark.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/handle-watermark.json"
+            },
+            {
+              "name": "headline-bar.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/headline-bar.json"
+            },
+            {
+              "name": "hook-title.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/hook-title.json"
+            },
+            {
+              "name": "launch-pack.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/launch-pack.json"
+            },
+            {
+              "name": "lower-scrim.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/lower-scrim.json"
+            },
+            {
+              "name": "pip-card.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/pip-card.json"
+            },
+            {
+              "name": "placeholder-logo.png",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/placeholder-logo.png"
+            },
+            {
+              "name": "placeholder-sponsor.png",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/placeholder-sponsor.png"
+            },
+            {
+              "name": "show-logo.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/show-logo.json"
+            },
+            {
+              "name": "sponsor-logo.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/sponsor-logo.json"
+            },
+            {
+              "name": "build-overlays.py",
+              "path": "skills/fountain-clip-producer/modules/overlays/scripts/build-overlays.py"
+            }
+          ]
+        },
+        {
+          "name": "preflight",
+          "description": "Confirm that the machine can render what the request asks for, before the first render starts.",
+          "module": "skills/fountain-clip-producer/modules/preflight/MODULE.md",
+          "assets": [
+            {
+              "name": "render-preflight.py",
+              "path": "skills/fountain-clip-producer/modules/preflight/scripts/render-preflight.py"
+            }
+          ]
+        },
+        {
+          "name": "qa",
+          "description": "Prove a style on a short render, and gate every delivery on one pass or fail report.",
+          "module": "skills/fountain-clip-producer/modules/qa/MODULE.md",
+          "assets": [
+            {
+              "name": "validate-clip.py",
+              "path": "skills/fountain-clip-producer/modules/qa/scripts/validate-clip.py"
+            }
+          ]
+        },
+        {
+          "name": "queue",
+          "description": "Work the render queue - find the drafts that wait for media, and render what auto-render allows.",
+          "module": "skills/fountain-clip-producer/modules/queue/MODULE.md",
+          "assets": []
+        },
+        {
+          "name": "shots",
+          "description": "Decide which shot the clip holds when one frame carries two people, and keep the cuts continuous.",
+          "module": "skills/fountain-clip-producer/modules/shots/MODULE.md",
+          "assets": [
+            {
+              "name": "plan-shots.py",
+              "path": "skills/fountain-clip-producer/modules/shots/scripts/plan-shots.py"
+            }
+          ]
+        },
+        {
+          "name": "trims",
+          "description": "Remove dead air and filler from a clip, after the user asks for it and sees what would go.",
+          "module": "skills/fountain-clip-producer/modules/trims/MODULE.md",
+          "assets": [
+            {
+              "name": "plan-trims.py",
+              "path": "skills/fountain-clip-producer/modules/trims/scripts/plan-trims.py"
+            }
+          ]
+        }
+      ],
+      "assets": [
+        {
+          "name": "anton-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/anton-regular.ttf"
+        },
+        {
+          "name": "courier-prime-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/courier-prime-regular.ttf"
+        },
+        {
+          "name": "montserrat-black.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/montserrat-black.ttf"
+        },
+        {
+          "name": "montserrat-bold.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/montserrat-bold.ttf"
+        },
+        {
+          "name": "montserrat-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/montserrat-regular.ttf"
+        },
+        {
+          "name": "mit-yunet.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/mit-yunet.txt"
+        },
+        {
+          "name": "ofl-anton.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-anton.txt"
+        },
+        {
+          "name": "ofl-courier-prime.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-courier-prime.txt"
+        },
+        {
+          "name": "ofl-montserrat.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-montserrat.txt"
+        },
+        {
+          "name": "face-detection-yunet-2023mar.onnx",
+          "path": "skills/fountain-clip-producer/assets/models/face-detection-yunet-2023mar.onnx"
+        }
+      ]
+    },
+    {
+      "name": "fountain-daily-growth",
+      "description": "Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.",
+      "skill": "skills/fountain-daily-growth/SKILL.md",
+      "modules": [
+        {
+          "name": "performance-review",
+          "description": "Read yesterday's posts and their numbers fresh from the API, and write the durable lessons.",
+          "module": "skills/fountain-daily-growth/modules/performance-review/MODULE.md",
+          "assets": []
+        },
+        {
+          "name": "trend-discovery",
+          "description": "Scan the news, score the trends, and shape the strongest into briefs for fountain-clip-finder.",
+          "module": "skills/fountain-daily-growth/modules/trend-discovery/MODULE.md",
+          "assets": []
+        }
+      ],
+      "assets": []
+    },
+    {
+      "name": "fountain-reports",
+      "description": "Build the reports the user reads - compose components into a preset, then email or print it.",
+      "skill": "skills/fountain-reports/SKILL.md",
+      "modules": [],
+      "assets": [
+        {
+          "name": "approve-note.md",
+          "path": "skills/fountain-reports/assets/components/approve-note.md"
+        },
+        {
+          "name": "candidate-card.md",
+          "path": "skills/fountain-reports/assets/components/candidate-card.md"
+        },
+        {
+          "name": "dashboard-link.md",
+          "path": "skills/fountain-reports/assets/components/dashboard-link.md"
+        },
+        {
+          "name": "headings-tour.md",
+          "path": "skills/fountain-reports/assets/components/headings-tour.md"
+        },
+        {
+          "name": "headline.md",
+          "path": "skills/fountain-reports/assets/components/headline.md"
+        },
+        {
+          "name": "setting-row.md",
+          "path": "skills/fountain-reports/assets/components/setting-row.md"
+        },
+        {
+          "name": "stats-table.md",
+          "path": "skills/fountain-reports/assets/components/stats-table.md"
+        },
+        {
+          "name": "warnings.md",
+          "path": "skills/fountain-reports/assets/components/warnings.md"
+        },
+        {
+          "name": "winners-losers.md",
+          "path": "skills/fountain-reports/assets/components/winners-losers.md"
+        },
+        {
+          "name": "draft-posts.md",
+          "path": "skills/fountain-reports/assets/presets/draft-posts.md"
+        },
+        {
+          "name": "performance.md",
+          "path": "skills/fountain-reports/assets/presets/performance.md"
+        },
+        {
+          "name": "rendered-posts.md",
+          "path": "skills/fountain-reports/assets/presets/rendered-posts.md"
+        },
+        {
+          "name": "settings.md",
+          "path": "skills/fountain-reports/assets/presets/settings.md"
+        }
+      ]
+    }
+  ]
+}
