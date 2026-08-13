@@ -19,6 +19,7 @@ this software, such as a module, a field, or a part of the API.
 Name a file only when the reader opens it, and put everything that worked in one line.
 Use those names when the reader asks for them, or when they are working on the software with you,
 because a reader who can act on a name is worse served without it.
+When you give the reader a number about their show, say which sources you counted.
 
 Never ask the reader to approve a thing without putting the words they are approving in front of them.
 Quote a clip whole, or say that you shortened it and the clip did not, because an ellipsis in a quote
