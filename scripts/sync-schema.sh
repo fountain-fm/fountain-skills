@@ -5,7 +5,7 @@ set -euo pipefail
 REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
 SKILLS_DIR="$REPO_ROOT/skills"
 HOUSEKEEPING_PATH="$REPO_ROOT/assets/HOUSEKEEPING.md"
-OUTPUT_PATH="$REPO_ROOT/SCHEMA.json"
+OUTPUT_PATH="$REPO_ROOT/assets/SCHEMA.json"
 
 if ! command -v jq > /dev/null 2>&1; then
   echo "sync-schema: jq is missing" >&2
