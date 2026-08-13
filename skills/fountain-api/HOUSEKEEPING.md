@@ -66,7 +66,8 @@ You MUST use only these headings:
 - Brand - the show's look: caption style, fonts, logos, and colours.
 - Accounts - what the API cannot name: the handle to tag a person by, where a show's video lives, and
   the folder name of a show.
-- Reporting - how the user wants their reports and emails: preset customizations of skill **fountain-reports**.
+- Reporting - how the user wants their reports and emails: the addresses they go to, and preset
+  customizations of skill **fountain-reports**.
 - Automation - the switches of the daily loop, e.g. auto-render and the day's clip budget.
 - Other - all other preferences.
 

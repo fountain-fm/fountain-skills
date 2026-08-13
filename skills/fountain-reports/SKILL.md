@@ -41,7 +41,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Drop a component whose data the caller did not give, and say so after the send.
 4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
    into a report sent later in the same run, or not at all.
-   Email is the default, and a user who is present and asked to read it here wins over the section.
+   Email is the default, and goes to the addresses under Reporting.
+   Ask for them when the section holds none, and record them in the same turn.
+   Print in the chat instead when the user asked to read it there.
    Say plainly when a report was composed but not sent.
 
 ## Additional notes
@@ -60,7 +62,9 @@ First contact, for a caller that finds the preferences empty:
    Reporting, and auto-render on under Automation.
 2. Mark each one `(default)`, and drop that mark when the user confirms or changes the value.
    The mark is what lets a later reader, and the origin of a `setting-row`, tell a default from a choice.
-3. Send the `settings` report, which says what was set and what else each heading holds.
+3. Ask the user where their emails go, and record the addresses under Reporting.
+   The `settings` report is the first one, so nothing sends without them.
+4. Send the `settings` report, which says what was set and what else each heading holds.
 
 The defaults only make the settings visible and editable, because every skill already defaults the same
 way with no entry at all.
