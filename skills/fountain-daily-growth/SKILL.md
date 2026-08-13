@@ -68,6 +68,9 @@ render machine that works this show.
 Offer to set up a scheduled run that renders the approved drafts when they want the day to finish
 without them, because a draft that nothing renders is a clip that never exists.
 
+Before you set up a scheduled run, say which entries it will follow that the user has not confirmed,
+and how much of the show it can search.
+
 An empty Editorial section is not a wall: proceed, and say so plainly.
 
 Use this skill for the recurring daily cycle.
