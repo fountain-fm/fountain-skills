@@ -1084,11 +1084,14 @@ def main():
                 # libass advances run a few percent wider than the measure, so pack with headroom
                 budget = safe_width(spec) * 0.94
             else:
-                print("note: could not measure text, so groups fall back to the word cap", file=sys.stderr)
+                fail(
+                    f"could not measure text in {font_file} - install ImageMagick, or the caption "
+                    f"is packed by word count alone and wraps wherever it does not fit"
+                )
         else:
-            print(
-                f"note: no font file for '{spec['font']['family']}', so groups fall back to the word cap",
-                file=sys.stderr,
+            fail(
+                f"no font file for '{spec['font']['family']}' - pass --font-file with the file libass "
+                f"will render, because a caption packed by word count alone wraps wherever it does not fit"
             )
     groups = group_words(words, spec["grouping"], widths, budget)
     events, fit_lines = build_events(groups, spec)
