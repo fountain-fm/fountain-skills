@@ -571,14 +571,17 @@ def safe_width(spec):
     return (spec["playResX"] - spec["position"]["marginL"] - spec["position"]["marginR"]) * spec["grouping"]["maxLines"]
 
 
-def match_installed_font(family):
+def match_installed_font(family, bold=False):
     """Ask fontconfig for a family, the way libass does when the family is not bundled.
 
     fontconfig always answers, so a different family in the answer is how a missing
     font is found: the clip renders in whatever was substituted.
+    The weight is part of the query because a bold face is often a separate file, and
+    measuring the regular one under-counts every group.
     Returns (file, substituted_family).
     """
-    proc = subprocess.run(["fc-match", "--format=%{family}\t%{file}", family], capture_output=True, text=True)
+    query = f"{family}:bold" if bold else family
+    proc = subprocess.run(["fc-match", "--format=%{family}\t%{file}", query], capture_output=True, text=True)
     if proc.returncode != 0 or "\t" not in proc.stdout:
         return None, None
     got, path = proc.stdout.split("\t", 1)
@@ -611,7 +614,7 @@ def resolve_font_file(spec, explicit=None):
     candidate = bundled / names.get(family, "")
     if candidate.is_file():
         return candidate, None
-    return match_installed_font(family)
+    return match_installed_font(family, bold)
 
 
 def measure_widths(words, font_file, point_size, case="verbatim"):
