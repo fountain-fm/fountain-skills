@@ -77,6 +77,9 @@ An absent heading means the same as an empty one.
 Empty preferences mean a new project, so follow the first contact steps of skill **fountain-reports**.
 When you rely on a built-in default because no setting names a choice, say so in passing.
 
+Accounts MUST name where the show's video lives before you count or cut anything from video.
+Ask the user when it says nothing, and record that Fountain holds it all when that is the answer.
+
 ### Narratives
 
 A narrative is a subject the show returns to, with the angle the show takes and the risk to avoid.
