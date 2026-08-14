@@ -39,6 +39,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.
    Drop a component whose data the caller did not give, and say so after the send.
+   A component that needs no data is never missing data, so this rule never drops it.
+   Only a customization can.
 4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
    into a report sent later in the same run, or not at all.
    Email is the default, and goes to the addresses under Reporting.
@@ -65,6 +67,7 @@ First contact, for a caller that finds the preferences empty:
 3. Ask the user where their emails go, and record the addresses under Reporting.
    The `settings` report is the first one, so nothing sends without them.
 4. Send the `settings` report, which says what was set and what else each heading holds.
+   First contact comes one time, so this is the only report that shows the headings unasked.
 
 The defaults only make the settings visible and editable, because every skill already defaults the same
 way with no entry at all.
