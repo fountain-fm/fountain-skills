@@ -37,25 +37,29 @@ With:
 
 1. Load skill **fountain-api**, and resolve the show with the Search API when you have only a name.
    The Search API gives a bare id, and the rest of the API needs the prefixed form, so add the type prefix.
-2. Search the show's transcripts with the Search API, scoping to the show.
+2. Read the transcript indexing progress with the Project API, which gives one row for each connected show.
+   The row counts the episodes of the show, the ones that hold an indexed transcript, and the ones in the queue.
+   Tell the caller how much of the show the search reaches, and say that the rest is out of reach.
+   A show with no row is not connected, so no count is available and you must judge the coverage from the results.
+3. Search the show's transcripts with the Search API, scoping to the show.
    Scope to the episodes instead when the caller names them.
    Each `ContentHitSegments` gives the episode and the segments that matched, with their times.
    Check that each hit belongs to the show, and drop the ones that do not, because a scope the API
    does not recognise searches every show on Fountain and answers 200.
-3. Search the theme, not the proper nouns of a headline, and use short keyword queries.
+4. Search the theme, not the proper nouns of a headline, and use short keyword queries.
    Also search for disagreement, predictions, surprising statements, and changes of mind.
    For a kind of moment, search the show's recurring subjects, then let that kind lead the score.
    Use the quote or the approximate time to choose the moment when the caller gives one.
-4. For a person, search their name.
+5. For a person, search their name.
    The transcript names nobody, so this finds where a name was said and never who said it - tell the
    caller that, and let module **copy** and skill **fountain-clip-producer** settle the speaker.
-5. Sort the segments of one episode by time, then join the ones that touch or overlap, because a
+6. Sort the segments of one episode by time, then join the ones that touch or overlap, because a
    passage often returns as two and a hit gives them in the order of the score.
    The result is a moment: one continuous passage to judge.
    Load the whole transcript with the Content API only when a moment needs the words around it.
-6. Score each moment 1-10 for controversy, insight, engagement, and relevance.
+7. Score each moment 1-10 for controversy, insight, engagement, and relevance.
    Remove any moment under 24 of 40, and rank what remains.
-7. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
+8. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
    Ask per episode, and only for the ones that still hold a moment - another episode cannot overlap.
    Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
    Compare only with a `source` whose `media` is the `enclosure` of the segments, because the two clocks
@@ -68,8 +72,9 @@ With:
 The search covers the episodes that hold a transcript, and never the whole show by default.
 Coverage is decided one episode at a time, so a gap sits anywhere and not only in the oldest episodes.
 An episode with no transcript is not in the search, so say which ones the search could not see.
-A show with few transcripts looks the same as a show with nothing to say: several different searches
-come back empty, or every one of them lands on the same episode.
+Most shows are not connected yet, so the count is absent more often than it is present.
+Without it, a show with few transcripts looks the same as a show with nothing to say: several different
+searches come back empty, or every one of them lands on the same episode.
 Say that, rather than report that the archive holds no moment - a search that reaches one episode of a
 thousand still answers with a real hit, and the user cannot tell the two apart from the result.
 
