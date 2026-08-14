@@ -20,7 +20,10 @@ import sys
 
 # How far to reach into the silence on each side, and never more than half of it, so two clips
 # cut from neighbouring segments can never overlap.
-PAD_SECONDS = 0.25
+PAD_IN_SECONDS = 0.25
+# The out point reaches further, because a segment can stop before the speech does and the last
+# word is then cut in half. Measured at 0.36s on one episode, against a 0.25s reach.
+PAD_OUT_SECONDS = 0.5
 
 
 def load_segments(payload: object) -> list[dict]:
@@ -38,14 +41,14 @@ def pad_in(segments: list[dict], index: int) -> float:
     """The in point: reach back into the silence before this segment, never past its neighbour."""
     start = segments[index]["start"]
     gap = start - segments[index - 1]["end"] if index > 0 else start
-    return round(start - min(PAD_SECONDS, max(gap, 0.0) / 2), 3)
+    return round(start - min(PAD_IN_SECONDS, max(gap, 0.0) / 2), 3)
 
 
 def pad_out(segments: list[dict], index: int) -> float:
     """The out point: reach forward into the silence after this segment, never into the next one."""
     end = segments[index]["end"]
-    gap = segments[index + 1]["start"] - end if index + 1 < len(segments) else PAD_SECONDS
-    return round(end + min(PAD_SECONDS, max(gap, 0.0) / 2), 3)
+    gap = segments[index + 1]["start"] - end if index + 1 < len(segments) else PAD_OUT_SECONDS
+    return round(end + min(PAD_OUT_SECONDS, max(gap, 0.0) / 2), 3)
 
 
 def print_boundaries(segments: list[dict], args: argparse.Namespace) -> None:

@@ -84,11 +84,12 @@ A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
 Move the cut off a sentence edge when the words are better, and never cut in the middle of a word.
 
-A segment edge already falls between two words, and the gap to the next segment is silence, so the
+A segment edge usually falls between two words, and the gap to the next segment is silence, so the
 script places each cut inside that gap: a short breath at each end, and never more than half the gap,
 so two clips cut from neighbouring segments cannot overlap.
-An edge therefore needs no checking here, and a clip that opens on the tail of a word is not a cut this
-module can make.
+A segment can stop before the speech does, so the out point reaches further than the in point.
+Prefer an out point with silence after it, because a segment that abuts the next one leaves nothing to
+reach into and the last word is cut.
 
 The transcript carries no word timings, and captions do not need them from here.
 Skill **fountain-clip-producer** makes them from the clip's own audio at render time.
