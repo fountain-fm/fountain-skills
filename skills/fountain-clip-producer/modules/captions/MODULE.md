@@ -95,10 +95,13 @@ The judgment calls stay yours:
 Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style:
 `sentence` lowercases every word first, so it destroys "I" and every name.
 
-Whisper invents a timing, so the script refuses three: a word that starts before the word before it,
-a word that still runs when the next one starts, and a word longer than two seconds.
+Whisper invents a timing, so the script refuses four: a word that starts before the word before it,
+a word that still runs when the next one starts, a word longer than two seconds, and a run of words
+packed tighter than anybody speaks.
 A list you build by hand MUST refuse them too.
-The long word is the one that ruins a clip, because every later word is pushed past its end.
+The long word ruins a clip because every later word is pushed past its end.
+The packed run is what whisper leaves when it writes over speech it did not hear: each word is short,
+in order and not long, so the rate is the only thing that gives it away.
 
 Hand the script a word list that still carries its punctuation, because the script reads each word's
 own text to find a sentence end: that is what closes a group, and what sentence case capitalises after.

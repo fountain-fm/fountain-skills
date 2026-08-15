@@ -378,6 +378,7 @@ def load_words(path):
         )
     if not words:
         fail(f"no usable words in {path}")
+    refuse_impossible_rate(words)
     clamped, nudged = enforce_monotonic(words)
     if clamped:
         print(f"note: shortened {clamped} word(s) that ran longer than {MAX_WORD_DUR}s in {path}", file=sys.stderr)
@@ -388,6 +389,30 @@ def load_words(path):
 
 MAX_WORD_DUR = 2.0  # nobody says one word for longer; a longer one is ASR debris, not speech
 MAX_SHIFT = 1.0  # a repair this large means the order is wrong, and no repair can know the truth
+MAX_WORDS_PER_SECOND = 9.0  # far above the fastest speech; only invented words reach it
+RATE_WINDOW = 5  # words to measure a rate over, so one short word cannot fail a build
+
+
+def refuse_impossible_rate(words):
+    """Fail when a run of words is packed tighter than anybody can speak.
+
+    Whisper can write words over speech it did not hear, and the invented ones
+    then anchor the real ones: a caption holds words that are each short enough,
+    in order, and none too long, so every other check passes while the line
+    races the audio. Rate is what gives it away, and it is measured over a run
+    because a single short word is ordinary.
+    """
+    if len(words) < RATE_WINDOW:
+        return
+    for i in range(len(words) - RATE_WINDOW + 1):
+        span = words[i + RATE_WINDOW - 1]["end"] - words[i]["start"]
+        if span <= 0 or RATE_WINDOW / span <= MAX_WORDS_PER_SECOND:
+            continue
+        said = " ".join(w["text"] for w in words[i : i + RATE_WINDOW])
+        fail(
+            f"words[{i}:{i + RATE_WINDOW}] ('{said}') run at {RATE_WINDOW / span:.1f} words a second, "
+            f"past the {MAX_WORDS_PER_SECOND:.0f} limit - make the word timings again from the clip's audio"
+        )
 
 
 def enforce_monotonic(words, min_dur=0.04):
