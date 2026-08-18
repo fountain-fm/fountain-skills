@@ -33,7 +33,7 @@ This module therefore also builds a time map, which module **boundaries** uses t
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 - Python 3.11 or later.
 - yt-dlp.
 

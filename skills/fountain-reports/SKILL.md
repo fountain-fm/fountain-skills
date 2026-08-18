@@ -29,12 +29,11 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 
 ## Process
 
-1. Load skill **fountain-api** and read the report customizations from the Reporting section of the
-   preferences.
+1. Read the report customizations from the Reporting section of the preferences.
    A customization can drop a component, reorder them, change a subject line, or change the delivery.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.

@@ -100,7 +100,7 @@ You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 - Output (REQUIRED) - list of what the skill produces
 - Housekeeping (REQUIRED) - "You MUST read HOUSEKEEPING.md if you haven't already".
   This section is the same in every skill.
-- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. skill **fountain-api** or python).
+- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. "Fountain API" or python).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
   Modules' requirements MUST be included here.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills.
@@ -125,7 +125,7 @@ Module is a mini skill - an isolatable chunk of skill logic.
 - Input (REQUIRED) - list of what the module requires: combination of variables (e.g. `clip_count`), API models,
   and/or unstructured agent input
 - Output (REQUIRED) - list of what the module produces
-- Requirements (OPTIONAL) - list of skills and software requirements (e.g. skill **fountain-api** or python).
+- Requirements (OPTIONAL) - list of skills and software requirements (e.g. "Fountain API" or python).
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
 - Process (REQUIRED) - list of steps to complete the task, when relevant refer to other modules or skills.
   Steps and the usage of certain skills and modules can be optional.
@@ -157,26 +157,29 @@ A skill MUST NOT tell the agent to keep an output for a later session.
 A skill MUST NOT tell the agent to read an output of an earlier session.
 
 Fountain-hosted preferences are the ONLY store for data that later sessions need.
-The agent loads and updates them with the Project API of skill **fountain-api**.
+The agent loads and updates them with the Project API.
 
 ## Fountain API
 
 Fountain API docs live at https://fountain.fm/docs.md
 The docs have two parts: `## Endpoints` and `## Models`.
 
-Skill **fountain-api** is the only way to interact with the API.
-A skill or module that needs the API MUST list skill **fountain-api** in Requirements.
-It MUST also tell the agent to load skill **fountain-api** before the first request.
-It MUST NOT give instructions about authentication - skill **fountain-api** owns that.
+An agent reaches the API through the Fountain MCP server, or through HTTP with a Fountain API key.
+HOUSEKEEPING.md owns that choice, and each skill carries a copy of it.
+
+A skill or module that needs the API MUST list "Fountain API" in Requirements.
+It MUST NOT say which route to take, how to authenticate, or what an MCP tool takes, because each
+tool carries its own input and output schema.
+It MUST NOT tell the agent to load anything before the first request.
 
 ### Endpoints
 
 You MUST NOT refer to an endpoint, a path, a method, a request body, or a query parameter.
 You MUST refer to the API only by its group (Project, Content, Search, Publishing, Uploads, Social).
-E.g., you CAN say "Load the latest episode via Publishing API of skill **fountain-api**".
+E.g., you CAN say "Load the latest episode via the Publishing API".
 
-Skill **fountain-api** is the only exception.
-It CAN refer to authentication and the structure of the docs.
+HOUSEKEEPING.md is the only exception.
+It CAN name the two routes, the docs, and the key.
 It still MUST NOT refer to an endpoint.
 
 ### Models

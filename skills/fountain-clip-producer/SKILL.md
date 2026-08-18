@@ -37,7 +37,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, for the face detection of module **framing**.
   Its model, and the fonts that the presets name, ship in `assets`, so no machine installs either.
@@ -53,7 +53,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Load skill **fountain-api**, and read the delivery tier from the request.
+1. Read the delivery tier from the request.
    Do the least work that the tier asks for.
 2. Run module **preflight** to check the machine before the first render.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.

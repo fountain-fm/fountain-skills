@@ -26,12 +26,12 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 - Python 3.11 or later.
 
 ## Process
 
-1. Load skill **fountain-api** and load the transcript of the episode with the Content API.
+1. Load the transcript of the episode with the Content API.
    Load it one time per episode, write it to a file, and use that file for each moment of that episode.
 2. Give the transcript to the script and read the pairs it finds:
 

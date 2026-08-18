@@ -2,13 +2,6 @@
   "housekeeping": "assets/HOUSEKEEPING.md",
   "skills": [
     {
-      "name": "fountain-api",
-      "description": "Interact with the Fountain API. Load and search content, publish your own podcasts, create social posts.",
-      "skill": "skills/fountain-api/SKILL.md",
-      "modules": [],
-      "assets": []
-    },
-    {
       "name": "fountain-clip-finder",
       "description": "Find the strongest clip moments in a show, write the post copy, and open a draft post for each channel.",
       "skill": "skills/fountain-clip-finder/SKILL.md",

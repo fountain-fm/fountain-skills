@@ -23,12 +23,12 @@ auto-render setting, and hands each eligible post to the process of the skill.
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 - Skill **fountain-reports**.
 
 ## Process
 
-1. Load skill **fountain-api** and read the Automation section of the preferences.
+1. Read the Automation section of the preferences.
    Work every show it names, unless the caller named one.
    On is the default auto-render when a show has no entry.
 2. List each show's posts via the Social API, and keep the drafts that miss their media.
