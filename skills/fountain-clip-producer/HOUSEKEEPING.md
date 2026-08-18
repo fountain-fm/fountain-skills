@@ -55,7 +55,7 @@ Base URL: https://api.fountain.fm/v1
 Authorization: Fountain API Key as Bearer Key
 
 - MUST read https://fountain.fm/docs.md in each new session
-- Find the project API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
+- Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
 - If no key, ask the user to make one at https://fountain.fm/studio/projects
 - A Fountain key starts with `fountain_`.
   When a request fails to authenticate under a key with a different prefix, the key is for another
