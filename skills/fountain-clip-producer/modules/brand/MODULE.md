@@ -24,11 +24,11 @@ The values live in the preferences, because only the preferences survive a sessi
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 
 ## Process
 
-1. Load the preferences with the Project API of skill **fountain-api**, and read the kit of the show.
+1. Load the preferences with the Project API, and read the kit of the show.
    The Brand section holds all of it: the caption style, and the assets around it.
 2. Produce the clip without a kit when the show has none, because a preset and an override work alone.
 3. Write the kit values into a kit file for this session, and give that file to the two scripts that read it.

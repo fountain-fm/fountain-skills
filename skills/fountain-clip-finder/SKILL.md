@@ -48,13 +48,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 - Python 3.11 or later.
 - yt-dlp, for episodes that have no video on Fountain.
 
 ## Process
 
-1. Load skill **fountain-api**, resolve the show, and list the connected `SocialChannel` with the Social API.
+1. Resolve the show, and list the connected `SocialChannel` with the Social API.
    Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a
    draft post on a channel, and there is no other place to keep the work.
    Continue only when the user asks for the clips without a channel.

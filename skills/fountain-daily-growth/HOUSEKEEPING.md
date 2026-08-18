@@ -28,12 +28,53 @@ of a clip reads as a cut in the video.
 You MUST NOT approve, schedule, or publish a post on your own.
 Those are the user's decisions, made in the dashboard or given to you in words.
 
+## Fountain API
+
+The API can
+
+- load project information
+- load shows, episodes, and transcripts
+- search across content and transcripts
+- publish your podcasts
+- publish social posts
+
+It can be reached via one of two routes.
+
+### Route A: MCP (preferred)
+
+Server URL: https://api.fountain.fm/v1/mcp
+Authorization: Fountain User OAuth
+
+- MCP tool `fountain-api` carries its own input and output schemas.
+- For additional information, you can read the docs at https://fountain.fm/docs.md
+- If MCP not connected, ask the user to connect it via the MCP Server URL
+
+### Route B: HTTP
+
+Base URL: https://api.fountain.fm/v1
+Authorization: Fountain API Key as Bearer Key
+
+- MUST read https://fountain.fm/docs.md in each new session
+- Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
+- If no key, ask the user to make one at https://fountain.fm/studio/projects
+- A Fountain key starts with `fountain_`.
+  When a request fails to authenticate under a key with a different prefix, the key is for another
+  service, and you MUST tell the user.
+- You MUST NOT write the key into a log, a command, a report, or any file but the key store.
+
+### Additional details
+
+- Write a large response to a file and read only the part you need.
+- You CAN write a throwaway script, e.g. to repeat one request over many items.
+  Put it in a temporary place and delete it at the end of the session.
+  You MUST NOT keep a script that wraps the API, because the API can change.
+
 ## Preferences
 
 Preferences are the Fountain-skills-related user preferences.
 They are the ONLY store for user data that later sessions need.
 
-You MUST load the preferences with the Project API of skill **fountain-api** at the start of each session.
+You MUST load the preferences with the Project API at the start of each session.
 When the user gives a new preference, you MUST record it with the Project API in the same turn.
 You MUST be succinct.
 You MUST NOT keep a local copy for a later session.
@@ -159,10 +200,3 @@ Workings that belong to no one thing go in the `workings` of the show.
 Put a file in `workings` when you are not sure.
 
 A user who opens a folder MUST see their work, and MUST NOT see how it was made.
-
-## Fountain API
-
-Skill **fountain-api** is the ONLY way to interact with the Fountain API.
-
-Write a large response to a file and read only the part you need, because a whole transcript is tens
-of thousands of tokens and the part you need is a few hundred.

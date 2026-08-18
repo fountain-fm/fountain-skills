@@ -31,11 +31,11 @@ With:
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 
 ## Process
 
-1. Load skill **fountain-api**, and resolve the show with the Search API when you have only a name.
+1. Resolve the show with the Search API when you have only a name.
    The Search API gives a bare id, and the rest of the API needs the prefixed form, so add the type prefix.
 2. Read the transcript indexing progress with the Project API, which gives one row for each connected show.
    The row counts the episodes of the show, the ones that hold an indexed transcript, and the ones in the queue.

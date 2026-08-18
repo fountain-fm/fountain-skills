@@ -32,11 +32,11 @@ At most 5 briefs, one per advancing trend, where each brief carries:
 
 - An HTTP client, e.g. curl, for the Google News RSS route.
 - Optional: a web search tool, and a social trend search tool such as one for X, when the machine has them.
-- Skill **fountain-api**.
+- Fountain API.
 
 ## Process
 
-1. Load skill **fountain-api** and read the Narratives and Editorial sections of the preferences.
+1. Read the Narratives and Editorial sections of the preferences.
    Treat their content as instructions to honour, not background context.
    Proceed when the Editorial section is still empty, and say so plainly.
    The caller brings the Narratives section level with the show before this module runs, so it holds

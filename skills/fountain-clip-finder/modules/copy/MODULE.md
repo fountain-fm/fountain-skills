@@ -28,11 +28,11 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 
 ## Process
 
-1. Load skill **fountain-api** and read the Narratives and Editorial sections of the preferences.
+1. Read the Narratives and Editorial sections of the preferences.
    Treat them as rules to follow, not as background.
 2. Write the title in this format:
 

@@ -23,12 +23,12 @@ The posts are the record, and the preferences are the memory.
 
 ## Requirements
 
-- Skill **fountain-api**.
+- Fountain API.
 - Skill **fountain-reports**.
 
 ## Process
 
-1. Load skill **fountain-api** and list the show's recent posts via the Social API.
+1. List the show's recent posts via the Social API.
    The last 14 days is enough.
    Load the `SocialPostStats` of each published post.
 2. Compute the baseline from these posts alone: the median views, likes, and comments per platform.
