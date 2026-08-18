@@ -30,7 +30,7 @@ Those are the user's decisions, made in the dashboard or given to you in words.
 
 ## Fountain API
 
-This API can
+The API can
 
 - load project information
 - load shows, episodes, and transcripts
@@ -38,7 +38,7 @@ This API can
 - publish your podcasts
 - publish social posts
 
-It can be reached in one of two routes.
+It can be reached via one of two routes.
 
 ### Route A: MCP (preferred)
 

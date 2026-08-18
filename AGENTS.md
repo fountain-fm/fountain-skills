@@ -168,8 +168,7 @@ An agent reaches the API through the Fountain MCP server, or through HTTP with a
 HOUSEKEEPING.md owns that choice, and each skill carries a copy of it.
 
 A skill or module that needs the API MUST list "Fountain API" in Requirements.
-It MUST NOT say which route to take, how to authenticate, or what an MCP tool takes, because each
-tool carries its own input and output schema.
+It MUST NOT say which route to take, how to authenticate, or what an MCP tool takes.
 It MUST NOT tell the agent to load anything before the first request.
 
 ### Endpoints
