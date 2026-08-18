@@ -11,6 +11,7 @@ if [[ ! -d node_modules ]]; then
 fi
 
 ./scripts/sync-housekeeping.sh
+./scripts/sync-schema.sh
 
 shopt -s nullglob
 # Stage only the copies git tracks, because git add fails on a path the .gitignore covers.
