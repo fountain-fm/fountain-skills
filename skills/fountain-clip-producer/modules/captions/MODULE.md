@@ -27,6 +27,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 - ffmpeg built with libass. On macOS that is the Homebrew `ffmpeg-full` formula, and not the default one.
 - ImageMagick, to measure text width.
+- fontconfig, to resolve a font the way libass does.
 - Python 3.11 or later.
 
 ## Process
@@ -109,6 +110,12 @@ reader gets.
 A caption group breaks on a speaker change, a sentence end, a silence, or the safe width, and never inside a clause.
 The script measures each word in the font and case it will render in and packs until the next will not fit,
 so `font.size` is the control, `grouping.maxWords` only a ceiling, and a one-word style is not packed at all.
+It resolves the font the way libass does, the bundled directory first and fontconfig after, so the file it
+measures is the file that gets drawn, and it refuses only when neither answers.
+A caption packed by the word cap alone wraps wherever it does not fit, and the fit report then certifies a
+layout the render never had.
+Tell the user when the build warns that a font is not installed: the clip is drawn in whatever was
+substituted, so the words are not in the font the brand asked for.
 A social caption drops the full stop and the comma that end a group, though a comma inside one stays.
 A question mark and an exclamation mark stay, because they carry tone.
 

@@ -571,10 +571,38 @@ def safe_width(spec):
     return (spec["playResX"] - spec["position"]["marginL"] - spec["position"]["marginR"]) * spec["grouping"]["maxLines"]
 
 
+def match_installed_font(family, bold=False):
+    """Ask fontconfig for a family, the way libass does when the family is not bundled.
+
+    fontconfig always answers, so a different family in the answer is how a missing
+    font is found: the clip renders in whatever was substituted.
+    The weight is part of the query because a bold face is often a separate file, and
+    measuring the regular one under-counts every group.
+    Returns (file, substituted_family).
+    """
+    query = f"{family}:bold" if bold else family
+    proc = subprocess.run(["fc-match", "--format=%{family}\t%{file}", query], capture_output=True, text=True)
+    if proc.returncode != 0 or "\t" not in proc.stdout:
+        return None, None
+    got, path = proc.stdout.split("\t", 1)
+    got = got.split(",")[0].strip()
+    file = Path(path.strip())
+    if not file.is_file():
+        return None, None
+    return file, (got if got.casefold() != family.casefold() else None)
+
+
 def resolve_font_file(spec, explicit=None):
-    """The file behind the spec's family, so a width can be measured."""
+    """The file libass will draw, so the measurement and the render are the same font.
+
+    ffmpeg is given the bundled directory, so libass looks there first and asks
+    fontconfig only for a family this skill does not ship. Resolving in that order
+    keeps the two in step; measuring a different file is what packs a caption too
+    full and wraps it.
+    Returns (file, substituted_family).
+    """
     if explicit:
-        return Path(explicit)
+        return Path(explicit), None
     family, bold = spec["font"]["family"], spec["font"]["bold"]
     bundled = Path(__file__).resolve().parents[3] / "assets" / "fonts"
     names = {
@@ -584,7 +612,9 @@ def resolve_font_file(spec, explicit=None):
         "Montserrat": "montserrat-bold.ttf" if bold else "montserrat-regular.ttf",
     }
     candidate = bundled / names.get(family, "")
-    return candidate if candidate.is_file() else None
+    if candidate.is_file():
+        return candidate, None
+    return match_installed_font(family, bold)
 
 
 def measure_widths(words, font_file, point_size, case="verbatim"):
@@ -1053,6 +1083,15 @@ def main():
             print(f"FAIL: {message}", file=sys.stderr)
         return 1
 
+    font_file, substituted = resolve_font_file(spec, args.font_file)
+    if substituted:
+        spec["font"]["drawnFamily"] = substituted
+        print(
+            f"warning: '{spec['font']['family']}' is not installed, so the clip is drawn in "
+            f"{substituted} - tell the user, because the words are not in the font they asked for",
+            file=sys.stderr,
+        )
+
     if args.emit_spec:
         Path(args.emit_spec).write_text(json.dumps(spec, indent=2) + "\n")
 
@@ -1075,7 +1114,6 @@ def main():
     mark_sentence_starts(words)
     widths = budget = None
     if spec["grouping"]["fitWidth"] and spec["animation"]["type"] in GROUP_ON_SCREEN:
-        font_file = resolve_font_file(spec, args.font_file)
         if font_file:
             widths = measure_widths(
                 words, font_file, round(spec["font"]["size"] * peak_scale(spec)), spec["font"]["case"]
@@ -1084,11 +1122,14 @@ def main():
                 # libass advances run a few percent wider than the measure, so pack with headroom
                 budget = safe_width(spec) * 0.94
             else:
-                print("note: could not measure text, so groups fall back to the word cap", file=sys.stderr)
+                fail(
+                    f"could not measure text in {font_file} - install ImageMagick, or the caption "
+                    f"is packed by word count alone and wraps wherever it does not fit"
+                )
         else:
-            print(
-                f"note: no font file for '{spec['font']['family']}', so groups fall back to the word cap",
-                file=sys.stderr,
+            fail(
+                f"no font file for '{spec['font']['family']}', and fontconfig named none either - pass "
+                f"--font-file, because a caption packed by word count alone wraps where it does not fit"
             )
     groups = group_words(words, spec["grouping"], widths, budget)
     events, fit_lines = build_events(groups, spec)
