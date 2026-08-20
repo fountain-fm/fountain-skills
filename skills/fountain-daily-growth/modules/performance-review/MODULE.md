@@ -58,6 +58,8 @@ The posts are the record, and the preferences are the memory.
    When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 8. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
    That is an operational failure to surface, not a weak post to learn from.
+   Say what you checked and found good when there is none, because a silent section reads the same as
+   a check that never ran.
 9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports** as the
    `performance` preset - how the report reaches the user is that skill's decision, not this one's.
    Give the show and the posts by id as well, because a clip card links its title into the dashboard.
