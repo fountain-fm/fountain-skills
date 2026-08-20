@@ -27,6 +27,10 @@ of a clip reads as a cut in the video.
 
 You MUST NOT approve, schedule, or publish a post on your own.
 Those are the user's decisions, made in the dashboard or given to you in words.
+You MUST NOT lose one either: read a post before you change it, send its publish time again with your
+change, and check that the answer still holds the time.
+A change that carries no time clears it, and the post then reads as approved and never goes out, with
+nothing in the answer to say so. Seen 2026-08-20, editing the words of nine scheduled posts.
 
 ## Fountain API
 
