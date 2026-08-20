@@ -35,7 +35,7 @@ The posts are the record, and the preferences are the memory.
 2. Total each platform over the last 7 days: the published posts counted, the reactions, the
    engagement rate, and the views.
    Reactions are likes plus comments, and the engagement rate is reactions divided by views.
-   Say what you counted: the 7 days, the posts they hold, and how many of those are published.
+   Name the span you counted, e.g. "Last 7 days", because the clips below cover a shorter one.
    The load is wider than this, because the baseline of step 3 wants more posts than a week holds.
 3. Compute the baseline from these posts alone: the median views, likes, and comments per platform.
    The baseline is computed each run, so it exists from the first run and needs no history file.
@@ -58,11 +58,13 @@ The posts are the record, and the preferences are the memory.
    When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 8. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
    That is an operational failure to surface, not a weak post to learn from.
-   Say what you checked and found good when there is none, because a silent section reads the same as
-   a check that never ran.
+   Give none when nothing failed, and the report leaves the section out.
 9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports** as the
    `performance` preset - how the report reaches the user is that skill's decision, not this one's.
-   Give the show and the posts by id as well, because a clip card links its title into the dashboard.
+   Give the show and the posts by id as well, because a clip card links its title into the dashboard and
+   every channel row into its own post.
+   Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
+   spells it.
 10. Record where the report reached at the end of the Reporting section, as the publish time of the
     newest post it covered, e.g. `Reported up to 2026-08-17T16:41Z.`
     Move it only when the report was sent.
