@@ -51,8 +51,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    it no heading of its own: the dashboard labels the note where the user reads it, so a heading
    arrives twice.
    The reader approves one clip and moves to the next, so the note is read in a few seconds.
-   Count the link text and never the address behind it: a news aggregator writes a link 800 characters
-   long, and a note measured with those inside it fails a limit that its words never reached.
+   Count MUST include only the link text, not the URL address after it.
 
    - What happened in the news and why it is live today, when the clip answers a trend.
    - What the clip contains, and the claim the speaker makes.
