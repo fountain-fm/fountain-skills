@@ -47,7 +47,8 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    Say which words you are unsure of, and skill **fountain-clip-producer** settles it on the video.
    `<topic>` is 1 to 4 words that say what the quote is about.
 
-3. Write the context note in Markdown, 300 to 2000 characters, under the heading `## Why this clip`:
+3. Write the context note in Markdown, 300 to 2000 characters, and give it no heading of its own:
+   the dashboard labels the note where the user reads it, so a heading arrives twice.
    Four sources as links spend about a third of that, so the ceiling is for them and not for prose.
 
    - What happened in the news and why it is live today, when the clip answers a trend.
