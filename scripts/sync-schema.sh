@@ -2,7 +2,7 @@
 # Builds SCHEMA.json from skill and module metadata.
 set -euo pipefail
 
-REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_DIR="$REPO_ROOT/skills"
 HOUSEKEEPING_PATH="$REPO_ROOT/assets/HOUSEKEEPING.md"
 OUTPUT_PATH="$REPO_ROOT/assets/SCHEMA.json"

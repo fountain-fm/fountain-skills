@@ -2,7 +2,7 @@
 # Installs the formatting tools and enables the git hooks. Run this once after you clone the repository.
 set -euo pipefail
 
-REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 if ! command -v npm > /dev/null 2>&1; then

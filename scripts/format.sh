@@ -3,7 +3,7 @@
 # Usage: format.sh [--check] [path ...]
 set -euo pipefail
 
-REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUFF_VERSION="0.16.1"
 
 check_mode=false

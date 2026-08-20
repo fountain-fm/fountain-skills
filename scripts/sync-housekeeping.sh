@@ -2,7 +2,7 @@
 # Copies assets/HOUSEKEEPING.md into every skill. With --check, reports stale copies instead of writing them.
 set -euo pipefail
 
-REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCE_FILE="$REPO_ROOT/assets/HOUSEKEEPING.md"
 
 check_mode=false
