@@ -124,8 +124,9 @@ that entry is true only for the machine that holds the file - naming such a fami
 substitute, and not the font.
 A caption packed by the word cap alone wraps wherever it does not fit, and the fit report then certifies a
 layout the render never had.
-Tell the user when the build warns that a font is not installed: the clip is drawn in whatever was
-substituted, so the words are not in the font the brand asked for.
+Tell the user what the build says about the font: that one is not installed and the clip is drawn in the
+substitute, or that it drew from a file this skill does not bundle.
+Either way the words may not be in the font the brand asked for, and the render is the only place it shows.
 A social caption drops the full stop and the comma that end a group, though a comma inside one stays.
 A question mark and an exclamation mark stay, because they carry tone.
 
