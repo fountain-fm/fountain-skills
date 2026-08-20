@@ -1114,8 +1114,7 @@ def main():
 
     font_file, substituted = resolve_font_file(spec, args.font_file)
     if font_file and bundled_fonts_dir() not in font_file.resolve().parents:
-        # A font from outside the bundle is right only when the preferences named it, and this
-        # script cannot read them. Saying which file drew the words is what makes the choice visible.
+        # This cannot read the preferences, so it names the file rather than judging the choice.
         print(
             f"note: drawing in {spec['font']['family']} from {font_file}, which this skill does not "
             f"bundle - right only if the preferences name it",
