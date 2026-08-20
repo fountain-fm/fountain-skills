@@ -46,12 +46,14 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Ask for them when the section holds none, and record them in the same turn.
    Print in the chat instead when the user asked to read it there.
    Say plainly when a report was composed but not sent.
+   A send that answers success is not proof of delivery, so say which one you saw.
 
 ## Additional notes
 
 The presets:
 
-- `performance` - the numbers for a window: headline, stats table, winners and losers, warnings.
+- `performance` - the numbers for a window: headline, channels overview, yesterday's clips, learnings,
+  warnings.
 - `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
 - `rendered-posts` - the rendered posts: headline, one card per post, the dashboard link.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
@@ -86,3 +88,9 @@ never markdown a caller writes by hand, because two callers writing the same blo
 
 Numbers come from the caller and go into the template unchanged.
 This skill formats; it MUST NOT recompute, round away, or soften what the caller measured.
+
+Send markdown, and never HTML.
+The Project API renders the markdown itself, and strips every attribute from the result, so styling
+that this skill sets does not reach the reader.
+It styles the tables and keeps the column alignment that markdown asks for, so markdown carries
+everything a report needs.

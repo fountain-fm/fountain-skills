@@ -1,5 +1,6 @@
-<!-- Data: title, summary_line. One sentence; the reader decides from it whether to read on. -->
+<!-- Data: show, date. The date is written out in full, e.g. "Tuesday 18 August 2026". -->
+<!-- The title names the show and the report, so the reader knows both from the inbox. -->
 
-# {title}
+# {show} Daily Performance
 
-{summary_line}
+{date}
