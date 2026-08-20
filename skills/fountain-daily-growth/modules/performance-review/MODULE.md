@@ -84,6 +84,11 @@ A show with one post has a weak baseline - say so instead of forcing a diagnosis
 A rate on few views is an artifact, and not a result.
 Do not call a winner or a loser from a rate alone when the post has fewer views than the platform's median.
 
+A lesson about a platform needs a platform that varied.
+Compare the publish hours before you write one: when every post on a platform went out at the same hour,
+say that instead, because the hour and the platform cannot be told apart.
+The times are already on the cards, so the reader can see what the lesson could not separate.
+
 A YouTube post is not settled for 72 hours, and its age comes from `meta.published`.
 Do not diagnose one younger than that.
 Do not mark the row either: the cards are yesterday's clips, so every YouTube row is young and a mark
