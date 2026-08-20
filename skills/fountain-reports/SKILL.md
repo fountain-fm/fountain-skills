@@ -54,10 +54,10 @@ The presets:
 
 - `performance` - the numbers for a window: headline, channels overview, yesterday's clips, learnings,
   warnings.
-- `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
-- `rendered-posts` - the rendered posts: the dashboard link first, then one summary line per clip.
-  The clips are made, so this report says which ones exist and sends the reader to them, and the words
-  are read in the dashboard rather than in the email.
+- `clips-waiting` - the clips that wait for a decision, rendered or not: the dashboard link first,
+  then one summary line per clip. The words are read in the dashboard, where the reader approves or
+  deletes, so the email says which clips exist and sends them there. Whether approving renders a clip
+  or sends it is the approve note's job, and not a second preset's.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
   Sent at first contact, or whenever the user asks what their settings are.
 
@@ -78,7 +78,7 @@ way with no entry at all.
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
 
-The printed surface serves the review in the chat: the user reads the same `rendered-posts` that
+The printed surface serves the review in the chat: the user reads the same `clips-waiting` that
 the email carries, so the two never disagree.
 
 Combining joins reports, not machines: a report can wait only for one sent later in the same run,
