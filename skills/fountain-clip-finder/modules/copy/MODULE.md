@@ -47,14 +47,16 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    Say which words you are unsure of, and skill **fountain-clip-producer** settles it on the video.
    `<topic>` is 1 to 4 words that say what the quote is about.
 
-3. Write the context note in Markdown, 300 to 2000 characters, under the heading `## Why this clip`:
-   Four sources as links spend about a third of that, so the ceiling is for them and not for prose.
+3. Write the context note in Markdown, 300 to 1000 characters of the words the reader sees, and give
+   it no heading of its own: the dashboard labels the note where the user reads it, so a heading
+   arrives twice.
+   The reader approves one clip and moves to the next, so the note is read in a few seconds.
+   Count MUST include only the link text, not the URL address after it.
 
    - What happened in the news and why it is live today, when the clip answers a trend.
    - What the clip contains, and the claim the speaker makes.
    - Why the clip answers that story, and which score dimension made it win.
-   - Each source as a link the reader can open, with its headline, its publisher and its date.
-     A source named without a link cannot be read, and the caller's brief carries the link.
+   - A risk the user has to weigh, in one sentence, and nothing when the clip carries none.
 
 4. Write `content.text` for each `SocialPlatform` the clip suits.
    Match the length, the tone, and the conventions of that platform.
@@ -81,12 +83,23 @@ Context rules:
 - Write statements, and not marketing language.
 - Name the score dimension, for example "it wins on controversy".
 - Do not repeat the post text, because the two have different readers.
-- Name each risk flag, an `already-clipped` moment, and a video match that is not `high`.
-  The user decides from this note, so anything it does not name is something nobody sees.
+- Name a risk the user has to weigh: a claim about a named person, a legal or medical exposure,
+  political language, a dated prediction inside the span, an `already-clipped` moment, or a video
+  match that is not `high`.
+  Write it as one sentence in the prose, and never as a list under a heading of its own.
+- Say nothing about a risk the clip does not carry, and nothing about the checks you ran.
+  That the speaker was confirmed on the render, that no advertisement sits in the span, that the hook
+  is a little soft, that nothing dates - these are how the work was done, and the user decides nothing
+  from them.
 
 Source rules, for a clip that answers a news story:
 
-- Cite each source as a Markdown link, and name the publication in the link text.
+- Link the source inside the sentence that uses it, and name the publication in the words around it,
+  e.g. "The Times reported on Tuesday that [the Fed raised rates](url)".
+  Never end the note with a list of links: a reader follows a source to check a claim, so it belongs
+  where the claim is.
+- Cite one source, the most reputable that carries the story, and add another only where it tells the
+  reader something the first does not.
 - A source MUST be published in the last 48 hours.
 - Use a publication that has an editorial standard.
   Do not cite a social post, an aggregator, or a blog with no named author.
