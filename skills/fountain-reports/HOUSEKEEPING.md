@@ -159,6 +159,7 @@ your-project
 
 You MUST keep your work as stateless as possible.
 If data is available from an API, you MUST load it from the API, and you MUST NOT keep a local copy.
+A file under `fountain` is working material, and a setting only when the preferences name its path.
 
 ### LOG.md
 

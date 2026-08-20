@@ -617,6 +617,10 @@ def match_installed_font(family, bold=False):
     return file, (got if got.casefold() != family.casefold() else None)
 
 
+def bundled_fonts_dir():
+    return Path(__file__).resolve().parents[3] / "assets" / "fonts"
+
+
 def resolve_font_file(spec, explicit=None):
     """The file libass will draw, so the measurement and the render are the same font.
 
@@ -629,7 +633,7 @@ def resolve_font_file(spec, explicit=None):
     if explicit:
         return Path(explicit), None
     family, bold = spec["font"]["family"], spec["font"]["bold"]
-    bundled = Path(__file__).resolve().parents[3] / "assets" / "fonts"
+    bundled = bundled_fonts_dir()
     names = {
         "Montserrat Black": "montserrat-black.ttf",
         "Anton": "anton-regular.ttf",
@@ -1109,6 +1113,13 @@ def main():
         return 1
 
     font_file, substituted = resolve_font_file(spec, args.font_file)
+    if font_file and bundled_fonts_dir() not in font_file.resolve().parents:
+        # This cannot read the preferences, so it names the file rather than judging the choice.
+        print(
+            f"note: drawing in {spec['font']['family']} from {font_file}, which this skill does not "
+            f"bundle - right only if the preferences name it",
+            file=sys.stderr,
+        )
     if substituted:
         spec["font"]["drawnFamily"] = substituted
         print(

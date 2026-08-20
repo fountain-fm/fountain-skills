@@ -115,10 +115,15 @@ The script measures each word in the font and case it will render in and packs u
 so `font.size` is the control, `grouping.maxWords` only a ceiling, and a one-word style is not packed at all.
 It resolves the font the way libass does, the bundled directory first and fontconfig after, so the file it
 measures is the file that gets drawn, and it refuses only when neither answers.
+Every preset names a font, so the clip has one without you choosing: pass `--font-file` only for a family
+this skill does not bundle, and never for a file you found on the disk.
+To change the font, record `font.family` under Brand, which is enough for a family this skill bundles.
+A family it does not bundle needs its file recorded beside it, true only for the machine that holds the
+file, because naming such a family alone renders the substitute and not the font.
 A caption packed by the word cap alone wraps wherever it does not fit, and the fit report then certifies a
 layout the render never had.
-Tell the user when the build warns that a font is not installed: the clip is drawn in whatever was
-substituted, so the words are not in the font the brand asked for.
+Tell the user what the build says about the font: that one is not installed and the clip is drawn in the
+substitute, or that it drew from a file this skill does not bundle.
 A social caption drops the full stop and the comma that end a group, though a comma inside one stays.
 A question mark and an exclamation mark stay, because they carry tone.
 
