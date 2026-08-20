@@ -115,6 +115,8 @@ The script measures each word in the font and case it will render in and packs u
 so `font.size` is the control, `grouping.maxWords` only a ceiling, and a one-word style is not packed at all.
 It resolves the font the way libass does, the bundled directory first and fontconfig after, so the file it
 measures is the file that gets drawn, and it refuses only when neither answers.
+Every preset names a font, so the clip has one without you choosing: pass `--font-file` only for a family
+this skill does not bundle, and never for a file you found on the disk.
 A caption packed by the word cap alone wraps wherever it does not fit, and the fit report then certifies a
 layout the render never had.
 Tell the user when the build warns that a font is not installed: the clip is drawn in whatever was

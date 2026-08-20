@@ -159,6 +159,8 @@ your-project
 
 You MUST keep your work as stateless as possible.
 If data is available from an API, you MUST load it from the API, and you MUST NOT keep a local copy.
+A file you find under `fountain` is working material and never a setting, whoever left it there.
+A file that is a setting, such as a logo, is one the preferences name by path.
 
 ### LOG.md
 
