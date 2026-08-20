@@ -346,10 +346,6 @@
           "path": "skills/fountain-reports/assets/components/approve-note.md"
         },
         {
-          "name": "candidate-card.md",
-          "path": "skills/fountain-reports/assets/components/candidate-card.md"
-        },
-        {
           "name": "clip-performance.md",
           "path": "skills/fountain-reports/assets/components/clip-performance.md"
         },
@@ -386,16 +382,12 @@
           "path": "skills/fountain-reports/assets/components/warnings.md"
         },
         {
-          "name": "draft-posts.md",
-          "path": "skills/fountain-reports/assets/presets/draft-posts.md"
+          "name": "clips-waiting.md",
+          "path": "skills/fountain-reports/assets/presets/clips-waiting.md"
         },
         {
           "name": "performance.md",
           "path": "skills/fountain-reports/assets/presets/performance.md"
-        },
-        {
-          "name": "rendered-posts.md",
-          "path": "skills/fountain-reports/assets/presets/rendered-posts.md"
         },
         {
           "name": "settings.md",
