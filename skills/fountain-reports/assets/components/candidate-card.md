@@ -8,8 +8,10 @@
 <!-- transcript is source.transcript, quoted whole, so the reader reads the words that were said. -->
 <!-- preview_url plays the episode from the moment, so the reader can check it. -->
 <!-- flags lists each risk flag, or "none". Drop a line whose data the caller did not give. -->
+<!-- The title links to the post in the dashboard: show_id is the ContentID of the show, one of -->
+<!-- ProjectOverview.shows, and post_id is the id of the SocialPost. Same domain rule as dashboard-link. -->
 
-### {title}
+### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
 
 {duration} - {platform} - [watch from {timecode}]({preview_url})
 
