@@ -350,6 +350,14 @@
           "path": "skills/fountain-reports/assets/components/candidate-card.md"
         },
         {
+          "name": "clip-performance.md",
+          "path": "skills/fountain-reports/assets/components/clip-performance.md"
+        },
+        {
+          "name": "clip-summary.md",
+          "path": "skills/fountain-reports/assets/components/clip-summary.md"
+        },
+        {
           "name": "dashboard-link.md",
           "path": "skills/fountain-reports/assets/components/dashboard-link.md"
         },
@@ -362,6 +370,10 @@
           "path": "skills/fountain-reports/assets/components/headline.md"
         },
         {
+          "name": "learnings.md",
+          "path": "skills/fountain-reports/assets/components/learnings.md"
+        },
+        {
           "name": "setting-row.md",
           "path": "skills/fountain-reports/assets/components/setting-row.md"
         },
@@ -372,10 +384,6 @@
         {
           "name": "warnings.md",
           "path": "skills/fountain-reports/assets/components/warnings.md"
-        },
-        {
-          "name": "winners-losers.md",
-          "path": "skills/fountain-reports/assets/components/winners-losers.md"
         },
         {
           "name": "draft-posts.md",

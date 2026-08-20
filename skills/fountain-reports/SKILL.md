@@ -55,7 +55,9 @@ The presets:
 - `performance` - the numbers for a window: headline, channels overview, yesterday's clips, learnings,
   warnings.
 - `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
-- `rendered-posts` - the rendered posts: headline, one card per post, the dashboard link.
+- `rendered-posts` - the rendered posts: the dashboard link first, then one summary line per clip.
+  The clips are made, so this report says which ones exist and sends the reader to them, and the words
+  are read in the dashboard rather than in the email.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
   Sent at first contact, or whenever the user asks what their settings are.
 
