@@ -9,12 +9,14 @@
 <!-- stylesheet can both take the last row to be the total. -->
 <!-- window names the span these totals cover, e.g. "Last 7 days". It sits under the heading because -->
 <!-- the clips below cover a shorter one, and a reader who cannot see both spans reads the wrong number. -->
+<!-- The figures are quoted, which is the only container Markdown can make. The heading stays outside -->
+<!-- it, as the heading of a clip card stays inside: a section is labelled, and its data is held. -->
 
 ## Channels Overview
 
-{window}
-
-| Platform                                  |   Posts |   Reactions |  Eng. rate |   Views |
-| ----------------------------------------- | ------: | ----------: | ---------: | ------: |
-| ![{platform}]({platform_icon}) {platform} | {posts} | {reactions} | {eng_rate} | {views} |
-| **Total**                                 | {posts} | {reactions} | {eng_rate} | {views} |
+> {window}
+>
+> | Platform                                  |   Posts |   Reactions |  Eng. rate |   Views |
+> | ----------------------------------------- | ------: | ----------: | ---------: | ------: |
+> | ![{platform}]({platform_icon}) {platform} | {posts} | {reactions} | {eng_rate} | {views} |
+> | **Total**                                 | {posts} | {reactions} | {eng_rate} | {views} |
