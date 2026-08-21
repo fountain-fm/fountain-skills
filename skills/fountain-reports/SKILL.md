@@ -46,14 +46,18 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Ask for them when the section holds none, and record them in the same turn.
    Print in the chat instead when the user asked to read it there.
    Say plainly when a report was composed but not sent.
+   A send that answers success is not proof of delivery, so say which one you saw.
 
 ## Additional notes
 
 The presets:
 
-- `performance` - the numbers for a window: headline, stats table, winners and losers, warnings.
-- `draft-posts` - drafts before any render: the words, one card per draft, the dashboard link.
-- `rendered-posts` - the rendered posts: headline, one card per post, the dashboard link.
+- `performance` - the numbers for a window: headline, channels overview, yesterday's clips, learnings,
+  warnings.
+- `clips-waiting` - the clips that wait for a decision, rendered or not: the dashboard link first,
+  then one summary line per clip. The words are read in the dashboard, where the reader approves or
+  deletes, so the email says which clips exist and sends them there. Whether approving renders a clip
+  or sends it is the approve note's job, and not a second preset's.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
   Sent at first contact, or whenever the user asks what their settings are.
 
@@ -74,7 +78,7 @@ way with no entry at all.
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
 
-The printed surface serves the review in the chat: the user reads the same `rendered-posts` that
+The printed surface serves the review in the chat: the user reads the same `clips-waiting` that
 the email carries, so the two never disagree.
 
 Combining joins reports, not machines: a report can wait only for one sent later in the same run,
@@ -86,3 +90,9 @@ never markdown a caller writes by hand, because two callers writing the same blo
 
 Numbers come from the caller and go into the template unchanged.
 This skill formats; it MUST NOT recompute, round away, or soften what the caller measured.
+
+Send markdown, and never HTML.
+The Project API renders the markdown itself, and strips every attribute from the result, so styling
+that this skill sets does not reach the reader.
+It styles the tables and keeps the column alignment that markdown asks for, so markdown carries
+everything a report needs.

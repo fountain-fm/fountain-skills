@@ -1,5 +1,11 @@
-<!-- Data: title, summary_line. One sentence; the reader decides from it whether to read on. -->
+<!-- Data: artwork, show, report, date. The date is written out in full, e.g. "Tuesday 18 August 2026". -->
+<!-- artwork is the show's cover art, which the Content API gives on the show. Drop the line when the -->
+<!-- caller gave none, because a broken image is worse than no image. -->
+<!-- report names what this one is, e.g. "Daily Performance" or "3 clips ready for review", because -->
+<!-- four presets share this component and the reader knows which arrived from the title alone. -->
 
-# {title}
+![{show}]({artwork})
 
-{summary_line}
+# {show} - {report}
+
+{date}
