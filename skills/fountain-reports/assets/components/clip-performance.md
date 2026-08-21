@@ -12,6 +12,8 @@
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms of this clip alone. -->
+<!-- The card is a quote because that is the only container Markdown can make: no div survives the -->
+<!-- sender, so a clip's title, its episode and its figures are held together by being quoted. -->
 <!-- learning is what this clip alone teaches. Drop the line when the caller gave none. -->
 <!-- The title links to the post in the dashboard, the same way a candidate card does: show_id is the -->
 <!-- ContentID of the show, one of ProjectOverview.shows, and post_id is the post of the first row. -->
@@ -21,13 +23,13 @@
 
 {window}
 
-### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
-
-{episode} ({episode_published})
-
-| Channel                                                 | Published   |   Reactions |  Eng. rate |   Views |
-| ------------------------------------------------------- | ----------- | ----------: | ---------: | ------: |
-| [![{platform}]({platform_icon}) {platform}]({post_url}) | {published} | {reactions} | {eng_rate} | {views} |
-| **Total**                                               |             | {reactions} | {eng_rate} | {views} |
-
-{learning}
+> ### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
+>
+> {episode} ({episode_published})
+>
+> | Channel                                                 | Published   |   Reactions |  Eng. rate |   Views |
+> | ------------------------------------------------------- | ----------- | ----------: | ---------: | ------: |
+> | [![{platform}]({platform_icon}) {platform}]({post_url}) | {published} | {reactions} | {eng_rate} | {views} |
+> | **Total**                                               |             | {reactions} | {eng_rate} | {views} |
+>
+> {learning}
