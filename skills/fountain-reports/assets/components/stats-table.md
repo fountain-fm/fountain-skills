@@ -1,6 +1,8 @@
 <!-- Data: one row per platform - platform, posts, reactions, eng_rate, views. -->
 <!-- This is what each platform did in the window, and never a baseline. -->
 <!-- posts is how many published posts the row counts. -->
+<!-- platform carries its mark, from the Fountain assets and named for the platform: -->
+<!-- https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp -->
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms, and every table in a report ends on one, so a reader and a -->
@@ -12,7 +14,7 @@
 
 {window}
 
-| Platform   |   Posts |   Reactions |  Eng. rate |   Views |
-| ---------- | ------: | ----------: | ---------: | ------: |
-| {platform} | {posts} | {reactions} | {eng_rate} | {views} |
-| **Total**  | {posts} | {reactions} | {eng_rate} | {views} |
+| Platform                                  |   Posts |   Reactions |  Eng. rate |   Views |
+| ----------------------------------------- | ------: | ----------: | ---------: | ------: |
+| ![{platform}]({platform_icon}) {platform} | {posts} | {reactions} | {eng_rate} | {views} |
+| **Total**                                 | {posts} | {reactions} | {eng_rate} | {views} |
