@@ -65,6 +65,8 @@ The posts are the record, and the preferences are the memory.
    every channel row into its own post.
    Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
    spells it.
+   Give the episode each clip was cut from and the day it came out, which the Content API holds on the
+   episode.
 10. Record where the report reached at the end of the Reporting section, as the publish time of the
     newest post it covered, e.g. `Reported up to 2026-08-17T16:41Z.`
     Move it only when the report was sent.

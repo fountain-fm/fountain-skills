@@ -7,6 +7,8 @@
 <!-- https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp -->
 <!-- One card carries every platform the clip went to, because the reader judges a clip and not a post. -->
 <!-- published is the publish time, so the reader can see the hour a result came from. -->
+<!-- episode names the episode the clip was cut from, and episode_published the day it came out, e.g. -->
+<!-- 20 May 2026, because a number reads differently against a clip cut from an old episode. -->
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms of this clip alone. -->
@@ -20,6 +22,8 @@
 {window}
 
 ### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
+
+{episode} ({episode_published})
 
 | Channel                                                 | Published   |   Reactions |  Eng. rate |   Views |
 | ------------------------------------------------------- | ----------- | ----------: | ---------: | ------: |
