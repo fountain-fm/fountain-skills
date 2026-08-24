@@ -37,6 +37,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    A customization can drop a component, reorder them, change a subject line, or change the delivery.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.
+   Build every Fountain link and every platform mark from `assets/links.md`, which holds each
+   address one time, so a report never carries an address a component spelled for itself.
    Drop a component whose data the caller did not give, and say so after the send.
    A component that needs no data is never missing data, so this rule never drops it.
    Only a customization can.
