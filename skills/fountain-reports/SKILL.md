@@ -58,6 +58,8 @@ The presets:
   then one summary line per clip. The words are read in the dashboard, where the reader approves or
   deletes, so the email says which clips exist and sends them there. Whether approving renders a clip
   or sends it is the approve note's job, and not a second preset's.
+- `daily` - the whole day in one mail: the clips that wait, then the numbers. The user asks for it in
+  place of the two, and the Reporting section records which of the two shapes the show wants.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
   Sent at first contact, or whenever the user asks what their settings are.
 
