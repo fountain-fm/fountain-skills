@@ -8,7 +8,9 @@
 <!-- The title links to the post in the dashboard: post_id is the post of the first channel listed. -->
 <!-- The summary is quoted for the same reason a performance card is: it is the only container -->
 <!-- Markdown can make, and every clip in a report is held the same way. -->
+<!-- The two lines carry no blank line between them, because a blank line ends a quote and would -->
+<!-- give the reader two containers holding half a clip each. -->
 
 > ### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
-
+>
 > {episode} ({episode_published}) - {channels}
