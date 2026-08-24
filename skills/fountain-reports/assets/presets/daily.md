@@ -3,13 +3,13 @@
 <!-- carry two headlines and one subject, and the reader reads the second subject over the first mail. -->
 <!-- The warnings of both halves are one section, so the reader finds every one of them in one place. -->
 
-Subject: {show} Daily, {date}
+Subject: {show} Daily Growth, {date}
 
-1. headline
-2. section - Clips waiting
-3. dashboard-link
-4. approve-note
-5. clip-summary, one per clip
+1. headline, reporting "Daily Growth"
+2. section - Today's Clips
+3. approve-note
+4. clip-summary, one per clip
+5. dashboard-link
 6. stats-table
 7. clip-performance, one per clip
 8. learnings
