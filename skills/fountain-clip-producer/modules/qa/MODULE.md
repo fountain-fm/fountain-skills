@@ -64,6 +64,7 @@ The gate blocks every tier above a rough cut, and it asks for all of this:
 - The landscape master is tall enough for the export, because a container says 1080x1920 whatever it holds.
 - No render pass and no caption pass introduced a black interval.
 - The clip opens and closes on a whole word.
+  The gate measures this on the delivered audio: speech at either rim means the span cut into a word.
   The first caption starts near the head of the clip, and the last one ends near its tail.
   Speech with no caption at either edge is the tail of the word before, or the head of the word after,
   and the clip opens or closes in the middle of it.
@@ -79,6 +80,11 @@ It adds the checks that only make sense across the whole clip.
 A style is new or changed when a show uses a preset for the first time, when an override changes the look,
 or when the kit of the show changes.
 A repeat render of a style that the user already approved needs no new proof.
+
+The two edge checks read the delivered file, so they say that a word was cut and never how to repair it.
+The repair needs the source, because the audio that completes the word sits outside the clip.
+Module **media** measures the same edges on the source before the cut, and that is where a span is fixed.
+A clip over a continuous music bed never reaches the silence threshold, so lower `--edge-noise` for it.
 
 The spec validation and the fit report catch the faults that a machine can measure.
 The proof catches the ones of judgment, such as a look that is valid and still wrong for the show.
