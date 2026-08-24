@@ -22,7 +22,7 @@ The skill itself keeps the narratives level with the show first, because both mo
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
-- The clips-waiting report, one time when the day's clips exist.
+- The report of the posts that wait, one time when the day's clips exist.
 - Updated preferences: the narratives brought level with the show, and the lessons of module
   **performance-review**.
 
@@ -51,7 +51,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    With auto-render on, render them with skill **fountain-clip-producer** as a clean final, so the user
    reviews the clip and not a description of it.
    Leave the rendering to a render machine instead when one works this show, and it sends the report.
-   Send the day's clips as the `clips-waiting` report of skill **fountain-reports** either way, and let
+   Send the day's clips as the `review-posts-simple` report of skill **fountain-reports** either way, and let
    its approve note say whether approving renders a clip or sends it.
 
 ## Additional notes

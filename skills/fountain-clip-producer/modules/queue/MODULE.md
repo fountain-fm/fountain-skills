@@ -44,7 +44,7 @@ auto-render setting, and hands each eligible post to the process of the skill.
    Retry on later runs while the count is under 3.
    At 3, stop retrying - the draft needs a person, not a fourth attempt.
 5. When this run attached media and every draft is done or given up, give the batch to skill
-   **fountain-reports** as the `clips-waiting` report - one report for the whole batch, the given-up
+   **fountain-reports** as the `review-posts-simple` report - one report for the whole batch, the given-up
    drafts under warnings so a failure never hides, delivery decided by the Reporting section.
    Report only on a run that attached something, or every idle poll repeats it.
 6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.

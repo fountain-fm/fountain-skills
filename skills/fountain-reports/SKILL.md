@@ -54,10 +54,10 @@ The presets:
 
 - `performance` - the numbers for a window: headline, channels overview, yesterday's clips, learnings,
   warnings.
-- `clips-waiting` - the clips that wait for a decision, rendered or not: the dashboard link first,
-  then one summary line per clip. The words are read in the dashboard, where the reader approves or
-  deletes, so the email says which clips exist and sends them there. Whether approving renders a clip
-  or sends it is the approve note's job, and not a second preset's.
+- `review-posts-simple` - the posts that wait for a decision, and nothing else. The words are read in
+  the dashboard, where the reader approves or deletes, so the mail says which posts exist and sends
+  them there. Whether approving renders a clip or sends it is the approve note's job, and not a second
+  preset's.
 - `review-posts` - the whole day in one mail: the posts that wait for a decision, then the numbers.
   The user asks for it in place of the two, and the Reporting section records which shape the show wants.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
@@ -80,8 +80,8 @@ way with no entry at all.
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
 
-The printed surface serves the review in the chat: the user reads the same `clips-waiting` that
-the email carries, so the two never disagree.
+The printed surface serves the review in the chat: the user reads the same report that the email
+carries, so the two never disagree.
 
 Combining joins reports, not machines: a report can wait only for one sent later in the same run,
 because nothing holds a pending report between machines.
