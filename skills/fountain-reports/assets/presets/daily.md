@@ -2,15 +2,15 @@
 <!-- This is composed once rather than combined at delivery, because two reports joined at delivery -->
 <!-- carry two headlines and one subject, and the reader reads the second subject over the first mail. -->
 <!-- The warnings of both halves are one section, so the reader finds every one of them in one place. -->
+<!-- It carries no headline: the show and the day are in the subject, and a mail the reader opens -->
+<!-- every morning is read for what it asks of them, which is the first line. -->
 
 Subject: {show} Daily Growth, {date}
 
-1. headline, reporting "Daily Growth"
-2. section - Today's Clips
-3. approve-note
-4. clip-summary, one per clip
-5. dashboard-link
-6. stats-table
-7. clip-performance, one per clip
-8. learnings
-9. warnings, from either half
+1. approve-note
+2. clip-summary, one per clip
+3. dashboard-link
+4. stats-table
+5. clip-performance, one per clip
+6. learnings
+7. warnings, from either half
