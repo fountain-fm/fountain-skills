@@ -6,7 +6,9 @@
 <!-- from an episode of any age, and the reader judges it differently when it is three months old. -->
 <!-- channels lists every channel the clip went to, because a clip is one post on each of them. -->
 <!-- The title links to the post in the dashboard: post_id is the post of the first channel listed. -->
+<!-- The summary is quoted for the same reason a performance card is: it is the only container -->
+<!-- Markdown can make, and every clip in a report is held the same way. -->
 
-### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
+> ### [{title}](https://beta.fountain.fm/studio/{show_id}/posts/{post_id})
 
-{episode} ({episode_published}) - {duration} - {channels}
+> {episode} ({episode_published}) - {duration} - {channels}

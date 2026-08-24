@@ -11,10 +11,12 @@
 <!-- the clips below cover a shorter one, and a reader who cannot see both spans reads the wrong number. -->
 <!-- The figures are quoted, which is the only container Markdown can make. The heading and the window -->
 <!-- stay outside it: the container holds the figures, and what they are is said above it. -->
+<!-- The window is written as emphasis, which is the only mark that separates it from an ordinary -->
+<!-- paragraph under a heading. The mail stylesheet draws it as a label, and not as italics. -->
 
 ## Channels Overview
 
-{window}
+_{window}_
 
 > | Platform                                  |   Posts |   Reactions |  Eng. rate |   Views |
 > | ----------------------------------------- | ------: | ----------: | ---------: | ------: |

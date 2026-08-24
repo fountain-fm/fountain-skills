@@ -49,8 +49,8 @@ The posts are the record, and the preferences are the memory.
    The window stays wider than that span so that the baseline holds.
 5. Find the posts that clearly beat or missed the baseline, and name the likely cause:
    the hook, the platform fit, the posting time, the clip length, or a saturated topic.
-   Put what one clip teaches on that clip's card, beside the numbers it came from.
-   Keep for the lessons list only what holds across clips: a platform, a hook, an hour, a guest.
+   A lesson from one clip names that clip, and a lesson that holds across clips names none.
+   Both go in the lessons list, where the reader reads the day together rather than clip by clip.
 6. Read the user's decisions from `meta.status` and the timestamps.
    A draft approved fast, edited before approval, or left untouched each says something.
    The user's edits to title, text, or context are the closest thing to a reason - diff them.
