@@ -1,4 +1,6 @@
 <!-- Data: count. Pick the note that matches what approval actually does for this show. -->
+<!-- count is the draft posts, and never the clips: a clip is one post on each channel it goes to, -->
+<!-- so three clips on three channels are nine posts, and nine is what the dashboard shows. -->
 <!-- The first is for a report sent before any render, when a render machine works this show. -->
 <!-- The second is for a report sent before any render when no machine does - one laptop and no -->
 <!-- scheduler is the common case, and there the first note is untrue. -->
