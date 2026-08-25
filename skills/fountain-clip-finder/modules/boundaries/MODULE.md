@@ -16,8 +16,10 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 ## Input
 
 - Each moment from module **discovery**, with its scores and each flag.
-- The `SocialPostMediaSource` of each moment from module **media**.
+- The `SocialPostMediaSource` of each moment from module **media**, or the external source of each
+  moment from module **external-source**.
 - The `TranscriptSegment` list of each episode, from the Content API.
+  For a moment from one video, the segments that module **external-source** read instead.
 - Optional: `clip_count`, `min_duration_seconds`, `max_duration_seconds`, and trend context from the caller.
 
 ## Output
@@ -34,6 +36,7 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 
 1. Load the transcript of the episode with the Content API.
    Load it one time per episode, and use it for each moment of that episode.
+   Use the segments you already hold for a moment from one video, and load nothing.
 2. Read the segments from 90 seconds before the moment to 90 seconds after it.
    A clip can start or end anywhere inside that window, not only at the edges of the moment.
 3. Select the in segment and the out segment that give the best clip:
@@ -49,6 +52,8 @@ The clip MUST pass the gates below, because a moment with substance can still fa
      and never more than 0.5 seconds.
 
    The duration is the distance between the two padded cuts, and the duration gate reads that number.
+   Pad a span from an automatic caption track by 0.5 seconds at each end instead, whatever the gap:
+   such a track times a line and not a word, so a cut on its edge lands inside a word.
 
 5. Score the clip 1-5 for hook strength, novelty, emotional intensity, shareability, and independence.
    Remove any clip under 18 of 25.
@@ -86,6 +91,7 @@ Skill **fountain-clip-producer** makes them from the clip's own audio at render 
 
 `ts_start` and `ts_end` are always in the clock of the transcript.
 For a Fountain file that is also the clock of `media`, because both come from one recording.
+For a video that Fountain does not hold, the captions are the transcript, so the two clocks are one there too.
 A YouTube cut runs behind the transcript by an amount that changes at every advertisement break, so
 skill **fountain-clip-producer** translates the span there, where it opens the file.
 A break inside the clip moves the end alone, so such a clip can fail at render time, after approval.

@@ -13,6 +13,8 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 ## Input
 
 - The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
+  A caller that clipped a video Fountain does not hold gives those fields without `ids`, and the post
+  it made carries no `source` to read them back from.
 - The word timings of that span, which this skill makes from the clip's own audio.
   Module **shots** wants the speaker of each word too, which nothing supplies.
 - A delivery tier, which the words of the request imply.
@@ -50,6 +52,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
   Module **preflight** finds it, and gives the user the line that installs it when the machine has none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
+  Keep it current: YouTube changes what a client must send, and a build a few weeks old
+  answers 403 on every download while the captions still come through.
 
 ## Process
 
