@@ -14,6 +14,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 - The `SocialPostMediaSource` of the post, which names the file in `media` and the span in `ts_start` and `ts_end`.
 - The `transcript` of that source, to confirm that the cut holds the expected words.
+- The `TranscriptSegment` list of the episode, from the Content API, for a watch-page source.
 
 ## Output
 
@@ -30,7 +31,23 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 1. Open `media` and read what kind of source it is.
    A local file and an HLS playlist are cuttable directly, and a watch-page URL is not.
-2. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
+2. Translate the span of a watch-page source first, because its `ts_start` and `ts_end` are in the
+   clock of the transcript and that file is not:
+
+   ```bash
+   # --build downloads the captions of the video one time and anchors them against the transcript.
+   echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --build "$MEDIA_URL" > time-map.json
+   # --span translates the clip span into the clock of the video, with no further network work.
+   echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --map time-map.json --span "$TS_START" "$TS_END"
+   ```
+
+   Cut with the translated span from here on.
+   Stop and report when `aligned` is false, because an advertisement break sits inside the clip, and
+   the fix is a different span and never a shift.
+   A Fountain file and an HLS playlist need no translation, because their clock is the clock of the
+   transcript.
+
+3. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
 
    ```bash
    # -show_entries lists each program with the size of its video, and the tallest of them wins.
@@ -48,7 +65,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
      -movflags +faststart clip-rough.mp4
    ```
 
-3. Fetch a watch-page URL with yt-dlp instead, and take only the padded window:
+4. Fetch a watch-page URL with yt-dlp instead, and take only the padded window:
 
    ```bash
    # -f takes the best video under 1080p and pairs it with the best audio.
@@ -59,7 +76,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
      -o clip-rough.mp4 "$MEDIA_URL"
    ```
 
-4. Re-trim the rough cut locally, because neither step 2 nor step 3 is frame-accurate:
+5. Re-trim the rough cut locally, because neither step 3 nor step 4 is frame-accurate:
 
    ```bash
    # -ss and -to on a local file give the exact span, measured on the rough cut.
@@ -70,7 +87,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
      clip-landscape-master.mp4
    ```
 
-5. Confirm the cut holds the expected words, for a source that carries advertisements of its own:
+6. Confirm the cut holds the expected words, for a source that carries advertisements of its own:
 
    ```bash
    scripts/verify-content-alignment.py --video-url "$MEDIA_URL" \
@@ -79,9 +96,9 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
    Stop and report to the user when the score is under the threshold.
 
-6. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
+7. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
    Measure the inset and crop to the camera area before any other module runs.
-7. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
+8. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
 
 ## Additional notes
 
@@ -96,6 +113,14 @@ That reads as lip-sync drift of several seconds, it is constant for the whole cl
 A bare master playlist with no map makes ffmpeg take the lowest bandwidth, which is often 360p.
 A vertical crop keeps about a third of the width, so 720p gives 405x720 of real picture for a 1080x1920
 delivery, and 1080p gives 608x1080. No later module puts back what this one did not fetch.
+
+The time map exists because the two files hold the same words at different times.
+A podcast inserts its advertisements into the audio and the video carries a different set, so the distance
+between the two clocks changes at every break.
+One offset for the whole episode is therefore wrong, and the map records each region on its own.
+The map costs one caption download of approximately 6 seconds, whatever the length of the episode.
+A low `anchor_coverage` means the captions and the transcript disagree, which usually means the video
+is not the episode - stop and report it, because the cut would hold the wrong words.
 
 To confirm sync on an HLS source, cut a short reference and compare the audio envelopes.
 Use a window of at least ±5 seconds, because a narrow window reports a small wrong offset and hides a large one.
