@@ -26,8 +26,9 @@ translates it at render time, because only the renderer must reach YouTube.
 - A preview link for each moment, which opens the video at the moment so the user can watch it.
   Always `https://fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the seconds in
   the clock of the transcript, which that player runs on for the audio and the Fountain video alike.
-  For a YouTube match, add the plain watch link with no time parameter, because that file runs on its
-  own clock and nothing here can translate into it.
+  For a YouTube match, add `https://www.youtube.com/watch?v=<id>&t=<seconds>s` with the transcript
+  seconds, and call it approximate, because that file runs on its own clock and nothing here can
+  translate into it - the drift is the advertisement difference, from zero to a few minutes.
 - A removal mark on each moment that has no usable video.
 
 ## Requirements
