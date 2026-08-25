@@ -8,14 +8,18 @@ Every skill relies on the Fountain API—create an account at [fountain.fm](http
 
 ### Codex
 
-Install this repository as a local Codex plugin.
-The plugin loads the bundled skills and connects to the Fountain MCP server.
+Codex plugin bundles Fountain skills and MCP.
 
 Sign in to Fountain when Codex asks you to authenticate the MCP connection.
 
-### Other Agent Plugin Clients
+### Claude
 
-Connect `https://api.fountain.fm/v1/mcp` to your client and sign in.
+Claude plugin bundles Fountain skills and MCP.
+
+1. On [claude.ai](https://claude.ai), open **Settings** in the sidebar
+2. Go to **Plugins**
+3. Press Add > Add marketplace > Add from a repository
+4. Paste in `https://github.com/fountain-fm/fountain-skills` and press Sync
 
 ## The skills
 
