@@ -335,8 +335,12 @@
           "path": "skills/fountain-reports/assets/components/approve-note.md"
         },
         {
-          "name": "candidate-card.md",
-          "path": "skills/fountain-reports/assets/components/candidate-card.md"
+          "name": "clip-performance.md",
+          "path": "skills/fountain-reports/assets/components/clip-performance.md"
+        },
+        {
+          "name": "clip-summary.md",
+          "path": "skills/fountain-reports/assets/components/clip-summary.md"
         },
         {
           "name": "dashboard-link.md",
@@ -351,6 +355,10 @@
           "path": "skills/fountain-reports/assets/components/headline.md"
         },
         {
+          "name": "learnings.md",
+          "path": "skills/fountain-reports/assets/components/learnings.md"
+        },
+        {
           "name": "setting-row.md",
           "path": "skills/fountain-reports/assets/components/setting-row.md"
         },
@@ -363,20 +371,12 @@
           "path": "skills/fountain-reports/assets/components/warnings.md"
         },
         {
-          "name": "winners-losers.md",
-          "path": "skills/fountain-reports/assets/components/winners-losers.md"
-        },
-        {
-          "name": "draft-posts.md",
-          "path": "skills/fountain-reports/assets/presets/draft-posts.md"
+          "name": "clips-waiting.md",
+          "path": "skills/fountain-reports/assets/presets/clips-waiting.md"
         },
         {
           "name": "performance.md",
           "path": "skills/fountain-reports/assets/presets/performance.md"
-        },
-        {
-          "name": "rendered-posts.md",
-          "path": "skills/fountain-reports/assets/presets/rendered-posts.md"
         },
         {
           "name": "settings.md",

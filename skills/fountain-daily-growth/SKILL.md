@@ -22,8 +22,7 @@ The skill itself keeps the narratives level with the show first, because both mo
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
-- The rendered-posts report, one time when the day's clips exist, or the draft-posts report when
-  auto-render is off.
+- The report of the posts that wait, one time when the day's clips exist.
 - Updated preferences: the narratives brought level with the show, and the lessons of module
   **performance-review**.
 
@@ -49,12 +48,11 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Read the auto-render setting from the Automation section of the preferences, where on is the default.
    List the day's drafts with the Social API either way, because step 4 hands the briefs on and never
    reads what came back.
-   With auto-render on, render them with skill **fountain-clip-producer** as a clean final, and send
-   them as the `rendered-posts` report of skill **fountain-reports**, so the user reviews the clip and
-   not a description of it.
-   Leave the rendering to a render machine instead when one works this show, and it sends that report.
-   With auto-render off, send them as the `draft-posts` report: the words alone, and the plain
-   statement that approving is what makes a clip render.
+   With auto-render on, render them with skill **fountain-clip-producer** as a clean final, so the user
+   reviews the clip and not a description of it.
+   Leave the rendering to a render machine instead when one works this show, and it sends the report.
+   Send the day's clips as the `review-posts-simple` report of skill **fountain-reports** either way, and let
+   its approve note say whether approving renders a clip or sends it.
 
 ## Additional notes
 
