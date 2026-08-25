@@ -6,9 +6,14 @@ Every skill relies on the Fountain API—create an account at [fountain.fm](http
 
 ## Install
 
-### MCP (Coming Soon)
+### Claude
 
-Connect `https://api.fountain.fm/v1/mcp` to your client and sign in.
+Claude plugin bundles Fountain skills and MCP.
+
+1. On [claude.ai](https://claude.ai), open **Settings** in the sidebar
+2. Go to **Plugins**
+3. Press Add > Add marketplace > Add from a repository
+4. Paste in `https://github.com/fountain-fm/fountain-skills` and press Sync
 
 ## The skills
 

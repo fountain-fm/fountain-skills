@@ -225,3 +225,5 @@ It installs the npm packages, installs uv with Homebrew, and turns on the git ho
 
 The agent hooks run at the end of each turn.
 The git pre-commit hook runs the same steps before each commit.
+
+`npm run check` also validates the Claude plugin manifests, if the Claude Code CLI is installed.

@@ -1,0 +1,13 @@
+{
+  "name": "fountain",
+  "displayName": "Fountain",
+  "description": "Skills and tools for podcast growth: automate publishing, produce clips, and analyze performance.",
+  "mcpServers": "./claude-mcp.json",
+  "author": {
+    "name": "Fountain",
+    "url": "https://fountain.fm"
+  },
+  "homepage": "https://fountain.fm",
+  "repository": "https://github.com/fountain-fm/fountain-skills",
+  "keywords": ["podcast", "clips", "video", "social", "fountain"]
+}
