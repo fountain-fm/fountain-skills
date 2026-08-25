@@ -9,13 +9,14 @@ A moment is a passage of a few minutes, and a clip is a span of about a minute i
 Only the transcript carries sentence-level times, so only here can that span be cut and judged.
 The agent reads the segments around the moment, selects a clean in and out point, and pads each cut
 into the silence between segments.
-That span is in the clock of the transcript, so this module then places it in `media` with the time map.
+That span is in the clock of the transcript, and it stays there: a YouTube match is translated into the
+clock of its file at render time.
 The clip MUST pass the gates below, because a moment with substance can still fail as a clip.
 
 ## Input
 
 - Each moment from module **discovery**, with its scores and each flag.
-- The `SocialPostMediaSource` of each moment from module **media**, and its time map when it has one.
+- The `SocialPostMediaSource` of each moment from module **media**.
 - The `TranscriptSegment` list of each episode, from the Content API.
 - Optional: `clip_count`, `min_duration_seconds`, `max_duration_seconds`, and trend context from the caller.
 
@@ -28,7 +29,6 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 ## Requirements
 
 - Fountain API.
-- Python 3.11 or later, only for the time map translation of a YouTube match.
 
 ## Process
 
@@ -57,14 +57,7 @@ The clip MUST pass the gates below, because a moment with substance can still fa
    Keep the best `clip_count` clips when the caller gives a count, and keep fewer when fewer pass.
    Returning fewer is the right answer and never a shortfall to make up.
 7. Join `text` of every segment that overlaps the span, word for word, and write it into `transcript`.
-8. Write the span into `ts_start` and `ts_end`.
-   For a moment that has a time map, translate the span first, because the span is in another clock:
-
-   ```bash
-   echo "$TRANSCRIPT_JSON" | ../../scripts/build-time-map.py --map "$TIME_MAP" --span 812.40 869.10
-   ```
-
-   Remove the clip when `aligned` is false, and give the user the note that says why.
+8. Write the span into `ts_start` and `ts_end`, in the clock of the transcript.
 
 ## Additional notes
 
@@ -76,7 +69,6 @@ Gates - a clip MUST pass all of them:
 - Tight duration - the target is 35 to 75 seconds, or the range the caller gives.
   A clip longer than 90 seconds needs a written reason.
 - One idea - a clip is one compact claim, and not a wide topic window.
-- Placed in the media - the two edges of the clip agree on where it sits in `media`.
 
 A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
@@ -92,10 +84,12 @@ reach into and the last word is cut.
 The transcript carries no word timings, and captions do not need them from here.
 Skill **fountain-clip-producer** makes them from the clip's own audio at render time.
 
-`ts_start` and `ts_end` MUST always be in the clock of `media`.
-A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
-The placement gate therefore reads both edges, because a break inside the clip moves the end alone.
-Such a clip cannot be shifted, only removed, and the answer is a different pair of in and out points.
+`ts_start` and `ts_end` are always in the clock of the transcript.
+For a Fountain file that is also the clock of `media`, because both come from one recording.
+A YouTube cut runs behind the transcript by an amount that changes at every advertisement break, so
+skill **fountain-clip-producer** translates the span there, where it opens the file.
+A break inside the clip moves the end alone, so such a clip can fail at render time, after approval.
+The renderer reports why, and the answer is a different pair of in and out points, never a shift.
 Never end a span on a dangling conjunction - cut before the "and", because a caption must not end on one.
 
 This module does not open `media`.
