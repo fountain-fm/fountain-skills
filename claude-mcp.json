@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "fountain": {
-      "type": "http",
-      "url": "https://api.fountain.fm/v1/mcp"
-    }
-  }
-}
