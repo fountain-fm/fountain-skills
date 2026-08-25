@@ -81,9 +81,9 @@ Title rules:
   Do it before the post exists, and on the post when you find it later - the span cannot change, so
   only the words can be put right.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
-- A quote that no person has checked is a machine's hearing of the words - an automatic caption track
-  and a whisper transcript both - so say that it waits for the render to confirm it, and never quote a
-  name or a number from one without saying so.
+- A quote from an automatic caption track or a whisper transcript is a machine's hearing of the words,
+  so say that it waits for the render to confirm it, and never quote a name or a number from one
+  without saying so.
   A subtitle file the show wrote itself is not a machine's hearing, and needs no such warning.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.
