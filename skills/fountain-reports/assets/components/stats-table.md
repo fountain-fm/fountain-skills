@@ -4,8 +4,9 @@
 <!-- platform carries its mark, whose address is platform_icon in links.md. -->
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
-<!-- The total row sums the platforms, and every table in a report ends on one, so a reader and a -->
-<!-- mail can both take the last row to be the total. -->
+<!-- The total row sums the platforms, and every table in a report ends on one. -->
+<!-- Write its first cell bold, because that is how the reader and the mail both tell a total row -->
+<!-- from a platform row. -->
 <!-- window names the span these totals cover, e.g. "Last 7 days". It sits under the heading because -->
 <!-- the clips below cover a shorter one, and a reader who cannot see both spans reads the wrong number. -->
 <!-- The figures are quoted, which is the only container Markdown can make. The heading and the window -->
