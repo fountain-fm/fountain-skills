@@ -6,6 +6,12 @@ Every skill relies on the Fountain API—create an account at [fountain.fm](http
 
 ## Install
 
+### Codex
+
+Codex plugin bundles Fountain skills and MCP.
+
+Sign in to Fountain when Codex asks you to authenticate the MCP connection.
+
 ### Claude
 
 Claude plugin bundles Fountain skills and MCP.
