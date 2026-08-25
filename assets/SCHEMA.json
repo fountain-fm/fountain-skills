@@ -371,12 +371,20 @@
           "path": "skills/fountain-reports/assets/components/warnings.md"
         },
         {
-          "name": "clips-waiting.md",
-          "path": "skills/fountain-reports/assets/presets/clips-waiting.md"
+          "name": "links.md",
+          "path": "skills/fountain-reports/assets/links.md"
         },
         {
           "name": "performance.md",
           "path": "skills/fountain-reports/assets/presets/performance.md"
+        },
+        {
+          "name": "review-posts-simple.md",
+          "path": "skills/fountain-reports/assets/presets/review-posts-simple.md"
+        },
+        {
+          "name": "review-posts.md",
+          "path": "skills/fountain-reports/assets/presets/review-posts.md"
         },
         {
           "name": "settings.md",
