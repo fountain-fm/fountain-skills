@@ -30,8 +30,8 @@
           "module": "skills/fountain-clip-finder/modules/external-source/MODULE.md",
           "assets": [
             {
-              "name": "fetch-captions.py",
-              "path": "skills/fountain-clip-finder/modules/external-source/scripts/fetch-captions.py"
+              "name": "read-segments.py",
+              "path": "skills/fountain-clip-finder/modules/external-source/scripts/read-segments.py"
             }
           ]
         },

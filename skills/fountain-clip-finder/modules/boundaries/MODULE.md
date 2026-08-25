@@ -54,6 +54,7 @@ The clip MUST pass the gates below, because a moment with substance can still fa
    The duration is the distance between the two padded cuts, and the duration gate reads that number.
    Pad a span from an automatic caption track by 0.5 seconds at each end instead, whatever the gap:
    such a track times a line and not a word, so a cut on its edge lands inside a word.
+   A whisper transcript and a subtitle file time the speech itself, so the rule above holds for them.
 
 5. Score the clip 1-5 for hook strength, novelty, emotional intensity, shareability, and independence.
    Remove any clip under 18 of 25.

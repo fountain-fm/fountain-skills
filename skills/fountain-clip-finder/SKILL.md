@@ -19,7 +19,8 @@ One of these:
 - A kind of moment, for example funny, angry, or surprising.
 - An episode, with an optional quote or approximate time.
 - A person, to find the moments of one guest or host.
-- One or more video URLs that the show never published as an episode, with an optional topic or quote.
+- One or more videos that the show never published as an episode, each a URL or a file on this
+  machine, with an optional topic or quote.
 
 Optional:
 
@@ -42,8 +43,9 @@ Fountain shows a post as a candidate only when it holds `source`, and only then 
 Module **copy** writes `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 
-A clip from a video URL carries an external source instead, which module **external-source** defines,
-and the post holds no `source` at all: `ids` names an episode and a show, and this clip has neither.
+A clip from a video that is not an episode carries an external source instead, which module
+**external-source** defines, and the post holds no `source` at all: `ids` names an episode and a show,
+and this clip has neither.
 Such a post is a draft with words and no clip behind it, so the render MUST happen in the same session.
 
 The posts then wait in the Social API, and nothing here invokes the next stage: skill
@@ -57,7 +59,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 - Fountain API.
 - A web search tool, for episodes that have no video on Fountain.
-- yt-dlp, for a video URL. A machine without it runs every other input.
+- yt-dlp, for a video URL, and ffmpeg with whisper for a local video that has no subtitle file.
+  Module **external-source** names both, and a machine without them runs every other input.
 
 ## Process
 
@@ -66,11 +69,11 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    draft post on a channel, and there is no other place to keep the work.
    Continue only when the user asks for the clips without a channel.
 2. Run module **discovery** to search the transcripts, score each moment, and drop the weak ones.
-   For a video URL, run module **external-source** first, and give its segments to module **discovery**
-   as the passages to score.
+   For a video that is not an episode, run module **external-source** first, and give its segments to
+   module **discovery** as the passages to score.
 3. Run module **media** to resolve the file each moment is cut from, and the clock that file runs on.
    Drop a moment when its episode has no video to cut from.
-   Skip this module for a video URL, because module **external-source** already named the file.
+   Skip this module for such a video, because module **external-source** already named the file.
 4. Run module **boundaries** to shape each moment into a clip, and to drop the ones that fail a gate.
 5. Run module **copy** to write `content.title`, `content.text`, and `context`.
 6. Create one draft `SocialPost` for each clip on each channel with the Social API.
@@ -84,13 +87,16 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 Each module removes work from the next one, so you MUST run them in the order above.
 
-A clip from a video URL is a post about something the audience cannot find on the feed, so the words
-carry the link that the request gives, and the user approves both together.
+A clip from a video that is not an episode is a post about something the audience cannot find on the
+feed, so the words carry the link that the request gives, and the user approves both together.
+An episode that is not published yet is the other case: the clip goes out before the episode does, so
+the words MUST NOT say that the audience can hear the rest of it today.
 
 `ts_start` and `ts_end` are always in the clock of the transcript.
 A YouTube cut of an episode runs to its own clock, and skill **fountain-clip-producer** translates the
 span into it at render time.
-A video URL is its own transcript, so those two clocks are one and nothing translates the span.
+A video that is not an episode is its own transcript, so those two clocks are one and nothing
+translates the span.
 
 This skill never makes a video file: it finds the moment, sets the span, and writes the words, and
 `source` holds all of that.
