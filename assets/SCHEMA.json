@@ -36,12 +36,7 @@
           ]
         }
       ],
-      "assets": [
-        {
-          "name": "build-time-map.py",
-          "path": "skills/fountain-clip-finder/scripts/build-time-map.py"
-        }
-      ]
+      "assets": []
     },
     {
       "name": "fountain-clip-producer",
@@ -147,6 +142,10 @@
           "description": "Cut the accurate landscape master that every other module of the skill builds on.",
           "module": "skills/fountain-clip-producer/modules/media/MODULE.md",
           "assets": [
+            {
+              "name": "build-time-map.py",
+              "path": "skills/fountain-clip-producer/modules/media/scripts/build-time-map.py"
+            },
             {
               "name": "verify-content-alignment.py",
               "path": "skills/fountain-clip-producer/modules/media/scripts/verify-content-alignment.py"

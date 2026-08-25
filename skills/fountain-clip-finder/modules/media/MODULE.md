@@ -9,26 +9,26 @@ A clip needs video, and this module looks in two places.
 It first reads the `ContentHit` that module **discovery** loaded, because that already names the video.
 It searches YouTube only when the show published none.
 A YouTube cut of an episode carries different advertisements, so it does not run to the transcript clock.
-This module therefore also builds a time map, which module **boundaries** uses to place a clip in that file.
+The span of such a clip therefore stays in the clock of the transcript, and skill **fountain-clip-producer**
+translates it at render time, because only the renderer must reach YouTube.
 
 ## Input
 
 - The scored moments from module **discovery**, and the `ContentHit` of each episode.
 - Where the show publishes its video, from the Accounts section of the preferences, for the episodes
   that need it.
-- The `TranscriptSegment` list of each episode that resolves to YouTube, from the Content API.
 
 ## Output
 
 - The `SocialPostMediaSource` of each moment, with `ids` and `media` set.
   Module **boundaries** sets the three remaining fields, so it is complete only after that module.
-- A time map for each moment that resolves to YouTube - the file that translates one clock into the other.
 - A confidence tier for each moment that needed a YouTube match.
 - A preview link for each moment, which opens the video at the moment so the user can watch it.
-  Fountain video: `https://fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the
-  seconds in the clock of the transcript, which is the clock of that file.
-  A YouTube match: `https://www.youtube.com/watch?v=<id>&t=<seconds>s`, with the seconds translated
-  through the time map, because that file runs to its own clock.
+  Always `https://fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the seconds in
+  the clock of the transcript, which that player runs on for the audio and the Fountain video alike.
+  For a YouTube match, add `https://www.youtube.com/watch?v=<id>&t=<seconds>s` with the transcript
+  seconds, and call it approximate, because that file runs on its own clock and nothing here can
+  translate into it - the drift is the advertisement difference, from zero to a few minutes.
 - A removal mark on each moment that has no usable video.
 
 ## Requirements
@@ -65,16 +65,6 @@ This module therefore also builds a time map, which module **boundaries** uses t
    - `unmatched` - mark the moment for removal.
 
 7. Write the resolved URL into `media`.
-8. Build the time map one time for each matched episode, with its transcript:
-
-   ```bash
-   TIME_MAP="fountain/outputs/$SHOW/workings/time-map-$CONTENT_ID.json"
-   echo "$TRANSCRIPT_JSON" | ../../scripts/build-time-map.py --build "$VIDEO_URL" > "$TIME_MAP"
-   ```
-
-   Name the file for the `content` id of `ids`, because one run can hold several episodes.
-   Carry the path forward, because module **boundaries** translates each span with it.
-   Read `anchor_coverage`, and mark the episode for removal when it is under 0.5.
 
 ## Additional notes
 
@@ -94,15 +84,5 @@ A show that rewrites titles for search usually keeps the guest name, and the gue
 An episode with no guest in its title and a rewritten video title can stay unmatched, and that is correct.
 You MUST NOT carry a `low` or an `unmatched` match forward without confirmation.
 
-The time map exists because the two files hold the same words at different times.
-A podcast inserts its advertisements into the audio and the video carries a different set, so the distance
-between the two clocks changes at every break.
-One offset for the whole episode is therefore wrong, and the map records each region on its own.
-
-The map costs one caption download of approximately 6 seconds, whatever the length of the episode.
-It holds the caption words, so a translation afterwards needs no network.
-A low `anchor_coverage` means the captions and the transcript disagree, which usually means the match is wrong.
-
-The map is an ephemeral output, and you MUST build it again in a later session.
-
-Skill **fountain-clip-producer** opens `media` at render time, so it confirms there that the video is real.
+Skill **fountain-clip-producer** opens `media` at render time, so it confirms there that the video is real,
+and it translates the span of a YouTube match into the clock of that file there.
