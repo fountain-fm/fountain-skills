@@ -10,12 +10,7 @@
           "name": "boundaries",
           "description": "Shape a scored moment into a clip - set a clean start and end, apply the gates, and cut the words.",
           "module": "skills/fountain-clip-finder/modules/boundaries/MODULE.md",
-          "assets": [
-            {
-              "name": "find-clip-boundaries.py",
-              "path": "skills/fountain-clip-finder/modules/boundaries/scripts/find-clip-boundaries.py"
-            }
-          ]
+          "assets": []
         },
         {
           "name": "copy",

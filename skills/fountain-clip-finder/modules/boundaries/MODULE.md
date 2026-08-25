@@ -7,7 +7,8 @@ description: Shape a scored moment into a clip - set a clean start and end, appl
 
 A moment is a passage of a few minutes, and a clip is a span of about a minute inside it.
 Only the transcript carries sentence-level times, so only here can that span be cut and judged.
-A script offers every clean pair of start and end points inside the duration range, and the agent selects one.
+The agent reads the segments around the moment, selects a clean in and out point, and pads each cut
+into the silence between segments.
 That span is in the clock of the transcript, so this module then places it in `media` with the time map.
 The clip MUST pass the gates below, because a moment with substance can still fail as a clip.
 
@@ -27,39 +28,36 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 ## Requirements
 
 - Fountain API.
-- Python 3.11 or later.
+- Python 3.11 or later, only for the time map translation of a YouTube match.
 
 ## Process
 
 1. Load the transcript of the episode with the Content API.
-   Load it one time per episode, write it to a file, and use that file for each moment of that episode.
-2. Give the transcript to the script and read the pairs it finds:
-
-   ```bash
-   scripts/find-clip-boundaries.py --moment-start 820.06 --moment-end 858.56 < transcript.json
-   ```
-
-   Add `--min-dur` and `--max-dur` when the caller gives a duration range.
-   The script uses 35 and 75 seconds when you do not, which is the default of the duration gate.
-
-3. Select the pair that gives the best clip:
+   Load it one time per episode, and use it for each moment of that episode.
+2. Read the segments from 90 seconds before the moment to 90 seconds after it.
+   A clip can start or end anywhere inside that window, not only at the edges of the moment.
+3. Select the in segment and the out segment that give the best clip:
 
    - The in point starts on the first word of the hook, and never on the words that lead up to it.
    - The out point ends a complete thought, and never a list, an example, or a question with no answer.
 
-4. Score the clip 1-5 for hook strength, novelty, emotional intensity, shareability, and independence.
+4. Pad each cut into the silence between segments:
+
+   - The in point is `start` of the in segment, minus half the gap to the segment before,
+     and never more than 0.25 seconds.
+   - The out point is `end` of the out segment, plus half the gap to the segment after,
+     and never more than 0.5 seconds.
+
+   The duration is the distance between the two padded cuts, and the duration gate reads that number.
+
+5. Score the clip 1-5 for hook strength, novelty, emotional intensity, shareability, and independence.
    Remove any clip under 18 of 25.
    Score timeliness and platform fit 1-5 as well, but only when the caller gives trend context.
-5. Apply the gates below, and remove a clip that fails one.
+6. Apply the gates below, and remove a clip that fails one.
    Keep the best `clip_count` clips when the caller gives a count, and keep fewer when fewer pass.
    Returning fewer is the right answer and never a shortfall to make up.
-6. Cut the text of the span and write it into `transcript`:
-
-   ```bash
-   scripts/find-clip-boundaries.py --span 812.40 869.10 < transcript.json
-   ```
-
-7. Write the span into `ts_start` and `ts_end`.
+7. Join `text` of every segment that overlaps the span, word for word, and write it into `transcript`.
+8. Write the span into `ts_start` and `ts_end`.
    For a moment that has a time map, translate the span first, because the span is in another clock:
 
    ```bash
@@ -84,9 +82,9 @@ A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
 Move the cut off a sentence edge when the words are better, and never cut in the middle of a word.
 
-A segment edge usually falls between two words, and the gap to the next segment is silence, so the
-script places each cut inside that gap: a short breath at each end, and never more than half the gap,
-so two clips cut from neighbouring segments cannot overlap.
+A segment edge usually falls between two words, and the gap to the next segment is silence, so each
+cut sits inside that gap: a short breath at each end, and never more than half the gap, so two clips
+cut from neighbouring segments cannot overlap.
 A segment can stop before the speech does, so the out point reaches further than the in point.
 Prefer an out point with silence after it, because a segment that abuts the next one leaves nothing to
 reach into and the last word is cut.
