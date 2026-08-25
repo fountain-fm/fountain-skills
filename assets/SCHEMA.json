@@ -28,12 +28,7 @@
           "name": "media",
           "description": "Resolve the file each clip is cut from, and map the transcript clock onto the clock of that file.",
           "module": "skills/fountain-clip-finder/modules/media/MODULE.md",
-          "assets": [
-            {
-              "name": "find-episode-video.py",
-              "path": "skills/fountain-clip-finder/modules/media/scripts/find-episode-video.py"
-            }
-          ]
+          "assets": []
         }
       ],
       "assets": []
