@@ -18,6 +18,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 ## Output
 
 - `clip-landscape-master.mp4`, cut to the span and cropped to the camera area.
+- An edge report, which names the silence at each end of the span.
 - An alignment report, for a source that needed the content check.
 
 ## Requirements
@@ -30,7 +31,16 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 1. Open `media` and read what kind of source it is.
    A local file and an HLS playlist are cuttable directly, and a watch-page URL is not.
-2. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
+2. Check that both edges land in silence, before any cut:
+
+   ```bash
+   scripts/check-span-edges.py --media "$MEDIA" --start "$TS_START" --end "$TS_END"
+   ```
+
+   Take each failed edge to the user with the words it cuts and the two times it offers, and cut
+   with the span they choose.
+
+3. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
 
    ```bash
    # -show_entries lists each program with the size of its video, and the tallest of them wins.
@@ -48,7 +58,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
      -movflags +faststart clip-rough.mp4
    ```
 
-3. Fetch a watch-page URL with yt-dlp instead, and take only the padded window:
+4. Fetch a watch-page URL with yt-dlp instead, and take only the padded window:
 
    ```bash
    # -f takes the best video under 1080p and pairs it with the best audio.
@@ -59,7 +69,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
      -o clip-rough.mp4 "$MEDIA_URL"
    ```
 
-4. Re-trim the rough cut locally, because neither step 2 nor step 3 is frame-accurate:
+5. Re-trim the rough cut locally, because neither step 2 nor step 3 is frame-accurate:
 
    ```bash
    # -ss and -to on a local file give the exact span, measured on the rough cut.
@@ -70,7 +80,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
      clip-landscape-master.mp4
    ```
 
-5. Confirm the cut holds the expected words, for a source that carries advertisements of its own:
+6. Confirm the cut holds the expected words, for a source that carries advertisements of its own:
 
    ```bash
    scripts/verify-content-alignment.py --video-url "$MEDIA_URL" \
@@ -79,14 +89,32 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
    Stop and report to the user when the score is under the threshold.
 
-6. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
+7. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
    Measure the inset and crop to the camera area before any other module runs.
-7. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
+8. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
 
 ## Additional notes
 
 The deliverable is always edge-to-edge camera video.
 An export that still shows the graphic frame of the show is a failed export, and this module prevents it.
+
+A span arrives from a transcript, and a transcript does not know where the speech stops.
+The stored end of a segment runs early, and two segments that abut leave no gap to reach into, so an
+edge taken from a segment can sit inside a word.
+The check measures the audio itself, which is the only thing that knows.
+
+It probes the source, and never the master, because a master cut at `ts_end` holds no audio past that
+point and can never show that the speech continues.
+This is why the check runs before the cut and not after it: an edge moved here costs one cut, and an
+edge moved after the render costs every render.
+
+The script offers a time on each side of a failed edge, and never chooses between them.
+Moving out keeps the word and adds what follows it, and moving in drops the word.
+Only the wanted words decide, so read `transcript` and ask the user.
+A span the user agrees to is the span the post must carry, so write it back with the corrected words.
+
+A clip over a continuous music bed never reaches the silence threshold.
+Lower `--noise` for it, and read the report rather than trusting the verdict.
 
 Never give an HLS video and an HLS audio playlist their own `-ss`.
 Many masters carry the audio as a separate rendition whose segments do not line up with the video.
