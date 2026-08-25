@@ -49,8 +49,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 ## Requirements
 
 - Fountain API.
-- Python 3.11 or later.
-- yt-dlp, for episodes that have no video on Fountain.
+- A web search tool, for episodes that have no video on Fountain.
 
 ## Process
 
