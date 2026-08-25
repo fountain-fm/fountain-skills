@@ -71,8 +71,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 Each module removes work from the next one, so you MUST run the four in the order above.
 
-`ts_start` and `ts_end` are always in the time of `media`, and never in the time of another file.
-A YouTube cut of an episode does not run to the clock of the transcript, so module **media** maps the two.
+`ts_start` and `ts_end` are always in the clock of the transcript.
+A YouTube cut of an episode runs to its own clock, and skill **fountain-clip-producer** translates the
+span into it at render time.
 
 This skill never makes a video file: it finds the moment, sets the span, and writes the words, and
 `source` holds all of that.
