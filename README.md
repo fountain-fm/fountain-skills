@@ -6,7 +6,14 @@ Every skill relies on the Fountain API—create an account at [fountain.fm](http
 
 ## Install
 
-### MCP (Coming Soon)
+### Codex
+
+Install this repository as a local Codex plugin.
+The plugin loads the bundled skills and connects to the Fountain MCP server.
+
+Sign in to Fountain when Codex asks you to authenticate the MCP connection.
+
+### Other Agent Plugin Clients
 
 Connect `https://api.fountain.fm/v1/mcp` to your client and sign in.
 
