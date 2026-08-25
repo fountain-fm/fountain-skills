@@ -26,7 +26,7 @@ _{window}_
 >
 > {episode} ({episode_published})
 >
-> | Channel                                                 | Published   |   Reactions |  Eng. rate |   Views |
-> | ------------------------------------------------------- | ----------- | ----------: | ---------: | ------: |
-> | [![{platform}]({platform_icon}) {platform}]({post_url}) | {published} | {reactions} | {eng_rate} | {views} |
-> | **Total**                                               |             | {reactions} | {eng_rate} | {views} |
+> | Channel                                                | Published   |   Reactions |  Eng. rate |   Views |
+> | ------------------------------------------------------ | ----------- | ----------: | ---------: | ------: |
+> | [![{platform}]({platform_icon}){platform}]({post_url}) | {published} | {reactions} | {eng_rate} | {views} |
+> | **Total**                                              |             | {reactions} | {eng_rate} | {views} |
