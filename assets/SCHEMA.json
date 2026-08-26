@@ -25,6 +25,17 @@
           "assets": []
         },
         {
+          "name": "external-source",
+          "description": "Read a video that Fountain does not hold, as transcript segments in the clock of that video.",
+          "module": "skills/fountain-clip-finder/modules/external-source/MODULE.md",
+          "assets": [
+            {
+              "name": "read-segments.py",
+              "path": "skills/fountain-clip-finder/modules/external-source/scripts/read-segments.py"
+            }
+          ]
+        },
+        {
           "name": "media",
           "description": "Resolve the file each clip is cut from, and map the transcript clock onto the clock of that file.",
           "module": "skills/fountain-clip-finder/modules/media/MODULE.md",
