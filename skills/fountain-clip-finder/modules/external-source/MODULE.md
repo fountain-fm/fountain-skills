@@ -28,6 +28,7 @@ Those times are the clock of the video itself, so nothing translates the span at
 
 ## Requirements
 
+- Python 3.11 or later, for every input: the reading is done by the script of this module.
 - yt-dlp, for a watch page URL.
 - ffmpeg built with whisper, and a whisper.cpp model, for a local video that has no subtitle file.
   Skill **fountain-clip-producer** names both, and its module **preflight** finds them.

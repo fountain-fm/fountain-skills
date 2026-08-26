@@ -59,8 +59,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 - Fountain API.
 - A web search tool, for episodes that have no video on Fountain.
-- yt-dlp, for a video URL, and ffmpeg with whisper for a local video that has no subtitle file.
-  Module **external-source** names both, and a machine without them runs every other input.
+- Python 3.11 or later, and yt-dlp for a video URL, and ffmpeg with whisper for a local video that
+  has no subtitle file.
+  Module **external-source** needs all three, and a machine without them runs every other input.
 
 ## Process
 
