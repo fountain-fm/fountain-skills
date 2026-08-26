@@ -50,6 +50,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    reads what came back.
    With auto-render on, render them with skill **fountain-clip-producer** as a clean final, so the user
    reviews the clip and not a description of it.
+   When the Brand section holds no confirmed kit, render the single strongest clip first, and present
+   it as the style proof of that skill.
+   Render the rest only after the user confirms or corrects the proof, because a batch in the wrong
+   look is a batch rendered twice.
    Leave the rendering to a render machine instead when one works this show, and it sends the report.
    Send the day's clips as the `review-posts-simple` report of skill **fountain-reports** either way, and let
    its approve note say whether approving renders a clip or sends it.
