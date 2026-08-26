@@ -57,6 +57,9 @@ The values live in the preferences, because only the preferences survive a sessi
       the number of words on screen, and the animation.
    3. Draft the kit values, and render a style proof on real footage of the show.
    4. Show the proof beside the reference, and repeat until the user confirms the match.
+      Name what the user can change on it - the size of the captions, their case, their colours and
+      the highlight, the outline, where they sit, how many words are on screen, the font, and the
+      logo - because a reader who does not know the vocabulary cannot ask for a correction.
    5. Ask for the font files when the show uses a licensed font.
 6. Record the confirmed kit with the Project API in the same turn.
 
