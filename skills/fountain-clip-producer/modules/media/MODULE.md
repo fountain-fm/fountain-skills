@@ -73,9 +73,11 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    ```bash
    # -f takes the best video under 1080p and pairs it with the best audio.
    # --download-sections fetches the window alone, and --force-keyframes-at-cuts lands near the cut.
+   # --merge-output-format decides the container, because -o names the file and never the format.
    yt-dlp -f "bestvideo[height<=1080]+bestaudio" \
      --download-sections "*$ROUGH_START-$ROUGH_END" \
      --force-keyframes-at-cuts \
+     --merge-output-format mp4 \
      -o clip-rough.mp4 "$MEDIA_URL"
    ```
 

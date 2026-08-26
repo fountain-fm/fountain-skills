@@ -61,6 +61,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
    Use the binary and the model that module **preflight** names, and ask for one word for each segment.
+   That asks for one token for each segment and gets it: whisper splits a long word across tokens and
+   writes no spaces, so join the tokens back into words yourself before any module reads them, and
+   keep the punctuation of each word, which module **captions** needs to find a sentence end.
    These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.
