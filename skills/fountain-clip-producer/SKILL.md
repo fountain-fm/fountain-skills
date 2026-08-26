@@ -50,6 +50,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
   Module **preflight** finds it, and gives the user the line that installs it when the machine has none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
+- A web search tool, and a way to read a page, for the reference sources of module **brand**.
 
 ## Process
 

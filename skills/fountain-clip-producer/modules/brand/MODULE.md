@@ -25,22 +25,43 @@ The values live in the preferences, because only the preferences survive a sessi
 ## Requirements
 
 - Fountain API.
+- A web search tool, and a way to read a page, to reach the clips and the profiles that a show
+  publishes outside Fountain.
 
 ## Process
 
 1. Load the preferences with the Project API, and read the kit of the show.
    The Brand section holds all of it: the caption style, and the assets around it.
-2. Produce the clip without a kit when the show has none, because a preset and an override work alone.
+2. Draft a kit from the show with step 5 when the Brand section holds none, because a show that has
+   never been asked still has a look, and the preset's look is nobody's.
+   Produce the clip without a kit only when the show gives nothing to read, because a preset and an
+   override work alone.
 3. Write the kit values into a kit file for this session, and give that file to the two scripts that read it.
    Build the file again in a later session, because the preferences are the store and the file is not.
 4. Apply the kit as the default, and let a per-clip override from the user win over it.
-5. Build a kit from a reference clip when the user asks to match a look that they already make:
+5. Build a kit from a reference clip when the user asks to match a look that they already make, or
+   when step 2 sends you here:
    1. Ask for one or two finished clips, or for a full-resolution screenshot of a caption on screen.
+      Read what the show already has when the user gives none, and stop at the first that answers:
+
+      - A clip the show posted on one of its own channels, which the Accounts section names.
+        Prefer this one: it is the only source that shows the show's captions on the show's footage.
+      - The show artwork of `info.image`, for the colours, the logo, and the character of the type.
+      - The website of the show and its social profiles, for those three when the artwork holds little.
+
+      Say which source each value came from, because a colour read from artwork is a guess at a
+      caption that the show has never made.
+
    2. Pull stills at the caption moments, and read the style off them.
       Read the character of the font, the case, the colours from the real pixels, the border, the position,
       the number of words on screen, and the animation.
    3. Draft the kit values, and render a style proof on real footage of the show.
    4. Show the proof beside the reference, and repeat until the user confirms the match.
+      Name what the user can change on it - the size of the captions, their case, their colours and
+      the highlight, the outline, where they sit, how many words are on screen, the font, and the
+      logo - because a reader who does not know the vocabulary cannot ask for a correction.
+      Give them the page of this skill with it, which shows every caption style and every overlay
+      package rendered, and a style is a thing to look at rather than to read a list of.
    5. Ask for the font files when the show uses a licensed font.
 6. Record the confirmed kit with the Project API in the same turn.
 
