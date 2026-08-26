@@ -31,7 +31,12 @@
           "assets": []
         }
       ],
-      "assets": []
+      "assets": [
+        {
+          "name": "clip-card.md",
+          "path": "skills/fountain-clip-finder/assets/clip-card.md"
+        }
+      ]
     },
     {
       "name": "fountain-clip-producer",
