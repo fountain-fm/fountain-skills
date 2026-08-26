@@ -36,6 +36,8 @@ The values live in the preferences, because only the preferences survive a sessi
 4. Apply the kit as the default, and let a per-clip override from the user win over it.
 5. Build a kit from a reference clip when the user asks to match a look that they already make:
    1. Ask for one or two finished clips, or for a full-resolution screenshot of a caption on screen.
+      Read what the show already has instead when the user has none to give: the logo and the
+      colours from `info.image` of the show, and any clip the show has posted on a connected channel.
    2. Pull stills at the caption moments, and read the style off them.
       Read the character of the font, the case, the colours from the real pixels, the border, the position,
       the number of words on screen, and the animation.
