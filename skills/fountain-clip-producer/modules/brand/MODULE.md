@@ -30,11 +30,15 @@ The values live in the preferences, because only the preferences survive a sessi
 
 1. Load the preferences with the Project API, and read the kit of the show.
    The Brand section holds all of it: the caption style, and the assets around it.
-2. Produce the clip without a kit when the show has none, because a preset and an override work alone.
+2. Draft a kit from the show with step 5 when the Brand section holds none, because a show that has
+   never been asked still has a look, and the preset's look is nobody's.
+   Produce the clip without a kit only when the show gives nothing to read, because a preset and an
+   override work alone.
 3. Write the kit values into a kit file for this session, and give that file to the two scripts that read it.
    Build the file again in a later session, because the preferences are the store and the file is not.
 4. Apply the kit as the default, and let a per-clip override from the user win over it.
-5. Build a kit from a reference clip when the user asks to match a look that they already make:
+5. Build a kit from a reference clip when the user asks to match a look that they already make, or
+   when step 2 sends you here:
    1. Ask for one or two finished clips, or for a full-resolution screenshot of a caption on screen.
       Read what the show already has instead when the user has none to give: the logo and the
       colours from `info.image` of the show, and any clip the show has posted on a connected channel.
