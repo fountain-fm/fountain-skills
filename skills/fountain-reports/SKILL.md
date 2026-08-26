@@ -73,17 +73,16 @@ First contact, for a caller that finds the preferences empty:
    The mark is what lets a later reader, and the origin of a `setting-row`, tell a default from a choice.
 3. Ask the user where their emails go, and record the addresses under Reporting.
    The `settings` report is the first one, so nothing sends without them.
-4. Derive a draft Brand kit from what the show already has: the logo and the colours from `info.image`
-   of the show, and the caption style of any clip the show has posted on a connected channel.
-   Record each value under Brand marked `(proposed)`, so the first clips carry the show's look and
-   not the preset's.
-   Say that the first rendered clip is the style proof, and that corrections to it are what confirm
-   the kit - skill **fountain-clip-producer** owns that proof.
-5. Send the `settings` report, which says what was set and what else each heading holds.
+4. Send the `settings` report, which says what was set and what else each heading holds.
    First contact comes one time, so this is the only report that shows the headings unasked.
 
 The defaults only make the settings visible and editable, because every skill already defaults the same
 way with no entry at all.
+
+The look of the show does not wait for first contact, because a project can hold entries and still have
+no look: the web onboarding writes some of them before an agent ever runs.
+Skill **fountain-clip-producer** drafts a kit from the show itself whenever the Brand section names
+none, and the first rendered clip is the style proof whose corrections confirm it.
 
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
