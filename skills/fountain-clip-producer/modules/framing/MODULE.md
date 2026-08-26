@@ -90,6 +90,10 @@ It cuts a true full-frame crop of the video, and it stops and asks the user when
 - Every sampled frame holds a face and an upper body, and mostly background or empty room is a failed export.
 - A frame the detector calls empty is not a miss when you open it and find the speaker.
   Say which frame you opened and what you saw, because a detector error MUST NOT block a clean clip.
+- A frame holding a title card, a graphic, or a cutaway holds no person because the show put none in
+  it, and a cold open on the show's own card is ordinary television.
+  Name those frames and what each one holds, so that the gate reads a graphic the show chose and not
+  a speaker who went missing.
 - The face sits a little away from the centre, on the side it looks away from, so it looks into the frame.
 - No edge clips the face, and the head keeps room above it.
 
