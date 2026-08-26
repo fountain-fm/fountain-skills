@@ -71,6 +71,8 @@ The gate blocks every tier above a rough cut, and it asks for all of this:
 - A contact sheet exists, and somebody looked at it.
 - The crop plan records a decision for each scene cut.
 - The visual QA report reports a pass, when it is present.
+  A frame that module **framing** named as a graphic passes this, because the show put no person
+  there, and one title card MUST NOT fail a clip that every other check passed.
 - The removal report of module **trims** is present, when the clip was cut, and the user approved it.
 
 Each production module runs its own checks as it works, and this module does not repeat them.
