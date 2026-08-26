@@ -84,6 +84,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     improve the clip - choosing the moment is the caller's job.
 11. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
     not to.
+12. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
+    line saying the render result and where the video is attached.
 
 ## Additional notes
 
