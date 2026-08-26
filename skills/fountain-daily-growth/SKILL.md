@@ -53,6 +53,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Leave the rendering to a render machine instead when one works this show, and it sends the report.
    Send the day's clips as the `review-posts-simple` report of skill **fountain-reports** either way, and let
    its approve note say whether approving renders a clip or sends it.
+   Present the day's clips in the chat on the clip card of skill **fountain-clip-finder**, whether or
+   not this run made them, because a day at budget still has clips the user has not seen.
 
 ## Additional notes
 
