@@ -25,6 +25,8 @@ The values live in the preferences, because only the preferences survive a sessi
 ## Requirements
 
 - Fountain API.
+- A web search tool, and a way to read a page, to reach the clips and the profiles that a show
+  publishes outside Fountain.
 
 ## Process
 
@@ -40,8 +42,16 @@ The values live in the preferences, because only the preferences survive a sessi
 5. Build a kit from a reference clip when the user asks to match a look that they already make, or
    when step 2 sends you here:
    1. Ask for one or two finished clips, or for a full-resolution screenshot of a caption on screen.
-      Read what the show already has instead when the user has none to give: the logo and the
-      colours from `info.image` of the show, and any clip the show has posted on a connected channel.
+      Read what the show already has when the user gives none, and stop at the first that answers:
+
+      - A clip the show posted on one of its own channels, which the Accounts section names.
+        Prefer this one: it is the only source that shows the show's captions on the show's footage.
+      - The show artwork of `info.image`, for the colours, the logo, and the character of the type.
+      - The website of the show and its social profiles, for those three when the artwork holds little.
+
+      Say which source each value came from, because a colour read from artwork is a guess at a
+      caption that the show has never made.
+
    2. Pull stills at the caption moments, and read the style off them.
       Read the character of the font, the case, the colours from the real pixels, the border, the position,
       the number of words on screen, and the animation.
