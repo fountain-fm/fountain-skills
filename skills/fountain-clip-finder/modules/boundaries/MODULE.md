@@ -39,6 +39,8 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 3. Select the in segment and the out segment that give the best clip:
 
    - The in point starts on the first word of the hook, and never on the words that lead up to it.
+     A segment ident, a date, and a speaker naming themselves lead up to it, whatever they open, so
+     start after them: a viewer who wanted the show's own opening would already be watching it.
    - The out point ends a complete thought, and never a list, an example, or a question with no answer.
 
 4. Pad each cut into the silence between segments:
