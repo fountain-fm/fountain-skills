@@ -52,6 +52,7 @@ At most 5 briefs, one per advancing trend, where each brief carries:
    the audience the show writes for, and say which you used.
    Then run the same query one more time on the subject of the whole show, which is the level that is
    too broad to be a narrative and right for a catch-all.
+   No query depends on the answer to another, so issue them together in one turn, in batches of 4 to 6.
    Widen the scan with a web search tool or a social trend tool when the machine has one, and say what
    the scan covered.
 
@@ -76,6 +77,7 @@ At most 5 briefs, one per advancing trend, where each brief carries:
    Use theme words, not the headline's proper nouns.
    Search the archive with the Search API for a trend that matches no narrative, and keep it when the
    show has covered the subject even one time.
+   Search for every such trend in one turn, because each search stands on its own.
    Propose a narrative for it, because the show has returned to the subject now.
    Drop it only when the archive holds nothing.
 

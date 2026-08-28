@@ -62,6 +62,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
+Where a step repeats one API call over many items - the numbers of each post, the news of each subject,
+the drafts of each clip - the items do not depend on each other, so ask for them together in one turn.
+
 This skill owns the two morning looks and nothing downstream.
 Finding moments and writing the copy is the job of skill **fountain-clip-finder**.
 Rendering is the job of skill **fountain-clip-producer**, run here or on a render machine that picks the
