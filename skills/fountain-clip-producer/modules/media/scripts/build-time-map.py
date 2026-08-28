@@ -7,6 +7,9 @@ and anchors the two clocks against each other across the episode. `--span` then 
 clip span from the saved map, with no further network work, and gives the `ts_start` and `ts_end`
 of a SocialPostMediaSource whose `media` is that video.
 
+The map of an episode does not change, so `--build` keeps it in the `--cache` file, against the
+episode id that `--episode` names. A miss builds the map as usual and writes it back.
+
 Reads a transcript on stdin - `{"segments": [...]}` or a bare list - and uses `start`, `end` and `text`
 of each TranscriptSegment.
 """
@@ -353,10 +356,34 @@ def translate_span(transcript_words: list[tuple[str, float]], time_map: dict, st
     return result
 
 
+def read_cache(cache_path: str) -> dict:
+    """Read the maps this machine has already built, or an empty cache when there are none."""
+    try:
+        with open(cache_path, encoding="utf-8") as handle:
+            cache = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return cache if isinstance(cache, dict) else {}
+
+
+def write_cached_map(cache_path: str, episode_id: str, time_map: dict) -> None:
+    """Save the map of this episode beside the maps of the other episodes."""
+    cache = read_cache(cache_path)
+    cache[episode_id] = time_map
+    # Write and rename, so that a reader never opens a file that is half written.
+    directory = os.path.dirname(os.path.abspath(cache_path))
+    with tempfile.NamedTemporaryFile("w", dir=directory, delete=False, encoding="utf-8") as handle:
+        json.dump(cache, handle, ensure_ascii=False)
+        temporary_path = handle.name
+    os.replace(temporary_path, cache_path)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", metavar="MEDIA", help="Build the map of this video and print it.")
     parser.add_argument("--map", metavar="FILE", help="The map that --build wrote.")
+    parser.add_argument("--cache", metavar="FILE", help="Read and write the maps of built episodes here.")
+    parser.add_argument("--episode", metavar="ID", help="The episode id that keys this map in the cache.")
     parser.add_argument(
         "--span",
         nargs=2,
@@ -369,11 +396,19 @@ def main() -> int:
     transcript_words = load_transcript_words(json.loads(sys.stdin.read()))
 
     if args.build:
+        cached = read_cache(args.cache).get(args.episode) if args.cache and args.episode else None
+        # An episode whose video changed carries a map of the old file, which places a clip nowhere.
+        if isinstance(cached, dict) and cached.get("media") == args.build:
+            print(f"read the map of episode {args.episode} from {args.cache}", file=sys.stderr)
+            print(json.dumps(cached, ensure_ascii=False))
+            return 0
         time_map = build_map(transcript_words, args.build)
         print(
             f"anchored {len(time_map['anchors'])} points, {len(time_map['offset_regions'])} offset regions",
             file=sys.stderr,
         )
+        if args.cache and args.episode:
+            write_cached_map(args.cache, args.episode, time_map)
         print(json.dumps(time_map, ensure_ascii=False))
         return 0
 

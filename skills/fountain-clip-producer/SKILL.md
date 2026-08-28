@@ -57,6 +57,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 1. Read the delivery tier from the request.
    Do the least work that the tier asks for.
 2. Run module **preflight** to check the machine before the first render.
+   One report serves every clip of a run, because the machine does not change between them.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
@@ -123,6 +124,11 @@ Touch only the output of the module that changes, and a caption change MUST NOT 
 
 A post does not have to be approved before this skill runs, and rendering one approves nothing.
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
+
+These steps make one clip, and several clips of one run are independent.
+Module **queue** therefore gives each clip its own worker and runs the workers at the same time, each
+in its own output folder, and a run is finished when the last clip is.
+They do not finish three times faster, because ffmpeg already uses every core of the machine.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.
 Readability, framing, and sync matter more than procedure.
