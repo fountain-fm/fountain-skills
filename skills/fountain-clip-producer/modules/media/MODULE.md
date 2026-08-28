@@ -15,7 +15,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 - The `SocialPostMediaSource` of the post, which names the file in `media` and the span in `ts_start` and `ts_end`.
 - The `transcript` of that source, to confirm that the cut holds the expected words.
 - The `TranscriptSegment` list of the episode, from the Content API, for a watch-page source.
-- The id of the episode, which keys its saved time map.
+- The id of the episode, which names its saved time map.
 
 ## Output
 
@@ -36,15 +36,15 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    clock of the transcript and that file is not:
 
    ```bash
+   # The cache sits in the workings of the show, so that every clip of that show reads it.
+   CACHE_DIR="fountain/outputs/$SHOW/workings/offsets"
    # --build downloads the captions of the video one time and anchors them against the transcript.
-   # --cache and --episode read the map this episode already has, and write it when it has none.
+   # --cache-dir and --episode read the map this episode already has, and write it when it has none.
    echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --build "$MEDIA_URL" \
-     --cache "$SHOW_WORKINGS/offsets.json" --episode "$EPISODE_ID" > time-map.json
+     --cache-dir "$CACHE_DIR" --episode "$EPISODE_ID" > time-map.json
    # --span translates the clip span into the clock of the video, with no further network work.
    echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --map time-map.json --span "$TS_START" "$TS_END"
    ```
-
-   Keep `offsets.json` in the `workings` of the show, because every clip of that show reads it.
 
    Cut with the translated span from here on.
    Read the map when `aligned` is false, because the two edges disagree for two different reasons.
@@ -126,12 +126,14 @@ delivery, and 1080p gives 608x1080. No later module puts back what this one did 
 
 The map of an episode does not change, and one episode gives up several clips over the weeks, so the
 cache saves the caption download and the anchoring of every clip after the first.
-It is a working file and never a setting: a run that finds no cache measures the map as before, and
+These are working files and never settings: a run that finds no cache measures the map as before, and
 is only slower.
-It gives a map back only when that map names the same video, because an episode whose video changed
-needs a new one.
-Two workers that clip one episode at the same time both measure it, which costs one measurement and
-leaves the same map behind.
+The cache gives a map back only when that map names the same video, because an episode whose video
+changed needs a new one.
+It holds one file for each episode, and each worker writes the file of the episode it is clipping and
+no other, so workers on different episodes cannot lose each other's maps.
+That is what the layout is for: the day's clips are three different episodes, and they are measured at
+the same time.
 
 The time map exists because the two files hold the same words at different times.
 A podcast inserts its advertisements into the audio and the video carries a different set, so the distance
