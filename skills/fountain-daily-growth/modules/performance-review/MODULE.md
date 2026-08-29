@@ -35,6 +35,8 @@ The posts are the record, and the preferences are the memory.
    there is nothing to ask for post by post.
    Treat a published post with no stats as one the platform has not answered for yet, and never as a
    post that no one saw.
+   Leave it out of the totals of step 2 and the baseline of step 3, because a zero it did not earn
+   pulls both down.
 2. Total each platform over the last 7 days: the published posts counted, the reactions, the
    engagement rate, and the views.
    Reactions are likes plus comments, and the engagement rate is reactions divided by views.
