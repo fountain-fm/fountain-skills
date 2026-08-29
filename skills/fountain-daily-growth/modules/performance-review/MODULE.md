@@ -14,7 +14,7 @@ The posts are the record, and the preferences are the memory.
 ## Input
 
 - `show` - the show the loop runs for.
-- The show's recent posts and their `SocialPostStats`, loaded fresh via the Social API.
+- The show's recent posts, listed via the Social API, each carrying its `SocialPostStats`.
 
 ## Output
 
@@ -31,8 +31,10 @@ The posts are the record, and the preferences are the memory.
 
 1. List the show's recent posts via the Social API.
    The last 14 days is enough.
-   Load the `SocialPostStats` of each published post.
-   One post's stats do not depend on another's, so ask for them together in one turn, in batches of 4 to 6.
+   Each post carries its `SocialPostStats`, which Fountain refreshes, so the list is the whole read and
+   there is nothing to ask for post by post.
+   Treat a published post with no stats as one the platform has not answered for yet, and never as a
+   post that no one saw.
 2. Total each platform over the last 7 days: the published posts counted, the reactions, the
    engagement rate, and the views.
    Reactions are likes plus comments, and the engagement rate is reactions divided by views.
@@ -86,7 +88,7 @@ A missing dashboard link is not an operational failure, so it never goes under t
 
 The whole window gets fresh stats each run, because an older post keeps collecting views and the totals
 and the baseline are counted again from the live numbers.
-Batches are what make the wide window cheap, and not a shorter window.
+One list carries every post's numbers, so the width of the window costs nothing.
 
 One-day noise MUST NOT go into the preferences.
 "This clip beat the baseline" is noise.
