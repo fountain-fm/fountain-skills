@@ -62,8 +62,8 @@ With:
 8. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
    Ask per episode, and only for the ones that still hold a moment - another episode cannot overlap.
    Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
-   Compare only with a `source` whose `media` is the `enclosure` of the segments, because the two clocks
-   agree only then.
+   Compare only with a `source` whose `media` is the `info.audio` of the segments' episode, because the
+   two clocks agree only then.
    Advance a marked moment only when the caller or the lessons ask for a new cut, and give what remains to
    module **media**.
 
