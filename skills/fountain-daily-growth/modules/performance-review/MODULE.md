@@ -14,7 +14,7 @@ The posts are the record, and the preferences are the memory.
 ## Input
 
 - `show` - the show the loop runs for.
-- The show's recent posts and their `SocialPostStats`, loaded fresh via the Social API.
+- The show's recent posts, listed via the Social API, each carrying its `SocialPostStats`.
 
 ## Output
 
@@ -31,7 +31,12 @@ The posts are the record, and the preferences are the memory.
 
 1. List the show's recent posts via the Social API.
    The last 14 days is enough.
-   Load the `SocialPostStats` of each published post.
+   Each post carries its `SocialPostStats`, which Fountain refreshes, so the list is the whole read and
+   there is nothing to ask for post by post.
+   Treat a published post with no stats as one the platform has not answered for yet, and never as a
+   post that no one saw.
+   Leave it out of the totals of step 2 and the baseline of step 3, because a zero it did not earn
+   pulls both down.
 2. Total each platform over the last 7 days: the published posts counted, the reactions, the
    engagement rate, and the views.
    Reactions are likes plus comments, and the engagement rate is reactions divided by views.
@@ -54,6 +59,8 @@ The posts are the record, and the preferences are the memory.
 6. Read the user's decisions from `meta.status` and the timestamps.
    A draft approved fast, edited before approval, or left untouched each says something.
    The user's edits to title, text, or context are the closest thing to a reason - diff them.
+   Read the decisions on the posts that arrived since the last report, and not on the whole window,
+   because an earlier run already read the older ones into the preferences.
 7. Write each durable lesson under the matching heading of the preferences, dated, succinctly.
    When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
 8. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
@@ -67,6 +74,7 @@ The posts are the record, and the preferences are the memory.
    spells it.
    Give the episode each clip was cut from and the day it came out, which the Content API holds on the
    episode.
+   Load each episode one time, however many clips came from it, and ask for them all in one turn.
 10. Record where the report reached at the end of the Reporting section, as the publish time of the
     newest post it covered, e.g. `Reported up to 2026-08-17T16:41Z.`
     Move it only when the report was sent.
@@ -79,6 +87,10 @@ show them.
 That is also why the marker moves only on a send: a report that failed has covered nothing.
 
 A missing dashboard link is not an operational failure, so it never goes under the warnings.
+
+The whole window gets fresh stats each run, because an older post keeps collecting views and the totals
+and the baseline are counted again from the live numbers.
+One list carries every post's numbers, so the width of the window costs nothing.
 
 One-day noise MUST NOT go into the preferences.
 "This clip beat the baseline" is noise.
