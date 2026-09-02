@@ -1,5 +1,5 @@
 {
-  "name": "fountain-skills",
+  "name": "fountain",
   "version": "0.1.0",
   "description": "Podcast Growth Skills for Your Agent",
   "author": {
@@ -9,7 +9,12 @@
   "repository": "https://github.com/fountain-fm/fountain-skills",
   "keywords": ["podcasts", "clips", "growth", "social-media", "reporting"],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
+  "mcpServers": {
+    "fountain": {
+      "type": "http",
+      "url": "https://api.fountain.fm/v1/mcp"
+    }
+  },
   "interface": {
     "displayName": "Fountain",
     "shortDescription": "Podcast Growth Skills for Your Agent",
