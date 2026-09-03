@@ -22,7 +22,7 @@ The skill itself keeps the narratives level with the show first, because both mo
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
-- The report of the posts that wait, one time when the day's clips exist.
+- One report for the day, sent and printed here: the posts that wait, then their numbers.
 - Updated preferences: the narratives brought level with the show, and the lessons of module
   **performance-review**.
 
@@ -55,10 +55,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Render the rest only after the user confirms or corrects the proof, because a batch in the wrong
    look is a batch rendered twice.
    Leave the rendering to a render machine instead when one works this show, and it sends the report.
-   Send the day's clips as the `review-posts-simple` report of skill **fountain-reports** either way, and let
-   its approve note say whether approving renders a clip or sends it.
-   Present the day's clips in the chat on the clip card of skill **fountain-clip-finder**, whether or
-   not this run made them, because a day at budget still has clips the user has not seen.
+   Send the day one time, as the `review-posts` report of skill **fountain-reports**, carrying the
+   clips that wait and the numbers of module **performance-review** together, and let its approve
+   note say whether approving renders a clip or sends it.
+   Ask that skill to print the same report here as well as sending it, so the user reads in the chat
+   what the mail carries and the two never disagree.
+   The printed report is the whole of what the chat shows about the day's clips, and it covers the
+   clips this run did not make, because a day at budget still has clips the user has not seen.
 
 ## Additional notes
 

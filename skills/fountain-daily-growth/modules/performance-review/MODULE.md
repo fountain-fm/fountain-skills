@@ -19,8 +19,8 @@ The posts are the record, and the preferences are the memory.
 ## Output
 
 - Updated Editorial, Narratives and Reporting sections of the preferences.
-- The `performance` report of skill **fountain-reports**: the numbers, the diagnosis, the warnings,
-  and the ids that its clip cards link by.
+- The numbers, the diagnosis, the warnings, and the ids that the clip cards link by, for the report
+  that skill **fountain-reports** builds. The caller chooses which report carries them.
 
 ## Requirements
 
@@ -66,8 +66,9 @@ The posts are the record, and the preferences are the memory.
 8. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
    That is an operational failure to surface, not a weak post to learn from.
    Give none when nothing failed, and the report leaves the section out.
-9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports** as the
-   `performance` preset - how the report reaches the user is that skill's decision, not this one's.
+9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports**.
+   Which preset carries them is the caller's decision, and how the report reaches the user is that
+   skill's, so this module names neither.
    Give the show and the posts by id as well, because a clip card links its title into the dashboard and
    every channel row into its own post.
    Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
