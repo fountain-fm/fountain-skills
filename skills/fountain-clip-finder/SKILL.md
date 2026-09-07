@@ -63,8 +63,6 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 4. Run module **boundaries** to shape each moment into a clip, and to drop the ones that fail a gate.
 5. Run module **copy** to write `content.title`, `content.text`, and `context`.
 6. Create one draft `SocialPost` for each clip on each channel with the Social API.
-   `source` goes in the call that creates the post, because an update that carries it answers 200 and
-   drops it, and the post is then a stub that nothing can render (seen 2026-09-07).
    Creating a post does not carry its text, so write the text with a second call, and check that it
    landed - a draft with no words looks finished in the dashboard and publishes as an empty post.
    The two calls of one post run in that order, and no post waits for another, so work through the
