@@ -48,6 +48,8 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
    Cut with the translated span from here on.
    Read the map when `aligned` is false, because the two edges disagree for two different reasons.
+   Check the tail even when `aligned` is true: an anchor near the head hides drift that grows towards
+   the end, and the clip then loses its last sentence.
    Stop and report when a region boundary falls inside the span: an advertisement break sits inside
    the clip, and the fix is a different span and never a shift.
    Two edges inside one region disagree from anchor drift instead, so cut the padded window and let
