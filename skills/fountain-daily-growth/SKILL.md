@@ -1,30 +1,32 @@
 ---
 name: fountain-daily-growth
-description: Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.
+description: Read yesterday's results, the new episodes and today's news, then brief fountain-clip-finder.
 ---
 
 ## Overview
 
-This skill is the head of the daily content chain, and it runs two modules in order.
-Module **performance-review** looks backward: it turns the numbers of yesterday's posts into lessons
-in the preferences.
-Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs
-for skill **fountain-clip-finder**.
-The skill itself keeps the narratives level with the show first, because both modules read them.
+This skill is the head of the daily content chain, and it runs three modules in order.
+Module **performance-review** turns the numbers of yesterday's posts into lessons in the preferences.
+Module **episode-watch** briefs skill **fountain-clip-finder** on each episode the show published since
+the last run.
+Module **trend-discovery** scores today's news and shapes the best trends into briefs for the same skill.
+The skill itself keeps the narratives level with the show first, because every module reads them.
 
 ## Input
 
 - `show` - the show to run the loop for.
-- The Narratives and Editorial sections of the preferences.
+- The Narratives, Editorial and Automation sections of the preferences.
 
 ## Output
 
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
+- One brief per new episode, from module **episode-watch**, handed to the same skill and carrying the
+  new-episode clip budget as `clip_count`.
 - The report of the posts that wait, one time when the day's clips exist.
-- Updated preferences: the narratives brought level with the show, and the lessons of module
-  **performance-review**.
+- Updated preferences: the narratives brought level with the show, the lessons of module
+  **performance-review**, and the episode that module **episode-watch** reached.
 
 ## Housekeeping
 
@@ -40,14 +42,16 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Bring the Narratives section level with the show, because both modules read it.
+1. Bring the Narratives section level with the show, because every module reads it.
 2. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
-3. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
-4. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
+3. Run module **episode-watch** to brief the episodes the show published since the last run.
+   It hands its own briefs on, so step 5 covers the trends alone.
+4. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
+5. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
    continues without this skill.
-5. Read the auto-render setting from the Automation section of the preferences, where on is the default.
-   List the day's drafts with the Social API either way, because step 4 hands the briefs on and never
-   reads what came back.
+6. Read the auto-render setting from the Automation section of the preferences, where on is the default.
+   List the day's drafts with the Social API either way, because steps 3 and 5 hand the briefs on and
+   never read what came back.
    With auto-render on, render them with skill **fountain-clip-producer** as a clean final, so the user
    reviews the clip and not a description of it.
    When the Brand section holds no confirmed kit, render the single strongest clip first, and present
@@ -65,7 +69,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 Where a step repeats one API call over many items - the numbers of each post, the news of each subject,
 the drafts of each clip - the items do not depend on each other, so ask for them together in one turn.
 
-This skill owns the two morning looks and nothing downstream.
+This skill owns the three morning looks and nothing downstream.
 Finding moments and writing the copy is the job of skill **fountain-clip-finder**.
 Rendering is the job of skill **fountain-clip-producer**, run here or on a render machine that picks the
 drafts up from the Social API.
@@ -77,6 +81,9 @@ without them, because a draft that nothing renders is a clip that never exists.
 
 Before you set up a scheduled run, say which entries it will follow that the user has not confirmed,
 and how much of the show it can search.
+
+A scheduler can start module **episode-watch** on its own between two loops, so a show that publishes in
+the evening does not wait for the next morning.
 
 An empty Editorial section is not a wall: proceed, and say so plainly.
 
