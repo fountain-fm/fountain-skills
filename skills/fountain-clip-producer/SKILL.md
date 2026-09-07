@@ -59,8 +59,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 2. Run module **preflight** to check the machine before the first render.
    One report serves every clip of a run, because the machine does not change between them.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
-   Cut every clip of the run in the same turn, and transcribe them in the same turn after that, because
-   no clip waits for another and each stage costs one turn whether it holds one clip or three.
+   Cut all the clips of the run in one turn, then transcribe them all in one turn.
+   No clip waits for another one.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
    Use the binary and the model that module **preflight** names, and ask for one word for each segment.
@@ -96,10 +96,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Additional notes
 
-A run that carries more than one clip does the same work on each of them, so hold the clips together and
-move them through one stage at a time.
-The cost of a run is the turns it takes, and not the seconds that ffmpeg takes: a render of one clip
-spends about a third of its time in the tools and the rest between them.
+A run with more than one clip does the same work on each clip.
+Move all the clips through one stage, then move them all through the next stage.
+A run costs turns, and not seconds of ffmpeg.
+A render of one clip spends a third of its time in the tools, and the rest between them.
 
 There are three delivery tiers, each adding to the one before, and the request implies which one.
 The user names the work they want, not the tier, so read it from their words:
