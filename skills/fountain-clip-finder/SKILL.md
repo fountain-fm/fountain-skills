@@ -53,6 +53,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
+A call that does not need the answer to another goes in the same turn as that other one.
+The turn is what the run pays for, and not the call.
+
 1. Resolve the show, and list the connected `SocialChannel` with the Social API.
    Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a
    draft post on a channel, and there is no other place to keep the work.

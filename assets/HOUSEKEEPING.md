@@ -17,6 +17,8 @@ Say a thing when it changes what the reader does next:
 Leave out a step that worked, a number that only proves the work happened, and a name from inside
 this software, such as a module, a field, or a part of the API.
 Name a file only when the reader opens it, and put everything that worked in one line.
+A run that nobody watches keeps its progress for the report at the end, because a line for each stage
+costs the run a turn and reaches nobody until it finishes.
 Use those names when the reader asks for them, or when they are working on the software with you,
 because a reader who can act on a name is worse served without it.
 When you give the reader a number about their show, say which sources you counted.
