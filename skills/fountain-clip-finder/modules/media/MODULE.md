@@ -24,7 +24,7 @@ translates it at render time, because only the renderer must reach YouTube.
   Module **boundaries** sets the three remaining fields, so it is complete only after that module.
 - A confidence tier for each moment that needed a YouTube match.
 - A preview link for each moment, which opens the video at the moment so the user can watch it.
-  Always `https://fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the seconds in
+  Always `https://beta.fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the seconds in
   the clock of the transcript, which that player runs on for the audio and the Fountain video alike.
   For a YouTube match, add `https://www.youtube.com/watch?v=<id>&t=<seconds>s` with the transcript
   seconds, and call it approximate, because that file runs on its own clock and nothing here can

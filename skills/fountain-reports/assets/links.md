@@ -2,7 +2,8 @@
 <!-- A component names the value it needs and never spells an address, so an address that changes -->
 <!-- changes here alone. -->
 
-The domain is `beta.fountain.fm` while Fountain tests, and `fountain.fm` in full production.
+Fountain is in test, so the domain of every reader-facing link is `beta.fountain.fm`.
+It becomes `fountain.fm` in full production.
 Change it here, and every report follows.
 
 - `post_url` - a post in the dashboard: `https://{domain}/studio/{show_id}/posts/{post_id}`.
