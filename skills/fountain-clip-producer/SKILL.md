@@ -59,6 +59,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 2. Run module **preflight** to check the machine before the first render.
    One report serves every clip of a run, because the machine does not change between them.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
+   Cut all the clips of the run together, then transcribe them all together.
+   No clip waits for another one.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
    Use the binary and the model that module **preflight** names, and ask for one word for each segment.
@@ -93,6 +95,11 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     line saying the render result and where the video is attached.
 
 ## Additional notes
+
+A run with more than one clip does the same work on each clip.
+Move all the clips through one stage, then move them all through the next stage.
+Most of the time of a render goes between the actions, and not inside them.
+A render of one clip spends a third of its time in the tools.
 
 There are three delivery tiers, each adding to the one before, and the request implies which one.
 The user names the work they want, not the tier, so read it from their words:
