@@ -53,8 +53,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-Make the calls that do not need each other's answers in one turn.
-A turn costs more than a call.
+Make the calls that do not need each other's answers at the same time.
+A run is slow between its actions, and not inside them.
 
 1. Resolve the show, and list the connected `SocialChannel` with the Social API.
    Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a

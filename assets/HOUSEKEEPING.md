@@ -19,7 +19,7 @@ this software, such as a module, a field, or a part of the API.
 Name a file only when the reader opens it, and put everything that worked in one line.
 When nobody watches a run, do not say what you do at each stage.
 Put it in the report at the end.
-A line in the chat costs a turn, and nobody reads it before the run stops.
+Nobody reads it before the run stops.
 Use those names when the reader asks for them, or when they are working on the software with you,
 because a reader who can act on a name is worse served without it.
 When you give the reader a number about their show, say which sources you counted.
