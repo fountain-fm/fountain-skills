@@ -10,8 +10,8 @@
 <!-- approves only what they can see. -->
 <!-- {post_url} is https://{domain}/studio/{show_id}/posts/{post_id}, the post of the first channel -->
 <!-- listed. show_id is the ContentID of the show, one of ProjectOverview.shows, and never the -->
-<!-- project id. The domain is beta.fountain.fm while Fountain tests, and fountain.fm in full -->
-<!-- production. -->
+<!-- project id. Fountain is in test, so the domain is beta.fountain.fm, and it becomes -->
+<!-- fountain.fm in full production. -->
 
 ### {title}
 
