@@ -72,7 +72,7 @@ Authorization: Fountain API Key as Bearer Key
 
 ### Additional details
 
-- Write a large response to a file and read only the part you need.
+- ALWAYS write API responses to a file and read only the part you need.
   A response too large to return is saved to a file for you, so read that file rather than ask again.
   Ask for fewer items when a list comes back too large, because a small page can still carry a large body.
 - A request can fail because the host is unreachable.
