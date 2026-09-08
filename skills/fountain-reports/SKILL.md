@@ -46,7 +46,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    into a report sent later in the same run, or not at all.
    Email is the default, and goes to the addresses under Reporting.
    Ask for them when the section holds none, and record them in the same turn.
-   Print in the chat instead when the user asked to read it there.
+   Print it in the chat as well when the caller asks for both, and print it instead when the user
+   asked only to read it here.
+   A printed report is the same words as the sent one, so the reader never has to open the mail to
+   learn what the chat left out.
    Say plainly when a report was composed but not sent.
    A send that answers success is not proof of delivery, so say which one you saw.
 
@@ -89,6 +92,7 @@ so any head of the chain reuses it unchanged.
 
 The printed surface serves the review in the chat: the user reads the same report that the email
 carries, so the two never disagree.
+A caller that prints and sends gives the reader one report in two places, and never two reports.
 
 Combining joins reports, not machines: a report can wait only for one sent later in the same run,
 because nothing holds a pending report between machines.
