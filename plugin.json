@@ -1,4 +1,5 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "fountain-skills"
+  "name": "fountain-skills",
+  "version": "1.2.0"
 }
