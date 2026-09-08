@@ -17,6 +17,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 - The `transcript` of that source, to confirm that the cut holds the expected words.
 - The `TranscriptSegment` list of the episode, from the Content API, for a watch-page source whose
   span is in the clock of that transcript.
+- The id of the episode, which names its saved time map.
 
 ## Output
 
@@ -39,15 +40,24 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    clock of the transcript and that file is not:
 
    ```bash
+   # The cache sits in the workings of the show, so that every clip of that show reads it.
+   CACHE_DIR="fountain/outputs/$SHOW/workings/offsets"
    # --build downloads the captions of the video one time and anchors them against the transcript.
-   echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --build "$MEDIA_URL" > time-map.json
+   # --cache-dir and --episode read the map this episode already has, and write it when it has none.
+   echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --build "$MEDIA_URL" \
+     --cache-dir "$CACHE_DIR" --episode "$EPISODE_ID" > time-map.json
    # --span translates the clip span into the clock of the video, with no further network work.
    echo "$TRANSCRIPT_JSON" | scripts/build-time-map.py --map time-map.json --span "$TS_START" "$TS_END"
    ```
 
    Cut with the translated span from here on.
-   Stop and report when `aligned` is false, because an advertisement break sits inside the clip, and
-   the fix is a different span and never a shift.
+   Read the map when `aligned` is false, because the two edges disagree for two different reasons.
+   Check the tail even when `aligned` is true: an anchor near the head hides drift that grows towards
+   the end, and the clip then loses its last sentence.
+   Stop and report when a region boundary falls inside the span: an advertisement break sits inside
+   the clip, and the fix is a different span and never a shift.
+   Two edges inside one region disagree from anchor drift instead, so cut the padded window and let
+   the words of the rough cut settle the edges.
    A Fountain file and an HLS playlist need no translation, because their clock is the clock of the
    transcript.
    A watch page that no episode holds needs none either: the caller read the span off that video, so
@@ -76,7 +86,7 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    ```bash
    # -f takes the best video under 1080p and pairs it with the best audio.
    # --download-sections fetches the window alone, and --force-keyframes-at-cuts lands near the cut.
-   # --merge-output-format keeps the name, because YouTube often serves webm and the name follows it.
+   # --merge-output-format decides the container, because -o names the file and never the format.
    yt-dlp -f "bestvideo[height<=1080]+bestaudio" \
      --download-sections "*$ROUGH_START-$ROUGH_END" \
      --force-keyframes-at-cuts \
@@ -121,6 +131,17 @@ That reads as lip-sync drift of several seconds, it is constant for the whole cl
 A bare master playlist with no map makes ffmpeg take the lowest bandwidth, which is often 360p.
 A vertical crop keeps about a third of the width, so 720p gives 405x720 of real picture for a 1080x1920
 delivery, and 1080p gives 608x1080. No later module puts back what this one did not fetch.
+
+The map of an episode does not change, and one episode gives up several clips over the weeks, so the
+cache saves the caption download and the anchoring of every clip after the first.
+These are working files and never settings: a run that finds no cache measures the map as before, and
+is only slower.
+The cache gives a map back only when that map names the same video, because an episode whose video
+changed needs a new one.
+It holds one file for each episode, and each worker writes the file of the episode it is clipping and
+no other, so workers on different episodes cannot lose each other's maps.
+That is what the layout is for: the day's clips are three different episodes, and they are measured at
+the same time.
 
 The time map exists because the two files hold the same words at different times.
 A podcast inserts its advertisements into the audio and the video carries a different set, so the distance

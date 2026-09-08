@@ -1,6 +1,6 @@
 {
   "name": "fountain-skills",
-  "version": "0.0.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Fountain Skills for agents",
   "scripts": {
@@ -9,6 +9,9 @@
     "format:check": "./scripts/format.sh --check",
     "housekeeping": "./scripts/sync-housekeeping.sh",
     "housekeeping:check": "./scripts/sync-housekeeping.sh --check",
+    "sync-version": "./scripts/sync-version.sh",
+    "sync-version:check": "./scripts/sync-version.sh --check",
+    "version:check": "./scripts/validate-version.sh",
     "fix": "./scripts/fix.sh",
     "check": "./scripts/fix.sh --check",
     "prepare": "git config core.hooksPath .githooks"

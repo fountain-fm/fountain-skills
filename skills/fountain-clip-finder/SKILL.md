@@ -65,6 +65,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
+Make the calls that do not need each other's answers at the same time.
+A run is slow between its actions, and not inside them.
+
 1. Resolve the show, and list the connected `SocialChannel` with the Social API.
    Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a
    draft post on a channel, and there is no other place to keep the work.
@@ -80,13 +83,19 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 6. Create one draft `SocialPost` for each clip on each channel with the Social API.
    Creating a post does not carry its text, so write the text with a second call, and check that it
    landed - a draft with no words looks finished in the dashboard and publishes as an empty post.
-7. Present the posts in rank order, with their scores, their reasons, and each flag.
+   The two calls of one post run in that order, and no post waits for another, so work through the
+   posts in batches of 4 to 6 at the same time.
+7. Present each clip as one clip card of `assets/clip-card.md`, in rank order, and close with the
+   card's drafts link.
+   The card carries the score, the reason, and each flag, so nothing waits in a summary above it.
    Give the external source of each clip to the renderer in this session, and say that these posts
    cannot be rendered from a later one.
 
 ## Additional notes
 
 Each module removes work from the next one, so you MUST run them in the order above.
+Inside a module the order is looser: where a step repeats one API call over many items, the items do
+not depend on each other, so ask for them together rather than one at a time.
 
 A clip from a video that is not an episode is a post about something the audience cannot find on the
 feed, so the words carry the link that the request gives, and the user approves both together.

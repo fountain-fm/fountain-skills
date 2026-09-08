@@ -54,16 +54,23 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
   Keep it current: YouTube changes what a client must send, and a build a few weeks old
   answers 403 on every download while the captions still come through.
+- A web search tool, and a way to read a page, for the reference sources of module **brand**.
 
 ## Process
 
 1. Read the delivery tier from the request.
    Do the least work that the tier asks for.
 2. Run module **preflight** to check the machine before the first render.
+   One report serves every clip of a run, because the machine does not change between them.
 3. Run module **media** to cut the landscape master from `media`, between `ts_start` and `ts_end`.
+   Cut all the clips of the run together, then transcribe them all together.
+   No clip waits for another one.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
    Use the binary and the model that module **preflight** names, and ask for one word for each segment.
+   That asks for one token for each segment and gets it: whisper splits a long word across tokens and
+   writes no spaces, so join the tokens back into words yourself before any module reads them, and
+   keep the punctuation of each word, which module **captions** needs to find a sentence end.
    These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.
@@ -88,8 +95,15 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     improve the clip - choosing the moment is the caller's job.
 11. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
     not to.
+12. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
+    line saying the render result and where the video is attached.
 
 ## Additional notes
+
+A run with more than one clip does the same work on each clip.
+Move all the clips through one stage, then move them all through the next stage.
+Most of the time of a render goes between the actions, and not inside them.
+A render of one clip spends a third of its time in the tools.
 
 There are three delivery tiers, each adding to the one before, and the request implies which one.
 The user names the work they want, not the tier, so read it from their words:
@@ -106,6 +120,8 @@ Captions on a portrait export are not a raise, and a square or a landscape expor
 The word timings come from the clip, and never from the episode transcript.
 That transcript carries sentences and no words, and it is the caller's evidence for the span rather than
 this skill's evidence for a caption.
+The words themselves are a different matter: whisper mishears a name or a number that the transcript has
+right, so correct the wording against the transcript and keep the timings whisper made.
 
 Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
 so that height is the real resolution of the clip, and module **qa** fails a big upscale.
@@ -121,6 +137,11 @@ Touch only the output of the module that changes, and a caption change MUST NOT 
 
 A post does not have to be approved before this skill runs, and rendering one approves nothing.
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
+
+These steps make one clip, and several clips of one run are independent.
+Module **queue** therefore gives each clip its own worker and runs the workers at the same time, each
+in its own output folder, and a run is finished when the last clip is.
+They do not finish three times faster, because ffmpeg already uses every core of the machine.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.
 Readability, framing, and sync matter more than procedure.

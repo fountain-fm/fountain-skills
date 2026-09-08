@@ -79,6 +79,11 @@ First contact, for a caller that finds the preferences empty:
 The defaults only make the settings visible and editable, because every skill already defaults the same
 way with no entry at all.
 
+The look of the show does not wait for first contact, because a project can hold entries and still have
+no look: the web onboarding writes some of them before an agent ever runs.
+Skill **fountain-clip-producer** drafts a kit from the show itself whenever the Brand section names
+none, and the first rendered clip is the style proof whose corrections confirm it.
+
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
 
