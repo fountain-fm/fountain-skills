@@ -59,6 +59,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    its approve note say whether approving renders a clip or sends it.
    Present the day's clips in the chat on the clip card of skill **fountain-clip-finder**, whether or
    not this run made them, because a day at budget still has clips the user has not seen.
+6. Offer to set the cycle on a daily schedule, one time, when the user has seen what a run produces.
 
 ## Additional notes
 
@@ -75,8 +76,13 @@ render machine that works this show.
 Offer to set up a scheduled run that renders the approved drafts when they want the day to finish
 without them, because a draft that nothing renders is a clip that never exists.
 
-Before you set up a scheduled run, say which entries it will follow that the user has not confirmed,
-and how much of the show it can search.
+A schedule can hold two runs: the one that renders approved drafts, and this skill each morning.
+Offer the morning one as its own question, after the user sees the clips of a run.
+A loop that a person must start each day is a loop that stops.
+
+Before you set up a scheduled run, say when it runs, which entries it will follow that the user has
+not confirmed, and how much of the show it can search.
+Set it up only on the user's word.
 
 An empty Editorial section is not a wall: proceed, and say so plainly.
 
