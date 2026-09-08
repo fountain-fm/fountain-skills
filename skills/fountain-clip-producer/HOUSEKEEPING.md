@@ -17,13 +17,17 @@ Say a thing when it changes what the reader does next:
 Leave out a step that worked, a number that only proves the work happened, and a name from inside
 this software, such as a module, a field, or a part of the API.
 Name a file only when the reader opens it, and put everything that worked in one line.
+When nobody watches a run, do not say what you do at each stage.
+Put it in the report at the end.
+Nobody reads it before the run stops.
 Use those names when the reader asks for them, or when they are working on the software with you,
 because a reader who can act on a name is worse served without it.
 When you give the reader a number about their show, say which sources you counted.
 
-Each skill has a page the reader can read, at `https://fountain.fm/docs/skills/<skill>`, where
+Each skill has a page the reader can read, at `https://beta.fountain.fm/docs/skills/<skill>`, where
 `<skill>` is the name of the skill without the `fountain-` in front of it.
-The domain is `beta.fountain.fm` while Fountain tests, and `fountain.fm` in full production.
+Fountain is in test, so the domain of every reader-facing link is `beta.fountain.fm`.
+It becomes `fountain.fm` in full production.
 Give the page when the reader asks what else they can change, or when you offer them a choice that
 the page shows better than words do, e.g. a style they would rather see than read about.
 
@@ -62,7 +66,7 @@ Authorization: Fountain API Key as Bearer Key
 
 - MUST read https://fountain.fm/docs.md in each new session
 - Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
-- If no key, ask the user to make one at https://fountain.fm/studio/projects
+- If no key, ask the user to make one at https://beta.fountain.fm/studio/projects
 - A Fountain key starts with `fountain_`.
   When a request fails to authenticate under a key with a different prefix, the key is for another
   service, and you MUST tell the user.
