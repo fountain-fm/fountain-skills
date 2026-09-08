@@ -17,6 +17,7 @@ Say a thing when it changes what the reader does next:
 Leave out a step that worked, a number that only proves the work happened, and a name from inside
 this software, such as a module, a field, or a part of the API.
 Name a file only when the reader opens it, and put everything that worked in one line.
+Send a file to the reader by its absolute path, because a relative one is read against another directory.
 When nobody watches a run, do not say what you do at each stage.
 Put it in the report at the end.
 Nobody reads it before the run stops.
@@ -74,7 +75,12 @@ Authorization: Fountain API Key as Bearer Key
 
 ### Additional details
 
-- Write a large response to a file and read only the part you need.
+- ALWAYS write API responses to a file and read only the part you need.
+  A response too large to return is saved to a file for you, so read that file rather than ask again.
+  Ask for fewer items when a list comes back too large, because a small page can still carry a large body.
+- A request can fail because the host is unreachable.
+  Try it again a few times before you treat it as an answer, and stop and report when it stays down.
+  Do not wait with a shell command, because the harness blocks one that only sleeps.
 - You CAN write a throwaway script, e.g. to repeat one request over many items.
   Put it in a temporary place and delete it at the end of the session.
   You MUST NOT keep a script that wraps the API, because the API can change.
