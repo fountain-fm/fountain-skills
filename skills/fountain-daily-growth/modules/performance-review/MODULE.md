@@ -68,13 +68,13 @@ The posts are the record, and the preferences are the memory.
    Give none when nothing failed, and the report leaves the section out.
 9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports** as the
    `performance` preset - how the report reaches the user is that skill's decision, not this one's.
-   Give the show and the posts by id as well, because a clip card links its title into the dashboard and
-   every channel row into its own post.
+   Give the project, the show, and the posts by id as well, because a clip card links its title into the
+   dashboard and every channel row into its own post.
    Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
    spells it.
    Give the episode each clip was cut from and the day it came out, which the Content API holds on the
    episode.
-   Load each episode one time, however many clips came from it, and ask for them all in one turn.
+   Load each episode one time, however many clips came from it, and ask for them all at the same time.
 10. Record where the report reached at the end of the Reporting section, as the publish time of the
     newest post it covered, e.g. `Reported up to 2026-08-17T16:41Z.`
     Move it only when the report was sent.

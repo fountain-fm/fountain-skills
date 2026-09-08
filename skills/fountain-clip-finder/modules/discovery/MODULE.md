@@ -41,7 +41,7 @@ With:
    The row counts the episodes of the show, the ones that hold an indexed transcript, and the ones in the queue.
    Tell the caller how much of the show the search reaches, and say that the rest is out of reach.
    A show with no row is not connected, so no count is available and you must judge the coverage from the results.
-   The progress and the searches of step 3 both need the show and nothing else, so issue them in one turn.
+   The progress and the searches of step 3 both need the show and nothing else, so issue them together.
 3. Search the show's transcripts with the Search API, scoping to the show.
    Scope to the show even when the caller names an episode, then keep the hits of that episode and drop
    the rest, because a scope that names an episode answers nothing, seen 2026-09-07.
@@ -52,7 +52,7 @@ With:
    The words of an episode's own title and show notes are its theme, so search those when the caller
    names one episode.
    Also search for disagreement, predictions, surprising statements, and changes of mind.
-   Issue the queries together in one turn, in batches of 4 to 6, because no query reads another's answer.
+   Issue the queries together, in batches of 4 to 6, because no query reads another's answer.
    For a kind of moment, search the show's recurring subjects, then let that kind lead the score.
    Use the quote or the approximate time to choose the moment when the caller gives one.
 5. For a person, search their name.
@@ -62,12 +62,13 @@ With:
    passage often returns as two and a hit gives them in the order of the score.
    The result is a moment: one continuous passage to judge.
    Load the whole transcript with the Content API only when a moment needs the words around it.
-   Load one transcript for each episode, however many of its moments need it, and ask in one turn.
+   Load one transcript for each episode, however many of its moments need it, and ask for them all at
+   the same time.
 7. Score each moment 1-10 for controversy, insight, engagement, and relevance.
    Remove any moment under 24 of 40, and rank what remains.
 8. Load the posts of the surviving moments' episodes with the Social API, in every lifecycle state.
    Ask per episode, and only for the ones that still hold a moment - another episode cannot overlap.
-   The episodes are independent, so ask for them together in one turn.
+   The episodes are independent, so ask for them all at the same time.
    Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
    Compare only with a `source` whose `media` is the `info.audio` of the segments' episode, because the
    two clocks agree only then.

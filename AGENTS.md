@@ -227,3 +227,18 @@ The agent hooks run at the end of each turn.
 The git pre-commit hook runs the same steps before each commit.
 
 `npm run check` also validates the Claude plugin manifests, if the Claude Code CLI is installed.
+
+### Version
+
+`version` in `package.json` is the version of the plugin.
+
+You MUST NOT change it.
+The pre-commit hook raises the minor version once for each branch, and syncs its across config files.
+
+## Pull requests
+
+Follow `.github/pull_request_template.md`:
+
+1. Write description to a file
+2. Check it with `node scripts/lint-pr-body.mjs <file>`
+3. Open PR with `gh pr create --body-file <file>`
