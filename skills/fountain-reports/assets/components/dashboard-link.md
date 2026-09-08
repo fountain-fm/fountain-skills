@@ -1,6 +1,4 @@
-<!-- Data: show_id, count. The one action the report asks for. -->
-<!-- show_id is the ContentID of the show, one of ProjectOverview.shows - not the project id. -->
-<!-- The URL structure is the same whether Fountain hosts the show or not. -->
-<!-- beta.fountain.fm is the test domain; it changes to the main domain at full production. -->
+<!-- Data: drafts_url, from links.md. The one action the report asks for, under the clips it acts on. -->
+<!-- It is bold and alone in its paragraph, which is how the mail draws it as a button. -->
 
-**[Review the {count} clips in the dashboard](https://beta.fountain.fm/studio/{show_id}/posts)**
+**[Review clips]({drafts_url})**

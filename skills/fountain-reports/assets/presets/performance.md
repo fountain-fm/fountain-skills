@@ -1,8 +1,9 @@
 <!-- Preset: the numbers for a window, sent after the performance analysis. -->
 
-Subject: {show} - performance, {date}
+Subject: {show} Daily Performance, {date}
 
 1. headline
 2. stats-table
-3. winners-losers
-4. warnings
+3. clip-performance
+4. learnings
+5. warnings

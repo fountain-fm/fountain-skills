@@ -1,0 +1,15 @@
+{
+  "name": "fountain-skills",
+  "owner": {
+    "name": "Fountain",
+    "url": "https://fountain.fm"
+  },
+  "description": "Fountain's own skills for podcast growth, bundled with the Fountain MCP server.",
+  "plugins": [
+    {
+      "name": "fountain",
+      "source": "./",
+      "description": "Skills and tools for podcast growth: automate publishing, produce clips, and analyze performance."
+    }
+  ]
+}

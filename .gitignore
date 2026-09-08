@@ -6,3 +6,6 @@ node_modules
 __pycache__
 *.pyc
 fountain/
+
+# scratch renders - never part of a skill
+.preview/

@@ -17,3 +17,15 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - run: npm ci
       - run: npm run check
+
+  version:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git fetch --depth=1 origin "$GITHUB_BASE_REF"
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+      - run: ./scripts/validate-version.sh "origin/$GITHUB_BASE_REF"
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}

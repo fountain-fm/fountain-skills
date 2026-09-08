@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Syncs HOUSEKEEPING.md and formats the staged files, then stages the results.
+# Syncs HOUSEKEEPING.md and the plugin version, formats the staged files, then stages the results.
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -11,6 +11,8 @@ if [[ ! -d node_modules ]]; then
 fi
 
 ./scripts/sync-housekeeping.sh
+./scripts/bump-version.sh
+./scripts/sync-version.sh
 ./scripts/sync-schema.sh
 
 shopt -s nullglob
@@ -22,6 +24,8 @@ done
 if [[ ${#housekeeping_files[@]} -gt 0 ]]; then
   git add -- "${housekeeping_files[@]}"
 fi
+
+git add -- package.json plugin.json .claude-plugin/plugin.json .codex-plugin/plugin.json
 
 staged_files=()
 while IFS= read -r staged_file; do
