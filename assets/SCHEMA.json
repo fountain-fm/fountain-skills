@@ -147,6 +147,10 @@
               "path": "skills/fountain-clip-producer/modules/media/scripts/build-time-map.py"
             },
             {
+              "name": "check-span-edges.py",
+              "path": "skills/fountain-clip-producer/modules/media/scripts/check-span-edges.py"
+            },
+            {
               "name": "verify-content-alignment.py",
               "path": "skills/fountain-clip-producer/modules/media/scripts/verify-content-alignment.py"
             }

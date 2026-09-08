@@ -14,6 +14,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+# How close to a rim a silence must reach to say the clip opens or closes there.
+EDGE_TOLERANCE = 0.05
+
 
 def run(cmd):
     return subprocess.run(cmd, check=False, text=True, capture_output=True)
@@ -78,6 +81,30 @@ def covered(interval, baselines, tolerance=0.04):
     )
 
 
+def silencedetect(path, noise_db, min_silence, duration):
+    proc = run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-i",
+            str(path),
+            "-af",
+            f"silencedetect=n={noise_db}dB:d={min_silence}",
+            "-f",
+            "null",
+            "-",
+        ]
+    )
+    text = f"{proc.stdout}\n{proc.stderr}"
+    starts = [float(value) for value in re.findall(r"silence_start:\s*(-?[0-9.]+)", text)]
+    ends = [float(value) for value in re.findall(r"silence_end:\s*(-?[0-9.]+)", text)]
+    intervals = [{"start": max(start, 0.0), "end": end} for start, end in zip(starts, ends, strict=False)]
+    # A silence that runs to the end of the file reports no end of its own, so close it there.
+    if len(starts) > len(ends):
+        intervals.append({"start": max(starts[-1], 0.0), "end": duration})
+    return intervals
+
+
 def add_check(checks, name, passed, detail):
     checks.append({"name": name, "status": "pass" if passed else "fail", "detail": detail})
 
@@ -102,6 +129,19 @@ def main():
         default=2.0,
         help="Largest allowed ratio of delivered height to clean-master height. 2.0 passes a 1080p source "
         "for a 1920-tall delivery and fails a 720p one.",
+    )
+    parser.add_argument(
+        "--edge-noise",
+        type=float,
+        default=-32.0,
+        help="Silence threshold in dB for the two edge checks. A clip over a continuous bed never "
+        "reaches it, and needs check-span-edges.py on the source instead.",
+    )
+    parser.add_argument(
+        "--edge-silence",
+        type=float,
+        default=0.06,
+        help="Shortest silence that counts at an edge. Shorter than the smallest breath a span reaches into.",
     )
     parser.add_argument("--contact-sheet")
     parser.add_argument("--visual-report", help="visual_qa_report.json produced by the framing module")
@@ -184,6 +224,26 @@ def main():
             bool(audio_streams(final_probe)),
             {"audioStreams": len(audio_streams(final_probe))},
         )
+
+        if audio_streams(final_probe):
+            final_duration = float(final_probe.get("format", {}).get("duration", 0))
+            edge_silences = silencedetect(args.final, args.edge_noise, args.edge_silence, final_duration)
+            # Speech at either rim means the span cut into a word, which fails the span and not the render.
+            opens_clean = any(interval["start"] <= EDGE_TOLERANCE for interval in edge_silences)
+            closes_clean = any(interval["end"] >= final_duration - EDGE_TOLERANCE for interval in edge_silences)
+            report["edgeSilences"] = edge_silences
+            add_check(
+                checks,
+                "opens_on_whole_word",
+                opens_clean,
+                {"duration": final_duration, "silences": edge_silences[:1]},
+            )
+            add_check(
+                checks,
+                "closes_on_whole_word",
+                closes_clean,
+                {"duration": final_duration, "silences": edge_silences[-1:]},
+            )
 
         if args.caption_layer:
             layer_probe = ffprobe(args.caption_layer, count_frames=True)
