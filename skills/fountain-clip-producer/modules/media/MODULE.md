@@ -13,8 +13,10 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 ## Input
 
 - The `SocialPostMediaSource` of the post, which names the file in `media` and the span in `ts_start` and `ts_end`.
+  A caller can give the same five fields without `ids`, for a video that Fountain does not hold.
 - The `transcript` of that source, to confirm that the cut holds the expected words.
-- The `TranscriptSegment` list of the episode, from the Content API, for a watch-page source.
+- The `TranscriptSegment` list of the episode, from the Content API, for a watch-page source whose
+  span is in the clock of that transcript.
 - The id of the episode, which names its saved time map.
 
 ## Output
@@ -26,6 +28,8 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 - ffmpeg and ffprobe.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
+  Keep it current: YouTube changes what a client must send, and a build a few weeks old
+  answers 403 on every download while the captions still come through.
 - Python 3.11 or later.
 
 ## Process
@@ -56,6 +60,8 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    the words of the rough cut settle the edges.
    A Fountain file and an HLS playlist need no translation, because their clock is the clock of the
    transcript.
+   A watch page that no episode holds needs none either: the caller read the span off that video, so
+   the two clocks are one. Translate only when the span comes from a Fountain transcript of an episode.
 
 3. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
 

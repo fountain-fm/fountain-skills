@@ -60,6 +60,7 @@ These are the layer types:
 - `image` puts a still, a video, or a GIF on the clip, for a logo, a B-roll insert, or an animated sticker.
 - `title` is the hook headline, and a box colour turns it into the solid headline bar.
 - `lowerThird` is the guest name and role, or the show and the episode number.
+  For a clip from a talk that no episode holds, it is the speaker and the event.
 - `watermark` is small persistent text, such as a handle.
 - `scrim` fades a dark gradient over the lower or the upper third, so that a caption stays legible on
   bright footage or over a graphic burned into the picture.
