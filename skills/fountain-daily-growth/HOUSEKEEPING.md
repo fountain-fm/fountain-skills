@@ -22,7 +22,7 @@ Plugins are an abstraction that packages together
 1. the MCP
 2. the skills
 
-The plugin is the preferred way to install Fountain MCP and skills because they receive regular updates.
+The plugin is the preferred way to install Fountain MCP and skills because it receives regular updates.
 
 ### API
 
@@ -38,10 +38,10 @@ It can be reached via one of two routes.
 
 #### Route A: MCP (preferred)
 
-- MCP enables Fountain users to authenticate via oAuth instead of generating API keys
+- MCP enables Fountain users to authenticate via OAuth instead of generating API keys
 - MCP provides tools for different API groups
 - For additional information, you can read the docs at https://beta.fountain.fm/docs.md
-- If MCP not connected, ask the user to connect it via the MCP Server URL
+- If MCP is not connected, ask the user to connect it via the MCP Server URL
 
 Config:
 
@@ -96,8 +96,8 @@ When you give the reader a number about their show, say which sources you counte
 You MUST NOT approve, schedule, or publish content on your own.
 The user does that themselves in the dashboard OR gives you the instruction explicitly.
 
-When asking to approve a clip, you MUST provide the full context.
-You MUST quote the clip in full.
+When you ask the user to approve content, you MUST provide the full context.
+You MUST quote the content in full, e.g. the words of a clip or the text of a post.
 
 ## Preferences
 
@@ -117,14 +117,15 @@ It MUST NOT have frontmatter.
 - You MUST be succinct.
 - Clearly mark when a preference is only proposed - let the user decide whether to keep it.
 - Clearly mark a preference you chose yourself. It MUST be obvious when it was not an explicit choice by the user.
-- Show preferences may go stale. Give greater weight to recent episodes more when you write new entries or review old ones.
+- Show-related preferences may go stale.
+  Give greater weight to recent episodes when you write new entries or review old ones.
   You MUST tell the user when an entry may be stale.
 
 ### Updating
 
 - Use Project API to update preferences.
-- The API call replaces the whole Markdown document, so you MUST not delete parts you did not mean to change.
-- When updating, always compare against existing preferences. Inform what has been updated.
+- The API call replaces the whole Markdown document, so you MUST NOT delete parts you did not mean to change.
+- When updating, always compare against existing preferences. Tell the user what you updated.
 
 ### H2 (##) headings
 
@@ -193,7 +194,7 @@ A file under `fountain` is working material, and a setting only when the prefere
 Outputs are ephemeral.
 You MUST NOT make an output for a later session to read.
 
-`outputs` holds one folder for each show
+`outputs` holds one folder for each show.
 Each show holds one folder for each asset you produce.
 
 Use show folder name from the Accounts section of the preferences.
