@@ -1,6 +1,6 @@
 {
   "name": "fountain",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "displayName": "Fountain",
   "description": "Skills and tools for podcast growth: automate publishing, produce clips, and analyze performance.",
   "mcpServers": "./.mcp.json",
