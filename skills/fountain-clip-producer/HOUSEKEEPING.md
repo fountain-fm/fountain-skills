@@ -1,70 +1,56 @@
-This housekeeping file is the same for every Fountain skill. It is enough to read it once per session.
+## Overview
 
-## What you say
+This housekeeping file is the same for every Fountain skill.
+It is enough to read it once per session.
 
-The reader makes podcasts, and does not work on this software.
-This section is what you say in the chat; a report has its own shape, and skill **fountain-reports**
-owns it.
+The reader does not develop fountain-skills.
 
-Say a thing when it changes what the reader does next:
+## About fountain-skills
 
-- A change you made to their words or their video, when it changes the meaning.
-- A choice that is theirs, with the options made plain.
-- Money you spent.
-- What is now public, what waits for them, and what moves only when they act.
-- A failure, and what it stops.
+Fountain has an MCP that wraps around its API.
 
-Leave out a step that worked, a number that only proves the work happened, and a name from inside
-this software, such as a module, a field, or a part of the API.
-Name a file only when the reader opens it, and put everything that worked in one line.
-When nobody watches a run, do not say what you do at each stage.
-Put it in the report at the end.
-Nobody reads it before the run stops.
-Use those names when the reader asks for them, or when they are working on the software with you,
-because a reader who can act on a name is worse served without it.
-When you give the reader a number about their show, say which sources you counted.
+Fountain also provides public skills for podcast growth.
+Most of them rely on the Fountain API.
 
-Each skill has a page the reader can read, at `https://beta.fountain.fm/docs/skills/<skill>`, where
-`<skill>` is the name of the skill without the `fountain-` in front of it.
-Fountain is in test, so the domain of every reader-facing link is `beta.fountain.fm`.
-It becomes `fountain.fm` in full production.
-Give the page when the reader asks what else they can change, or when you offer them a choice that
-the page shows better than words do, e.g. a style they would rather see than read about.
+github.com/fountain-fm/fountain-skills contains
 
-Never ask the reader to approve a thing without putting the words they are approving in front of them.
-Quote a clip whole, or say that you shortened it and the clip did not, because an ellipsis in a quote
-of a clip reads as a cut in the video.
+- all the skills (including this file)
+- the configuration files for the MCP and the agent plugins
 
-You MUST NOT approve, schedule, or publish a post on your own.
-Those are the user's decisions, made in the dashboard or given to you in words.
+Plugins are an abstraction that packages together
 
-## Fountain API
+1. the MCP
+2. the skills
+
+The plugin is the preferred way to install Fountain MCP and skills because they receive regular updates.
+
+### API
 
 The API can
 
 - load project information
-- load shows, episodes, and transcripts
-- search across content and transcripts
+- load public shows, episodes, and transcripts
+- search across public content and transcripts
 - publish your podcasts
 - publish social posts
 
 It can be reached via one of two routes.
 
-### Route A: MCP (preferred)
+#### Route A: MCP (preferred)
 
-Server URL: https://api.fountain.fm/v1/mcp
-Authorization: Fountain User OAuth
-
-- MCP tool `fountain-api` carries its own input and output schemas.
-- For additional information, you can read the docs at https://fountain.fm/docs.md
+- MCP enables Fountain users to authenticate via oAuth instead of generating API keys
+- MCP provides tools for different API groups
+- For additional information, you can read the docs at https://beta.fountain.fm/docs.md
 - If MCP not connected, ask the user to connect it via the MCP Server URL
 
-### Route B: HTTP
+Config:
 
-Base URL: https://api.fountain.fm/v1
-Authorization: Fountain API Key as Bearer Key
+- Server URL: https://api.fountain.fm/v1/mcp
+- Authorization: Fountain User OAuth
 
-- MUST read https://fountain.fm/docs.md in each new session
+#### Route B: HTTP (discouraged)
+
+- MUST read https://beta.fountain.fm/docs.md in each new session
 - Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
 - If no key, ask the user to make one at https://beta.fountain.fm/studio/projects
 - A Fountain key starts with `fountain_`.
@@ -72,58 +58,90 @@ Authorization: Fountain API Key as Bearer Key
   service, and you MUST tell the user.
 - You MUST NOT write the key into a log, a command, a report, or any file but the key store.
 
-### Additional details
+Config:
 
+- Base URL: https://api.fountain.fm/v1
+- Authorization: Fountain API Key as Bearer Key
+
+#### Additional details
+
+- If you think the MCP/API is not connected / authenticated, double check by trying to list the projects.
+  Don't just assume it isn't working.
 - Write a large response to a file and read only the part you need.
 - You CAN write a throwaway script, e.g. to repeat one request over many items.
   Put it in a temporary place and delete it at the end of the session.
   You MUST NOT keep a script that wraps the API, because the API can change.
 
+## How you talk
+
+These rules dictate your communication style in the chat.
+A report has its own separate communication rules, which are described in skill **fountain-reports**.
+
+Inform the reader when it changes what they may do next:
+
+- You made a change to their words or video, and it changes the meaning
+- Money you spent
+- What is now public and what requires action
+- A failure, and what it blocks
+
+Do not provide unnecessary information (unless the reader asks about it):
+
+- Process of how you successfully completed the task
+- Technical details of fountain-skills: module names, file names, object fields, parts of the API
+
+When you give the reader a number about their show, say which sources you counted.
+
+## Approving
+
+You MUST NOT approve, schedule, or publish content on your own.
+The user does that themselves in the dashboard OR gives you the instruction explicitly.
+
+When asking to approve a clip, you MUST provide the full context.
+You MUST quote the clip in full.
+
 ## Preferences
 
-Preferences are the Fountain-skills-related user preferences.
-They are the ONLY store for user data that later sessions need.
+Preferences are the Fountain-related project preferences.
+They are the ONLY store for project data that later sessions need.
 
-You MUST load the preferences with the Project API at the start of each session.
-When the user gives a new preference, you MUST record it with the Project API in the same turn.
-You MUST be succinct.
-You MUST NOT keep a local copy for a later session.
-
-Each entry MUST stay true to the user and to the show:
-
-- Mark an entry the user did not give as proposed, and let them keep it or cut it.
-  Mark a value you chose yourself the same way, under any heading.
-  Without a mark, the next session reads your choice as the user's and keeps it.
-- An entry you derive from the show goes stale as the show changes.
-  Weigh the recent episodes above the old ones whenever you write one, and not only under Narratives.
-  Say so when you notice an entry the show has outgrown, because nothing else will tell the user.
-- An entry that states how the API behaves MUST carry the date you saw it behave that way.
-  A limit is the kind of fact that gets fixed, so check one again before you let it stop you.
-- A write replaces the whole document, so you MUST carry every entry and mark you did not mean to change.
-- A run that carries a standing brief MUST compare it against the preferences, follow the preferences,
-  and say which line it overrode.
+### Format
 
 Preferences are stored as Markdown.
 It MUST NOT have frontmatter.
+
+### Guidelines
+
+- You MUST load the preferences with the Project API at the start of each session.
+- You MUST NOT keep a local copy for a later session.
+- When the user gives a new preference, you MUST record it with the Project API in the same turn.
+- You MUST be succinct.
+- Clearly mark when a preference is only proposed - let the user decide whether to keep it.
+- Clearly mark a preference you chose yourself. It MUST be obvious when it was not an explicit choice by the user.
+- Show preferences may go stale. Give greater weight to recent episodes more when you write new entries or review old ones.
+  You MUST tell the user when an entry may be stale.
+
+### Updating
+
+- Use Project API to update preferences.
+- The API call replaces the whole Markdown document, so you MUST not delete parts you did not mean to change.
+- When updating, always compare against existing preferences. Inform what has been updated.
 
 ### H2 (##) headings
 
 You MUST use only these headings:
 
-- Narratives - the subjects the show returns to, each with its angle and the risk to avoid.
+- Narratives - the subjects the show returns to, each with its angle and risks to avoid.
 - Editorial - tone, structure, and rules for what to make and when to publish it.
   A guest, a format, or a name that carries authority in a hook belongs here and never under
   Narratives, because it shapes how a clip is written and not which subject the show returns to.
 - Brand - the show's look: caption style, fonts, logos, and colours.
-- Accounts - what the API cannot name: the handle to tag a person by, where a show's video lives, and
-  the folder name of a show.
-- Reporting - how the user wants their reports and emails: the addresses they go to, and preset
-  customizations of skill **fountain-reports**.
-- Automation - the switches of the daily loop, e.g. auto-render and the day's clip budget.
+- Accounts - information not provided by the API: handle to tag a person by,
+  external video source (e.g. YouTube) for a show, and the folder name for a show.
+- Reporting - email addresses reports go to and preset customizations of skill **fountain-reports**.
+- Automation - daily loop options, e.g. auto-render and the day's clip budget.
 - Other - all other preferences.
 
 Write a heading only when it has an entry.
-An absent heading means the same as an empty one.
 
 Empty preferences mean a new project, so follow the first contact steps of skill **fountain-reports**.
 When you rely on a built-in default because no setting names a choice, say so in passing.
@@ -133,7 +151,7 @@ Ask the user when it says nothing, and record that Fountain holds it all when th
 
 ### Narratives
 
-A narrative is a subject the show returns to, with the angle the show takes and the risk to avoid.
+A narrative is a subject the show returns to, with the angle the show takes and the risks to avoid.
 It is how a skill decides whether a subject is for this show, and how it shapes what it makes of it.
 Write one line for each, in that order.
 Pitch it between the show and one episode: the subject of the whole show fits every story, and the
@@ -158,56 +176,30 @@ If a local file system is available, you MUST store Fountain-related assets in `
 ```
 your-project
 └───fountain
-    │   LOG.md // daily log, optional
     └───outputs // ephemeral outputs
         └───my-show // one folder for each show
-            ├───104-best-moment // one folder for each thing you make
+            ├───104-best-moment // one folder for each asset
             │   │   vertical-captioned.mp4 // the finished work
-            │   └───workings // what that thing was made from
-            └───workings // workings that belong to no one thing
+            │   └───workings // intermediate outputs
+            └───workings // outputs that are shared or that don't belong to any one asset
 ```
 
 You MUST keep your work as stateless as possible.
 If data is available from an API, you MUST load it from the API, and you MUST NOT keep a local copy.
 A file under `fountain` is working material, and a setting only when the preferences name its path.
 
-### LOG.md
-
-You MUST keep this if a local file system is available.
-
-When you use Fountain skills, record what you do in this file after each turn.
-You MUST NOT read this file in full, just the latest 7 days at the end of the file.
-
-#### H2 (##) headings
-
-MUST follow `## YYYY-MM-DD` format.
-The oldest day MUST be first.
-
-#### Body
-
-Under today's heading, record one Markdown list item at the end of the turn.
-This MUST include your actions, as well as new findings and failures if any.
-You MUST be succinct.
-
 ### Outputs
 
 Outputs are ephemeral.
 You MUST NOT make an output for a later session to read.
 
-`outputs` holds one folder for each show, and each show holds one folder for each thing you make.
-Neither holds a loose file.
+`outputs` holds one folder for each show
+Each show holds one folder for each asset you produce.
 
-Take the name of a show folder from the Accounts section of the preferences, and keep it short.
-Choose one the first time you make that folder, and record it there in the same turn, or the next run
-picks a different name and splits one show in two.
-Name a thing for the episode and then the thing, e.g. `104-best-moment`.
-Use the day the episode came out when the show does not name its episodes.
+Use show folder name from the Accounts section of the preferences.
+Choose the name once and record it in the same turn.
+For assets, use folder name `{episode_number ?? YYYY-MM-DD}-{slugified-topic}`, i.e. episode number (or publish date) and the topic.
 
-In the folder of a thing, keep the finished work that the Output of the skill names, and nothing else.
-Name each file for what it is, because the folder already says which thing it belongs to.
-Everything else goes in `workings`: a draft, a proof, a plan, a report, an intermediate video, and
-any file a script wrote for another script.
-Workings that belong to no one thing go in the `workings` of the show.
-Put a file in `workings` when you are not sure.
-
-A user who opens a folder MUST see their work, and MUST NOT see how it was made.
+In each asset folder, keep the finished work that the Output of the skill names, and nothing else.
+Everything else goes in `workings`: a draft, a proof, a plan, a report, an intermediate video, a throwaway script.
+Anything the user does not need to see MUST go into `workings`.
