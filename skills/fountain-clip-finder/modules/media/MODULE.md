@@ -35,6 +35,7 @@ translates it at render time, because only the renderer must reach YouTube.
 
 - Fountain API.
 - A web search tool, for the episodes that have no video on Fountain.
+- Skill **fountain-onboarding**.
 
 ## Process
 
@@ -46,7 +47,7 @@ translates it at render time, because only the renderer must reach YouTube.
    Fountain cuts that file and the audio from one recording, so the clocks agree and no map is needed.
 4. Read where the show publishes its video, usually a YouTube channel, from the Accounts section of the
    preferences.
-   Ask the user one time when the preferences do not name a channel, then record the answer with the Project API.
+   Run skill **fountain-onboarding** when the preferences do not name a channel.
    Do this only when an episode reaches this step.
 5. Match each episode that has no video with the web search tool.
    Search for the episode title of the `ContentHit` together with the name of the channel, and never

@@ -49,12 +49,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - A whisper.cpp model file, which the whisper filter takes the path of and does nothing without.
   `ggml-base.en.bin` in `~/.cache/whisper` is the one this skill looks for first, and it is 141 MB, so
   the machine installs it one time and the skill does not ship it.
-  Module **preflight** finds it, and gives the user the line that installs it when the machine has none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
   Keep it current: YouTube changes what a client must send, and a build a few weeks old
   answers 403 on every download while the captions still come through.
 - A web search tool, and a way to read a page, for the reference sources of module **brand**.
+- Skill **fountain-onboarding**, which installs a tool that module **preflight** finds missing.
 
 ## Process
 

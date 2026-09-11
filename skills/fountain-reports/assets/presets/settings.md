@@ -1,4 +1,4 @@
-<!-- Preset: the project's current settings - sent at first contact, or whenever the user asks for them. -->
+<!-- Preset: the project's current settings - sent when the user asks for them. -->
 
 Subject: {show} - your settings
 

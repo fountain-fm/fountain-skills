@@ -66,7 +66,7 @@ another post encodes - and the encoding itself gets no faster.
 Lower the number on a machine with few cores.
 
 The queue asks per show because the Social API lists posts by their source, and names no wider set.
-A show reaches this machine by having an Automation entry, which the first run of the loop writes for it.
+A show reaches this machine by having an Automation entry, which skill **fountain-onboarding** writes for it.
 
 Progress lives on the posts themselves: an attached upload is the only "done" mark, so a run that dies
 mid-batch loses nothing, and the next run picks up the remainder.

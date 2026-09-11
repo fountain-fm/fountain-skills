@@ -341,6 +341,13 @@
       "assets": []
     },
     {
+      "name": "fountain-onboarding",
+      "description": "Set up Fountain. Trigger on first use, when asked, when preferences are empty, or when a skill is missing something.",
+      "skill": "skills/fountain-onboarding/SKILL.md",
+      "modules": [],
+      "assets": []
+    },
+    {
       "name": "fountain-reports",
       "description": "Build the reports the user reads - compose components into a preset, then email or print it.",
       "skill": "skills/fountain-reports/SKILL.md",
