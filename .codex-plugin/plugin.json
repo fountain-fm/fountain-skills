@@ -1,13 +1,19 @@
 {
   "name": "fountain",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Podcast Growth Skills for Your Agent",
   "author": {
     "name": "Fountain"
   },
   "homepage": "https://fountain.fm",
   "repository": "https://github.com/fountain-fm/fountain-skills",
-  "keywords": ["podcasts", "clips", "growth", "social-media", "reporting"],
+  "keywords": [
+    "podcasts",
+    "clips",
+    "growth",
+    "social-media",
+    "reporting"
+  ],
   "skills": "./skills/",
   "mcpServers": {
     "fountain": {
@@ -21,7 +27,10 @@
     "longDescription": "Podcast Growth Skills for Your Agent",
     "developerName": "Fountain",
     "category": "Productivity",
-    "capabilities": ["Interactive", "Write"],
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
     "websiteURL": "https://fountain.fm",
     "defaultPrompt": [
       "Find the strongest clip moments from my latest episode.",

@@ -1097,6 +1097,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     return header + "\n".join(events) + "\n"
 
 
+def preset_says_word_cap_on_a_one_word_style(preset):
+    one_word = preset.get("animation", {}).get("type") in {"word-pop", "bounce-in"}
+    return one_word and "maxWords" in preset.get("grouping", {})
+
+
 def resolve_style(style_arg):
     path = Path(style_arg)
     if not path.exists():
@@ -1158,6 +1163,12 @@ def main():
     preset = json.loads(style_path.read_text())
     deep_merge(spec, preset)
     spec["name"] = preset.get("name", style_path.stem)
+    if preset_says_word_cap_on_a_one_word_style(preset):
+        print(
+            f"warning: '{spec['name']}' caps the words on screen and animates one word at a time, "
+            f"so the cap draws nothing - drop one of the two",
+            file=sys.stderr,
+        )
 
     if args.brand_kit:
         kit_path = Path(args.brand_kit)

@@ -20,9 +20,6 @@
   "position": {
     "alignment": "bottom-center"
   },
-  "grouping": {
-    "maxWords": 3
-  },
   "animation": {
     "type": "word-pop",
     "appearMs": 110,
