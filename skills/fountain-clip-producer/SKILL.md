@@ -30,8 +30,8 @@ Optional:
 - The finished work: a landscape master, and one export for each shape that the request asks for.
   The master is finished work and not a working, because the user keeps it and cuts from it again.
 - A `SocialPostUpload` on `content.uploads` of the post, unless the user asked you not to attach it.
-- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, and a removal
-  report when module **trims** cut the clip.
+- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, a style sheet
+  when the user chose a style from one, and a removal report when module **trims** cut the clip.
 
 ## Housekeeping
 
@@ -77,11 +77,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
 6. Run module **brand** to load the look of the show, for a clean final or a publish final.
-7. Run module **captions** on every portrait export, and on another shape when the request asks for it.
+7. Run module **style-sheet** when the request names no caption style and module **brand** holds none.
+   Build one sheet for the run, and hold the captions until the user names a tile.
+8. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
-8. Run module **overlays** when the request asks for a layer.
-9. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
-10. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
+9. Run module **overlays** when the request asks for a layer.
+10. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
+11. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
     that the person it credits is the one who says it.
     The caller wrote both unseen: the transcript carries sentences and names no speaker.
     Take the speaker from the camera and from a cutaway that shows a closed mouth.
@@ -93,9 +95,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     captions and the gate all describe the old cut, and only the gate can say the new one is finished.
     Move an edge only to repair what you can prove, or to make a change the user asked for, and never to
     improve the clip - choosing the moment is the caller's job.
-11. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
+12. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
     not to.
-12. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
+13. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
     line saying the render result and where the video is attached.
 
 ## Additional notes

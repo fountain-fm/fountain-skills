@@ -1,6 +1,6 @@
 {
   "name": "fountain",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "displayName": "Fountain",
   "description": "Skills and tools for podcast growth: automate publishing, produce clips, and analyze performance.",
   "mcpServers": "./.mcp.json",
@@ -10,5 +10,11 @@
   },
   "homepage": "https://fountain.fm",
   "repository": "https://github.com/fountain-fm/fountain-skills",
-  "keywords": ["podcast", "clips", "video", "social", "fountain"]
+  "keywords": [
+    "podcast",
+    "clips",
+    "video",
+    "social",
+    "fountain"
+  ]
 }
