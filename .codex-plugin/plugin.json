@@ -24,6 +24,7 @@
     "capabilities": ["Interactive", "Write"],
     "websiteURL": "https://fountain.fm",
     "defaultPrompt": [
+      "Set up Fountain for my podcast.",
       "Find the strongest clip moments from my latest episode.",
       "Produce the next draft clip as a platform-ready video.",
       "Review yesterday's podcast growth and recommend today's work."

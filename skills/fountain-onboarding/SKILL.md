@@ -24,7 +24,10 @@ That is so that you do not need to ask again later.
 
 ## Output
 
-- Summary of what has been updated.
+- Updated preferences.
+- A scheduled run of skill **fountain-daily-growth**.
+- A summary in the chat: what changed, what is still missing, and who must act on it.
+- A next step: return to the task that triggered this skill, or offer a first run of skill **fountain-clip-finder**.
 
 ## Housekeeping
 
@@ -44,23 +47,34 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Ensure that the project has at least one podcast.
    Otherwise, link to https://beta.fountain.fm/studio/{project_id}/onboarding?kind=PODCAST
 6. If there are no connected social channels, suggest connecting YouTube, X, or Instagram via the Social API.
-7. Ensure the project preferences specify clip styling, the source of clip material, automation (auto-render, etc.),
+7. Ensure the project preferences specify the source of clip material, automation (auto-render, etc.),
    email addresses to send the reports to, and any other relevant details.
-8. When running locally, ensure all relevant software is installed: Python 3.11 or above, yt-dlp, ffmpeg + ffprobe
-   (the most complete version that includes libass, drawtext, fontconfig and whisper), whisper.cpp, OpenCV 4.8 or
-   later, ImageMagick.
+8. Write out brand guidelines by researching the look of the show: artwork, website, existing clips.
+   Choose the caption style (using skill **fountain-clip-producer**), color, and font.
+   Record the logo URLs if available.
+   Don't include them logos in the clip settings unless existing clips have it.
+9. When running locally, ensure all relevant software is installed: Python 3.11 or above, yt-dlp, ffmpeg + ffprobe
+   (the most complete version that includes libass, drawtext, fontconfig and whisper, e.g. Homebrew `ffmpeg-full`),
+   OpenCV 4.8 or later, ImageMagick, and a whisper.cpp model file (`ggml-base.en.bin` in `~/.cache/whisper`).
    If something is missing, attempt to install it yourself.
    Otherwise, make it easy for the user to install it themselves, even if they are non-technical.
-9. Set up automatic daily growth using skill **fountain-daily-growth**.
+10. Set up automatic daily growth using skill **fountain-daily-growth**.
 
 ## Additional notes
 
 Onboarding must not feel overwhelming:
 
-- Use Fountain defaults for relevant preferences, like caption styling.
+- Use the Fountain defaults below.
   Present the defaults to confirm, and offer customization as optional.
   Do not present all options unless the user chooses to customize.
 - Do not provide unnecessary information.
 - When appropriate, make a decision yourself.
+
+Fountain defaults:
+
+- Each report delivered as email, under Reporting.
+- `performance` and `review-posts-simple` as two separate reports, under Reporting.
+- Auto-render on, under Automation.
+- 3 clips per day, under Automation.
 
 When this skill is triggered as part of a specific task, explain the need for going through this.
