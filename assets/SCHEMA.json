@@ -342,7 +342,7 @@
     },
     {
       "name": "fountain-onboarding",
-      "description": "Set up Fountain. Trigger on first use or when asked, when preferences are empty, when a skill is missing something.",
+      "description": "Set up Fountain. Trigger on first use, when asked, when preferences are empty, or when a skill is missing something.",
       "skill": "skills/fountain-onboarding/SKILL.md",
       "modules": [],
       "assets": []

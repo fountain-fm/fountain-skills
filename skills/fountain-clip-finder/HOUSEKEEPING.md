@@ -74,7 +74,7 @@ Config:
 
 ## Setup
 
-Skill **fountain-onboarding** ensures Fountain and the user's environemnt are fully set up.
+Skill **fountain-onboarding** ensures Fountain and the user's environment are fully set up.
 
 - You MUST run it before the task when the preferences are empty.
 - You MUST run it when a part of the setup is missing, e.g. a channel, a report address, or a tool.
