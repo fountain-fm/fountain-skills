@@ -112,7 +112,7 @@ They are the ONLY store for project data that later sessions need.
 - The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", "Reporting", "Automation", and "Other".
 - Include a heading only when it has an entry.
 - Each list item MUST NOT exceed 200 chars. 200 is a ceiling, not a target. 5 words is better than 30.
-- Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)` to indicate whether it was chosen by an agent or the user and when it was updated, e.g. ``- `bold-social` caption style (USER-2026-09-10)``.
+- Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)` to indicate whether it was chosen by an agent or the user and when it was updated, e.g. "- `bold-social` caption style (USER-2026-09-10)"
 
 ### Guidelines
 
