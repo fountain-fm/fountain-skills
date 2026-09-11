@@ -52,7 +52,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 8. Write out brand guidelines by researching the look of the show: artwork, website, existing clips.
    Choose the caption style (using skill **fountain-clip-producer**), color, and font.
    Record the logo URLs if available.
-   Don't include them logos in the clip settings unless existing clips have it.
+   Don't include logos in the clip settings unless existing clips have them.
+   Present a mockup of how the clip will look like.
+   Offer to customize: https://beta.fountain.fm/docs/styling-clips.
 9. When running locally, ensure all relevant software is installed: Python 3.11 or above, yt-dlp, ffmpeg + ffprobe
    (the most complete version that includes libass, drawtext, fontconfig and whisper, e.g. Homebrew `ffmpeg-full`),
    OpenCV 4.8 or later, ImageMagick, and a whisper.cpp model file (`ggml-base.en.bin` in `~/.cache/whisper`).
