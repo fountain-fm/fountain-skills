@@ -13,6 +13,7 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 ## Input
 
 - The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
+  The file can carry no video, which most of a podcast catalogue does not.
   A caller that clipped a video Fountain does not hold gives those fields without `ids`, and the post
   it made carries no `source` to read them back from.
 - The word timings of that span, which this skill makes from the clip's own audio.
@@ -76,12 +77,17 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Cut only when the user asks, because the cut moves every time after it.
 5. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
+   Skip both for a source with no video, which has no picture to crop and no face to follow.
 6. Run module **brand** to load the look of the show, for a clean final or a publish final.
 7. Run module **style-sheet** when the request names no caption style and module **brand** holds none.
    Build one sheet for the run, and hold the captions until the user names a tile.
 8. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
-9. Run module **overlays** when the request asks for a layer.
+9. Run module **overlays** when the request asks for a layer, and always for a source with no video.
+   There the overlay is not polish: an audiogram package is the whole picture, and without one the clip
+   is captions on an empty frame.
+   Load the artwork of the show from `info.image` and give it to the package, which every one of them
+   needs.
 10. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
 11. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
     that the person it credits is the one who says it.
@@ -114,6 +120,8 @@ The user names the work they want, not the tier, so read it from their words:
   Read it from words about checking a span rather than making a clip.
 - A clean final is publishable, and a portrait export carries captions, because it is watched muted.
   Read it from "produce this clip", when the request names neither captions nor packaging.
+  A clean final of a source with no video carries its audiogram package too, for the same reason that a
+  portrait export carries captions: without it there is nothing to watch.
 - A publish final adds the overlays and the packaging, and the request names one of them.
 
 Ask when the words fit none of the three, and you MUST NOT raise the tier on your own: polish is requested work.

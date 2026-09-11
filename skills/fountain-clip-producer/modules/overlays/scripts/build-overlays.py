@@ -55,6 +55,9 @@ LAYER_DEFAULTS = {
         "boxColor": None,  # solid bar behind the text (headline-bar style)
         "boxPad": 12,
         "maxLines": 2,  # a title that wraps past this is set smaller until it fits
+        # what the boxColor paints: the text itself, a band across the frame, or a rounded card
+        "boxShape": "text",  # text | band | card
+        "cardRadius": 28,
         "position": "top-center",
         "marginH": 60,
         "marginV": 300,
@@ -136,6 +139,8 @@ LAYER_DEFAULTS = {
         "cornerRadius": 0,
         "asset": None,  # a still to build the base from; defaults to the clip's own picture
         "marginV": None,  # how far down the foreground sits; centred when absent
+        "borderW": 0,  # a rim around the card, which is what separates a dark cover from a dark ground
+        "borderColor": "#FFFFFF26",
     },
 }
 
@@ -512,6 +517,41 @@ def drawtext_filter(layer, text, size, y_offset, duration, timed=True):
     return "drawtext=" + ":".join(opts)
 
 
+def backing_box(layer, lines, size, step, args):
+    """Where the thing behind a title sits, measured from the lines rather than the glyphs.
+
+    drawtext can only box what it draws, which gives every line its own width and
+    leaves a ragged edge. A band and a card are placed before a glyph exists, so
+    both have one clean edge whatever the text turns out to be.
+    """
+    pad = layer["boxPad"]
+    height = step * (len(lines) - 1) + round(size * 1.2) + 2 * pad
+    vertical = layer["position"].split("-")[0]
+    top = {
+        "top": layer["marginV"] - pad,
+        "middle": round((args.height - height) / 2),
+        "bottom": args.height - height - layer["marginV"] + pad,
+    }[vertical]
+    return max(0, top), height
+
+
+def band_filter(layer, top, height, end):
+    return (
+        f"drawbox=x=0:y={top}:w=iw:h={height}:"
+        f"color={ff_color(layer['boxColor'], 'box color')}:t=fill:"
+        f"enable='between(t,{layer['start']},{end})'"
+    )
+
+
+def card_width(layer, lines, size, args, budget):
+    """A card hugs its longest line, so it never floats wider than the words in it."""
+    widest = 0
+    for line in lines:
+        measured = text_width(line, layer["fontFile"], size, args.magick)
+        widest = max(widest, measured if measured is not None else len(line) * size * 0.62)
+    return min(round(widest) + 4 * layer["boxPad"], budget + 2 * layer["boxPad"])
+
+
 def build_command(layers, args):
     duration = args.duration
     for layer in layers:
@@ -532,6 +572,12 @@ def build_command(layers, args):
         out = next_label()
         fg_w = round(args.width * blur["scale"] / 2) * 2
         fg_steps = [f"scale={fg_w}:-2"]
+        if blur["borderW"] > 0:
+            rim = blur["borderW"]
+            fg_steps.append(
+                f"pad=iw+{2 * rim}:ih+{2 * rim}:{rim}:{rim}:"
+                f"color={ff_color(blur['borderColor'], 'blurFill borderColor')}"
+            )
         if blur["cornerRadius"] > 0:
             fg_steps += rounded_steps(blur["cornerRadius"])
         # An input stream can feed two filters, and ffmpeg splits it for itself.
@@ -594,7 +640,26 @@ def build_command(layers, args):
             budget = args.width - 2 * layer["marginH"]
             lines, size = fit_lines(layer, layer["fontFile"], budget, args.magick)
             step = round(size * 1.25)
-            filters = [drawtext_filter(layer, line, size, i * step, duration) for i, line in enumerate(lines)]
+            end = layer["end"] if layer["end"] is not None else (duration if duration is not None else 1e9)
+            shape = layer["boxShape"] if layer["boxColor"] else "text"
+            filters = []
+            if shape == "band":
+                top, height = backing_box(layer, lines, size, step, args)
+                filters.append(band_filter(layer, top, height, end))
+                layer = {**layer, "boxColor": None}
+            elif shape == "card":
+                top, height = backing_box(layer, lines, size, step, args)
+                width = card_width(layer, lines, size, args, budget)
+                card = f"[card{label_n}]"
+                graph.append(
+                    f"color=c={ff_color(layer['boxColor'], 'box color')}:s={width}x{height}:"
+                    f"d={duration},{','.join(rounded_steps(layer['cardRadius']))}{card}"
+                )
+                mid = next_label()
+                graph.append(f"{chain}{card}overlay=x=(W-w)/2:y={top}:enable='between(t,{layer['start']},{end})'{mid}")
+                chain = mid
+                layer = {**layer, "boxColor": None}
+            filters += [drawtext_filter(layer, line, size, i * step, duration) for i, line in enumerate(lines)]
             graph.append(f"{chain}{','.join(filters)}{out}")
             chain = out
         elif kind == "watermark":

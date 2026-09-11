@@ -66,6 +66,8 @@ These are the layer types:
 - `watermark` is small persistent text, such as a handle.
 - `scrim` fades a dark gradient over the lower or the upper third, so that a caption stays legible on
   bright footage or over a graphic burned into the picture.
+  It is an ingredient rather than a package: add it to the preset that needs it, the way
+  `audiogram-headline` does, because a scrim on its own is not a look.
 - `progressBar` sweeps a thin bar across the clip.
 - `audiogram` draws a meter of the sound, for a source that carries no video.
 - `blurFill` is the base for footage that is not vertical, and it spans the blurred fill and the card look.
@@ -77,6 +79,10 @@ Text near the caption zone and a layer in the right tenth of the frame raise a w
 because the platform draws its own buttons in that rail.
 A title too long for one line is wrapped, and set smaller until it fits the lines it is allowed, because
 nobody who writes a hook can see the frame it lands in.
+`boxFullWidth` draws one band across the frame behind every line, which is the news-clip look;
+the box of `drawtext` hugs each line on its own and leaves a ragged edge.
+`blurFill` takes a `borderW`, and a card needs one whenever the artwork and the background are both
+dark, or the cover reads as a hole in the frame rather than as a card on it.
 
 A source with no video needs one of the audiogram packages, and each of them is built around the show's
 artwork rather than around the meter.

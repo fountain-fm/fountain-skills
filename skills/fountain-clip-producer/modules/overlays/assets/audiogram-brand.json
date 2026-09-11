@@ -1,14 +1,16 @@
 {
   "name": "audiogram-brand",
-  "description": "A solid brand background with the artwork small and centred, and a meter that grows from a centre line. The quiet, editorial end of the audiograms, and the one to use when the artwork is busy. Needs layers.0.asset; set layers.0.background to the show's colour.",
+  "description": "A solid brand background with the artwork small and centred behind a thin rim, and a meter that grows from a centre line. The quiet, editorial end of the audiograms, and the one to use when the artwork is too busy to sit behind text. Needs layers.0.asset; set layers.0.background to the show's colour.",
   "layers": [
     {
       "type": "blurFill",
       "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
-      "background": "#101016",
+      "background": "#232833",
       "scale": 0.45,
       "cornerRadius": 28,
-      "marginV": 420
+      "marginV": 420,
+      "borderW": 3,
+      "borderColor": "#FFFFFF33"
     },
     {
       "type": "title",

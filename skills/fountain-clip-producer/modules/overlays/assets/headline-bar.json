@@ -9,14 +9,19 @@
       "color": "#111111",
       "borderW": 0,
       "boxColor": "#FFFFFF",
-      "boxPad": 18,
+      "boxPad": 26,
       "position": "top-center",
       "marginV": 260,
       "start": 0,
       "end": 3.0,
       "fadeInMs": 150,
-      "fadeOutMs": 250
+      "fadeOutMs": 250,
+      "boxShape": "band"
     },
-    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+    {
+      "type": "progressBar",
+      "height": 12,
+      "color": "#FFFFFFD9"
+    }
   ]
 }

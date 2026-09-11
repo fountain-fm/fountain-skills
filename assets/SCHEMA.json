@@ -60,10 +60,6 @@
           "module": "skills/fountain-clip-producer/modules/brand/MODULE.md",
           "assets": [
             {
-              "name": "derive-palette.cpython-314.pyc",
-              "path": "skills/fountain-clip-producer/modules/brand/scripts/__pycache__/derive-palette.cpython-314.pyc"
-            },
-            {
               "name": "derive-palette.py",
               "path": "skills/fountain-clip-producer/modules/brand/scripts/derive-palette.py"
             }
@@ -214,16 +210,16 @@
               "path": "skills/fountain-clip-producer/modules/overlays/assets/headline-bar.json"
             },
             {
+              "name": "hook-card.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/hook-card.json"
+            },
+            {
               "name": "hook-title.json",
               "path": "skills/fountain-clip-producer/modules/overlays/assets/hook-title.json"
             },
             {
               "name": "launch-pack.json",
               "path": "skills/fountain-clip-producer/modules/overlays/assets/launch-pack.json"
-            },
-            {
-              "name": "lower-scrim.json",
-              "path": "skills/fountain-clip-producer/modules/overlays/assets/lower-scrim.json"
             },
             {
               "name": "pip-card.json",
@@ -244,10 +240,6 @@
             {
               "name": "sponsor-logo.json",
               "path": "skills/fountain-clip-producer/modules/overlays/assets/sponsor-logo.json"
-            },
-            {
-              "name": "build-overlays.cpython-314.pyc",
-              "path": "skills/fountain-clip-producer/modules/overlays/scripts/__pycache__/build-overlays.cpython-314.pyc"
             },
             {
               "name": "build-overlays.py",
