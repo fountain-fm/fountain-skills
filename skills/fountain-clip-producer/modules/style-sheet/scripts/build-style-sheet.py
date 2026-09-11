@@ -199,6 +199,11 @@ def main():
     parser.add_argument("--out", required=True, help="Output contact sheet (.jpg).")
     parser.add_argument("--at", type=float, help="Clip time to sample, in seconds. Defaults to a third of the way in.")
     parser.add_argument("--styles", help="Comma-separated preset names. Defaults to every preset.")
+    parser.add_argument(
+        "--brand-kit",
+        help="A kit file from module brand. Every tile is then drawn through the kit, which is how the "
+        "candidates for one show are compared.",
+    )
     parser.add_argument("--columns", type=int, default=4, help="Tiles per row. Default 4.")
     parser.add_argument("--tile-height", type=int, default=720, help="Tile height in pixels. Default 720.")
     parser.add_argument(
@@ -233,7 +238,10 @@ def main():
     for preset in presets(args.styles):
         name = preset.stem
         ass = work / f"{name}.ass"
-        built = run([sys.executable, str(BUILD_CAPTIONS), "--style", name, "--words", args.words, "--out", str(ass)])
+        build = [sys.executable, str(BUILD_CAPTIONS), "--style", name, "--words", args.words, "--out", str(ass)]
+        if args.brand_kit:
+            build += ["--brand-kit", args.brand_kit]
+        built = run(build)
         if built.returncode != 0:
             skipped.append((name, built.stderr.strip().splitlines()[-1] if built.stderr.strip() else "build failed"))
             continue
@@ -260,7 +268,10 @@ def main():
         fail("no preset rendered, so there is nothing to choose from")
 
     out = Path(args.out)
-    montage(args.magick, tiles, out, args.columns, args.tile_height, f"caption styles at {at:.1f}s")
+    title = f"caption styles at {at:.1f}s"
+    if args.brand_kit:
+        title = f"{title}, in the show's colours"
+    montage(args.magick, tiles, out, args.columns, args.tile_height, title)
 
     if args.emit_index:
         Path(args.emit_index).write_text(json.dumps({"at": at, "styles": index}, indent=2) + "\n")

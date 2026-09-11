@@ -58,7 +58,16 @@
           "name": "brand",
           "description": "Hold the colours, fonts, and assets of a show, so that every clip for it looks the same.",
           "module": "skills/fountain-clip-producer/modules/brand/MODULE.md",
-          "assets": []
+          "assets": [
+            {
+              "name": "derive-palette.cpython-314.pyc",
+              "path": "skills/fountain-clip-producer/modules/brand/scripts/__pycache__/derive-palette.cpython-314.pyc"
+            },
+            {
+              "name": "derive-palette.py",
+              "path": "skills/fountain-clip-producer/modules/brand/scripts/derive-palette.py"
+            }
+          ]
         },
         {
           "name": "captions",
@@ -128,10 +137,6 @@
             {
               "name": "word-pop.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
-            },
-            {
-              "name": "build-captions.cpython-314.pyc",
-              "path": "skills/fountain-clip-producer/modules/captions/scripts/__pycache__/build-captions.cpython-314.pyc"
             },
             {
               "name": "build-captions.py",
