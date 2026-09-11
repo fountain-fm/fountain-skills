@@ -76,11 +76,14 @@ The spec layers from the lowest priority to the highest: defaults, shape, preset
 `--shape` MUST name the shape of the export being captioned, because it sets the coordinate space that
 libass draws in: a portrait spec burned on a landscape export stretches every letter.
 The shape also decides where the words sit, so the position is right without anybody setting a margin.
-A portrait clip carries them a quarter of the frame up from the bottom, which clears the platform UI
-below and the face above, because a 9:16 crop of one speaker fills its middle with that face.
-A landscape clip carries them along the bottom, where the frame holds the whole room and nothing sits
-under them.
+A portrait post is watched inside the app's own furniture, and the words stay clear of it: the post
+caption, the handle and the audio line claim the bottom of the frame, and the reaction buttons claim
+the right edge.
+The margins of the portrait shape clear the worst of the four apps, and they leave the face clear too,
+because a 9:16 crop of one speaker fills the middle of the frame with that face.
+A landscape clip carries no such furniture, so its words sit along the bottom.
 Move them with an override only for a clip that needs it, such as a shot where the speaker sits low.
+The script warns when an override puts the words back under the furniture.
 A misspelled override path is a hard error, and `--check` rejects unreadable contrast or flicker on its own.
 
 Use `bold-social` when neither the request nor the brand kit names a preset: it reads on a phone at arm's

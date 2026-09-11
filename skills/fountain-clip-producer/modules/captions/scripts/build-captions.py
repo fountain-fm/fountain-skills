@@ -30,17 +30,38 @@ import sys
 from pathlib import Path
 
 # The shape of the export decides the coordinate space and where the words sit.
-# In portrait the words sit a quarter of the frame up from the bottom: high
-# enough to clear the platform UI, low enough to clear the face, which fills the
-# middle of a 9:16 crop of one speaker. In landscape the words belong along the bottom,
-# because the frame holds the whole room and nothing sits under them.
+#
+# A portrait clip is watched inside the app's own furniture, and the words have
+# to stay clear of it. Measured on a 1080x1920 frame, the bottom is claimed by
+# the post caption, the handle and the audio line - about 500px on Instagram
+# Reels, 384 on YouTube Shorts and 320 on TikTok - and the right edge by the
+# rail of reaction buttons, about 130px on Shorts and 120 on TikTok. The margins
+# below clear the worst of each, and the side margins match so that a centred
+# caption stays centred.
+#
+# A landscape clip carries no such furniture, so the words sit along the bottom.
+SAFE_BOTTOM = {"portrait": 500, "square": 120, "landscape": 60}
+
 SHAPES = {
-    "portrait": {"playResX": 1080, "playResY": 1920, "position": {"marginV": 480}},
-    "square": {"playResX": 1080, "playResY": 1080, "position": {"marginV": 130}},
-    "landscape": {"playResX": 1920, "playResY": 1080, "position": {"marginV": 110}},
+    "portrait": {
+        "playResX": 1080,
+        "playResY": 1920,
+        "position": {"marginV": 520, "marginL": 130, "marginR": 130},
+    },
+    "square": {
+        "playResX": 1080,
+        "playResY": 1080,
+        "position": {"marginV": 130, "marginL": 60, "marginR": 60},
+    },
+    "landscape": {
+        "playResX": 1920,
+        "playResY": 1080,
+        "position": {"marginV": 110, "marginL": 90, "marginR": 90},
+    },
 }
 
 DEFAULTS = {
+    "shape": "portrait",
     "playResX": 1080,
     "playResY": 1920,
     # Tokens the ASR lowercases that must render in their canonical case. Conservative
@@ -306,10 +327,11 @@ def validate_spec(spec):
             f"[{int(40 * scale)}, {int(140 * scale)}] for a {min(spec['playResX'], spec['playResY'])}px short edge"
         )
 
-    ui_zone = round(150 * spec["playResY"] / 1920)
-    if position["marginV"] < ui_zone:
+    safe_bottom = SAFE_BOTTOM[spec["shape"]]
+    if position["marginV"] < safe_bottom:
         warnings.append(
-            f"position.marginV {position['marginV']} sits inside the platform UI zone (bottom ~{ui_zone}px)"
+            f"position.marginV {position['marginV']} sits inside the app's own furniture, which claims "
+            f"the bottom {safe_bottom}px of a {spec['shape']} post"
         )
     if caption_top(spec) < spec["playResY"] * 0.25:
         warnings.append(
@@ -1128,6 +1150,7 @@ def main():
     args = parser.parse_args()
 
     spec = copy.deepcopy(DEFAULTS)
+    spec["shape"] = args.shape
     deep_merge(spec, copy.deepcopy(SHAPES[args.shape]))
     style_path = resolve_style(args.style)
     preset = json.loads(style_path.read_text())
