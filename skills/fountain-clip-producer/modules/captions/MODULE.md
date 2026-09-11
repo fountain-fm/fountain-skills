@@ -76,8 +76,8 @@ The spec layers from the lowest priority to the highest: defaults, shape, preset
 `--shape` MUST name the shape of the export being captioned, because it sets the coordinate space that
 libass draws in: a portrait spec burned on a landscape export stretches every letter.
 The shape also decides where the words sit, so the position is right without anybody setting a margin.
-A portrait clip carries them a third of the frame up from the bottom, which clears the platform UI below
-and the face above, because a 9:16 crop of one speaker fills its middle with that face.
+A portrait clip carries them a quarter of the frame up from the bottom, which clears the platform UI
+below and the face above, because a 9:16 crop of one speaker fills its middle with that face.
 A landscape clip carries them along the bottom, where the frame holds the whole room and nothing sits
 under them.
 Move them with an override only for a clip that needs it, such as a shot where the speaker sits low.

@@ -30,12 +30,12 @@ import sys
 from pathlib import Path
 
 # The shape of the export decides the coordinate space and where the words sit.
-# In portrait the words sit a third of the frame up from the bottom: high enough
-# to clear the platform UI, low enough to clear the face, which fills the middle
-# of a 9:16 crop of one speaker. In landscape the words belong along the bottom,
+# In portrait the words sit a quarter of the frame up from the bottom: high
+# enough to clear the platform UI, low enough to clear the face, which fills the
+# middle of a 9:16 crop of one speaker. In landscape the words belong along the bottom,
 # because the frame holds the whole room and nothing sits under them.
 SHAPES = {
-    "portrait": {"playResX": 1080, "playResY": 1920, "position": {"marginV": 640}},
+    "portrait": {"playResX": 1080, "playResY": 1920, "position": {"marginV": 480}},
     "square": {"playResX": 1080, "playResY": 1080, "position": {"marginV": 130}},
     "landscape": {"playResX": 1920, "playResY": 1080, "position": {"marginV": 110}},
 }
