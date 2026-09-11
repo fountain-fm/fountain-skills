@@ -10,7 +10,7 @@ Module **performance-review** looks backward: it turns the numbers of yesterday'
 in the preferences.
 Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs
 for skill **fountain-clip-finder**.
-The skill itself keeps the narratives level with the show first, because both modules read them.
+The skill itself updates the narratives first, because both modules read them.
 
 ## Input
 
@@ -23,7 +23,7 @@ The skill itself keeps the narratives level with the show first, because both mo
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
 - The report of the posts that wait, one time when the day's clips exist.
-- Updated preferences: the narratives brought level with the show, and the lessons of module
+- Updated preferences: the narratives, and the lessons of module
   **performance-review**.
 
 ## Housekeeping
@@ -40,7 +40,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Bring the Narratives section level with the show, because both modules read it.
+1. Update the Narratives section, because both modules read it.
 2. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
 3. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
 4. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain

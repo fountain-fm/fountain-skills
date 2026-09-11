@@ -76,7 +76,7 @@ The posts are the record, and the preferences are the memory.
    episode.
    Load each episode one time, however many clips came from it, and ask for them all at the same time.
 10. Record where the report reached at the end of the Reporting section, as the publish time of the
-    newest post it covered, e.g. `Reported up to 2026-08-17T16:41Z.`
+    newest post it covered, e.g. `- Reported up to 2026-08-17T16:41Z (AGENT-2026-08-18)`.
     Move it only when the report was sent.
 
 ## Additional notes

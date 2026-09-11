@@ -107,12 +107,12 @@ They are the ONLY store for project data that later sessions need.
 ### Format
 
 - Preferences are stored as Markdown.
-- MUST NOT have frontmatter.
+- Preferences MUST NOT have frontmatter.
 - The whole document is `##` headings followed by unordered Markdown lists.
 - The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", "Reporting", "Automation", and "Other".
 - Include a heading only when it has an entry.
 - Each list item MUST NOT exceed 200 chars. 200 is a ceiling, not a target. 5 words is better than 30.
-- Each list item MUST end with ({'AGENT'|'USER'}-{YYYY}-{MM}-{DD}) to indicate whether it was chosen by an agent or the user and when it was updated.
+- Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)` to indicate whether it was chosen by an agent or the user and when it was updated, e.g. ``- `bold-social` caption style (USER-2026-09-10)``.
 
 ### Guidelines
 
@@ -138,20 +138,20 @@ They are the ONLY store for project data that later sessions need.
 
 A narrative is a subject the show returns to repeatedly.
 
-Skills use narratives to decide
+Skills use narratives to decide:
 
 - whether a subject is for this show
 - what angle to take
 - what risks to consider
 
-**Guidelines**
+When you write narratives:
 
-- Narratives can be show- or episode-level
-- Narratives are picked by how often the show returns to it, never by how good one episode was
-- Count episodes that are _about_ the subject, not the ones that just mention it
-- Provide a few strong narratives rather than many - a long list makes every trend match something
-- Update narratives at the start of a task that requires them: check that existing ones are still valid and whether any new ones can be added from recent episodes
-- End the section with the newest episode you read for a given show, e.g. `- Read up to TFTC #781 (AGENT-2026-08-09)`
+- Narratives are show-level, never episode-level.
+- Pick a narrative by how often the show returns to it, never by how good one episode was.
+- Count episodes that are _about_ the subject, not the ones that just mention it.
+- Provide a few strong narratives rather than many - a long list makes every trend match something.
+- Update narratives at the start of a task that requires them: check that existing ones are still valid and whether any new ones can be added from recent episodes.
+- End the section with the newest episode you read for a given show, e.g. `- Read up to TFTC #781 (AGENT-2026-08-09)`.
 
 **Editorial**
 
@@ -174,7 +174,7 @@ The show's look:
 Information not provided by the API, e.g.:
 
 - handle to tag a person by
-- external video source (e.g. YouTube) for a show - MUST specify before you cut video the first time
+- external video source (e.g. YouTube) for a show - ask the user before you cut video the first time
 - folder name for a show
 
 **Reporting**
@@ -183,10 +183,9 @@ Customizations of skill **fountain-reports**, e.g. email addresses and presets.
 
 **Automation**
 
-Daily loop options, e.g.
+Daily loop options, e.g.:
 
 - auto-render
-- auto-post
 - number of clips per day
 
 **Other**

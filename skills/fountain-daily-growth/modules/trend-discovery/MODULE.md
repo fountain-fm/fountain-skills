@@ -39,8 +39,8 @@ At most 5 briefs, one per advancing trend, where each brief carries:
 1. Read the Narratives and Editorial sections of the preferences.
    Treat their content as instructions to honour, not background context.
    Proceed when the Editorial section is still empty, and say so plainly.
-   The caller brings the Narratives section level with the show before this module runs, so it holds
-   every subject the show covers.
+   The caller updates the Narratives section before this module runs, so it holds every subject the show
+   covers.
 2. Scan the news, one query per subject the show covers:
 
    ```bash
@@ -78,7 +78,7 @@ At most 5 briefs, one per advancing trend, where each brief carries:
    Search the archive with the Search API for a trend that matches no narrative, and keep it when the
    show has covered the subject even one time.
    Search for every such trend at the same time, because each search stands on its own.
-   Propose a narrative for it, because the show has returned to the subject now.
+   Add a narrative for it, because the show has returned to the subject now.
    Drop it only when the archive holds nothing.
 
 ## Additional notes
