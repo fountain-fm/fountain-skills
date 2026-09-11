@@ -19,7 +19,8 @@
       "end": 3.0,
       "fadeInMs": 240,
       "fadeOutMs": 320,
-      "maxLines": 3
+      "maxLines": 3,
+      "boxMargin": 90
     },
     {
       "type": "progressBar",

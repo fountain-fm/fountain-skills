@@ -79,8 +79,12 @@ Text near the caption zone and a layer in the right tenth of the frame raise a w
 because the platform draws its own buttons in that rail.
 A title too long for one line is wrapped, and set smaller until it fits the lines it is allowed, because
 nobody who writes a hook can see the frame it lands in.
-`boxFullWidth` draws one band across the frame behind every line, which is the news-clip look;
-the box of `drawtext` hugs each line on its own and leaves a ragged edge.
+`boxShape` says what the `boxColor` paints: the text, a `band` with square ends, or a rounded `card`.
+The box of `drawtext` hugs each line on its own and leaves a ragged edge, so a band and a card are both
+measured from the drawn glyphs instead: one clean edge around every line, centred on the ink rather than
+on the typeset box, which carries leading the letters do not and sits the backing high on its own words.
+Both hug the text rather than the frame, because a backing sized to the frame is far wider than a short
+hook needs, and `boxMargin` is how close either may come to the edge.
 `blurFill` takes a `borderW`, and a card needs one whenever the artwork and the background are both
 dark, or the cover reads as a hole in the frame rather than as a card on it.
 

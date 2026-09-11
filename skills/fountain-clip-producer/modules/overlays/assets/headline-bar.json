@@ -16,7 +16,8 @@
       "end": 3.0,
       "fadeInMs": 150,
       "fadeOutMs": 250,
-      "boxShape": "band"
+      "boxShape": "band",
+      "boxMargin": 90
     },
     {
       "type": "progressBar",

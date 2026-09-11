@@ -58,6 +58,7 @@ LAYER_DEFAULTS = {
         # what the boxColor paints: the text itself, a band across the frame, or a rounded card
         "boxShape": "text",  # text | band | card
         "cardRadius": 28,
+        "boxMargin": 0,  # how close a band or a card may come to the edge of the frame
         "position": "top-center",
         "marginH": 60,
         "marginV": 300,
@@ -246,10 +247,14 @@ def rounded_steps(radius):
     return ["format=rgba", f"geq=r='r(X,Y)':g='g(X,Y)':b='b(X,Y)':a='{rounded_alpha(radius)}'"]
 
 
-def text_width(text, font_file, size, magick):
-    """The drawn width of a line, measured in the font that will draw it."""
+def text_box(text, font_file, size, magick):
+    """The inked width and height of a line, measured in the font that will draw it.
+
+    Trimmed, because the typeset box carries leading that the drawn glyphs do not,
+    and a backing sized to that box sits visibly high on the text inside it.
+    """
     if not (font_file and magick):
-        return None
+        return None, None
     proc = subprocess.run(
         [
             magick,
@@ -260,8 +265,10 @@ def text_width(text, font_file, size, magick):
             "-pointsize",
             str(size),
             f"label:{text}",
+            "-trim",
+            "+repage",
             "-format",
-            "%w",
+            "%w %h",
             "info:",
         ],
         check=False,
@@ -269,9 +276,14 @@ def text_width(text, font_file, size, magick):
         capture_output=True,
     )
     try:
-        return int(proc.stdout.strip())
+        width, height = proc.stdout.strip().split()
+        return int(width), int(height)
     except ValueError:
-        return None
+        return None, None
+
+
+def text_width(text, font_file, size, magick):
+    return text_box(text, font_file, size, magick)[0]
 
 
 def wrap_text(text, font_file, size, budget, magick):
@@ -518,38 +530,35 @@ def drawtext_filter(layer, text, size, y_offset, duration, timed=True):
 
 
 def backing_box(layer, lines, size, step, args):
-    """Where the thing behind a title sits, measured from the lines rather than the glyphs.
+    """Where the thing behind a title sits, and how big, measured from the drawn glyphs.
 
     drawtext can only box what it draws, which gives every line its own width and
     leaves a ragged edge. A band and a card are placed before a glyph exists, so
-    both have one clean edge whatever the text turns out to be.
+    both keep one clean edge whatever the text turns out to be.
+
+    Both hug the text rather than the frame: a backing sized to the frame is far
+    wider than a short hook needs, and one sized to the typeset box rather than
+    to the ink sits visibly high on the words inside it.
     """
     pad = layer["boxPad"]
-    height = step * (len(lines) - 1) + round(size * 1.2) + 2 * pad
-    vertical = layer["position"].split("-")[0]
-    top = {
-        "top": layer["marginV"] - pad,
-        "middle": round((args.height - height) / 2),
-        "bottom": args.height - height - layer["marginV"] + pad,
-    }[vertical]
-    return max(0, top), height
-
-
-def band_filter(layer, top, height, end):
-    return (
-        f"drawbox=x=0:y={top}:w=iw:h={height}:"
-        f"color={ff_color(layer['boxColor'], 'box color')}:t=fill:"
-        f"enable='between(t,{layer['start']},{end})'"
-    )
-
-
-def card_width(layer, lines, size, args, budget):
-    """A card hugs its longest line, so it never floats wider than the words in it."""
-    widest = 0
+    widest, last_ink = 0, None
     for line in lines:
-        measured = text_width(line, layer["fontFile"], size, args.magick)
-        widest = max(widest, measured if measured is not None else len(line) * size * 0.62)
-    return min(round(widest) + 4 * layer["boxPad"], budget + 2 * layer["boxPad"])
+        width, height = text_box(line, layer["fontFile"], size, args.magick)
+        widest = max(widest, width if width is not None else len(line) * size * 0.62)
+        last_ink = height if height is not None else round(size * 0.75)
+    ceiling = args.width - 2 * layer["boxMargin"]
+    box_w = min(round(widest) + 2 * pad, ceiling)
+    box_h = step * (len(lines) - 1) + last_ink + 2 * pad
+
+    # drawtext puts the top of the first line's ink at its own y, so the backing
+    # starts one pad above that and ends one pad below the last line's ink.
+    vertical = layer["position"].split("-")[0]
+    ink_top = {
+        "top": layer["marginV"],
+        "middle": round((args.height - (box_h - 2 * pad)) / 2),
+        "bottom": args.height - layer["marginV"] - (box_h - 2 * pad),
+    }[vertical]
+    return max(0, ink_top - pad), box_w, box_h, ink_top
 
 
 def build_command(layers, args):
@@ -638,28 +647,29 @@ def build_command(layers, args):
         elif kind == "title":
             out = next_label()
             budget = args.width - 2 * layer["marginH"]
-            lines, size = fit_lines(layer, layer["fontFile"], budget, args.magick)
-            step = round(size * 1.25)
-            end = layer["end"] if layer["end"] is not None else (duration if duration is not None else 1e9)
             shape = layer["boxShape"] if layer["boxColor"] else "text"
-            filters = []
-            if shape == "band":
-                top, height = backing_box(layer, lines, size, step, args)
-                filters.append(band_filter(layer, top, height, end))
-                layer = {**layer, "boxColor": None}
-            elif shape == "card":
-                top, height = backing_box(layer, lines, size, step, args)
-                width = card_width(layer, lines, size, args, budget)
-                card = f"[card{label_n}]"
-                graph.append(
-                    f"color=c={ff_color(layer['boxColor'], 'box color')}:s={width}x{height}:"
-                    f"d={duration},{','.join(rounded_steps(layer['cardRadius']))}{card}"
-                )
+            if shape in {"band", "card"}:
+                # The words have to fit inside the backing, not merely inside the frame.
+                budget = min(budget, args.width - 2 * layer["boxMargin"] - 2 * layer["boxPad"])
+            lines_of, size = fit_lines(layer, layer["fontFile"], budget, args.magick)
+            step = round(size * 1.25)
+            end_t = layer["end"] if layer["end"] is not None else (duration if duration is not None else 1e9)
+            if shape in {"band", "card"}:
+                top, box_w, box_h, ink_top = backing_box(layer, lines_of, size, step, args)
+                radius = layer["cardRadius"] if shape == "card" else 0
+                steps = [f"color=c={ff_color(layer['boxColor'], 'box color')}:s={box_w}x{box_h}:d={duration}"]
+                if radius > 0:
+                    steps += rounded_steps(radius)
+                backing = f"[box{label_n}]"
+                graph.append(f"{','.join(steps)}{backing}")
                 mid = next_label()
-                graph.append(f"{chain}{card}overlay=x=(W-w)/2:y={top}:enable='between(t,{layer['start']},{end})'{mid}")
+                graph.append(
+                    f"{chain}{backing}overlay=x=(W-w)/2:y={top}:enable='between(t,{layer['start']},{end_t})'{mid}"
+                )
                 chain = mid
-                layer = {**layer, "boxColor": None}
-            filters += [drawtext_filter(layer, line, size, i * step, duration) for i, line in enumerate(lines)]
+                # The text is re-anchored to the ink line the backing was built around.
+                layer = {**layer, "boxColor": None, "marginV": ink_top, "position": "top-center"}
+            filters = [drawtext_filter(layer, line, size, i * step, duration) for i, line in enumerate(lines_of)]
             graph.append(f"{chain}{','.join(filters)}{out}")
             chain = out
         elif kind == "watermark":
