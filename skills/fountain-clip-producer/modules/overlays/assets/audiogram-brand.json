@@ -1,0 +1,44 @@
+{
+  "name": "audiogram-brand",
+  "description": "A solid brand background with the artwork small and centred, and a meter that grows from a centre line. The quiet, editorial end of the audiograms, and the one to use when the artwork is busy. Needs layers.0.asset; set layers.0.background to the show's colour.",
+  "layers": [
+    {
+      "type": "blurFill",
+      "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
+      "background": "#101016",
+      "scale": 0.45,
+      "cornerRadius": 28,
+      "marginV": 420
+    },
+    {
+      "type": "title",
+      "text": "REPLACE WITH EPISODE TITLE",
+      "size": 46,
+      "position": "top-center",
+      "marginV": 950,
+      "marginH": 130,
+      "start": 0,
+      "end": null,
+      "fadeInMs": 0,
+      "fadeOutMs": 0,
+      "borderW": 0,
+      "maxLines": 2
+    },
+    {
+      "type": "audiogram",
+      "width": 820,
+      "height": 140,
+      "color": "#FFFFFFCC",
+      "waveMode": "bars",
+      "bars": 44,
+      "mirror": true,
+      "position": "bottom-center",
+      "marginV": 660
+    },
+    {
+      "type": "progressBar",
+      "height": 10,
+      "color": "#FFFFFFB3"
+    }
+  ]
+}

@@ -186,12 +186,20 @@
           "module": "skills/fountain-clip-producer/modules/overlays/MODULE.md",
           "assets": [
             {
-              "name": "audiogram-artwork.json",
-              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram-artwork.json"
+              "name": "audiogram-brand.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram-brand.json"
             },
             {
-              "name": "audiogram.json",
-              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram.json"
+              "name": "audiogram-cover.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram-cover.json"
+            },
+            {
+              "name": "audiogram-headline.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram-headline.json"
+            },
+            {
+              "name": "audiogram-minimal.json",
+              "path": "skills/fountain-clip-producer/modules/overlays/assets/audiogram-minimal.json"
             },
             {
               "name": "guest-intro.json",
@@ -236,6 +244,10 @@
             {
               "name": "sponsor-logo.json",
               "path": "skills/fountain-clip-producer/modules/overlays/assets/sponsor-logo.json"
+            },
+            {
+              "name": "build-overlays.cpython-314.pyc",
+              "path": "skills/fountain-clip-producer/modules/overlays/scripts/__pycache__/build-overlays.cpython-314.pyc"
             },
             {
               "name": "build-overlays.py",

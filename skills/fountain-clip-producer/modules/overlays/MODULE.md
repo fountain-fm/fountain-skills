@@ -13,6 +13,7 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 ## Input
 
 - The export to decorate, usually `clip-vertical.mp4`, and its duration.
+- The artwork of the show, for a clip whose source carries no video.
 - Optional: a preset name, the text of a title, a brand kit, and per-clip overrides.
 
 ## Output
@@ -23,6 +24,7 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 ## Requirements
 
 - ffmpeg built with drawtext and fontconfig. On macOS that is the Homebrew `ffmpeg-full` formula.
+- ImageMagick, to measure a title before it is drawn.
 - Python 3.11 or later.
 
 ## Process
@@ -65,7 +67,7 @@ These are the layer types:
 - `scrim` fades a dark gradient over the lower or the upper third, so that a caption stays legible on
   bright footage or over a graphic burned into the picture.
 - `progressBar` sweeps a thin bar across the clip.
-- `audiogram` draws a waveform, for a source that carries no video.
+- `audiogram` draws a meter of the sound, for a source that carries no video.
 - `blurFill` is the base for footage that is not vertical, and it spans the blurred fill and the card look.
 
 The compiler validates before it emits.
@@ -73,6 +75,24 @@ An unknown layer type, a misspelled field, and a missing asset are hard errors.
 `blurFill` MUST be the first layer, because it builds the base.
 Text near the caption zone and a layer in the right tenth of the frame raise a warning,
 because the platform draws its own buttons in that rail.
+A title too long for one line is wrapped, and set smaller until it fits the lines it is allowed, because
+nobody who writes a hook can see the frame it lands in.
+
+A source with no video needs one of the audiogram packages, and each of them is built around the show's
+artwork rather than around the meter.
+That is what the shows doing this well all do: the artwork, the episode title and the words carry the
+clip, and the meter only says that the picture is not frozen.
+`audiogram-cover` is the one to reach for, because it needs nothing but the artwork and the title.
+Take `audiogram-headline` when the clip leads with a claim, `audiogram-brand` when the artwork is too
+busy to sit behind text, and `audiogram-minimal` when the cover should do the talking alone.
+Every one of them needs `layers.0.asset` pointed at the artwork file, which the agent downloads from the
+show's `info.image`.
+
+The meter reads as a meter only when it has few bars and they are fat, so `bars` is dozens and never
+hundreds, and `barGap` is what makes a bar a bar.
+Speech fills a fraction of a full-scale meter, so `gain` stretches the part that is drawn; raise it for a
+quiet clip and lower it if the bars hit the ceiling.
+`mirror` grows them from a centre line instead of from the floor.
 
 The convention on a podcast clip is restraint.
 A simple lower third reads well.

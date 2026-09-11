@@ -1,0 +1,31 @@
+{
+  "name": "audiogram-minimal",
+  "description": "Artwork, a thin centre-line meter, and nothing else. For a show whose cover does the talking, and the only audiogram that carries no text. Needs layers.0.asset.",
+  "layers": [
+    {
+      "type": "blurFill",
+      "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
+      "background": "blur",
+      "sigma": 55,
+      "scale": 0.52,
+      "cornerRadius": 32,
+      "marginV": 520
+    },
+    {
+      "type": "audiogram",
+      "width": 560,
+      "height": 80,
+      "color": "#FFFFFFB3",
+      "waveMode": "bars",
+      "bars": 28,
+      "mirror": true,
+      "position": "bottom-center",
+      "marginV": 690
+    },
+    {
+      "type": "progressBar",
+      "height": 8,
+      "color": "#FFFFFF99"
+    }
+  ]
+}

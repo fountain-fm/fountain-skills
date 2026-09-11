@@ -8,12 +8,13 @@
       "width": 420,
       "opacity": 1.0,
       "position": "bottom-center",
-      "marginH": 60,
+      "marginH": 150,
       "marginV": 300,
       "start": 1.5,
       "end": 6.5,
       "fadeInMs": 400,
-      "fadeOutMs": 400
+      "fadeOutMs": 400,
+      "cornerRadius": 20
     }
   ]
 }
