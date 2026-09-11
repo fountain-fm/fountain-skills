@@ -14,7 +14,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 ## Input
 
 - The word timings of the clip, made from its own audio and rebased so the first word starts at zero.
-- The export to caption, usually `clip-vertical.mp4`.
+- The export to caption, usually `clip-vertical.mp4`, and its shape.
 - Optional: a preset name, a brand kit from module **brand**, and per-clip overrides.
 
 ## Output
@@ -41,7 +41,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 3. Compile the spec and the words into the ASS file:
 
    ```bash
-   scripts/build-captions.py --style word-pop --words words.json \
+   scripts/build-captions.py --style word-pop --shape portrait --words words.json \
      --override colors.highlight=#FFD400 --override font.size=84 \
      --out captions.ass --emit-lines caption-lines.json --emit-spec resolved-style.json
    ```
@@ -71,7 +71,16 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 ## Additional notes
 
-The spec layers from the lowest priority to the highest: defaults, preset, brand kit, per-clip override.
+The spec layers from the lowest priority to the highest: defaults, shape, preset, brand kit, per-clip override.
+
+`--shape` MUST name the shape of the export being captioned, because it sets the coordinate space that
+libass draws in: a portrait spec burned on a landscape export stretches every letter.
+The shape also decides where the words sit, so the position is right without anybody setting a margin.
+A portrait clip carries them a third of the frame up from the bottom, which clears the platform UI below
+and the face above, because a 9:16 crop of one speaker fills its middle with that face.
+A landscape clip carries them along the bottom, where the frame holds the whole room and nothing sits
+under them.
+Move them with an override only for a clip that needs it, such as a shot where the speaker sits low.
 A misspelled override path is a hard error, and `--check` rejects unreadable contrast or flicker on its own.
 
 Use `bold-social` when neither the request nor the brand kit names a preset: it reads on a phone at arm's

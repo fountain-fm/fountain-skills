@@ -24,8 +24,7 @@
   "position": {
     "alignment": "bottom-center",
     "marginL": 70,
-    "marginR": 70,
-    "marginV": 240
+    "marginR": 70
   },
   "grouping": {
     "maxWords": 5,

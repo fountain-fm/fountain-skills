@@ -29,6 +29,17 @@ import subprocess
 import sys
 from pathlib import Path
 
+# The shape of the export decides the coordinate space and where the words sit.
+# In portrait the words sit a third of the frame up from the bottom: high enough
+# to clear the platform UI, low enough to clear the face, which fills the middle
+# of a 9:16 crop of one speaker. In landscape the words belong along the bottom,
+# because the frame holds the whole room and nothing sits under them.
+SHAPES = {
+    "portrait": {"playResX": 1080, "playResY": 1920, "position": {"marginV": 640}},
+    "square": {"playResX": 1080, "playResY": 1080, "position": {"marginV": 130}},
+    "landscape": {"playResX": 1920, "playResY": 1080, "position": {"marginV": 110}},
+}
+
 DEFAULTS = {
     "playResX": 1080,
     "playResY": 1920,
@@ -285,17 +296,26 @@ def validate_spec(spec):
         elif ratio < 4.5:
             warnings.append(f"primary/backdrop contrast {ratio:.1f}:1 is below the 4.5:1 accessibility target")
 
-    scale = spec["playResX"] / 1080
+    # Readability runs against the short edge of the frame, and never the width:
+    # a landscape export is 1920 wide and still shows the same size of letter as
+    # a portrait one, because both are 1080 on their short edge.
+    scale = min(spec["playResX"], spec["playResY"]) / 1080
     if not 40 * scale <= font["size"] <= 140 * scale:
         failures.append(
             f"font.size {font['size']} outside readable range "
-            f"[{int(40 * scale)}, {int(140 * scale)}] for {spec['playResX']}px width"
+            f"[{int(40 * scale)}, {int(140 * scale)}] for a {min(spec['playResX'], spec['playResY'])}px short edge"
         )
 
-    if position["marginV"] < 150:
-        warnings.append(f"position.marginV {position['marginV']} sits inside the platform UI zone (bottom ~150px)")
-    if position["marginV"] > spec["playResY"] * 0.5:
-        warnings.append(f"position.marginV {position['marginV']} places captions above mid-frame")
+    ui_zone = round(150 * spec["playResY"] / 1920)
+    if position["marginV"] < ui_zone:
+        warnings.append(
+            f"position.marginV {position['marginV']} sits inside the platform UI zone (bottom ~{ui_zone}px)"
+        )
+    if caption_top(spec) < spec["playResY"] * 0.25:
+        warnings.append(
+            f"position.marginV {position['marginV']} puts the words in the top quarter of the frame, "
+            f"where they cover a face"
+        )
 
     if grouping["maxWords"] > 6:
         warnings.append(
@@ -590,6 +610,16 @@ def peak_scale(spec):
     if kind not in WORD_LEVEL_TYPES and kind not in {"karaoke-fill", "highlight-sweep", "typewriter"}:
         scale = max(scale, emphasis["scalePct"] / 100)
     return scale
+
+
+def caption_top(spec):
+    """How far down the frame the words sit, whichever edge the margin is measured from."""
+    vertical = spec["position"]["alignment"].split("-")[0]
+    if vertical == "top":
+        return spec["position"]["marginV"]
+    if vertical == "middle":
+        return spec["playResY"] / 2
+    return spec["playResY"] - spec["position"]["marginV"]
 
 
 def safe_width(spec):
@@ -1061,6 +1091,12 @@ def main():
         default="bold-social",
         help="Preset name (from modules/captions/assets/) or path to a style spec JSON. Defaults to bold-social.",
     )
+    parser.add_argument(
+        "--shape",
+        choices=tuple(SHAPES),
+        default="portrait",
+        help="The shape of the export being captioned. Sets the coordinate space and where the words sit.",
+    )
     parser.add_argument("--words", help="Word-timings JSON for the clip span. Required unless --check.")
     parser.add_argument(
         "--brand-kit",
@@ -1092,6 +1128,7 @@ def main():
     args = parser.parse_args()
 
     spec = copy.deepcopy(DEFAULTS)
+    deep_merge(spec, copy.deepcopy(SHAPES[args.shape]))
     style_path = resolve_style(args.style)
     preset = json.loads(style_path.read_text())
     deep_merge(spec, preset)
@@ -1175,7 +1212,7 @@ def main():
 
     print(
         f"{args.out}: {len(events)} events from {len(words)} words in {len(groups)} groups "
-        f"({spec['name']}, {spec['animation']['type']})"
+        f"({spec['name']}, {spec['animation']['type']}, {args.shape})"
     )
     return 0
 

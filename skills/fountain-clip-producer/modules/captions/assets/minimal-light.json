@@ -21,8 +21,7 @@
   "position": {
     "alignment": "bottom-center",
     "marginL": 90,
-    "marginR": 90,
-    "marginV": 210
+    "marginR": 90
   },
   "grouping": {
     "maxWords": 6,

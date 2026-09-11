@@ -20,8 +20,7 @@
   "position": {
     "alignment": "bottom-center",
     "marginL": 70,
-    "marginR": 70,
-    "marginV": 250
+    "marginR": 70
   },
   "grouping": {
     "maxWords": 5
