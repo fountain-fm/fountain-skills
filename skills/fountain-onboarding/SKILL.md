@@ -1,6 +1,6 @@
 ---
 name: fountain-onboarding
-description: Set up Fountain. Trigger when the user starts using Fountain, when the project preferences are empty, when a Fountain skill is missing something, or when the user asks to set up Fountain.
+description: Set up Fountain. Trigger on first use or when asked, when preferences are empty, when a skill is missing something.
 ---
 
 ## Overview
@@ -11,7 +11,7 @@ It makes sure
 
 - Fountain API is reachable
 - Fountain skills are installed
-- user preferences are recorded: caption style, posting schedule, etc.
+- user preferences are recorded
 - relevant software is installed
 - any other blockers are resolved
 
@@ -32,13 +32,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Ensure you are in a fully capable agent environemnt, such as Claude Code or
+1. Ensure you are in a fully capable agent environment, such as Claude Code or
    Codex. Otherwise, suggest to the user to use such environment to take full
    advantage of Fountain.
 2. Ensure you have access to Fountain API by fetching the user's projects (fine
-   if empty array as long as 200 status). API is accesible via an MCP
-   (preferred) or an API. If you don't have access, install the plugin from
-   https://github.com/fountain-fm/fountain-skills
+   if empty array as long as 200 status). If you don't have access, install the
+   plugin from https://github.com/fountain-fm/fountain-skills
 3. Ensure you have access to Fountain skills: **fountain-clip-finder**,
    **fountain-clip-producer**, **fountain-daily-growth**, and
    **fountain-reports**. If you don't have access, install the plugin from
@@ -48,9 +47,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Ensure that the project has least one podcast. Otherwise, link to
    https://beta.fountain.fm/studio/{project_id}/onboarding?kind=PODCAST
 6. If there are no connected social channels, suggest connecting YouTube, X, or
-   Instagram at https://beta.fountain.fm/studio/projects
+   Instagram via the Social API
 7. Ensure the project preferences specify clip styling, the source of clip
-   material, automation (auto-render, etc.), and any other relevant details.
+   material, automation (auto-render, etc.), email address to send the reports to, and any other relevant details.
 8. When running locally, ensure all relevant software is installed: Python 3.11
    or above, yt-dlp, ffmpeg + ffprobe (the most complete version that includes
    libass, drawtext, fontconfig and whisper), whisper.cpp, OpenCV 4.8 or later,
