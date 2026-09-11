@@ -17,7 +17,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 - The link that every post MUST carry, when the caller gives one.
 - The scores from module **discovery** and module **boundaries**, and each flag.
 - The show's connected channels, via the Social API.
-- Voice notes from the Editorial section and confirmed handles from the Accounts section of the preferences.
+- Voice notes from the Editorial section and handles from the Accounts section of the preferences.
 - The trend and its sources, when a caller found the clip for a news story.
 
 ## Output

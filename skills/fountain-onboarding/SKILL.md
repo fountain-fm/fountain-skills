@@ -49,17 +49,17 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 6. If there are no connected social channels, suggest connecting YouTube, X, or Instagram via the Social API.
 7. Ensure the project preferences specify the source of clip material, automation (auto-render, etc.),
    email addresses to send the reports to, and any other relevant details.
-8. Write out brand guidelines by researching the look of the show: artwork, website, existing clips.
+8. When running locally, ensure all relevant software is installed: Python 3.11 or above, yt-dlp, ffmpeg + ffprobe
+   (the most complete version that includes libass, drawtext, fontconfig and whisper, e.g. Homebrew `ffmpeg-full`),
+   OpenCV 4.8 or later, ImageMagick, and a whisper.cpp model file (`ggml-base.en.bin` in `~/.cache/whisper`).
+   If something is missing, attempt to install it yourself.
+   Otherwise, make it easy for the user to install it themselves, even if they are non-technical.
+9. Write out brand guidelines by researching the look of the show: artwork, website, existing clips.
    Choose the caption style (using skill **fountain-clip-producer**), color, and font.
    Record the guidelines, and the logo URLs if available.
    Don't include logos in the clip settings unless existing clips have them.
    Present a mockup of what the clip will look like.
    Offer to customize: https://beta.fountain.fm/docs/styling-clips.
-9. When running locally, ensure all relevant software is installed: Python 3.11 or above, yt-dlp, ffmpeg + ffprobe
-   (the most complete version that includes libass, drawtext, fontconfig and whisper, e.g. Homebrew `ffmpeg-full`),
-   OpenCV 4.8 or later, ImageMagick, and a whisper.cpp model file (`ggml-base.en.bin` in `~/.cache/whisper`).
-   If something is missing, attempt to install it yourself.
-   Otherwise, make it easy for the user to install it themselves, even if they are non-technical.
 10. Set up automatic daily growth using skill **fountain-daily-growth**.
     Record its time and the machine that runs it under Automation.
 
@@ -82,5 +82,8 @@ Fountain defaults:
 - `performance` and `review-posts-simple` as two separate reports, under Reporting.
 - Auto-render on, under Automation.
 - 3 clips per day, under Automation.
+
+When no user is present, e.g. in a scheduled run, do only the steps that need no answer from the user.
+Report what is still missing, so that the user can complete it in the next chat.
 
 When this skill is triggered as part of a specific task, explain the need for going through this.
