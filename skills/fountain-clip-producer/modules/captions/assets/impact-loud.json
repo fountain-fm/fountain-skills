@@ -4,7 +4,7 @@
   "font": {
     "family": "Anton",
     "size": 96,
-    "bold": true,
+    "bold": false,
     "case": "upper"
   },
   "colors": {

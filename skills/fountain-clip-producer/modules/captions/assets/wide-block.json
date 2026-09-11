@@ -1,0 +1,27 @@
+{
+  "name": "wide-block",
+  "description": "Wide heavy grotesque in cream on a near-black block, three words at a time. The most solid style here, and the one that survives the busiest footage.",
+  "font": {
+    "family": "Archivo Black",
+    "size": 76,
+    "bold": false,
+    "case": "upper"
+  },
+  "colors": {
+    "primary": "#FFF4E0",
+    "highlight": "#FFB020",
+    "outline": "#0E0E12",
+    "box": "#0E0E12"
+  },
+  "border": {
+    "style": "box",
+    "outline": 14,
+    "shadow": 0
+  },
+  "grouping": {
+    "maxWords": 3
+  },
+  "animation": {
+    "type": "none"
+  }
+}

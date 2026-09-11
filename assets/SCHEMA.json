@@ -74,8 +74,8 @@
               "path": "skills/fountain-clip-producer/modules/captions/assets/bounce-in.json"
             },
             {
-              "name": "clean-editorial.json",
-              "path": "skills/fountain-clip-producer/modules/captions/assets/clean-editorial.json"
+              "name": "broadsheet.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/broadsheet.json"
             },
             {
               "name": "current-word.json",
@@ -84,6 +84,10 @@
             {
               "name": "glow-bounce.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/glow-bounce.json"
+            },
+            {
+              "name": "glow-word.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/glow-word.json"
             },
             {
               "name": "hormozi.json",
@@ -98,6 +102,10 @@
               "path": "skills/fountain-clip-producer/modules/captions/assets/karaoke-fill.json"
             },
             {
+              "name": "marker.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/marker.json"
+            },
+            {
               "name": "minimal-light.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/minimal-light.json"
             },
@@ -106,20 +114,24 @@
               "path": "skills/fountain-clip-producer/modules/captions/assets/pill-karaoke.json"
             },
             {
-              "name": "speaker-duo.json",
-              "path": "skills/fountain-clip-producer/modules/captions/assets/speaker-duo.json"
-            },
-            {
-              "name": "tiktok-style.json",
-              "path": "skills/fountain-clip-producer/modules/captions/assets/tiktok-style.json"
+              "name": "stadium.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/stadium.json"
             },
             {
               "name": "typewriter.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/typewriter.json"
             },
             {
+              "name": "wide-block.json",
+              "path": "skills/fountain-clip-producer/modules/captions/assets/wide-block.json"
+            },
+            {
               "name": "word-pop.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
+            },
+            {
+              "name": "build-captions.cpython-314.pyc",
+              "path": "skills/fountain-clip-producer/modules/captions/scripts/__pycache__/build-captions.cpython-314.pyc"
             },
             {
               "name": "build-captions.py",
@@ -283,8 +295,20 @@
           "path": "skills/fountain-clip-producer/assets/fonts/anton-regular.ttf"
         },
         {
+          "name": "archivo-black-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/archivo-black-regular.ttf"
+        },
+        {
+          "name": "bebas-neue-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/bebas-neue-regular.ttf"
+        },
+        {
           "name": "courier-prime-regular.ttf",
           "path": "skills/fountain-clip-producer/assets/fonts/courier-prime-regular.ttf"
+        },
+        {
+          "name": "dm-serif-display-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/dm-serif-display-regular.ttf"
         },
         {
           "name": "montserrat-black.ttf",
@@ -299,6 +323,18 @@
           "path": "skills/fountain-clip-producer/assets/fonts/montserrat-regular.ttf"
         },
         {
+          "name": "permanent-marker-regular.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/permanent-marker-regular.ttf"
+        },
+        {
+          "name": "poppins-bold.ttf",
+          "path": "skills/fountain-clip-producer/assets/fonts/poppins-bold.ttf"
+        },
+        {
+          "name": "apache-permanent-marker.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/apache-permanent-marker.txt"
+        },
+        {
           "name": "mit-yunet.txt",
           "path": "skills/fountain-clip-producer/assets/licences/mit-yunet.txt"
         },
@@ -307,12 +343,28 @@
           "path": "skills/fountain-clip-producer/assets/licences/ofl-anton.txt"
         },
         {
+          "name": "ofl-archivo-black.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-archivo-black.txt"
+        },
+        {
+          "name": "ofl-bebas-neue.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-bebas-neue.txt"
+        },
+        {
           "name": "ofl-courier-prime.txt",
           "path": "skills/fountain-clip-producer/assets/licences/ofl-courier-prime.txt"
         },
         {
+          "name": "ofl-dm-serif-display.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-dm-serif-display.txt"
+        },
+        {
           "name": "ofl-montserrat.txt",
           "path": "skills/fountain-clip-producer/assets/licences/ofl-montserrat.txt"
+        },
+        {
+          "name": "ofl-poppins.txt",
+          "path": "skills/fountain-clip-producer/assets/licences/ofl-poppins.txt"
         },
         {
           "name": "face-detection-yunet-2023mar.onnx",

@@ -88,8 +88,23 @@ A misspelled override path is a hard error, and `--check` rejects unreadable con
 
 Use `bold-social` when neither the request nor the brand kit names a preset: it reads on a phone at arm's
 length, and it animates nothing that can go wrong.
-The presets in `assets` are starting points, each carries its own description, and `hormozi` wants 3 to 5
-words marked `"emphasize": true`.
+Show the user module **style-sheet** rather than this list when they have not chosen, because the
+descriptions in `assets` say what a style is for and only the render says what it looks like.
+
+Each preset owns one job, and no two of them differ by a knob alone:
+
+- Nothing moves: `bold-social` reads anywhere, `broadsheet` carries authority in a display serif,
+  `wide-block` survives the busiest footage on a solid block, `minimal-light` stays out of the way.
+- One word at a time: `word-pop` scales in, `bounce-in` rises, `impact-loud` shouts, `marker` is written
+  by hand, and `glow-bounce` burns.
+- The phrase stays and the spoken word is marked: by colour in `current-word`, by a pill in
+  `pill-karaoke`, by a halo in `glow-word`, by filling in `karaoke-fill`, and across the line in `stadium`.
+- `typewriter` reveals a letter at a time, and `hormozi` wants 3 to 5 words marked `"emphasize": true`.
+
+The script colours each speaker differently and labels them, through `colors.speakers` and
+`grouping.speakerLabels`.
+No preset uses either, because nothing gives this skill the speaker of a word.
+Set them as overrides on the day something does.
 
 These are the text rules, and the default mode is faithful-clean.
 The script owns the mechanical ones - safe because the audio still carries every word: it drops "um" and

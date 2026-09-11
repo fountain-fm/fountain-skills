@@ -686,15 +686,17 @@ def resolve_font_file(spec, explicit=None):
         return Path(explicit), None
     family, bold = spec["font"]["family"], spec["font"]["bold"]
     bundled = bundled_fonts_dir()
-    names = {
-        "Montserrat Black": "montserrat-black.ttf",
-        "Anton": "anton-regular.ttf",
-        "Courier Prime": "courier-prime-regular.ttf",
-        "Montserrat": "montserrat-bold.ttf" if bold else "montserrat-regular.ttf",
-    }
-    candidate = bundled / names.get(family, "")
-    if candidate.is_file():
-        return candidate, None
+    # A bundled file is named after its family, so a new font needs no entry in
+    # any list: drop "Bebas Neue" in as bebas-neue-regular.ttf and it resolves.
+    # The regular file answers a bold request for a face that ships one weight,
+    # which is every display face here, and libass then bolds it itself.
+    slug = re.sub(r"[^a-z0-9]+", "-", family.lower()).strip("-")
+    wanted = [f"{slug}-bold.ttf"] if bold else []
+    wanted += [f"{slug}-regular.ttf", f"{slug}.ttf"]
+    for name in wanted:
+        candidate = bundled / name
+        if candidate.is_file():
+            return candidate, None
     return match_installed_font(family, bold)
 
 
