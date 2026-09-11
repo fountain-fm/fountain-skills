@@ -128,7 +128,8 @@ They are the ONLY store for project data that later sessions need.
 - When the user gives a new preference, you MUST record it with the Project API in the same turn.
 - You MUST be succinct and write in ASD-STE100 Simplified Technical English.
 - You MUST NOT store data that can be derived from other sources, e.g. API shape.
-- You MUST NOT store proposed preferences. You MUST only store preferences explicitly chosen by the user or you.
+- You MUST NOT mark an entry as proposed or pending.
+  If it is in preferences, it is active.
 - Show-related preferences may go stale.
   Give greater weight to recent episodes when you write new entries or review old ones.
   You MUST tell the user when an entry may be stale.

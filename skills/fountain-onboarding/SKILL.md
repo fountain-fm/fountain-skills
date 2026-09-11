@@ -51,9 +51,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    email addresses to send the reports to, and any other relevant details.
 8. Write out brand guidelines by researching the look of the show: artwork, website, existing clips.
    Choose the caption style (using skill **fountain-clip-producer**), color, and font.
-   Record the logo URLs if available.
+   Record the guidelines, and the logo URLs if available.
    Don't include logos in the clip settings unless existing clips have them.
-   Present a mockup of how the clip will look like.
+   Present a mockup of what the clip will look like.
    Offer to customize: https://beta.fountain.fm/docs/styling-clips.
 9. When running locally, ensure all relevant software is installed: Python 3.11 or above, yt-dlp, ffmpeg + ffprobe
    (the most complete version that includes libass, drawtext, fontconfig and whisper, e.g. Homebrew `ffmpeg-full`),
@@ -61,16 +61,20 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    If something is missing, attempt to install it yourself.
    Otherwise, make it easy for the user to install it themselves, even if they are non-technical.
 10. Set up automatic daily growth using skill **fountain-daily-growth**.
+    Record its time and the machine that runs it under Automation.
 
 ## Additional notes
 
+Record each preference with the Project API as soon as you or the user choose it.
+Any preference that the agent asks to confirm MUST already be recorded in project preferences.
+Therefore, if the user leaves the chat, something is still recorded.
+
 Onboarding must not feel overwhelming:
 
-- Use the Fountain defaults below.
-  Present the defaults to confirm, and offer customization as optional.
+- Record the Fountain defaults below, then present them to confirm, and offer customization as optional.
   Do not present all options unless the user chooses to customize.
 - Do not provide unnecessary information.
-- When appropriate, make a decision yourself.
+- When appropriate, make a decision yourself but offer customization.
 
 Fountain defaults:
 
