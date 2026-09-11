@@ -57,6 +57,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    ImageMagick. If something is missing, attempt to install yourself. Otherwise,
    make it easy for the user to install themselves, even if they are
    non-technical.
+9. Set up automatic daily growth using skill **fountain-daily-growth**.
 
 ## Additional notes
 
