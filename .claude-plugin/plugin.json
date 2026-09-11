@@ -10,5 +10,11 @@
   },
   "homepage": "https://fountain.fm",
   "repository": "https://github.com/fountain-fm/fountain-skills",
-  "keywords": ["podcast", "clips", "video", "social", "fountain"]
+  "keywords": [
+    "podcast",
+    "clips",
+    "video",
+    "social",
+    "fountain"
+  ]
 }
