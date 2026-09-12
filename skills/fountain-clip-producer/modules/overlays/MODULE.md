@@ -87,6 +87,8 @@ Both hug the text rather than the frame, because a backing sized to the frame is
 hook needs, and `boxMargin` is how close either may come to the edge.
 `blurFill` takes a `borderW`, and a card needs one whenever the artwork and the background are both
 dark, or the cover reads as a hole in the frame rather than as a card on it.
+`backgroundDim` takes the blurred artwork behind the card toward black, because a cover blurred at full
+strength still competes with the card and the words that are cut from the same picture.
 
 A source with no video needs one of the audiogram packages, and each of them is built around the show's
 artwork rather than around the meter.

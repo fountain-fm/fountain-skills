@@ -135,6 +135,10 @@
               "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
             },
             {
+              "name": "build-captions.cpython-314.pyc",
+              "path": "skills/fountain-clip-producer/modules/captions/scripts/__pycache__/build-captions.cpython-314.pyc"
+            },
+            {
               "name": "build-captions.py",
               "path": "skills/fountain-clip-producer/modules/captions/scripts/build-captions.py"
             }

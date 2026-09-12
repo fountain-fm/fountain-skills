@@ -9,7 +9,8 @@
       "sigma": 40,
       "scale": 0.62,
       "cornerRadius": 36,
-      "marginV": 240
+      "marginV": 240,
+      "backgroundDim": 0.5
     },
     {
       "type": "title",
@@ -34,11 +35,6 @@
       "bars": 34,
       "position": "bottom-center",
       "marginV": 650
-    },
-    {
-      "type": "progressBar",
-      "height": 10,
-      "color": "#FFFFFFD9"
     }
   ]
 }

@@ -7,7 +7,8 @@
       "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
       "background": "blur",
       "sigma": 24,
-      "scale": 1.0
+      "scale": 1.0,
+      "backgroundDim": 0.5
     },
     {
       "type": "scrim",
@@ -42,11 +43,6 @@
       "bars": 48,
       "position": "bottom-center",
       "marginV": 660
-    },
-    {
-      "type": "progressBar",
-      "height": 12,
-      "color": "#FFFFFFE6"
     }
   ]
 }

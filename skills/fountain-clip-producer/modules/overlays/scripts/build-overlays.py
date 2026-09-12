@@ -138,6 +138,7 @@ LAYER_DEFAULTS = {
         "scale": 1.0,
         "background": "blur",  # "blur" or a hex color
         "cornerRadius": 0,
+        "backgroundDim": 0.0,  # how far the background is taken toward black, so the card sits forward
         "asset": None,  # a still to build the base from; defaults to the clip's own picture
         "marginV": None,  # how far down the foreground sits; centred when absent
         "borderW": 0,  # a rim around the card, which is what separates a dark cover from a dark ground
@@ -596,9 +597,12 @@ def build_command(layers, args):
         else:
             source = "[0:v]"
         if blur["background"] == "blur":
+            # colorlevels scales the output range, which darkens without washing the colour out.
+            keep = round(1 - blur["backgroundDim"], 3)
+            dim = f",colorlevels=romax={keep}:gomax={keep}:bomax={keep}" if blur["backgroundDim"] else ""
             graph.append(
                 f"{source}scale={args.width}:{args.height}:force_original_aspect_ratio=increase,"
-                f"crop={args.width}:{args.height},gblur=sigma={blur['sigma']}[bg]"
+                f"crop={args.width}:{args.height},gblur=sigma={blur['sigma']}{dim}[bg]"
             )
         else:
             graph.append(

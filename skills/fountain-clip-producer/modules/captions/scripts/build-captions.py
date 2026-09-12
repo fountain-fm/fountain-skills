@@ -25,6 +25,7 @@ import argparse
 import copy
 import json
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -669,6 +670,32 @@ def match_installed_font(family, bold=False):
     return file, (got if got.casefold() != family.casefold() else None)
 
 
+def em_correction(font_file):
+    """How much to scale an ASS font size so the drawn letter matches the number.
+
+    libass sizes a font by its Windows ascent-plus-descent box rather than by its
+    em, and that box is a different multiple of the em in every face: Montserrat
+    draws at 0.64 of its stated size, Poppins at 0.57, Bebas Neue at 0.77. Without
+    this, the same number means a different letter in every preset, and neither
+    ImageMagick nor drawtext agrees with what libass drew.
+    """
+    try:
+        data = Path(font_file).read_bytes()
+        count = struct.unpack(">H", data[4:6])[0]
+        tables = {}
+        for i in range(count):
+            entry = 12 + i * 16
+            tables[data[entry : entry + 4].decode("latin-1")] = struct.unpack(">I", data[entry + 8 : entry + 12])[0]
+        head, os2 = tables["head"], tables["OS/2"]
+        upem = struct.unpack(">H", data[head + 18 : head + 20])[0]
+        ascent = struct.unpack(">H", data[os2 + 74 : os2 + 76])[0]
+        descent = struct.unpack(">H", data[os2 + 76 : os2 + 78])[0]
+    except (OSError, KeyError, struct.error, IndexError):
+        return 1.0
+    box = ascent + descent
+    return box / upem if upem else 1.0
+
+
 def bundled_fonts_dir():
     return Path(__file__).resolve().parents[3] / "assets" / "fonts"
 
@@ -822,7 +849,39 @@ def anchor_xy(spec):
     return round(horizontal[h]), round(vertical[v])
 
 
-def build_events(groups, spec):
+def rounded_rect_path(width, height, radius):
+    """An ASS drawing of a rounded rectangle, which is what a pill actually is."""
+    r, w, h = radius, width, height
+    return (
+        f"m {r} 0 l {w - r} 0 b {w} 0 {w} 0 {w} {r} l {w} {h - r} b {w} {h} {w} {h} {w - r} {h} "
+        f"l {r} {h} b 0 {h} 0 {h} 0 {h - r} l 0 {r} b 0 0 0 0 {r} 0"
+    )
+
+
+def word_offsets(group, widths, scale, case_mode):
+    """Where each word of a centred line starts, and how wide it is, in frame pixels.
+
+    Returns None when the words were never measured, because a pill guessed from
+    a character count lands beside the word rather than behind it.
+    """
+    if not widths:
+        return None
+    space = widths.get(" ", 0) / scale
+    sizes = []
+    for word in group:
+        measured = widths.get(word["text"])
+        if measured is None:
+            return None
+        sizes.append(measured / scale)
+    line = sum(sizes) + space * (len(sizes) - 1)
+    left, out = -line / 2, []
+    for size in sizes:
+        out.append((left, size))
+        left += size + space
+    return out
+
+
+def build_events(groups, spec, widths=None, width_scale=1.0):
     """Return (dialogue_lines, fit_lines). fit_lines describe the widest text
     simultaneously on screen per event, at the animation's PEAK scale, for the
     caption fit report."""
@@ -894,8 +953,22 @@ def build_events(groups, spec):
 
     blur_prefix = f"{{\\blur{border['blur']}}}" if border["blur"] > 0 else ""
 
-    def dialogue(start, end, text):
-        events.append(f"Dialogue: 0,{format_time(start)},{format_time(end)},Caption,,0,0,0,,{blur_prefix}{text}")
+    def dialogue(start, end, text, layer=1):
+        events.append(f"Dialogue: {layer},{format_time(start)},{format_time(end)},Caption,,0,0,0,,{blur_prefix}{text}")
+
+    def pill_behind(start, end, offsets, index, fill):
+        """Draw the rounded rectangle the active word sits on."""
+        left, word_width = offsets[index]
+        size = spec["font"]["size"]
+        pad_x, height = round(size * 0.20), round(size * 1.34)
+        width = round(word_width) + 2 * pad_x
+        x = round(spec["playResX"] / 2 + left) - pad_x
+        y = round(caption_top(spec) - height * 0.80)
+        events.append(
+            f"Dialogue: 0,{format_time(start)},{format_time(end)},Caption,,0,0,0,,"
+            f"{{\\pos({x},{y})\\an7\\bord0\\shad0\\blur0\\1c{fill}\\p1}}"
+            f"{rounded_rect_path(width, height, round(height / 2))}"
+        )
 
     def fit(text):
         # With maxLines >= 2 the budget is per-line width x lines (smart wrap
@@ -979,7 +1052,7 @@ def build_events(groups, spec):
             pop = animation["popPct"]
             mode = animation["highlightMode"]
             active_scale = animation["activeScalePct"]
-            pill = max(8, round(spec["font"]["size"] * 0.14))
+            offsets = word_offsets(group, widths, width_scale, case_mode) if mode == "box" else None
             for i, word in enumerate(group):
                 w_start = word["start"]
                 w_end = group[i + 1]["start"] if i + 1 < len(group) else end
@@ -990,8 +1063,9 @@ def build_events(groups, spec):
                         color_hex = group[j]["_emphColor"] if group[j]["emphasize"] else colors["highlight"]
                         active_hl = hex_to_inline(color_hex, "highlight color")
                         if mode == "box":
-                            open_tags = f"\\bord{pill}\\3c{active_hl}\\shad0"
-                            close_tags = f"\\bord{border['outline']}\\3c{outline_inline}\\shad{border['shadow']}"
+                            # The pill is drawn behind the line; the word itself keeps its own colour.
+                            open_tags = "\\shad0"
+                            close_tags = f"\\shad{border['shadow']}"
                         elif mode == "glow":
                             glow = max(5, border["blur"])
                             open_tags = f"\\bord4\\blur{glow}\\3c{active_hl}"
@@ -1007,6 +1081,9 @@ def build_events(groups, spec):
                         parts.append(emph_wrap(txt, group[j]["_emphColor"], base))
                     else:
                         parts.append(txt)
+                if offsets:
+                    fill_hex = group[i]["_emphColor"] if group[i]["emphasize"] else colors["highlight"]
+                    pill_behind(w_start, w_end, offsets, i, hex_to_inline(fill_hex, "highlight color"))
                 prefix = base_prefix
                 if i == 0 and pop > 100:
                     prefix += f"{{\\fscx{pop}\\fscy{pop}\\t(0,{animation['appearMs']},\\fscx100\\fscy100)}}"
@@ -1036,6 +1113,9 @@ def build_events(groups, spec):
 
 def style_line(spec):
     font, colors, border, position = spec["font"], spec["colors"], spec["border"], spec["position"]
+    # font.size is the height of the drawn letter, so the number is corrected on
+    # the way into the style block rather than meaning a different thing per face.
+    drawn_size = round(font["size"] * spec.get("emCorrection", 1.0))
     if border["style"] == "box":
         box = colors["box"] or colors["outline"]
         outline_color = hex_to_ass(box, "colors.box")
@@ -1048,7 +1128,7 @@ def style_line(spec):
     fields = [
         "Caption",
         font["family"],
-        font["size"],
+        drawn_size,
         hex_to_ass(colors["primary"], "colors.primary"),
         hex_to_ass(colors["highlight"], "colors.highlight"),
         outline_color,
@@ -1201,6 +1281,8 @@ def main():
             file=sys.stderr,
         )
 
+    spec["emCorrection"] = round(em_correction(font_file), 4) if font_file else 1.0
+
     if args.emit_spec:
         Path(args.emit_spec).write_text(json.dumps(spec, indent=2) + "\n")
 
@@ -1241,7 +1323,7 @@ def main():
                 f"--font-file, because a caption packed by word count alone wraps where it does not fit"
             )
     groups = group_words(words, spec["grouping"], widths, budget)
-    events, fit_lines = build_events(groups, spec)
+    events, fit_lines = build_events(groups, spec, widths, peak_scale(spec))
     Path(args.out).write_text(build_ass(spec, events))
     if args.emit_lines:
         Path(args.emit_lines).write_text(json.dumps(fit_lines, indent=2) + "\n")

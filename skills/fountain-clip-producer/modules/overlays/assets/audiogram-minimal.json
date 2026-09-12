@@ -9,7 +9,8 @@
       "sigma": 55,
       "scale": 0.52,
       "cornerRadius": 32,
-      "marginV": 520
+      "marginV": 520,
+      "backgroundDim": 0.5
     },
     {
       "type": "audiogram",
@@ -21,11 +22,6 @@
       "mirror": true,
       "position": "bottom-center",
       "marginV": 690
-    },
-    {
-      "type": "progressBar",
-      "height": 8,
-      "color": "#FFFFFF99"
     }
   ]
 }

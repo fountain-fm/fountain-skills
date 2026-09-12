@@ -21,11 +21,6 @@
       "fadeOutMs": 320,
       "maxLines": 3,
       "boxMargin": 90
-    },
-    {
-      "type": "progressBar",
-      "height": 12,
-      "color": "#FFFFFFD9"
     }
   ]
 }

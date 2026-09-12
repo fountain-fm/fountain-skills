@@ -36,11 +36,6 @@
       "mirror": true,
       "position": "bottom-center",
       "marginV": 660
-    },
-    {
-      "type": "progressBar",
-      "height": 10,
-      "color": "#FFFFFFB3"
     }
   ]
 }
