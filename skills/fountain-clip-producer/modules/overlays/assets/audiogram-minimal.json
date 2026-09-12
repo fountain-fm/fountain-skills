@@ -6,11 +6,13 @@
       "type": "blurFill",
       "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
       "background": "blur",
-      "sigma": 55,
+      "sigma": 100,
       "scale": 0.52,
       "cornerRadius": 32,
       "marginV": 520,
-      "backgroundDim": 0.5
+      "backgroundDim": 0.66,
+      "borderW": 3,
+      "borderColor": "#FFFFFF2E"
     },
     {
       "type": "audiogram",

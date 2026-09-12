@@ -6,11 +6,13 @@
       "type": "blurFill",
       "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
       "background": "blur",
-      "sigma": 40,
+      "sigma": 90,
       "scale": 0.62,
       "cornerRadius": 36,
       "marginV": 240,
-      "backgroundDim": 0.5
+      "backgroundDim": 0.62,
+      "borderW": 3,
+      "borderColor": "#FFFFFF2E"
     },
     {
       "type": "title",

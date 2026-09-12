@@ -5,12 +5,12 @@
     {
       "type": "blurFill",
       "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
-      "background": "#232833",
+      "background": "#2C3244",
       "scale": 0.45,
       "cornerRadius": 28,
       "marginV": 420,
-      "borderW": 3,
-      "borderColor": "#FFFFFF33"
+      "borderW": 4,
+      "borderColor": "#FFFFFF40"
     },
     {
       "type": "title",

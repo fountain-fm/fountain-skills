@@ -89,6 +89,10 @@ hook needs, and `boxMargin` is how close either may come to the edge.
 dark, or the cover reads as a hole in the frame rather than as a card on it.
 `backgroundDim` takes the blurred artwork behind the card toward black, because a cover blurred at full
 strength still competes with the card and the words that are cut from the same picture.
+Blur it far enough and dim it far enough and the background stops being a picture at all: it becomes a
+wash of the show's own colour, which is what the treatment is for.
+A card always carries a rim on a background made from itself, because a dark cover blurred into a dark
+ground leaves no edge for the eye, and the card reads as a hole in the frame.
 
 A source with no video needs one of the audiogram packages, and each of them is built around the show's
 artwork rather than around the meter.

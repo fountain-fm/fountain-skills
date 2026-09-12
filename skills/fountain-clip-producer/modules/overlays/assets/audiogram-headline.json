@@ -6,9 +6,9 @@
       "type": "blurFill",
       "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
       "background": "blur",
-      "sigma": 24,
+      "sigma": 60,
       "scale": 1.0,
-      "backgroundDim": 0.5
+      "backgroundDim": 0.6
     },
     {
       "type": "scrim",
