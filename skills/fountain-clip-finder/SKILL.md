@@ -62,6 +62,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - Python 3.11 or later, and yt-dlp for a video URL, and ffmpeg with whisper for a local video that
   has no subtitle file.
   Module **external-source** needs all three, and a machine without them runs every other input.
+- Skill **fountain-onboarding**.
 
 ## Process
 
@@ -69,8 +70,8 @@ Make the calls that do not need each other's answers at the same time.
 A run is slow between its actions, and not inside them.
 
 1. Resolve the show, and list the connected `SocialChannel` with the Social API.
-   Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a
-   draft post on a channel, and there is no other place to keep the work.
+   Run skill **fountain-onboarding** when the show has none, because a clip becomes a draft post on a
+   channel, and there is no other place to keep the work.
    Continue only when the user asks for the clips without a channel.
 2. Run module **discovery** to search the transcripts, score each moment, and drop the weak ones.
    For a video that is not an episode, run module **external-source** first, and give its segments to

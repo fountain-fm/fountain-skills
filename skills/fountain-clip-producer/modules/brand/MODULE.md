@@ -47,9 +47,8 @@ The values live in the preferences, because only the preferences survive a sessi
       picture. Take the bundled family whose character matches the wordmark, and choose three presets
       that suit it. A serif cover suits `broadsheet`, a heavy condensed one `stadium` or `impact-loud`,
       a hand-lettered one `marker`, and a clean geometric one `bold-social` or `wide-block`.
-   3. Render those three through the kit with module **style-sheet**, which draws each preset in the
-      colours of the show.
-   4. Give the user the sheet and ask them to name a tile.
+   3. Render one mockup on real footage of the show, in the colours the artwork gave.
+   4. Show the user the mockup, and send them to https://beta.fountain.fm/docs/styling-clips to change it.
       Name what they can change on it - the size of the captions, their case, their colours and the
       highlight, the outline, where they sit, how many words are on screen, and the font - because a
       reader who does not know the vocabulary cannot ask for a correction.
@@ -72,10 +71,17 @@ The values live in the preferences, because only the preferences survive a sessi
    2. Pull stills at the caption moments, and read the style off them.
       Read the character of the font, the case, the colours from the real pixels, the border, the position,
       the number of words on screen, and the animation.
-   3. Draft the kit values, and render a style proof on real footage of the show.
+   3. Draft the kit values, record them with the Project API, and render a style proof on real footage
+      of the show.
    4. Show the proof beside the reference, and repeat until the user confirms the match.
+      Record each correction with the Project API in the same turn.
+      Name what the user can change on it - the size of the captions, their case, their colours and
+      the highlight, the outline, where they sit, how many words are on screen, the font, and the
+      logo - because a reader who does not know the vocabulary cannot ask for a correction.
+      Give them https://beta.fountain.fm/docs/styling-clips with it, which draws every caption style and
+      every overlay package, because a style is a thing to look at rather than a list to read.
    5. Ask for the font files when the show uses a licensed font.
-6. Record the confirmed kit with the Project API in the same turn.
+6. Record the confirmation of the kit with the Project API in the same turn.
 
 ## Additional notes
 

@@ -88,8 +88,8 @@ A misspelled override path is a hard error, and `--check` rejects unreadable con
 
 Use `bold-social` when neither the request nor the brand kit names a preset: it reads on a phone at arm's
 length, and it animates nothing that can go wrong.
-Show the user module **style-sheet** rather than this list when they have not chosen, because the
-descriptions in `assets` say what a style is for and only the render says what it looks like.
+Send the user to https://beta.fountain.fm/docs/styling-clips rather than this list when they have not
+chosen, because the descriptions in `assets` say what a style is for and only the page shows it.
 
 Each preset owns one job, and no two of them differ by a knob alone:
 

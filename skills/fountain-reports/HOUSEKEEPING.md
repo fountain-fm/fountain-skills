@@ -72,6 +72,13 @@ Config:
   Put it in a temporary place and delete it at the end of the session.
   You MUST NOT keep a script that wraps the API, because the API can change.
 
+## Setup
+
+Skill **fountain-onboarding** ensures Fountain and the user's environment are fully set up.
+
+- You MUST run it before the task when the preferences are empty.
+- You MUST run it when a part of the setup is missing, e.g. a channel, a report address, or a tool.
+
 ## How you talk
 
 These rules dictate your communication style in the chat.
@@ -106,17 +113,23 @@ They are the ONLY store for project data that later sessions need.
 
 ### Format
 
-Preferences are stored as Markdown.
-It MUST NOT have frontmatter.
+- Preferences are stored as Markdown.
+- Preferences MUST NOT have frontmatter.
+- The whole document is `##` headings followed by unordered Markdown lists.
+- The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", "Reporting", "Automation", and "Other".
+- Include a heading only when it has an entry.
+- Each list item MUST NOT exceed 200 chars. 200 is a ceiling, not a target. 5 words is better than 30.
+- Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)` to indicate whether it was chosen by an agent or the user and when it was updated, e.g. "- `bold-social` caption style (USER-2026-09-10)"
 
 ### Guidelines
 
 - You MUST load the preferences with the Project API at the start of each session.
 - You MUST NOT keep a local copy for a later session.
 - When the user gives a new preference, you MUST record it with the Project API in the same turn.
-- You MUST be succinct.
-- Clearly mark when a preference is only proposed - let the user decide whether to keep it.
-- Clearly mark a preference you chose yourself. It MUST be obvious when it was not an explicit choice by the user.
+- You MUST be succinct and write in ASD-STE100 Simplified Technical English.
+- You MUST NOT store data that can be derived from other sources, e.g. API shape.
+- You MUST NOT mark an entry as proposed or pending.
+  If it is in preferences, it is active.
 - Show-related preferences may go stale.
   Give greater weight to recent episodes when you write new entries or review old ones.
   You MUST tell the user when an entry may be stale.
@@ -127,48 +140,65 @@ It MUST NOT have frontmatter.
 - The API call replaces the whole Markdown document, so you MUST NOT delete parts you did not mean to change.
 - When updating, always compare against existing preferences. Tell the user what you updated.
 
-### H2 (##) headings
+### Sections
 
-You MUST use only these headings:
+**Narratives**
 
-- Narratives - the subjects the show returns to, each with its angle and risks to avoid.
-- Editorial - tone, structure, and rules for what to make and when to publish it.
-  A guest, a format, or a name that carries authority in a hook belongs here and never under
-  Narratives, because it shapes how a clip is written and not which subject the show returns to.
-- Brand - the show's look: caption style, fonts, logos, and colours.
-- Accounts - information not provided by the API: handle to tag a person by,
-  external video source (e.g. YouTube) for a show, and the folder name for a show.
-- Reporting - email addresses reports go to and preset customizations of skill **fountain-reports**.
-- Automation - daily loop options, e.g. auto-render and the day's clip budget.
-- Other - all other preferences.
+A narrative is a subject the show returns to repeatedly.
 
-Write a heading only when it has an entry.
+Skills use narratives to decide:
 
-Empty preferences mean a new project, so follow the first contact steps of skill **fountain-reports**.
-When you rely on a built-in default because no setting names a choice, say so in passing.
+- whether a subject is for this show
+- what angle to take
+- what risks to consider
 
-Accounts MUST name where the show's video lives before you count or cut anything from video.
-Ask the user when it says nothing, and record that Fountain holds it all when that is the answer.
+When you write narratives:
 
-### Narratives
+- Narratives are show-level, never episode-level.
+- Pick a narrative by how often the show returns to it, never by how good one episode was.
+- Count episodes that are _about_ the subject, not the ones that just mention it.
+- Provide a few strong narratives rather than many - a long list makes every trend match something.
+- Update narratives at the start of a task that requires them: check that existing ones are still valid and whether any new ones can be added from recent episodes.
+- End the section with the newest episode you read for a given show, e.g. `- Read up to TFTC #781 (AGENT-2026-08-09)`.
 
-A narrative is a subject the show returns to, with the angle the show takes and the risks to avoid.
-It is how a skill decides whether a subject is for this show, and how it shapes what it makes of it.
-Write one line for each, in that order.
-Pitch it between the show and one episode: the subject of the whole show fits every story, and the
-subject of one episode fits only that one.
-A narrative earns its place by how often the show returns to it, and never by how good one episode was.
-Count the episodes that are about a subject, and not the ones that mention it, because a passing
-mention is not coverage and a keyword search cannot tell the two apart.
-Give few strong narratives rather than many, because a long list makes every trend match something.
+**Editorial**
 
-Bring this section level with the show before you read it, whichever skill you are running.
-It records the newest episode it has read: build it from the episode titles of the Content API when
-it records none, whatever entries it already holds, and fold in the later episodes otherwise.
-Add a narrative when an episode fits none.
-End the section with the newest episode you read, named the way the show names it, e.g.
-`Read up to #781, 2026-08-09.`
-A sentence about where the entries came from is not that line, and the next run rebuilds without it.
+- Tone, structure, and rules for what to make and when to publish it.
+- A guest, a format, or a name that carries authority in a hook belongs here and
+  never under Narratives, because it shapes how a clip is written and not which
+  subject the show returns to.
+
+**Brand**
+
+The show's look:
+
+- caption style
+- fonts
+- logos
+- colors
+
+**Accounts**
+
+Information not provided by the API, e.g.:
+
+- handle to tag a person by
+- external video source (e.g. YouTube) for a show - ask the user before you cut video the first time
+- folder name for a show
+
+**Reporting**
+
+Customizations of skill **fountain-reports**, e.g. email addresses and presets.
+
+**Automation**
+
+Daily loop options, e.g.:
+
+- auto-render
+- number of clips per day
+
+**Other**
+
+All other preferences.
 
 ## Fountain assets
 

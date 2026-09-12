@@ -31,8 +31,8 @@ Optional:
 - The finished work: a landscape master, and one export for each shape that the request asks for.
   The master is finished work and not a working, because the user keeps it and cuts from it again.
 - A `SocialPostUpload` on `content.uploads` of the post, unless the user asked you not to attach it.
-- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, a style sheet
-  when the user chose a style from one, and a removal report when module **trims** cut the clip.
+- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, and a removal
+  report when module **trims** cut the clip.
 
 ## Housekeeping
 
@@ -50,12 +50,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - A whisper.cpp model file, which the whisper filter takes the path of and does nothing without.
   `ggml-base.en.bin` in `~/.cache/whisper` is the one this skill looks for first, and it is 141 MB, so
   the machine installs it one time and the skill does not ship it.
-  Module **preflight** finds it, and gives the user the line that installs it when the machine has none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
   Keep it current: YouTube changes what a client must send, and a build a few weeks old
   answers 403 on every download while the captions still come through.
 - A web search tool, and a way to read a page, for the reference sources of module **brand**.
+- Skill **fountain-onboarding**, which installs a tool that module **preflight** finds missing.
 
 ## Process
 
@@ -79,8 +79,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
    Skip both for a source with no video, which has no picture to crop and no face to follow.
 6. Run module **brand** to load the look of the show, for a clean final or a publish final.
-7. Run module **style-sheet** when the request names no caption style and module **brand** holds none.
-   Build one sheet for the run, and hold the captions until the user names a tile.
+7. Send the user to https://beta.fountain.fm/docs/styling-clips when the request names no caption
+   style and module **brand** holds none.
+   That page draws every style, and the choice it records comes back as a brand kit.
+   Do not hold the run for an answer: produce with the default and say what it was.
 8. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
 9. Run module **overlays** when the request asks for a layer, and always for a source with no video.

@@ -135,10 +135,6 @@
               "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
             },
             {
-              "name": "build-captions.cpython-314.pyc",
-              "path": "skills/fountain-clip-producer/modules/captions/scripts/__pycache__/build-captions.cpython-314.pyc"
-            },
-            {
               "name": "build-captions.py",
               "path": "skills/fountain-clip-producer/modules/captions/scripts/build-captions.py"
             }
@@ -291,17 +287,6 @@
           ]
         },
         {
-          "name": "style-sheet",
-          "description": "Draw every caption preset on one frame of the clip, so the user chooses a style by looking at it.",
-          "module": "skills/fountain-clip-producer/modules/style-sheet/MODULE.md",
-          "assets": [
-            {
-              "name": "build-style-sheet.py",
-              "path": "skills/fountain-clip-producer/modules/style-sheet/scripts/build-style-sheet.py"
-            }
-          ]
-        },
-        {
           "name": "trims",
           "description": "Remove dead air and filler from a clip, after the user asks for it and sees what would go.",
           "module": "skills/fountain-clip-producer/modules/trims/MODULE.md",
@@ -414,6 +399,13 @@
           "assets": []
         }
       ],
+      "assets": []
+    },
+    {
+      "name": "fountain-onboarding",
+      "description": "Set up Fountain. Trigger on first use, when asked, when preferences are empty, or when a skill is missing something.",
+      "skill": "skills/fountain-onboarding/SKILL.md",
+      "modules": [],
       "assets": []
     },
     {
