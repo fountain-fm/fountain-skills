@@ -241,7 +241,8 @@ def rounded_alpha(radius):
             (f"gt(X,W-{radius})", f"gt(Y,H-{radius})", f"(W-{radius})", f"(H-{radius})"),
         )
     )
-    return f"255*not({corners})"
+    # alpha(X,Y) rather than 255: overwriting it would make a translucent rim solid.
+    return f"alpha(X,Y)*not({corners})"
 
 
 def rounded_steps(radius):
