@@ -696,6 +696,26 @@ def em_correction(font_file):
     return box / upem if upem else 1.0
 
 
+def descent_ratio(font_file):
+    """How far the font's own box drops below the baseline, as a share of the em.
+
+    libass puts the bottom of that box on the margin, so this is the distance
+    between the margin and the baseline the letters actually sit on.
+    """
+    try:
+        data = Path(font_file).read_bytes()
+        count = struct.unpack(">H", data[4:6])[0]
+        tables = {}
+        for i in range(count):
+            entry = 12 + i * 16
+            tables[data[entry : entry + 4].decode("latin-1")] = struct.unpack(">I", data[entry + 8 : entry + 12])[0]
+        upem = struct.unpack(">H", data[tables["head"] + 18 : tables["head"] + 20])[0]
+        descent = struct.unpack(">H", data[tables["OS/2"] + 76 : tables["OS/2"] + 78])[0]
+    except (OSError, KeyError, struct.error, IndexError):
+        return 0.25
+    return descent / upem if upem else 0.25
+
+
 def bundled_fonts_dir():
     return Path(__file__).resolve().parents[3] / "assets" / "fonts"
 
@@ -849,6 +869,9 @@ def anchor_xy(spec):
     return round(horizontal[h]), round(vertical[v])
 
 
+CAP_HEIGHT = 0.72  # a capital's share of the em, close enough in every face this skill bundles
+
+
 def rounded_rect_path(width, height, radius):
     """An ASS drawing of a rounded rectangle, which is what a pill actually is."""
     r, w, h = radius, width, height
@@ -960,10 +983,15 @@ def build_events(groups, spec, widths=None, width_scale=1.0):
         """Draw the rounded rectangle the active word sits on."""
         left, word_width = offsets[index]
         size = spec["font"]["size"]
-        pad_x, height = round(size * 0.20), round(size * 1.34)
+        pad_x, pad_y = round(size * 0.20), round(size * 0.30)
+        # The pill wraps the letters, not the line box: libass rests that box's
+        # bottom on the margin, and the baseline sits the font's own descent above it.
+        cap = size * CAP_HEIGHT
+        baseline = caption_top(spec) - spec.get("descentRatio", 0.25) * size
+        height = round(cap + 2 * pad_y)
         width = round(word_width) + 2 * pad_x
         x = round(spec["playResX"] / 2 + left) - pad_x
-        y = round(caption_top(spec) - height * 0.80)
+        y = round(baseline - cap - pad_y)
         events.append(
             f"Dialogue: 0,{format_time(start)},{format_time(end)},Caption,,0,0,0,,"
             f"{{\\pos({x},{y})\\an7\\bord0\\shad0\\blur0\\1c{fill}\\p1}}"
@@ -1282,6 +1310,7 @@ def main():
         )
 
     spec["emCorrection"] = round(em_correction(font_file), 4) if font_file else 1.0
+    spec["descentRatio"] = round(descent_ratio(font_file), 4) if font_file else 0.25
 
     if args.emit_spec:
         Path(args.emit_spec).write_text(json.dumps(spec, indent=2) + "\n")
