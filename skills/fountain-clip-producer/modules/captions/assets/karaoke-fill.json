@@ -18,10 +18,7 @@
     "shadow": 0
   },
   "position": {
-    "alignment": "bottom-center",
-    "marginL": 60,
-    "marginR": 60,
-    "marginV": 240
+    "alignment": "bottom-center"
   },
   "grouping": {
     "maxWords": 5

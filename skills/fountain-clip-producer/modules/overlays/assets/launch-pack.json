@@ -25,7 +25,6 @@
       "end": 7.5,
       "fadeInMs": 400,
       "fadeOutMs": 400
-    },
-    { "type": "progressBar", "height": 12, "color": "#FFFFFFD9" }
+    }
   ]
 }

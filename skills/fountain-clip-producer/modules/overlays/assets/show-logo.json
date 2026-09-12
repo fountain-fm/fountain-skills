@@ -8,9 +8,10 @@
       "width": 120,
       "opacity": 0.85,
       "position": "top-right",
-      "marginH": 44,
+      "marginH": 150,
       "marginV": 44,
-      "fadeInMs": 300
+      "fadeInMs": 300,
+      "cornerRadius": 20
     }
   ]
 }

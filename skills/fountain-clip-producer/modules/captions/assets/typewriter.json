@@ -1,6 +1,6 @@
 {
   "name": "typewriter",
-  "description": "Characters reveal sequentially across each phrase. Dramatic, slower pacing — best for storytelling beats, not dense speech.",
+  "description": "Characters reveal sequentially across each phrase. Dramatic, slower pacing \u2014 best for storytelling beats, not dense speech.",
   "font": {
     "family": "Courier Prime",
     "size": 80,
@@ -18,10 +18,7 @@
     "shadow": 0
   },
   "position": {
-    "alignment": "bottom-center",
-    "marginL": 80,
-    "marginR": 80,
-    "marginV": 230
+    "alignment": "bottom-center"
   },
   "grouping": {
     "maxWords": 5,

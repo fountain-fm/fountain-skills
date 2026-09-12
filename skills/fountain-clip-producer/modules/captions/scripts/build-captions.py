@@ -25,11 +25,44 @@ import argparse
 import copy
 import json
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
 
+# The shape of the export decides the coordinate space and where the words sit.
+#
+# A portrait clip is watched inside the app's own furniture, and the words have
+# to stay clear of it. Measured on a 1080x1920 frame, the bottom is claimed by
+# the post caption, the handle and the audio line - about 500px on Instagram
+# Reels, 384 on YouTube Shorts and 320 on TikTok - and the right edge by the
+# rail of reaction buttons, about 130px on Shorts and 120 on TikTok. The margins
+# below clear the worst of each, and the side margins match so that a centred
+# caption stays centred.
+#
+# A landscape clip carries no such furniture, so the words sit along the bottom.
+SAFE_BOTTOM = {"portrait": 500, "square": 120, "landscape": 60}
+
+SHAPES = {
+    "portrait": {
+        "playResX": 1080,
+        "playResY": 1920,
+        "position": {"marginV": 520, "marginL": 130, "marginR": 130},
+    },
+    "square": {
+        "playResX": 1080,
+        "playResY": 1080,
+        "position": {"marginV": 130, "marginL": 60, "marginR": 60},
+    },
+    "landscape": {
+        "playResX": 1920,
+        "playResY": 1080,
+        "position": {"marginV": 110, "marginL": 90, "marginR": 90},
+    },
+}
+
 DEFAULTS = {
+    "shape": "portrait",
     "playResX": 1080,
     "playResY": 1920,
     # Tokens the ASR lowercases that must render in their canonical case. Conservative
@@ -285,17 +318,27 @@ def validate_spec(spec):
         elif ratio < 4.5:
             warnings.append(f"primary/backdrop contrast {ratio:.1f}:1 is below the 4.5:1 accessibility target")
 
-    scale = spec["playResX"] / 1080
+    # Readability runs against the short edge of the frame, and never the width:
+    # a landscape export is 1920 wide and still shows the same size of letter as
+    # a portrait one, because both are 1080 on their short edge.
+    scale = min(spec["playResX"], spec["playResY"]) / 1080
     if not 40 * scale <= font["size"] <= 140 * scale:
         failures.append(
             f"font.size {font['size']} outside readable range "
-            f"[{int(40 * scale)}, {int(140 * scale)}] for {spec['playResX']}px width"
+            f"[{int(40 * scale)}, {int(140 * scale)}] for a {min(spec['playResX'], spec['playResY'])}px short edge"
         )
 
-    if position["marginV"] < 150:
-        warnings.append(f"position.marginV {position['marginV']} sits inside the platform UI zone (bottom ~150px)")
-    if position["marginV"] > spec["playResY"] * 0.5:
-        warnings.append(f"position.marginV {position['marginV']} places captions above mid-frame")
+    safe_bottom = SAFE_BOTTOM[spec["shape"]]
+    if position["marginV"] < safe_bottom:
+        warnings.append(
+            f"position.marginV {position['marginV']} sits inside the app's own furniture, which claims "
+            f"the bottom {safe_bottom}px of a {spec['shape']} post"
+        )
+    if caption_top(spec) < spec["playResY"] * 0.25:
+        warnings.append(
+            f"position.marginV {position['marginV']} puts the words in the top quarter of the frame, "
+            f"where they cover a face"
+        )
 
     if grouping["maxWords"] > 6:
         warnings.append(
@@ -592,6 +635,16 @@ def peak_scale(spec):
     return scale
 
 
+def caption_top(spec):
+    """How far down the frame the words sit, whichever edge the margin is measured from."""
+    vertical = spec["position"]["alignment"].split("-")[0]
+    if vertical == "top":
+        return spec["position"]["marginV"]
+    if vertical == "middle":
+        return spec["playResY"] / 2
+    return spec["playResY"] - spec["position"]["marginV"]
+
+
 def safe_width(spec):
     return (spec["playResX"] - spec["position"]["marginL"] - spec["position"]["marginR"]) * spec["grouping"]["maxLines"]
 
@@ -617,6 +670,52 @@ def match_installed_font(family, bold=False):
     return file, (got if got.casefold() != family.casefold() else None)
 
 
+def em_correction(font_file):
+    """How much to scale an ASS font size so the drawn letter matches the number.
+
+    libass sizes a font by its Windows ascent-plus-descent box rather than by its
+    em, and that box is a different multiple of the em in every face: Montserrat
+    draws at 0.64 of its stated size, Poppins at 0.57, Bebas Neue at 0.77. Without
+    this, the same number means a different letter in every preset, and neither
+    ImageMagick nor drawtext agrees with what libass drew.
+    """
+    try:
+        data = Path(font_file).read_bytes()
+        count = struct.unpack(">H", data[4:6])[0]
+        tables = {}
+        for i in range(count):
+            entry = 12 + i * 16
+            tables[data[entry : entry + 4].decode("latin-1")] = struct.unpack(">I", data[entry + 8 : entry + 12])[0]
+        head, os2 = tables["head"], tables["OS/2"]
+        upem = struct.unpack(">H", data[head + 18 : head + 20])[0]
+        ascent = struct.unpack(">H", data[os2 + 74 : os2 + 76])[0]
+        descent = struct.unpack(">H", data[os2 + 76 : os2 + 78])[0]
+    except (OSError, KeyError, struct.error, IndexError):
+        return 1.0
+    box = ascent + descent
+    return box / upem if upem else 1.0
+
+
+def descent_ratio(font_file):
+    """How far the font's own box drops below the baseline, as a share of the em.
+
+    libass puts the bottom of that box on the margin, so this is the distance
+    between the margin and the baseline the letters actually sit on.
+    """
+    try:
+        data = Path(font_file).read_bytes()
+        count = struct.unpack(">H", data[4:6])[0]
+        tables = {}
+        for i in range(count):
+            entry = 12 + i * 16
+            tables[data[entry : entry + 4].decode("latin-1")] = struct.unpack(">I", data[entry + 8 : entry + 12])[0]
+        upem = struct.unpack(">H", data[tables["head"] + 18 : tables["head"] + 20])[0]
+        descent = struct.unpack(">H", data[tables["OS/2"] + 76 : tables["OS/2"] + 78])[0]
+    except (OSError, KeyError, struct.error, IndexError):
+        return 0.25
+    return descent / upem if upem else 0.25
+
+
 def bundled_fonts_dir():
     return Path(__file__).resolve().parents[3] / "assets" / "fonts"
 
@@ -634,15 +733,17 @@ def resolve_font_file(spec, explicit=None):
         return Path(explicit), None
     family, bold = spec["font"]["family"], spec["font"]["bold"]
     bundled = bundled_fonts_dir()
-    names = {
-        "Montserrat Black": "montserrat-black.ttf",
-        "Anton": "anton-regular.ttf",
-        "Courier Prime": "courier-prime-regular.ttf",
-        "Montserrat": "montserrat-bold.ttf" if bold else "montserrat-regular.ttf",
-    }
-    candidate = bundled / names.get(family, "")
-    if candidate.is_file():
-        return candidate, None
+    # A bundled file is named after its family, so a new font needs no entry in
+    # any list: drop "Bebas Neue" in as bebas-neue-regular.ttf and it resolves.
+    # The regular file answers a bold request for a face that ships one weight,
+    # which is every display face here, and libass then bolds it itself.
+    slug = re.sub(r"[^a-z0-9]+", "-", family.lower()).strip("-")
+    wanted = [f"{slug}-bold.ttf"] if bold else []
+    wanted += [f"{slug}-regular.ttf", f"{slug}.ttf"]
+    for name in wanted:
+        candidate = bundled / name
+        if candidate.is_file():
+            return candidate, None
     return match_installed_font(family, bold)
 
 
@@ -768,7 +869,42 @@ def anchor_xy(spec):
     return round(horizontal[h]), round(vertical[v])
 
 
-def build_events(groups, spec):
+CAP_HEIGHT = 0.72  # a capital's share of the em, close enough in every face this skill bundles
+
+
+def rounded_rect_path(width, height, radius):
+    """An ASS drawing of a rounded rectangle, which is what a pill actually is."""
+    r, w, h = radius, width, height
+    return (
+        f"m {r} 0 l {w - r} 0 b {w} 0 {w} 0 {w} {r} l {w} {h - r} b {w} {h} {w} {h} {w - r} {h} "
+        f"l {r} {h} b 0 {h} 0 {h} 0 {h - r} l 0 {r} b 0 0 0 0 {r} 0"
+    )
+
+
+def word_offsets(group, widths, scale, case_mode):
+    """Where each word of a centred line starts, and how wide it is, in frame pixels.
+
+    Returns None when the words were never measured, because a pill guessed from
+    a character count lands beside the word rather than behind it.
+    """
+    if not widths:
+        return None
+    space = widths.get(" ", 0) / scale
+    sizes = []
+    for word in group:
+        measured = widths.get(word["text"])
+        if measured is None:
+            return None
+        sizes.append(measured / scale)
+    line = sum(sizes) + space * (len(sizes) - 1)
+    left, out = -line / 2, []
+    for size in sizes:
+        out.append((left, size))
+        left += size + space
+    return out
+
+
+def build_events(groups, spec, widths=None, width_scale=1.0):
     """Return (dialogue_lines, fit_lines). fit_lines describe the widest text
     simultaneously on screen per event, at the animation's PEAK scale, for the
     caption fit report."""
@@ -840,8 +976,27 @@ def build_events(groups, spec):
 
     blur_prefix = f"{{\\blur{border['blur']}}}" if border["blur"] > 0 else ""
 
-    def dialogue(start, end, text):
-        events.append(f"Dialogue: 0,{format_time(start)},{format_time(end)},Caption,,0,0,0,,{blur_prefix}{text}")
+    def dialogue(start, end, text, layer=1):
+        events.append(f"Dialogue: {layer},{format_time(start)},{format_time(end)},Caption,,0,0,0,,{blur_prefix}{text}")
+
+    def pill_behind(start, end, offsets, index, fill):
+        """Draw the rounded rectangle the active word sits on."""
+        left, word_width = offsets[index]
+        size = spec["font"]["size"]
+        pad_x, pad_y = round(size * 0.20), round(size * 0.30)
+        # The pill wraps the letters, not the line box: libass rests that box's
+        # bottom on the margin, and the baseline sits the font's own descent above it.
+        cap = size * CAP_HEIGHT
+        baseline = caption_top(spec) - spec.get("descentRatio", 0.25) * size
+        height = round(cap + 2 * pad_y)
+        width = round(word_width) + 2 * pad_x
+        x = round(spec["playResX"] / 2 + left) - pad_x
+        y = round(baseline - cap - pad_y)
+        events.append(
+            f"Dialogue: 0,{format_time(start)},{format_time(end)},Caption,,0,0,0,,"
+            f"{{\\pos({x},{y})\\an7\\bord0\\shad0\\blur0\\1c{fill}\\p1}}"
+            f"{rounded_rect_path(width, height, round(height / 2))}"
+        )
 
     def fit(text):
         # With maxLines >= 2 the budget is per-line width x lines (smart wrap
@@ -925,7 +1080,7 @@ def build_events(groups, spec):
             pop = animation["popPct"]
             mode = animation["highlightMode"]
             active_scale = animation["activeScalePct"]
-            pill = max(8, round(spec["font"]["size"] * 0.14))
+            offsets = word_offsets(group, widths, width_scale, case_mode) if mode == "box" else None
             for i, word in enumerate(group):
                 w_start = word["start"]
                 w_end = group[i + 1]["start"] if i + 1 < len(group) else end
@@ -936,8 +1091,9 @@ def build_events(groups, spec):
                         color_hex = group[j]["_emphColor"] if group[j]["emphasize"] else colors["highlight"]
                         active_hl = hex_to_inline(color_hex, "highlight color")
                         if mode == "box":
-                            open_tags = f"\\bord{pill}\\3c{active_hl}\\shad0"
-                            close_tags = f"\\bord{border['outline']}\\3c{outline_inline}\\shad{border['shadow']}"
+                            # The pill is drawn behind the line; the word itself keeps its own colour.
+                            open_tags = "\\shad0"
+                            close_tags = f"\\shad{border['shadow']}"
                         elif mode == "glow":
                             glow = max(5, border["blur"])
                             open_tags = f"\\bord4\\blur{glow}\\3c{active_hl}"
@@ -953,6 +1109,9 @@ def build_events(groups, spec):
                         parts.append(emph_wrap(txt, group[j]["_emphColor"], base))
                     else:
                         parts.append(txt)
+                if offsets:
+                    fill_hex = group[i]["_emphColor"] if group[i]["emphasize"] else colors["highlight"]
+                    pill_behind(w_start, w_end, offsets, i, hex_to_inline(fill_hex, "highlight color"))
                 prefix = base_prefix
                 if i == 0 and pop > 100:
                     prefix += f"{{\\fscx{pop}\\fscy{pop}\\t(0,{animation['appearMs']},\\fscx100\\fscy100)}}"
@@ -982,6 +1141,9 @@ def build_events(groups, spec):
 
 def style_line(spec):
     font, colors, border, position = spec["font"], spec["colors"], spec["border"], spec["position"]
+    # font.size is the height of the drawn letter, so the number is corrected on
+    # the way into the style block rather than meaning a different thing per face.
+    drawn_size = round(font["size"] * spec.get("emCorrection", 1.0))
     if border["style"] == "box":
         box = colors["box"] or colors["outline"]
         outline_color = hex_to_ass(box, "colors.box")
@@ -994,7 +1156,7 @@ def style_line(spec):
     fields = [
         "Caption",
         font["family"],
-        font["size"],
+        drawn_size,
         hex_to_ass(colors["primary"], "colors.primary"),
         hex_to_ass(colors["highlight"], "colors.highlight"),
         outline_color,
@@ -1043,6 +1205,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     return header + "\n".join(events) + "\n"
 
 
+def preset_says_word_cap_on_a_one_word_style(preset):
+    one_word = preset.get("animation", {}).get("type") in {"word-pop", "bounce-in"}
+    return one_word and "maxWords" in preset.get("grouping", {})
+
+
 def resolve_style(style_arg):
     path = Path(style_arg)
     if not path.exists():
@@ -1060,6 +1227,12 @@ def main():
         "--style",
         default="bold-social",
         help="Preset name (from modules/captions/assets/) or path to a style spec JSON. Defaults to bold-social.",
+    )
+    parser.add_argument(
+        "--shape",
+        choices=tuple(SHAPES),
+        default="portrait",
+        help="The shape of the export being captioned. Sets the coordinate space and where the words sit.",
     )
     parser.add_argument("--words", help="Word-timings JSON for the clip span. Required unless --check.")
     parser.add_argument(
@@ -1092,10 +1265,18 @@ def main():
     args = parser.parse_args()
 
     spec = copy.deepcopy(DEFAULTS)
+    spec["shape"] = args.shape
+    deep_merge(spec, copy.deepcopy(SHAPES[args.shape]))
     style_path = resolve_style(args.style)
     preset = json.loads(style_path.read_text())
     deep_merge(spec, preset)
     spec["name"] = preset.get("name", style_path.stem)
+    if preset_says_word_cap_on_a_one_word_style(preset):
+        print(
+            f"warning: '{spec['name']}' caps the words on screen and animates one word at a time, "
+            f"so the cap draws nothing - drop one of the two",
+            file=sys.stderr,
+        )
 
     if args.brand_kit:
         kit_path = Path(args.brand_kit)
@@ -1127,6 +1308,9 @@ def main():
             f"{substituted} - tell the user, because the words are not in the font they asked for",
             file=sys.stderr,
         )
+
+    spec["emCorrection"] = round(em_correction(font_file), 4) if font_file else 1.0
+    spec["descentRatio"] = round(descent_ratio(font_file), 4) if font_file else 0.25
 
     if args.emit_spec:
         Path(args.emit_spec).write_text(json.dumps(spec, indent=2) + "\n")
@@ -1168,14 +1352,14 @@ def main():
                 f"--font-file, because a caption packed by word count alone wraps where it does not fit"
             )
     groups = group_words(words, spec["grouping"], widths, budget)
-    events, fit_lines = build_events(groups, spec)
+    events, fit_lines = build_events(groups, spec, widths, peak_scale(spec))
     Path(args.out).write_text(build_ass(spec, events))
     if args.emit_lines:
         Path(args.emit_lines).write_text(json.dumps(fit_lines, indent=2) + "\n")
 
     print(
         f"{args.out}: {len(events)} events from {len(words)} words in {len(groups)} groups "
-        f"({spec['name']}, {spec['animation']['type']})"
+        f"({spec['name']}, {spec['animation']['type']}, {args.shape})"
     )
     return 0
 

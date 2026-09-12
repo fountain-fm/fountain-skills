@@ -1,0 +1,27 @@
+{
+  "name": "broadsheet",
+  "description": "High-contrast display serif, sentence case, no colour. For interview and journalism shows where the words should carry authority rather than energy.",
+  "font": {
+    "family": "DM Serif Display",
+    "size": 84,
+    "bold": false,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#E8C77A",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 4,
+    "shadow": 2
+  },
+  "grouping": {
+    "maxWords": 6
+  },
+  "animation": {
+    "type": "none",
+    "leadMs": 100
+  }
+}

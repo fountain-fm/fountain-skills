@@ -1,0 +1,30 @@
+{
+  "name": "glow-word",
+  "description": "Whole phrase on screen; the spoken word lights up inside a cyan halo rather than changing colour. The only cool palette here, and it suits dark or night footage.",
+  "font": {
+    "family": "Montserrat",
+    "size": 92,
+    "bold": true,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#00E5FF",
+    "outline": "#001B22"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 4,
+    "shadow": 0,
+    "blur": 6
+  },
+  "grouping": {
+    "maxWords": 5
+  },
+  "animation": {
+    "type": "current-word",
+    "highlightMode": "glow",
+    "activeScalePct": 104,
+    "leadMs": 80
+  }
+}
