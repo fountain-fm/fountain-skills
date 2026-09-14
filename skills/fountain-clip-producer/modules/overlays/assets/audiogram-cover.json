@@ -1,0 +1,42 @@
+{
+  "name": "audiogram-cover",
+  "description": "The default for a source with no video: the artwork blurred to fill the frame, the artwork again sharp and rounded as a card, the episode title under it, and a bar meter above the captions. Needs layers.0.asset and layers.1.text.",
+  "layers": [
+    {
+      "type": "blurFill",
+      "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
+      "background": "blur",
+      "sigma": 90,
+      "scale": 0.62,
+      "cornerRadius": 36,
+      "marginV": 240,
+      "backgroundDim": 0.62,
+      "borderW": 3,
+      "borderColor": "#FFFFFF2E"
+    },
+    {
+      "type": "title",
+      "text": "REPLACE WITH EPISODE TITLE",
+      "size": 50,
+      "position": "top-center",
+      "marginV": 960,
+      "marginH": 130,
+      "start": 0,
+      "end": null,
+      "fadeInMs": 0,
+      "fadeOutMs": 0,
+      "borderW": 3,
+      "maxLines": 2
+    },
+    {
+      "type": "audiogram",
+      "width": 760,
+      "height": 120,
+      "color": "#FFFFFFE6",
+      "waveMode": "bars",
+      "bars": 34,
+      "position": "bottom-center",
+      "marginV": 650
+    }
+  ]
+}

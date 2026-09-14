@@ -22,6 +22,8 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 ## Output
 
 - `clip-landscape-master.mp4`, cut to the span and cropped to the camera area.
+- Or `clip-base.mp4` for a source that carries no video: the audio of the span on an empty frame of the
+  target shape, which module **overlays** then paints.
 - An alignment report, for a source that needed the content check.
 
 ## Requirements
@@ -117,6 +119,16 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 7. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
    Measure the inset and crop to the camera area before any other module runs.
 8. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
+9. Build an empty base instead, when the source carries no video at all, because every module after this
+   one paints onto a frame and there is none:
+
+   ```bash
+   # -f lavfi draws an empty frame of the target shape, and -shortest ends it with the audio.
+   # The frame is black because the audiogram package covers it; nothing here is ever seen.
+   ffmpeg -hide_banner -y -f lavfi -i color=c=black:s=1080x1920 -ss "$TS_START" -to "$TS_END" \
+     -i "$SOURCE" -shortest -map 0:v -map 1:a \
+     -c:v libx264 -preset veryfast -crf 20 -c:a aac -movflags +faststart clip-base.mp4
+   ```
 
 ## Additional notes
 

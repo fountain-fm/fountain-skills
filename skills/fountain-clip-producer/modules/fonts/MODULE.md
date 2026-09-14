@@ -7,6 +7,8 @@ description: Make the font that a style names available to the renderer, and sub
 
 A style spec names a font family, and `build-captions.py` writes that name into the ASS style block.
 The skill carries its own fonts, so every preset renders the same on any machine.
+A bundled file is named after the family it carries, so a new family needs no entry in any list: the
+script builds the file name from the family name and finds it.
 A missing font does more than change the look, because it changes the rendered width of the text.
 The fit measurement and the burn must therefore see the same font.
 
@@ -74,6 +76,11 @@ Pass it an absolute path to the bundled file, because `magick -list font` is oft
 A font file registers a family and a style, and libass matches on the family.
 The bold weight of a family is therefore the family name with `font.bold`, and never "Family Bold",
 which matches nothing at all.
+
+Most display faces ship one weight, and `font.bold` on one of those makes libass draw a bold that the
+file does not carry.
+ImageMagick measures the file as it is, so the caption is then wider than the width the fit report
+certifies. Leave `font.bold` off for a face that ships a single weight.
 
 Title cards, lower thirds, and on-screen labels follow these same rules.
 They take `fontfile=` with the drawtext filter, or they come in as a prepared image.

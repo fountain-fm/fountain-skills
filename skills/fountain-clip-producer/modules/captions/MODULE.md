@@ -14,7 +14,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 ## Input
 
 - The word timings of the clip, made from its own audio and rebased so the first word starts at zero.
-- The export to caption, usually `clip-vertical.mp4`.
+- The export to caption, usually `clip-vertical.mp4`, and its shape.
 - Optional: a preset name, a brand kit from module **brand**, and per-clip overrides.
 
 ## Output
@@ -41,7 +41,7 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 3. Compile the spec and the words into the ASS file:
 
    ```bash
-   scripts/build-captions.py --style word-pop --words words.json \
+   scripts/build-captions.py --style word-pop --shape portrait --words words.json \
      --override colors.highlight=#FFD400 --override font.size=84 \
      --out captions.ass --emit-lines caption-lines.json --emit-spec resolved-style.json
    ```
@@ -71,13 +71,40 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 ## Additional notes
 
-The spec layers from the lowest priority to the highest: defaults, preset, brand kit, per-clip override.
+The spec layers from the lowest priority to the highest: defaults, shape, preset, brand kit, per-clip override.
+
+`--shape` MUST name the shape of the export being captioned, because it sets the coordinate space that
+libass draws in: a portrait spec burned on a landscape export stretches every letter.
+The shape also decides where the words sit, so the position is right without anybody setting a margin.
+A portrait post is watched inside the app's own furniture, and the words stay clear of it: the post
+caption, the handle and the audio line claim the bottom of the frame, and the reaction buttons claim
+the right edge.
+The margins of the portrait shape clear the worst of the four apps, and they leave the face clear too,
+because a 9:16 crop of one speaker fills the middle of the frame with that face.
+A landscape clip carries no such furniture, so its words sit along the bottom.
+Move them with an override only for a clip that needs it, such as a shot where the speaker sits low.
+The script warns when an override puts the words back under the furniture.
 A misspelled override path is a hard error, and `--check` rejects unreadable contrast or flicker on its own.
 
 Use `bold-social` when neither the request nor the brand kit names a preset: it reads on a phone at arm's
 length, and it animates nothing that can go wrong.
-The presets in `assets` are starting points, each carries its own description, and `hormozi` wants 3 to 5
-words marked `"emphasize": true`.
+Send the user to https://beta.fountain.fm/docs/styling-clips rather than this list when they have not
+chosen, because the descriptions in `assets` say what a style is for and only the page shows it.
+
+Each preset owns one job, and no two of them differ by a knob alone:
+
+- Nothing moves: `bold-social` reads anywhere, `broadsheet` carries authority in a display serif,
+  `wide-block` survives the busiest footage on a solid block, `minimal-light` stays out of the way.
+- One word at a time: `word-pop` scales in, `bounce-in` rises, `impact-loud` shouts, `marker` is written
+  by hand, and `glow-bounce` burns.
+- The phrase stays and the spoken word is marked: by colour in `current-word`, by a pill in
+  `pill-karaoke`, by a halo in `glow-word`, by filling in `karaoke-fill`, and across the line in `stadium`.
+- `typewriter` reveals a letter at a time, and `hormozi` wants 3 to 5 words marked `"emphasize": true`.
+
+The script colours each speaker differently and labels them, through `colors.speakers` and
+`grouping.speakerLabels`.
+No preset uses either, because nothing gives this skill the speaker of a word.
+Set them as overrides on the day something does.
 
 These are the text rules, and the default mode is faithful-clean.
 The script owns the mechanical ones - safe because the audio still carries every word: it drops "um" and

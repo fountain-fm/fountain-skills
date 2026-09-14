@@ -1,0 +1,27 @@
+{
+  "name": "marker",
+  "description": "Handwritten marker, one word at a time, warm and off-white. For vlogs and personal shows, where a machine-set caption looks wrong.",
+  "font": {
+    "family": "Permanent Marker",
+    "size": 92,
+    "bold": false,
+    "case": "verbatim"
+  },
+  "colors": {
+    "primary": "#FFF8E7",
+    "highlight": "#FF6B2C",
+    "outline": "#241000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 5,
+    "shadow": 0
+  },
+  "animation": {
+    "type": "bounce-in",
+    "appearMs": 140,
+    "settleMs": 130,
+    "overshootPct": 112,
+    "riseHeight": 90
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "audiogram-headline",
+  "description": "The news look: the artwork fills the frame behind a dark scrim, with the hook in large capitals across the top and a thin meter low down. The loudest audiogram, for a clip that leads with a claim. Needs layers.0.asset and layers.2.text.",
+  "layers": [
+    {
+      "type": "blurFill",
+      "asset": "REPLACE-WITH-SHOW-ARTWORK.png",
+      "background": "blur",
+      "sigma": 60,
+      "scale": 1.0,
+      "backgroundDim": 0.6
+    },
+    {
+      "type": "scrim",
+      "height": 900,
+      "color": "#000000",
+      "opacity": 0.8,
+      "position": "bottom",
+      "curve": 1.4
+    },
+    {
+      "type": "title",
+      "text": "REPLACE WITH THE HOOK",
+      "size": 78,
+      "position": "top-center",
+      "marginV": 260,
+      "marginH": 110,
+      "start": 0,
+      "end": null,
+      "fadeInMs": 0,
+      "fadeOutMs": 0,
+      "borderW": 0,
+      "maxLines": 3,
+      "boxColor": "#000000CC",
+      "boxPad": 26
+    },
+    {
+      "type": "audiogram",
+      "width": 900,
+      "height": 90,
+      "color": "#FFFFFFD9",
+      "waveMode": "bars",
+      "bars": 48,
+      "position": "bottom-center",
+      "marginV": 660
+    }
+  ]
+}
