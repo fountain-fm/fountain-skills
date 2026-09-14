@@ -1,89 +1,57 @@
 ---
 name: fountain-reports
-description: Build the reports the user reads - compose components into a preset, then email or print it.
+description: Compose and deliver Fountain performance, clip-review, or settings reports.
 ---
 
 ## Overview
 
-This skill owns how a report looks, so no caller invents its own format.
-A report is a preset: an ordered list of components, where each component is a markdown template that
-data fills.
-The caller names the preset and gives the data; this skill composes the report and delivers it the
-way the Reporting section asks - email, printed, combined with a later report, or not at all.
-The user customizes a preset once, in the preferences, and every later report honours it.
+This skill turns caller data into a consistent report from reusable presets and components.
+It owns report structure and delivery, but it does not recompute the caller's results.
 
 ## Input
 
-- The preset name.
-- The data that the preset's components need, from the caller.
-- Optional: the surface, when the user is present and asks to read the report here.
-- Report customizations from the Reporting section of the preferences, when the show has any.
+- A preset name and the data required by its components.
+- Optional Reporting preferences and a requested delivery surface.
 
 ## Output
 
-- The report, delivered as the Reporting section asks - email is the default.
+- The composed report, delivered through the configured surface or returned in chat.
 
 ## Housekeeping
 
-You MUST read HOUSEKEEPING.md if you haven't already.
+Read HOUSEKEEPING.md before you use the Fountain API or preferences.
 
 ## Requirements
 
-- Fountain API.
-- Skill **fountain-onboarding**.
+- Fountain API for email delivery and Reporting preferences.
 
 ## Process
 
-1. Read the report customizations from the Reporting section of the preferences.
-   A customization can drop a component, reorder them, change a subject line, or change the delivery.
-2. Read the preset from `assets/presets`, and apply the customization.
-3. Fill each component template from `assets/components` with the caller's data.
-   Build every Fountain link and every platform mark from `assets/links.md`, which holds each
-   address one time, so a report never carries an address a component spelled for itself.
-   Drop a component whose data the caller did not give, and say so after the send.
-   A component that needs no data is never missing data, so this rule never drops it.
-   Only a customization can.
-4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
-   into a report sent later in the same run, or not at all.
-   Email is the default, and goes to the addresses under Reporting.
-   Run skill **fountain-onboarding** when the section holds none.
-   Print in the chat instead when the user asked to read it there.
-   Say plainly when a report was composed but not sent.
-   A send that answers success is not proof of delivery, so say which one you saw.
+1. Load Reporting preferences only when the request does not name the delivery and customization directly.
+2. Read the selected preset from `assets/presets`.
+   Apply configured component order, omissions, subject, and delivery changes.
+3. Fill its templates from `assets/components` with the caller's data.
+   Build Fountain and platform links from `assets/links.md`.
+   Drop a data-dependent component when its input is absent, and report the omission.
+4. Deliver by email, print in chat, combine with a report later in the same run, or do not send,
+   as the request or Reporting preferences specify.
+   Use email as the default.
+   Use skill **fountain-onboarding** only when missing report setup blocks delivery.
+5. Report whether the API accepted the send.
+   Do not claim that an accepted send proves inbox delivery.
+
+The run is complete when the report is delivered as requested, or when the composed report and exact
+delivery blocker are both available to the user.
 
 ## Additional notes
 
-The presets:
+Available presets are:
 
-- `performance` - the numbers for a window: headline, channels overview, yesterday's clips, learnings,
-  warnings.
-- `review-posts-simple` - the posts that wait for a decision, and nothing else. The words are read in
-  the dashboard, where the reader approves or deletes, so the mail says which posts exist and sends
-  them there. Whether approving renders a clip or sends it is the approve note's job, and not a second
-  preset's.
-- `review-posts` - the whole day in one mail: the posts that wait for a decision, then the numbers.
-  The user asks for it in place of the two, and the Reporting section records which shape the show wants.
-- `settings` - the current settings, each with its origin, and the tour of the headings.
-  Sent when the user asks what their settings are.
+- `performance` for a performance window.
+- `review-posts-simple` for posts that wait for a decision.
+- `review-posts` for review posts and performance in one report.
+- `settings` for current settings and their origins.
 
-A preset is named for the state it reports, never for the occasion or the skill that sends it,
-so any head of the chain reuses it unchanged.
-
-The printed surface serves the review in the chat: the user reads the same report that the email
-carries, so the two never disagree.
-
-Combining joins reports, not machines: a report can wait only for one sent later in the same run,
-because nothing holds a pending report between machines.
-
-A component is small and single-purpose.
-A new kind of email is a new preset over the same components, and a missing block is a new component -
-never markdown a caller writes by hand, because two callers writing the same block drift apart.
-
-Numbers come from the caller and go into the template unchanged.
-This skill formats; it MUST NOT recompute, round away, or soften what the caller measured.
-
-Send markdown, and never HTML.
-The Project API renders the markdown itself, and strips every attribute from the result, so styling
-that this skill sets does not reach the reader.
-It styles the tables and keeps the column alignment that markdown asks for, so markdown carries
-everything a report needs.
+A preset describes the state it reports, not the skill or occasion that requested it.
+Numbers pass through unchanged.
+Send Markdown, because the Project API renders it and strips HTML attributes.

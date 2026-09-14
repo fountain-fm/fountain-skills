@@ -1,115 +1,68 @@
 ---
 name: fountain-clip-finder
-description: Find the strongest clip moments in a show, write the post copy, and open a draft post for each channel.
+description: Find podcast clip moments and create channel-specific draft social posts.
 ---
 
 ## Overview
 
-This skill searches a show's transcripts for the moments that could become a strong clip.
-Four modules narrow the field: module **discovery** scores the moments, module **media** resolves the file
-each one is cut from, module **boundaries** sets the span, and module **copy** writes the words around it.
-Module **external-source** replaces the search for a video that Fountain does not hold.
-Each clip becomes a draft post, so the user decides what goes out.
+This skill turns a clip request into ranked draft posts.
+It routes episode footage through modules **discovery**, **media**, **boundaries**, and **copy**.
+It uses module **external-source** only for a video that Fountain does not hold.
+It does not render, approve, schedule, or publish a clip.
 
 ## Input
 
-One of these:
-
-- A topic, or the terms to search for.
-- A kind of moment, for example funny, angry, or surprising.
-- An episode, with an optional quote or approximate time.
-- A person, to find the moments of one guest or host.
-- One or more videos that the show never published as an episode, each a URL or a file on this
-  machine, with an optional topic or quote.
-
-Optional:
-
-- `clip_count` - the most clips to return, which the show's archive may not fill.
-- `min_duration_seconds` and `max_duration_seconds` - the length to cut to.
-- A link that every post MUST carry, for example the page a campaign drives to.
-- Trend context with its sources, when the clip must answer a news story.
-  This skill does not search the news, so the caller gives the sources.
+- A show, episode, person, topic, quote, approximate time, or kind of moment.
+- Or one or more user-supplied video URLs or local files that Fountain does not hold.
+- Optional clip count, duration range, required link, or sourced trend context.
 
 ## Output
 
-One draft `SocialPost` for each clip on each connected `SocialChannel`, ranked by the clip score of
-module **boundaries**.
-
-A post targets one channel, and the platform of that channel decides how the text reads.
-One clip on two channels is therefore two posts, each with its own text.
-
-The API marks `source` optional, but this skill MUST write it.
-Fountain shows a post as a candidate only when it holds `source`, and only then can a renderer cut the clip.
-Module **copy** writes `content.title`, `content.text`, and `context`.
-Module **media** and module **boundaries** build `source` between them.
-
-A clip from a video that is not an episode carries an external source instead, which module
-**external-source** defines, and the post holds no `source` at all: `ids` names an episode and a show,
-and this clip has neither.
-Such a post is a draft with words and no clip behind it, so the render MUST happen in the same session.
-
-The posts then wait in the Social API, and nothing here invokes the next stage: skill
-**fountain-clip-producer** works from `source` and attaches the video to the post.
+- Ranked clip cards.
+- One draft `SocialPost` per suitable clip and connected `SocialChannel`.
+- A complete `SocialPostMediaSource` for an episode clip.
+- An in-session render handoff for an external video clip.
 
 ## Housekeeping
 
-You MUST read HOUSEKEEPING.md if you haven't already.
+Read HOUSEKEEPING.md before you use the Fountain API, preferences, or local outputs.
 
 ## Requirements
 
 - Fountain API.
-- A web search tool, for episodes that have no video on Fountain.
-- Python 3.11 or later, and yt-dlp for a video URL, and ffmpeg with whisper for a local video that
-  has no subtitle file.
-  Module **external-source** needs all three, and a machine without them runs every other input.
-- Skill **fountain-onboarding**.
+- A web search tool only when module **media** must find episode video outside Fountain.
+- Read module **external-source** for its conditional software requirements.
 
 ## Process
 
-Make the calls that do not need each other's answers at the same time.
-A run is slow between its actions, and not inside them.
+1. Resolve the show and list its connected `SocialChannel` records.
+   Use skill **fountain-onboarding** only when channel setup blocks the requested draft posts.
+   Continue without drafts when the user asked only for clip candidates.
+2. For Fountain episodes, read and run module **discovery**.
+   For a user-supplied external video, read module **external-source** first, then run module **discovery**
+   on the returned segments.
+3. For Fountain episodes, read and run module **media**.
+   Skip it for an external video, because module **external-source** already resolved the file.
+4. Read and run module **boundaries** on each surviving moment.
+5. Read and run module **copy** on each surviving clip.
+6. Create the draft posts with the Social API.
+   Write each post's text with the required second call, then verify that the text landed.
+   Process independent clips and channels concurrently in small batches.
+7. Present the ranked clip cards from `assets/clip-card.md`.
 
-1. Resolve the show, and list the connected `SocialChannel` with the Social API.
-   Run skill **fountain-onboarding** when the show has none, because a clip becomes a draft post on a
-   channel, and there is no other place to keep the work.
-   Continue only when the user asks for the clips without a channel.
-2. Run module **discovery** to search the transcripts, score each moment, and drop the weak ones.
-   For a video that is not an episode, run module **external-source** first, and give its segments to
-   module **discovery** as the passages to score.
-3. Run module **media** to resolve the file each moment is cut from, and the clock that file runs on.
-   Drop a moment when its episode has no video to cut from.
-   Skip this module for such a video, because module **external-source** already named the file.
-4. Run module **boundaries** to shape each moment into a clip, and to drop the ones that fail a gate.
-5. Run module **copy** to write `content.title`, `content.text`, and `context`.
-6. Create one draft `SocialPost` for each clip on each channel with the Social API.
-   Creating a post does not carry its text, so write the text with a second call, and check that it
-   landed - a draft with no words looks finished in the dashboard and publishes as an empty post.
-   The two calls of one post run in that order, and no post waits for another, so work through the
-   posts in batches of 4 to 6 at the same time.
-7. Present each clip as one clip card of `assets/clip-card.md`, in rank order, and close with the
-   card's drafts link.
-   The card carries the score, the reason, and each flag, so nothing waits in a summary above it.
-   Give the external source of each clip to the renderer in this session, and say that these posts
-   cannot be rendered from a later one.
+The run is complete when each selected clip has a card and each intended channel has a verified draft,
+or when the result states why no draft could be created.
 
 ## Additional notes
 
-Each module removes work from the next one, so you MUST run them in the order above.
-Inside a module the order is looser: where a step repeats one API call over many items, the items do
-not depend on each other, so ask for them together rather than one at a time.
+The module order is fixed only where one module produces the input of the next one.
+Return fewer clips than requested when fewer pass the gates.
 
-A clip from a video that is not an episode is a post about something the audience cannot find on the
-feed, so the words carry the link that the request gives, and the user approves both together.
-An episode that is not published yet is the other case: the clip goes out before the episode does, so
-the words MUST NOT say that the audience can hear the rest of it today.
+An external video post has no `source`, episode id, or show id.
+Render it in the same session and give the external source directly to skill **fountain-clip-producer**.
 
-`ts_start` and `ts_end` are always in the clock of the transcript.
-A YouTube cut of an episode runs to its own clock, and skill **fountain-clip-producer** translates the
-span into it at render time.
-A video that is not an episode is its own transcript, so those two clocks are one and nothing
-translates the span.
+Always write `source` on an episode draft.
+Fountain can offer the draft to a renderer only when that field is present.
 
-This skill never makes a video file: it finds the moment, sets the span, and writes the words, and
-`source` holds all of that.
-
-Give few strong clips rather than many weak ones, and say plainly when the show holds none.
+Do not say that an unpublished episode is available to hear now.
+Do not create a video file in this skill.

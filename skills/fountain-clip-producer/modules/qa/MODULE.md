@@ -1,6 +1,6 @@
 ---
 name: qa
-description: Prove a style on a short render, and gate every delivery on one pass or fail report.
+description: Prove a style and gate delivery on technical, visual, and content checks.
 ---
 
 ## Overview
@@ -17,6 +17,8 @@ Nothing reaches the user until that gate reports a pass.
 - The crop plan and the visual QA report of module **framing**, and the contact sheet.
 - The caption fit report of module **captions**, when the export carries captions.
 - The removal report of module **trims**, when the clip was cut.
+- The verified word timings from module **words**.
+- The `SocialPost` and its source transcript, when the render belongs to a post.
 
 ## Output
 
@@ -52,7 +54,13 @@ Nothing reaches the user until that gate reports a pass.
 
 4. Add `--caption-layer` only when the render used a prepared transparent layer.
    That layer is the one case with a separate file, and it needs its own frame rate and alpha checks.
-5. Report the failed checks and the next repair step when the gate fails.
+5. Confirm on the render that each quoted phrase is present and that the credited person says it.
+   Use the picture and audio for speaker identity, because the transcript names no speaker.
+   Correct a proven copy or credit error with the Social API, and report the change.
+   Move a source edge only when the render proves that it cuts a word or excludes the quoted phrase.
+   Write the corrected span and transcript to the post with the Social API.
+   When an edge moves, rerun module **media** and every later module that depends on the changed master.
+6. Report the failed checks and the next repair step when the gate fails.
    You MUST NOT present the file as finished.
 
 ## Additional notes
@@ -84,3 +92,7 @@ A repeat render of a style that the user already approved needs no new proof.
 
 The spec validation and the fit report catch the faults that a machine can measure.
 The proof catches the ones of judgment, such as a look that is valid and still wrong for the show.
+
+Do not move a source edge to improve the editorial choice.
+Move it only to repair a proven content or word-boundary fault, or to make a change the user requested.
+A source span that seems wrong but cannot be proved wrong is a report, not an automatic repair.
