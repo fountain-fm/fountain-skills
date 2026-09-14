@@ -31,7 +31,7 @@ fountain-skills
 └───skills
     └───fountain-abc // skill name
         │   SKILL.md // skill
-        │   HOUSEKEEPING.md // rules, copy-pasted with a script
+        │   HOUSEKEEPING.md // short shared runtime rules, copy-pasted with a script
         ├───scripts // skill-wide scripts
         │       def.py
         ├───assets // skill-wide non-script assets
@@ -78,10 +78,14 @@ Leave it out when the asset does, e.g. a font, whose version a font tool reads f
 
 Each line MUST be under 120 chars.
 A skill MUST do one job, and the body MUST be as short as that job allows.
-A body over 100 lines is a signal to check that it is still one job, and never a reason to cut a rule
-that earns its place.
+The root document MUST act as a router when the skill has multiple workflows.
+It MUST state the shared outcome, the routing decisions, and the completion condition.
+It MUST leave workflow-specific mechanics in the module that owns them.
+A body over 100 lines is a signal to check that the root repeats module guidance or over-specifies a sequence.
 
-Significant chunks of isolatable logic CAN be exported to a module.
+Significant chunks of isolatable logic SHOULD be exported to a module.
+The skill MUST tell the agent when to read each module.
+It MUST NOT make the agent read a module that does not apply to the request.
 
 You MUST refer to skills and modules by name (e.g. module **face-detection**).
 You MUST NOT refer to modules or skills by path (e.g. "modules/face-detection/MODULE.md").
@@ -98,14 +102,14 @@ You MUST NOT repeat information that is already in HOUSEKEEPING.md.
 - Input (REQUIRED) - list of what the skill requires: combination of variables (e.g. `clip_count`), API models,
   and/or unstructured user input
 - Output (REQUIRED) - list of what the skill produces
-- Housekeeping (REQUIRED) - "You MUST read HOUSEKEEPING.md if you haven't already".
-  This section is the same in every skill.
-- Requirements (OPTIONAL) - list of other skills and software requirements (e.g. "Fountain API" or python).
+- Housekeeping (REQUIRED) - tell the agent to read HOUSEKEEPING.md before it uses the Fountain API,
+  changes preferences, publishes, or writes local outputs.
+- Requirements (OPTIONAL) - list shared requirements and route conditional requirements to the module that uses them.
   When relevant you MUST specify version / formula, e.g. default Homebrew ffmpeg lacks features.
-  Modules' requirements MUST be included here.
-- Process (REQUIRED) - list of steps to complete the task, when relevant refer to modules or other skills.
-  Steps and the usage of certain skills and modules can be optional.
-  You MUST NOT overdescribe edge cases, failure modes, etc. here - use "Additional notes" for that.
+- Process (REQUIRED) - give routing decisions and the shortest useful order of work.
+  Use a fixed sequence only where a later result depends on an earlier one.
+  Define what finished means, so the agent continues through verification and repair.
+  Refer to modules for mechanics, and use "Additional notes" for important exceptions.
 - Additional notes (OPTIONAL) - anything else
 
 You MUST NOT add any other H2 headings.

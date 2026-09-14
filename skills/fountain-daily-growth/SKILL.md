@@ -1,82 +1,57 @@
 ---
 name: fountain-daily-growth
-description: Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.
+description: Run the recurring podcast growth cycle from recent results and current news.
 ---
 
 ## Overview
 
-This skill is the head of the daily content chain, and it runs two modules in order.
-Module **performance-review** looks backward: it turns the numbers of yesterday's posts into lessons
-in the preferences.
-Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs
-for skill **fountain-clip-finder**.
-The skill itself updates the narratives first, because both modules read them.
+This skill reviews recent post performance, finds timely trends, and starts the best clip work.
+It is for the recurring growth cycle, not for a one-off clip request.
+Modules **performance-review** and **trend-discovery** own the two analysis workflows.
 
 ## Input
 
-- `show` - the show to run the loop for.
-- The Narratives and Editorial sections of the preferences.
+- The show to review.
+- Its Narratives, Editorial, Automation, and Reporting preferences when those sections exist.
 
 ## Output
 
-- One brief per advancing trend, handed to skill **fountain-clip-finder**.
-  A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
-  clip budget as `clip_count`.
-- The report of the posts that wait, one time when the day's clips exist.
-- Updated preferences: the narratives, and the lessons of module
-  **performance-review**.
+- Updated durable lessons and narratives.
+- At most five sourced trend briefs with a shared daily clip budget.
+- Draft or rendered clip candidates and the configured reports.
 
 ## Housekeeping
 
-You MUST read HOUSEKEEPING.md if you haven't already.
+Read HOUSEKEEPING.md before you use the Fountain API or preferences.
 
 ## Requirements
 
-- An HTTP client, e.g. curl, for the Google News RSS route of module **trend-discovery**.
-- Optional: a web search tool, and a social trend search tool such as one for X, when the machine has them.
 - Fountain API.
-- Skill **fountain-clip-finder**.
-- Skill **fountain-reports**.
-- Skill **fountain-onboarding**.
+- Read module **trend-discovery** for its news-source requirements.
+- Skills **fountain-clip-finder**, **fountain-clip-producer**, and **fountain-reports**.
 
 ## Process
 
-1. Update the Narratives section, because both modules read it.
-2. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
-3. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
-4. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
-   continues without this skill.
-5. Read the auto-render setting from the Automation section of the preferences, where on is the default.
-   List the day's drafts with the Social API either way, because step 4 hands the briefs on and never
-   reads what came back.
-   With auto-render on, render them with skill **fountain-clip-producer** as a clean final, so the user
-   reviews the clip and not a description of it.
-   When the Brand section holds no confirmed kit, render the single strongest clip first, and present
-   it as the style proof of that skill.
-   Render the rest only after the user confirms or corrects the proof, because a batch in the wrong
-   look is a batch rendered twice.
-   Leave the rendering to a render machine instead when one works this show, and it sends the report.
-   Send the day's clips as the `review-posts-simple` report of skill **fountain-reports** either way, and let
-   its approve note say whether approving renders a clip or sends it.
-   Present the day's clips in the chat on the clip card of skill **fountain-clip-finder**, whether or
-   not this run made them, because a day at budget still has clips the user has not seen.
+1. Load the relevant preferences and refresh Narratives only when recent episodes can change them.
+   Do not audit unrelated setup or settings.
+2. Read and run module **performance-review**.
+3. Read and run module **trend-discovery** with the updated lessons and narratives.
+4. Give each advancing brief to skill **fountain-clip-finder** with its `clip_count`.
+5. Read auto-render from Automation, with on as the default.
+   With auto-render on, use skill **fountain-clip-producer** to make clean finals.
+   With auto-render off, leave verified drafts for the configured renderer or the user.
+6. If no brand kit is confirmed, render only the strongest style proof and leave the other clips as drafts.
+   State the one style decision that blocks the remaining renders.
+7. Deliver the performance and review reports through skill **fountain-reports**.
+   Also show the day's clips in chat with the clip cards from skill **fountain-clip-finder**.
+
+The run is complete when the analysis is recorded, every advancing brief reached the clip finder,
+and each resulting draft is rendered, assigned to a renderer, or held for one stated user decision.
 
 ## Additional notes
 
-Where a step repeats one API call over many items - the numbers of each post, the news of each subject,
-the drafts of each clip - the items do not depend on each other, so ask for them all at the same time.
+Process independent posts, episodes, and trends concurrently where their inputs do not depend on each other.
+An empty Editorial section does not block a run.
 
-This skill owns the two morning looks and nothing downstream.
-Finding moments and writing the copy is the job of skill **fountain-clip-finder**.
-Rendering is the job of skill **fountain-clip-producer**, run here or on a render machine that picks the
-drafts up from the Social API.
-
-Auto-render off means something else has to render, so say which: the user's word in the chat, or a
-render machine that works this show.
-Run skill **fountain-onboarding** to schedule a render of the approved drafts when they want the day to
-finish without them, because a draft that nothing renders is a clip that never exists.
-
-An empty Editorial section is not a wall: proceed, and say so plainly.
-
-Use this skill for the recurring daily cycle.
-For a one-off "find me a clip about X", use skill **fountain-clip-finder** directly.
+Use skill **fountain-clip-finder** directly for a one-off clip request.
+Use skill **fountain-onboarding** only when a missing setup item blocks this cycle.

@@ -1,6 +1,6 @@
 ---
 name: copy
-description: Write the title, the context note, and the platform post text for a verified clip, and check them for risk.
+description: Write the title, context, and platform post text for a verified clip, then check them for risk.
 ---
 
 ## Overview
