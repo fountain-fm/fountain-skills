@@ -24,6 +24,17 @@ Claude plugin bundles Fountain skills and MCP.
 4. Paste in `https://github.com/fountain-fm/fountain-skills` and press Sync
 5. In chat (preferably Claude Code), say "Set up Fountain"
 
+### Claude Code
+
+Run these commands in Claude Code:
+
+```
+/plugin marketplace add fountain-fm/fountain-skills
+/plugin install fountain@fountain-skills
+```
+
+Then say "Set up Fountain".
+
 ## The skills
 
 | Skill                    | Job                                                                      |
@@ -33,3 +44,7 @@ Claude plugin bundles Fountain skills and MCP.
 | `fountain-clip-producer` | Produce videos for candidate clips with framing, captions, and overlays. |
 | `fountain-daily-growth`  | Read yesterday's numbers and today's news, then brief the clip finder.   |
 | `fountain-reports`       | Create email reports detailing clip performance and new clip candidates. |
+
+## License
+
+[MIT](LICENSE)
