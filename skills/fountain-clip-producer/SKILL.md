@@ -84,9 +84,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
    Skip both for a source with no video, which has no picture to crop and no face to follow.
 6. Run module **brand** to load the look of the show, for a clean final or a publish final.
-7. Send the user to https://beta.fountain.fm/docs/styling-clips when the request names no caption
-   style and module **brand** holds none.
-   That page draws every style, and the choice it records comes back as a brand kit.
+7. Send the user to the clip styling page when the request names no caption style and module
+   **brand** holds none.
+   The choice it records comes back as a brand kit.
    Do not hold the run for an answer: produce with the default and say what it was.
 8. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
