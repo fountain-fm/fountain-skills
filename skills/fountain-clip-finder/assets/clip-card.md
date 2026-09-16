@@ -8,7 +8,7 @@
 <!-- One text line per channel the clip went to, labelled by platform, each from its own post. -->
 <!-- Add one line for each flag the clip carries, e.g. an uncertain speaker, because the reader -->
 <!-- approves only what they can see. -->
-<!-- {post_url} is https://{domain}/studio/{project_id}/{entity_id}/posts/{post_id}, the post of -->
+<!-- {post_url} is https://beta.fountain.fm/studio/{project_id}/{entity_id}/posts/{post_id}, the post of -->
 <!-- the first channel listed. {project_id} is ProjectOverview._id. {entity_id} names the show: its -->
 <!-- feed id when the project hosts it, one of ProjectOverview.feeds, and its ContentID when the -->
 <!-- project does not, one of ProjectOverview.shows. A show that is in both is hosted, so the feed -->
@@ -28,6 +28,6 @@
 **[Review this draft]({post_url})**
 
 <!-- After the last card, one link to everything that waits, on the same domain rule: -->
-<!-- {drafts_url} is https://{domain}/studio/{project_id}/{entity_id}/posts?tab=DRAFT -->
+<!-- {drafts_url} is https://beta.fountain.fm/studio/{project_id}/{entity_id}/posts?tab=DRAFT for posts scoped to a Fountain podcast as source and https://beta.fountain.fm/studio/{project_id}/~/posts?tab=DRAFT -->
 
 **[Review all drafts]({drafts_url})**
