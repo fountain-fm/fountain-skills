@@ -74,6 +74,9 @@ read, so the passages are chosen by reading and never by search, and no earlier 
    Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
    Compare only with a `source` whose `media` is the `info.audio` of the segments' episode, because the
    two clocks agree only then.
+   For a moment from one media URL, list recent posts without a source filter.
+   Compare it with the same YouTube video id, or with the same `media` when both sources have empty `ids`.
+   Mark it `already-clipped` when the spans overlap by more than half.
    Advance a marked moment only when the caller or the lessons ask for a new cut, and give what remains to
    module **media**.
 
@@ -102,8 +105,8 @@ because a moment can improve when it is shaped, and some fail in the later modul
 A posted clip cut from another file cannot be compared here, because its `ts_start` is in that file's
 clock. Such a clip is rare, and missing one costs a repeat rather than a wrong clip.
 
-A moment from one video is compared with nothing at step 8: a post from such a video holds no `source`,
-so the API cannot say what was clipped before. Ask the user whether the video was clipped already.
+A moment from a raw local video is compared with nothing at step 8, because its post holds no `source`.
+Ask the user whether that video was clipped already.
 
 Do not force a match: the speaker MUST discuss the theme directly, and say so when nothing has substance.
 
