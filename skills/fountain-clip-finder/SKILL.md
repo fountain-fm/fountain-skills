@@ -84,9 +84,13 @@ A run is slow between its actions, and not inside them.
 4. Run module **boundaries** to shape each moment into a clip, and to drop the ones that fail a gate.
 5. Run module **copy** to write `content.title`, `content.text`, and `context`.
 6. Create one draft `SocialPost` for each clip on each channel with the Social API.
-   Include the complete `source` when `media` is a URL.
+   Give the complete `SocialPostMediaSource` to the Social API when `media` is a URL.
    Creating a post does not carry its text, so write the text with a second call, and check that it
    landed - a draft with no words looks finished in the dashboard and publishes as an empty post.
+   Load the saved `SocialPost` after both writes.
+   For a media URL, require `source` to match the complete `SocialPostMediaSource` that the modules built.
+   A successful write with an absent or incomplete `source` is a failed draft.
+   Repair `source` one time with the Social API, load the post again, and stop with the error if it is still wrong.
    The two calls of one post run in that order, and no post waits for another, so work through the
    posts in batches of 4 to 6 at the same time.
 7. Present each clip as one clip card of `assets/clip-card.md`, in rank order, and close with the
