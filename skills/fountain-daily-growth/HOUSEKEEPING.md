@@ -112,7 +112,7 @@ You MUST quote the content in full, e.g. the words of a clip or the text of a po
 - `drafts_url` - `https://beta.fountain.fm/studio/{project_id}/~/posts?tab=DRAFT`
 - `episode_url` - `https://beta.fountain.fm/episode/{episode_id}?t={seconds}`, which starts the player at that second
 - `platform_icon` - `https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp`
-- Clip styling page - `https://beta.fountain.fm/docs/styling-clips`, which draws every caption style and every overlay package
+- Clip styling page - `https://beta.fountain.fm/docs/styling-clips`
 
 ## Preferences
 
