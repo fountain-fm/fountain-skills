@@ -5,8 +5,9 @@
 <!-- channel's own post, because a clip is one post on each channel and the reader wants the one they read. -->
 <!-- One card carries every platform the clip went to, because the reader judges a clip and not a post. -->
 <!-- published is the publish time, so the reader can see the hour a result came from. -->
-<!-- episode names the episode the clip was cut from, and episode_published the day it came out, e.g. -->
-<!-- 20 May 2026, because a number reads differently against a clip cut from an old episode. -->
+<!-- source names the episode or external video that the clip was cut from. -->
+<!-- source_published includes its date in parentheses when known, e.g. (20 May 2026). -->
+<!-- A number reads differently against a clip cut from an old source. -->
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms of this clip alone. -->
@@ -23,7 +24,7 @@ _{window}_
 
 > ### [{title}]({post_url})
 >
-> {episode} ({episode_published})
+> {source}{source_published}
 >
 > | Channel                                                | Published   |   Reactions |  Eng. rate |   Views |
 > | ------------------------------------------------------ | ----------- | ----------: | ---------: | ------: |

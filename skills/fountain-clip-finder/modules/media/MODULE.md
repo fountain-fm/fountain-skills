@@ -64,6 +64,7 @@ translates it at render time, because only the renderer must reach YouTube.
    - `unmatched` - no candidate fits. Mark the moment for removal.
 
 7. Write the resolved URL into `media`.
+   Add the matched video as `youtube:video:<id>` to `ids`.
 
 ## Additional notes
 
