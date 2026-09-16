@@ -1,4 +1,4 @@
-<!-- Data: one entry per clip - title, post_url, source, source_published, channels. Build links from links.md. -->
+<!-- Data: one entry per clip - title, post_url, source, source_published, channels. -->
 <!-- A summary for a report that sends the reader to the dashboard: enough to recognise a clip, and -->
 <!-- never the copy or the transcript, which the reader reads in the dashboard. -->
 <!-- source names the episode or external video that the clip was cut from. -->

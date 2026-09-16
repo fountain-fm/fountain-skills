@@ -455,10 +455,6 @@
           "path": "skills/fountain-reports/assets/components/warnings.md"
         },
         {
-          "name": "links.md",
-          "path": "skills/fountain-reports/assets/links.md"
-        },
-        {
           "name": "performance.md",
           "path": "skills/fountain-reports/assets/presets/performance.md"
         },
