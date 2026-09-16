@@ -1,4 +1,4 @@
-<!-- Data: one entry per clip - title, post_url, episode, channels. Build the link from links.md. -->
+<!-- Data: one entry per clip - title, post_url, episode, channels. -->
 <!-- A summary for a report that sends the reader to the dashboard: enough to recognise a clip, and -->
 <!-- never the copy or the transcript, which the reader reads in the dashboard. -->
 <!-- episode names the episode the clip was cut from, the way the show names it, e.g. #748. -->

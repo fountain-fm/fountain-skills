@@ -59,7 +59,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Record the guidelines, and the logo URLs if available.
    Don't include logos in the clip settings unless existing clips have them.
    Present a mockup of what the clip will look like.
-   Offer to customize: https://beta.fountain.fm/docs/styling-clips.
+   Offer to customize on the clip styling page.
 10. Set up automatic daily growth using skill **fountain-daily-growth**.
     Record its time and the machine that runs it under Automation.
 

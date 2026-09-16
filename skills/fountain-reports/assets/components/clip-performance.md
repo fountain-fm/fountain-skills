@@ -1,5 +1,4 @@
-<!-- Data: one card per clip - title, post_url, and one row for each channel, plus the total. -->
-<!-- Build every link and every mark from links.md, which holds each address one time. -->
+<!-- Data: one card per clip - title, post_url, platform_icon, and one row for each channel, plus the total. -->
 <!-- window names the span these clips cover, e.g. "Last 24 hours", and matches the span you reported. -->
 <!-- A row holds platform, published, reactions, eng_rate, views. -->
 <!-- platform is written the way the platform writes itself - Instagram, X, YouTube - and links to that -->
