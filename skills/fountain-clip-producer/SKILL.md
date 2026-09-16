@@ -108,8 +108,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     captions and the gate all describe the old cut, and only the gate can say the new one is finished.
     Move an edge only to repair what you can prove, or to make a change the user asked for, and never to
     improve the clip - choosing the moment is the caller's job.
-12. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
-    not to.
+12. Load the `SocialPost` with the Social API before you attach the video.
+    When the input `media` is a URL, require the saved `source` to match the complete
+    `SocialPostMediaSource` that supplied the render.
+    Repair an absent or incomplete `source` one time with the Social API, load the post again, and stop
+    with the error if it is still wrong.
+    Attach the video with the Uploads API and the Social API, unless the user asked you not to.
 13. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
     line saying the render result and where the video is attached.
 

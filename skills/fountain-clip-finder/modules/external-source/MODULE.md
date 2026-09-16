@@ -65,7 +65,9 @@ Those times are the clock of the video itself, so nothing translates the span at
    A subtitle file or a caption track that stops early holds a part of the talk, so say which part the
    search reaches.
 4. Write `media` as the URL or the path the user gave.
-   For a YouTube watch page, write `ids` as its one `youtube:video:<id>` value.
+   For a YouTube watch page, set `ids` to an array that contains only `youtube:video:<id>`.
+   Use the video id from the watch page URL.
+   Never put the watch page URL in `ids`, and never leave `ids` empty for a YouTube watch page.
    For another media URL, write empty `ids`.
    Keep a raw local path as an external source for this session, and do not call it a `SocialPostMediaSource`.
    Give the segments and `media` to module **discovery** as the passages to score.
