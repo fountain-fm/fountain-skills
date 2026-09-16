@@ -12,7 +12,8 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 ## Input
 
-- The `SocialPostMediaSource` of the verified clip.
+- The `SocialPostMediaSource` of the verified clip, or the external source of a raw local video.
+- The title of an external video from module **external-source**.
 - The name the caller asked for, when the request named a person.
 - The link that every post MUST carry, when the caller gives one.
 - The scores from module **discovery** and module **boundaries**, and each flag.
@@ -57,6 +58,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    - What happened in the news and why it is live today, when the clip answers a trend.
    - What the clip contains, and the claim the speaker makes.
    - Why the clip answers that story, and which score dimension made it win.
+   - The external video title, when `ids` does not name an episode.
    - A risk the user has to weigh, in one sentence, and nothing when the clip carries none.
 
 4. Write `content.text` for each `SocialPlatform` the clip suits.

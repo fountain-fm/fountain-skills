@@ -16,15 +16,16 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 ## Input
 
 - Each moment from module **discovery**, with its scores and each flag.
-- The `SocialPostMediaSource` of each moment from module **media**, or the external source of each
-  moment from module **external-source**.
+- The partial `SocialPostMediaSource` of each media URL from module **media** or module **external-source**.
+- The external source of each local video from module **external-source**.
 - The `TranscriptSegment` list of each episode, from the Content API.
   For a moment from one video, the segments that module **external-source** read instead.
 - Optional: `clip_count`, `min_duration_seconds`, `max_duration_seconds`, and trend context from the caller.
 
 ## Output
 
-- The complete `SocialPostMediaSource` of each clip.
+- The complete `SocialPostMediaSource` of each clip whose `media` is a URL.
+- The complete external source of each clip whose `media` is a raw local path.
 - The clip scores, added to the scores of module **discovery**.
 - A removal mark on each clip that fails a gate.
 

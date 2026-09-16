@@ -14,8 +14,9 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 
 - The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
   The file can carry no video, which most of a podcast catalogue does not.
-  A caller that clipped a video Fountain does not hold gives those fields without `ids`, and the post
-  it made carries no `source` to read them back from.
+  Empty `ids` and a YouTube video id both name sources that Fountain does not hold as episodes.
+- Or an external source for a raw local video, which carries the media path and span for this session.
+  Its post carries no `source`, because a raw local path is not a valid `media` URL.
 - The word timings of that span, which this skill makes from the clip's own audio.
   Module **shots** wants the speaker of each word too, which nothing supplies.
 - A delivery tier, which the words of the request imply.

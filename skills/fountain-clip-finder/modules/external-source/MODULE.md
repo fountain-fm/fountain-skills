@@ -20,9 +20,12 @@ Those times are the clock of the video itself, so nothing translates the span at
 
 ## Output
 
-- An external source for each video: `media`, the title, and the segments.
-  An external source is a `SocialPostMediaSource` without `ids`, because no episode and no show hold
-  the video. The modules after this one fill `transcript`, `ts_start` and `ts_end`.
+- A partial `SocialPostMediaSource` for each media URL, with `ids` and `media`.
+  The title and segments go with it for the later modules.
+  A YouTube watch page uses its `youtube:video:<id>`, and another external URL uses empty `ids`.
+  The modules after this one fill `transcript`, `ts_start` and `ts_end`.
+- An external source for each local video, with its path, title, and segments.
+  A raw local path is not a valid `media` URL, so it cannot be stored on the post.
 - What each set of segments was read from, which decides how far a span is padded and how much a
   quote from it can be trusted.
 
@@ -62,6 +65,9 @@ Those times are the clock of the video itself, so nothing translates the span at
    A subtitle file or a caption track that stops early holds a part of the talk, so say which part the
    search reaches.
 4. Write `media` as the URL or the path the user gave.
+   For a YouTube watch page, write `ids` as its one `youtube:video:<id>` value.
+   For another media URL, write empty `ids`.
+   Keep a raw local path as an external source for this session, and do not call it a `SocialPostMediaSource`.
    Give the segments and `media` to module **discovery** as the passages to score.
 
 ## Additional notes
