@@ -1,6 +1,6 @@
 ---
 name: copy
-description: Write the title, the context note, and the platform post text for a verified clip, and check them for risk.
+description: Write the label, the context note, and the platform post text for a verified clip, and check them for risk.
 ---
 
 ## Overview
@@ -23,9 +23,10 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 ## Output
 
-- `content.title` - a short title in the quote format, for the dashboard and the email digest.
+- `meta.label` - a short internal label in the quote format, the same on every channel of the clip.
 - `context` - a Markdown note that gives the reason to post the clip.
 - `content.text` - one text per `SocialPlatform` the clip suits.
+- `content.title` - only for a platform that shows a title beside the text, e.g. YouTube.
 - The risk flags, with each new flag that the copy itself introduces.
 
 ## Requirements
@@ -36,14 +37,14 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 1. Read the Narratives and Editorial sections of the preferences.
    Treat them as rules to follow, not as background.
-2. Write the title in this format:
+2. Write the label in this format:
 
    ```text
    "<quote>" — <person> on <topic>
    "Nobody wants to say it out loud" — <person> on <topic>
    ```
 
-   The quote is at most 40 characters, and the full title is at most 90 characters.
+   The quote is at most 40 characters, and the full label is at most 90 characters.
    `<person>` is the speaker, named as the show credits them.
    The transcript names nobody, so the guest is a guess whenever the host may have said the line.
    Say which words you are unsure of, and skill **fountain-clip-producer** settles it on the video.
@@ -64,6 +65,9 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 4. Write `content.text` for each `SocialPlatform` the clip suits.
    Match the length, the tone, and the conventions of that platform.
    Write one text per platform, and never reuse one text across platforms.
+   Write `content.title` only where the platform shows a title, because a post there does not publish without one.
+   The title must make the viewer want to watch, and it must describe the clip accurately.
+   Follow the usual rules of the platform, such as a short length, the important words first, and few capitals or emoji.
    Put the link the caller gave at the end of the text, on its own line, with the address exactly as
    it was given: a campaign reads the parameters of that address, and a shortened or tidied one is a
    different link.
@@ -75,7 +79,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 ## Additional notes
 
-Title rules:
+Label rules:
 
 - Copy the quote from `transcript` word for word, and do not correct the grammar.
   Put a word heard wrong right in `transcript` itself, and not only in the quote you took from it,
