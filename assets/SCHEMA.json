@@ -14,7 +14,7 @@
         },
         {
           "name": "copy",
-          "description": "Write the title, the context note, and the platform post text for a verified clip, and check them for risk.",
+          "description": "Write the label, the context note, and the platform post text for a verified clip, and check them for risk.",
           "module": "skills/fountain-clip-finder/modules/copy/MODULE.md",
           "assets": []
         },
