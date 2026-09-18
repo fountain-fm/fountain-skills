@@ -55,7 +55,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    it as the style proof of that skill.
    Render the rest only after the user confirms or corrects the proof, because a batch in the wrong
    look is a batch rendered twice.
-   Leave the rendering to a render machine instead when one works this show, and it sends the report.
+   Leave the rendering to a render machine instead when the Automation section names one for this show.
+   Do not render here then, and still send the report below, because the machine renders and does not
+   report the day a second time.
    Send the day one time, as the `review-posts` report of skill **fountain-reports**, carrying the
    clips that wait and the numbers of module **performance-review** together, and let its approve
    note say whether approving renders a clip or sends it.
