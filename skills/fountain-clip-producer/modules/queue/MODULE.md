@@ -33,13 +33,17 @@ It hands them over together, because one post's render tells the next post nothi
    Work every show it names, unless the caller named one.
    On is the default auto-render when a show has no entry.
 2. List each show's posts via the Social API, and keep the drafts that miss their media.
+   Also list drafts by status so that a source with no show id is visible.
+   Keep such a source only when its channel or project context assigns it to a show that this machine works.
+   Leave it in the queue and report what is missing when that context cannot name a show.
+   Remove duplicate posts by post id after the two lists are joined.
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
    With auto-render on, keep them all - rendering a draft the user later rejects wastes only CPU.
 3. Run module **preflight** one time before any render, because the machine is the same for every post.
    Then dispatch the eligible posts together, one worker for each post, and at most three at a time.
    Give each worker the post, the preflight report, and its own output folder, and let it run the
    process of the skill from module **media** to the attachment, in the shape its platform needs.
-   The posts are independent - each names its own episode, its own span and its own render - so a
+   The posts are independent - each names its own source, its own span and its own render - so a
    worker reads no file another worker writes, and decides nothing about another post.
    Wait for every worker, and read the result of each one.
 4. Let a failed worker end alone, and let the rest finish.
@@ -53,6 +57,8 @@ It hands them over together, because one post's render tells the next post nothi
 5. When this run attached media and every draft is done or given up, give the batch to skill
    **fountain-reports** as the `review-posts-simple` report - one report for the whole batch, the given-up
    drafts under warnings so a failure never hides, delivery decided by the Reporting section.
+   Give each source label and its publish date when known.
+   Use the episode for a source with an episode id, and use the external video title from `context` otherwise.
    Report only on a run that attached something, or every idle poll repeats it.
 6. Report the run plainly, and stop - when the next run happens is the machine's schedule, not yours.
 
@@ -65,8 +71,9 @@ The win is the waiting - the reading, the deciding and the network of one post n
 another post encodes - and the encoding itself gets no faster.
 Lower the number on a machine with few cores.
 
-The queue asks per show because the Social API lists posts by their source, and names no wider set.
-A show reaches this machine by having an Automation entry, which the first run of the loop writes for it.
+The queue asks per show for a source with a show id, because that is the narrowest reliable list.
+It also asks by status for YouTube-only and empty `ids`, because those sources cannot match a show filter.
+A show reaches this machine by having an Automation entry, which skill **fountain-onboarding** writes for it.
 
 Progress lives on the posts themselves: an attached upload is the only "done" mark, so a run that dies
 mid-batch loses nothing, and the next run picks up the remainder.

@@ -10,7 +10,7 @@ Module **performance-review** looks backward: it turns the numbers of yesterday'
 in the preferences.
 Module **trend-discovery** looks forward: it scores today's news and shapes the best trends into briefs
 for skill **fountain-clip-finder**.
-The skill itself keeps the narratives level with the show first, because both modules read them.
+The skill itself updates the narratives first, because both modules read them.
 
 ## Input
 
@@ -23,7 +23,7 @@ The skill itself keeps the narratives level with the show first, because both mo
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
 - One report for the day, sent and printed here: the posts that wait, then their numbers.
-- Updated preferences: the narratives brought level with the show, and the lessons of module
+- Updated preferences: the narratives, and the lessons of module
   **performance-review**.
 
 ## Housekeeping
@@ -37,10 +37,11 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - Fountain API.
 - Skill **fountain-clip-finder**.
 - Skill **fountain-reports**.
+- Skill **fountain-onboarding**.
 
 ## Process
 
-1. Bring the Narratives section level with the show, because both modules read it.
+1. Update the Narratives section, because both modules read it.
 2. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
 3. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
 4. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
@@ -58,6 +59,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Send the day one time, as the `review-posts` report of skill **fountain-reports**, carrying the
    clips that wait and the numbers of module **performance-review** together, and let its approve
    note say whether approving renders a clip or sends it.
+   Give each source label and its publish date when known.
+   Use the episode for a source with an episode id, and use the external video title from `context` otherwise.
    Ask that skill to print the same report here as well as sending it, so the user reads in the chat
    what the mail carries and the two never disagree.
    The printed report is the whole of what the chat shows about the day's clips, and it covers the
@@ -75,11 +78,8 @@ drafts up from the Social API.
 
 Auto-render off means something else has to render, so say which: the user's word in the chat, or a
 render machine that works this show.
-Offer to set up a scheduled run that renders the approved drafts when they want the day to finish
-without them, because a draft that nothing renders is a clip that never exists.
-
-Before you set up a scheduled run, say which entries it will follow that the user has not confirmed,
-and how much of the show it can search.
+Run skill **fountain-onboarding** to schedule a render of the approved drafts when they want the day to
+finish without them, because a draft that nothing renders is a clip that never exists.
 
 An empty Editorial section is not a wall: proceed, and say so plainly.
 

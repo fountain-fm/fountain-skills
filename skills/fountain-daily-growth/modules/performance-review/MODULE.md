@@ -45,8 +45,10 @@ The posts are the record, and the preferences are the memory.
 3. Compute the baseline from these posts alone: the median views, likes, and comments per platform.
    The baseline is computed each run, so it exists from the first run and needs no history file.
    It is what a post is measured against, and the report never shows it.
-4. Group the posts by clip on `source.ids` with `source.ts_start` and `source.ts_end`, because no field
-   identifies a clip.
+4. Group the posts by clip on one source key, because no field identifies a clip.
+   Sort `source.ids`, then combine them with `source.media`, `source.ts_start` and `source.ts_end`.
+   The media value keeps two empty-ID sources with the same span separate.
+   A post without `source` cannot join its other channel posts, so report it alone by post id.
    Report the clips that published since the last report, each one time, with every platform it went to
    and the total of those platforms.
    The Reporting section of the preferences records where the last report reached.
@@ -73,11 +75,13 @@ The posts are the record, and the preferences are the memory.
    dashboard and every channel row into its own post.
    Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
    spells it.
-   Give the episode each clip was cut from and the day it came out, which the Content API holds on the
-   episode.
+   For a source with an episode id, give the episode and the day it came out.
+   The Content API holds both.
    Load each episode one time, however many clips came from it, and ask for them all at the same time.
+   For another source, give the source label in the post context when it is available.
+   Otherwise use `External source`, and omit the source date.
 10. Record where the report reached at the end of the Reporting section, as the publish time of the
-    newest post it covered, e.g. `Reported up to 2026-08-17T16:41Z.`
+    newest post it covered, e.g. `- Reported up to 2026-08-17T16:41Z (AGENT-2026-08-18)`.
     Move it only when the report was sent.
 
 ## Additional notes

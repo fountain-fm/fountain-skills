@@ -12,11 +12,13 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 
 ## Input
 
-- The `SocialPostMediaSource` of the verified clip.
+- The `SocialPostMediaSource` of the verified clip, or the external source of a raw local video.
+- The title of an external video from module **external-source**.
 - The name the caller asked for, when the request named a person.
+- The link that every post MUST carry, when the caller gives one.
 - The scores from module **discovery** and module **boundaries**, and each flag.
 - The show's connected channels, via the Social API.
-- Voice notes from the Editorial section and confirmed handles from the Accounts section of the preferences.
+- Voice notes from the Editorial section and handles from the Accounts section of the preferences.
 - The trend and its sources, when a caller found the clip for a news story.
 
 ## Output
@@ -56,13 +58,19 @@ The words MUST agree with the clip, because a promise the clip does not keep los
    - What happened in the news and why it is live today, when the clip answers a trend.
    - What the clip contains, and the claim the speaker makes.
    - Why the clip answers that story, and which score dimension made it win.
+   - The external video title, when `ids` does not name an episode.
    - A risk the user has to weigh, in one sentence, and nothing when the clip carries none.
 
 4. Write `content.text` for each `SocialPlatform` the clip suits.
    Match the length, the tone, and the conventions of that platform.
    Write one text per platform, and never reuse one text across platforms.
+   Put the link the caller gave at the end of the text, on its own line, with the address exactly as
+   it was given: a campaign reads the parameters of that address, and a shortened or tidied one is a
+   different link.
 5. Name the speaker who is on camera.
    Read the handle from the Accounts section of the preferences, or from the episode show notes with the Content API.
+   A clip from a video that Fountain does not hold has no show notes, so the video title and the
+   preferences are all there is, and no handle is confirmed anywhere else.
 6. Run the safety pass over every text before you return it.
 
 ## Additional notes
@@ -75,6 +83,10 @@ Title rules:
   Do it before the post exists, and on the post when you find it later - the span cannot change, so
   only the words can be put right.
 - Cut a long quote at a word break, and never add an ellipsis to reach the limit.
+- A quote from an automatic caption track or a whisper transcript is a machine's hearing of the words,
+  so say that it waits for the render to confirm it, and never quote a name or a number from one
+  without saying so.
+  A subtitle file the show wrote itself is not a machine's hearing, and needs no such warning.
 - Use sentence case, and no emoji, no hashtag, and no clickbait question.
 - Name the moment, and not the episode.
 

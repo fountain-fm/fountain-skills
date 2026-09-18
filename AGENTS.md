@@ -161,7 +161,7 @@ The agent loads and updates them with the Project API.
 
 ## Fountain API
 
-Fountain API docs live at https://fountain.fm/docs.md
+Fountain API docs live at https://beta.fountain.fm/docs.md
 The docs have two parts: `## Endpoints` and `## Models`.
 
 An agent reaches the API through the Fountain MCP server, or through HTTP with a Fountain API key.

@@ -29,6 +29,7 @@ It reports the environment, and it never looks at a rendered file.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python.
 - ImageMagick, for a captioned render.
+- Skill **fountain-onboarding**, to install a missing tool.
 
 ## Process
 
@@ -45,8 +46,8 @@ It reports the environment, and it never looks at a rendered file.
    whisper and three modules read them.
    Name the family alone, because a weight in the name matches nothing and reads as a missing font.
 
-2. Stop and report to the user when the report names a missing tool.
-   Say which tool is absent and how to install it, because this is a fault of the machine and not of the clip.
+2. Stop and run skill **fountain-onboarding** when the report names a missing tool, because this is a
+   fault of the machine and not of the clip.
 3. Read the caption renderer from the report, and record it in the caption plan.
    The order of preference is ASS, then drawtext, then a prepared transparent layer.
 4. Burn the captions with the binary that the report names, and not always with the one on the PATH.

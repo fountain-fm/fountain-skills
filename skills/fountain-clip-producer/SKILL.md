@@ -13,6 +13,10 @@ The rest shape the picture, put the words and the layers on it, and gate the del
 ## Input
 
 - The `SocialPostMediaSource` of a `SocialPost`, which names the file and the span.
+  The file can carry no video, which most of a podcast catalogue does not.
+  Empty `ids` and a YouTube video id both name sources that Fountain does not hold as episodes.
+- Or an external source for a raw local video, which carries the media path and span for this session.
+  Its post carries no `source`, because a raw local path is not a valid `media` URL.
 - The word timings of that span, which this skill makes from the clip's own audio.
   Module **shots** wants the speaker of each word too, which nothing supplies.
 - A delivery tier, which the words of the request imply.
@@ -47,10 +51,12 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - A whisper.cpp model file, which the whisper filter takes the path of and does nothing without.
   `ggml-base.en.bin` in `~/.cache/whisper` is the one this skill looks for first, and it is 141 MB, so
   the machine installs it one time and the skill does not ship it.
-  Module **preflight** finds it, and gives the user the line that installs it when the machine has none.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
+  Keep it current: YouTube changes what a client must send, and a build a few weeks old
+  answers 403 on every download while the captions still come through.
 - A web search tool, and a way to read a page, for the reference sources of module **brand**.
+- Skill **fountain-onboarding**, which installs a tool that module **preflight** finds missing.
 
 ## Process
 
@@ -63,21 +69,34 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    No clip waits for another one.
    Then transcribe the master with whisper to get the word timings of the clip, and rebase them so the
    first word starts at zero.
-   Use the binary and the model that module **preflight** names, and ask for one word for each segment.
-   That asks for one token for each segment and gets it: whisper splits a long word across tokens and
-   writes no spaces, so join the tokens back into words yourself before any module reads them, and
-   keep the punctuation of each word, which module **captions** needs to find a sentence end.
+   Use the binary and the model that module **preflight** names, with `max_len=1`, and put `model=`
+   last in the filter string or the option after it is swallowed.
+   That asks for one token for each segment, and each token is usually a whole word.
+   A token is a continuation of the word before it only when it carries no leading space and the word
+   before it does not end a sentence: join those two, and treat every other token as its own word.
+   Do not join on timing, because whisper butts one word's start against the last one's end.
+   A run of punctuation is its own token: attach it to the word before it rather than drop it, because
+   module **captions** reads it to find a sentence end.
    These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.
 5. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
+   Skip both for a source with no video, which has no picture to crop and no face to follow.
 6. Run module **brand** to load the look of the show, for a clean final or a publish final.
-7. Run module **captions** on every portrait export, and on another shape when the request asks for it.
+7. Send the user to the clip styling page when the request names no caption style and module
+   **brand** holds none.
+   The choice it records comes back as a brand kit.
+   Do not hold the run for an answer: produce with the default and say what it was.
+8. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
-8. Run module **overlays** when the request asks for a layer.
-9. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
-10. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
+9. Run module **overlays** when the request asks for a layer, and always for a source with no video.
+   There the overlay is not polish: an audiogram package is the whole picture, and without one the clip
+   is captions on an empty frame.
+   Load the artwork of the show from `info.image` and give it to the package, which every one of them
+   needs.
+10. Run module **qa** as the blocking gate, and deliver nothing until it reports a pass.
+11. Confirm on the render, and never on the transcript, that the quote the copy uses is in the clip and
     that the person it credits is the one who says it.
     The caller wrote both unseen: the transcript carries sentences and names no speaker.
     Take the speaker from the camera and from a cutaway that shows a closed mouth.
@@ -89,9 +108,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     captions and the gate all describe the old cut, and only the gate can say the new one is finished.
     Move an edge only to repair what you can prove, or to make a change the user asked for, and never to
     improve the clip - choosing the moment is the caller's job.
-11. Attach the video to the post with the Uploads API and the Social API, unless the user asked you
-    not to.
-12. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
+12. Load the `SocialPost` with the Social API before you attach the video.
+    When the input `media` is a URL, require the saved `source` to match the complete
+    `SocialPostMediaSource` that supplied the render.
+    Repair an absent or incomplete `source` one time with the Social API, load the post again, and stop
+    with the error if it is still wrong.
+    Attach the video with the Uploads API and the Social API, unless the user asked you not to.
+13. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
     line saying the render result and where the video is attached.
 
 ## Additional notes
@@ -108,6 +131,8 @@ The user names the work they want, not the tier, so read it from their words:
   Read it from words about checking a span rather than making a clip.
 - A clean final is publishable, and a portrait export carries captions, because it is watched muted.
   Read it from "produce this clip", when the request names neither captions nor packaging.
+  A clean final of a source with no video carries its audiogram package too, for the same reason that a
+  portrait export carries captions: without it there is nothing to watch.
 - A publish final adds the overlays and the packaging, and the request names one of them.
 
 Ask when the words fit none of the three, and you MUST NOT raise the tier on your own: polish is requested work.

@@ -1,0 +1,26 @@
+{
+  "name": "hook-card",
+  "description": "The hook set on a rounded card over the footage, sized to the longest line. Between hook-title, which floats bare over the picture, and headline-bar, which cuts a band across it. Override layers.0.text with the clip's hook.",
+  "layers": [
+    {
+      "type": "title",
+      "text": "REPLACE WITH THE CLIP HOOK",
+      "size": 62,
+      "position": "top-center",
+      "marginV": 320,
+      "marginH": 120,
+      "color": "#FFFFFF",
+      "borderW": 0,
+      "boxColor": "#0E1014E0",
+      "boxShape": "card",
+      "boxPad": 26,
+      "cardRadius": 32,
+      "start": 0,
+      "end": 3.0,
+      "fadeInMs": 240,
+      "fadeOutMs": 320,
+      "maxLines": 3,
+      "boxMargin": 90
+    }
+  ]
+}

@@ -20,20 +20,25 @@ One of these:
 - An episode, with an optional quote or approximate time.
 - A person, to find the moments of one guest or host.
 
-With:
+With one of:
 
 - The show, resolved to its `ContentID`.
+- The segments of a video that Fountain does not hold, from module **external-source**.
 
 ## Output
 
 - The scored moments, each with its scores and each flag.
 - The `ContentHit` of each episode, which the search returns and which already names the video.
+  A moment from one video carries its external source instead.
 
 ## Requirements
 
 - Fountain API.
 
 ## Process
+
+For the segments of one video, read them in full and skip to step 6: one talk is short enough to
+read, so the passages are chosen by reading and never by search, and no earlier step has a source.
 
 1. Resolve the show with the Search API when you have only a name.
    The Search API gives a bare id, and the rest of the API needs the prefixed form, so add the type prefix.
@@ -69,6 +74,9 @@ With:
    Mark a moment `already-clipped` when it overlaps the `source` of one by more than half.
    Compare only with a `source` whose `media` is the `info.audio` of the segments' episode, because the
    two clocks agree only then.
+   For a moment from one media URL, list recent posts without a source filter.
+   Compare it with the same YouTube video id, or with the same `media` when both sources have empty `ids`.
+   Mark it `already-clipped` when the spans overlap by more than half.
    Advance a marked moment only when the caller or the lessons ask for a new cut, and give what remains to
    module **media**.
 
@@ -96,6 +104,9 @@ because a moment can improve when it is shaped, and some fail in the later modul
 
 A posted clip cut from another file cannot be compared here, because its `ts_start` is in that file's
 clock. Such a clip is rare, and missing one costs a repeat rather than a wrong clip.
+
+A moment from a raw local video is compared with nothing at step 8, because its post holds no `source`.
+Ask the user whether that video was clipped already.
 
 Do not force a match: the speaker MUST discuss the theme directly, and say so when nothing has substance.
 
