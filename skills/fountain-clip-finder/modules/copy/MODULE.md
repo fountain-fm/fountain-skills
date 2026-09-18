@@ -65,7 +65,7 @@ The words MUST agree with the clip, because a promise the clip does not keep los
 4. Write `content.text` for each `SocialPlatform` the clip suits.
    Match the length, the tone, and the conventions of that platform.
    Write one text per platform, and never reuse one text across platforms.
-   Write `content.title` only where the platform shows a title, because a post there does not publish without one.
+   Write `content.title` only where the platform shows a title.
    The title must make the viewer want to watch, and it must describe the clip accurately.
    Follow the usual rules of the platform, such as a short length, the important words first, and few capitals or emoji.
    Put the link the caller gave at the end of the text, on its own line, with the address exactly as
