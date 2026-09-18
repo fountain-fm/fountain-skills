@@ -59,6 +59,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    look is a batch rendered twice.
    With auto-render on and a render machine named for this show in the Automation section, do not
    render here and stop after this step: the machine renders, and it sends the report of step 6.
+   Run steps 2 and 6 here after all when no draft waits for a video, because nothing will render and
+   the day would otherwise have no mail.
 6. Send the day one time, as the `review-posts` report of skill **fountain-reports**: the clips that wait,
    then the numbers of module **performance-review**.
    With auto-render on, send it only when the videos exist, so the reader reviews clips and not
