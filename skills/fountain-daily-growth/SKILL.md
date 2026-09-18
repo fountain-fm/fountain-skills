@@ -22,7 +22,8 @@ The skill itself updates the narratives first, because both modules read them.
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**, carrying its share of the day's
   clip budget as `clip_count`.
-- One report for the day, sent and printed here: the posts that wait, then their numbers.
+- One report for the day: the posts that wait, then yesterday's numbers.
+  With auto-render on it goes out when the videos exist, and it is the only mail of the day.
 - Updated preferences: the narratives, and the lessons of module
   **performance-review**.
 
@@ -43,6 +44,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 1. Update the Narratives section, because both modules read it.
 2. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
+   Skip it when a render machine sends the report of step 6, because that machine runs it.
 3. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
 4. Hand each brief to skill **fountain-clip-finder**, and do not read its result - the chain
    continues without this skill.
@@ -55,12 +57,13 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    it as the style proof of that skill.
    Render the rest only after the user confirms or corrects the proof, because a batch in the wrong
    look is a batch rendered twice.
-   Leave the rendering to a render machine instead when the Automation section names one for this show.
-   Do not render here then, and still send the report below, because the machine renders and does not
-   report the day a second time.
-   Send the day one time, as the `review-posts` report of skill **fountain-reports**, carrying the
-   clips that wait and the numbers of module **performance-review** together, and let its approve
-   note say whether approving renders a clip or sends it.
+   With auto-render on and a render machine named for this show in the Automation section, do not
+   render here and stop after this step: the machine renders, and it sends the report of step 6.
+6. Send the day one time, as the `review-posts` report of skill **fountain-reports**: the clips that wait,
+   then the numbers of module **performance-review**.
+   With auto-render on, send it only when the videos exist, so the reader reviews clips and not
+   descriptions.
+   With auto-render off, send it now, and let its approve note say what renders a clip.
    Give each source label and its publish date when known.
    Use the episode for a source with an episode id, and use the external video title from `context` otherwise.
    Ask that skill to print the same report here as well as sending it, so the user reads in the chat
@@ -80,6 +83,12 @@ drafts up from the Social API.
 
 Auto-render off means something else has to render, so say which: the user's word in the chat, or a
 render machine that works this show.
+Whatever renders later sends a second mail that the renders are ready, and it is the only other mail.
+
+A caller that has just rendered the day's drafts can ask for the report alone.
+Run steps 2 and 6 for it, with the drafts it gave up under warnings.
+Skip it when the line that module **performance-review** writes in the Reporting section already carries
+today's date, so a second pass of the render machine never mails the day twice.
 Run skill **fountain-onboarding** to schedule a render of the approved drafts when they want the day to
 finish without them, because a draft that nothing renders is a clip that never exists.
 
