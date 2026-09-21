@@ -71,12 +71,14 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    first word starts at zero.
    Use the binary and the model that module **preflight** names, with `max_len=1`, and put `model=`
    last in the filter string or the option after it is swallowed.
-   That asks for one token for each segment, and each token is usually a whole word.
-   A token is a continuation of the word before it only when it carries no leading space and the word
-   before it does not end a sentence: join those two, and treat every other token as its own word.
-   Do not join on timing, because whisper butts one word's start against the last one's end.
-   A run of punctuation is its own token: attach it to the word before it rather than drop it, because
-   module **captions** reads it to find a sentence end.
+   Write it as SRT, and give it to `scripts/align-word-timings.py` with the `transcript` of the source
+   as the reference and the clip's start in that SRT as the offset.
+   The script keeps the transcript's words and whisper's timings, so a name or a number that whisper
+   misheard is spelled right, and it writes the words JSON that module **captions** reads.
+   Read the words it lists as unheard before you caption: a number in digits, or a word that differs
+   from the audio, is where a caption goes wrong.
+   A share of matched words under 0.8 means the reference does not describe this audio, so check the
+   span and the offset first.
    These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.
@@ -137,7 +139,8 @@ The word timings come from the clip, and never from the episode transcript.
 That transcript carries sentences and no words, and it is the caller's evidence for the span rather than
 this skill's evidence for a caption.
 The words themselves are a different matter: whisper mishears a name or a number that the transcript has
-right, so correct the wording against the transcript and keep the timings whisper made.
+right, which is why the words come from the transcript and the timings from whisper.
+Never write an aligner in the run, because code written mid-run fails in a new way each time.
 
 Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
 so that height is the real resolution of the clip, and module **qa** fails a big upscale.
