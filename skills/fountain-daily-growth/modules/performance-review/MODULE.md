@@ -60,7 +60,7 @@ The posts are the record, and the preferences are the memory.
    Both go in the lessons list, where the reader reads the day together rather than clip by clip.
 6. Read the user's decisions from `meta.status` and the timestamps.
    A draft approved fast, edited before approval, or left untouched each says something.
-   The user's edits to title, text, or context are the closest thing to a reason - diff them.
+   The user's edits to label, title, text, or context are the closest thing to a reason - diff them.
    Read the decisions on the posts that arrived since the last report, and not on the whole window,
    because an earlier run already read the older ones into the preferences.
 7. Write each durable lesson under the matching heading of the preferences, dated, succinctly.
@@ -71,7 +71,7 @@ The posts are the record, and the preferences are the memory.
 9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports**.
    Which preset carries them is the caller's decision, and how the report reaches the user is that
    skill's, so this module names neither.
-   Give the project, the show, and the posts by id as well, because a clip card links its title into the
+   Give the project, the show, and the posts by id as well, because a clip card links its label into the
    dashboard and every channel row into its own post.
    Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
    spells it.

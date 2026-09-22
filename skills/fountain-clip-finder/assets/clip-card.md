@@ -10,7 +10,7 @@
 <!-- approves only what they can see. -->
 <!-- {post_url} is the post of the first channel listed. -->
 
-### {title}
+### {label}
 
 {source}{source_published}
 

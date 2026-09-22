@@ -1,4 +1,4 @@
-<!-- Data: one card per clip - title, post_url, platform_icon, and one row for each channel, plus the total. -->
+<!-- Data: one card per clip - label, post_url, platform_icon, and one row for each channel, plus the total. -->
 <!-- window names the span these clips cover, e.g. "Last 24 hours", and matches the span you reported. -->
 <!-- A row holds platform, published, reactions, eng_rate, views. -->
 <!-- platform is written the way the platform writes itself - Instagram, X, YouTube - and links to that -->
@@ -12,8 +12,8 @@
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms of this clip alone. -->
 <!-- The card is a quote because that is the only container Markdown can make: no div survives the -->
-<!-- sender, so a clip's title, its episode and its figures are held together by being quoted. -->
-<!-- The title links to the post of the first row, and each row to the post of its own channel. -->
+<!-- sender, so a clip's label, its episode and its figures are held together by being quoted. -->
+<!-- The label links to the post of the first row, and each row to the post of its own channel. -->
 <!-- A clip holds one post per channel, and the rows below name the rest. -->
 <!-- The window is written as emphasis, which is the only mark that separates it from an ordinary -->
 <!-- paragraph under a heading. The mail draws it as a label, and not as italics. -->
@@ -22,7 +22,7 @@
 
 _{window}_
 
-> ### [{title}]({post_url})
+> ### [{label}]({post_url})
 >
 > {source}{source_published}
 >
