@@ -77,8 +77,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    misheard is spelled right, and it writes the words JSON that module **captions** reads.
    Read the words it lists as unheard before you caption: a number in digits, or a word that differs
    from the audio, is where a caption goes wrong.
-   A share of matched words under 0.8 means the reference does not describe this audio, so check the
-   span and the offset first.
+   Words it lists as past the end are not in this clip, so check the offset and the duration.
+   When it matches less than 80% of the transcript, the transcript does not describe this clip, so check
+   the span and the offset before you caption.
    These are measured from the audio being cut, so they are the only timings that describe this file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because the cut moves every time after it.
@@ -140,7 +141,7 @@ That transcript carries sentences and no words, and it is the caller's evidence 
 this skill's evidence for a caption.
 The words themselves are a different matter: whisper mishears a name or a number that the transcript has
 right, which is why the words come from the transcript and the timings from whisper.
-Never write an aligner in the run, because code written mid-run fails in a new way each time.
+Never write your own alignment code in the run, because code written mid-run fails in a new way each time.
 
 Always cut from the tallest rendition: a 9:16 crop keeps the whole height and about a third of the width,
 so that height is the real resolution of the clip, and module **qa** fails a big upscale.
