@@ -202,6 +202,7 @@ Customizations of skill **fountain-reports**, e.g. email addresses and presets.
 Daily loop options, e.g.:
 
 - auto-render
+- a render machine that renders this show's drafts on its own schedule
 - number of clips per day
 
 **Other**
