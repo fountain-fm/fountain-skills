@@ -1,19 +1,21 @@
 <!-- Data: one row per platform - platform, posts, reactions, eng_rate, views. -->
 <!-- This is what each platform did in the window, and never a baseline. -->
 <!-- posts is how many published posts the row counts. -->
-<!-- platform carries its mark, platform_icon. The mark's own margin makes the gap, so no space -->
-<!-- sits between the mark and the name. -->
+<!-- platform has its mark, platform_icon. -->
+<!-- The margin of the mark makes the gap, so there is no space between the mark and the name. -->
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms, and every table in a report ends on one. -->
 <!-- Write its first cell bold, because that is how the reader and the mail both tell a total row -->
 <!-- from a platform row. -->
-<!-- window names the span these totals cover, e.g. "Last 7 days". It sits under the heading because -->
-<!-- the clips below cover a shorter one, and a reader who cannot see both spans reads the wrong number. -->
-<!-- The figures are quoted, which is the only container Markdown can make. The heading and the window -->
-<!-- stay outside it: the container holds the figures, and what they are is said above it. -->
+<!-- window names the span these totals cover, e.g. "Last 7 days". -->
+<!-- It sits under the heading, because the clips below cover a shorter span. -->
+<!-- A reader who cannot see both spans reads the wrong number. -->
+<!-- The figures are quoted, and a quote is the only container that Markdown can make. -->
+<!-- The heading and the window stay outside the quote. -->
+<!-- The quote holds the figures, and the text above it says what they are. -->
 <!-- The window is written as emphasis, which is the only mark that separates it from an ordinary -->
-<!-- paragraph under a heading. The mail draws it as a label, and not as italics. -->
+<!-- paragraph under a heading. The mail shows it as a label, and not as italics. -->
 
 ## Channels Overview
 

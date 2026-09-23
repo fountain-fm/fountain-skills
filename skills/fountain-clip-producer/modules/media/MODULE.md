@@ -7,8 +7,9 @@ description: Cut the accurate landscape master that every other module of the sk
 
 The caller gives a reference and not a file.
 This module opens `media`, cuts the span between `ts_start` and `ts_end`, and writes `clip-landscape-master.mp4`.
-There is no editorial judgment here, because the span is already settled.
-A mistake at this step is a sync fault or a timing fault, and every module after it inherits the fault.
+This module makes no editorial decision, because the caller already chose the span.
+A mistake at this step is a sync fault or a timing fault.
+Every module after this one inherits the fault.
 
 ## Input
 
@@ -21,24 +22,27 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 ## Output
 
 - `clip-landscape-master.mp4`, cut to the span and cropped to the camera area.
-- Or `clip-base.mp4` for a source that carries no video: the audio of the span on an empty frame of the
-  target shape, which module **overlays** then paints.
+- Or `clip-base.mp4`, for a source that carries no video.
+  This file is the audio of the span on an empty frame of the target shape.
+  Module **overlays** then paints on that frame.
 - An alignment report, for a source that needed the content check.
 
 ## Requirements
 
 - ffmpeg and ffprobe.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
-  Keep it current: YouTube changes what a client must send, and a build a few weeks old
-  answers 403 on every download while the captions still come through.
+  Keep it current, because YouTube changes what a client must send.
+  A build a few weeks old gets a 403 error on every download, while the captions still download.
 - Python 3.11 or later.
 
 ## Process
 
 1. Open `media` and read what kind of source it is.
-   A local file and an HLS playlist are cuttable directly, and a watch-page URL is not.
+   You can cut a local file and an HLS playlist directly.
+   You cannot cut a watch-page URL directly.
 2. Translate the span first when `ids` names an episode, a show, and a YouTube video.
-   Its `ts_start` and `ts_end` are in the clock of the Fountain transcript, and that file is not:
+   Its `ts_start` and `ts_end` are in the clock of the Fountain transcript.
+   The video file is not in that clock:
 
    ```bash
    # The cache sits in the workings of the show, so that every clip of that show reads it.
@@ -52,17 +56,20 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    ```
 
    Cut with the translated span from here on.
-   Read the map when `aligned` is false, because the two edges disagree for two different reasons.
-   Check the tail even when `aligned` is true: an anchor near the head hides drift that grows towards
-   the end, and the clip then loses its last sentence.
-   Stop and report when a region boundary falls inside the span: an advertisement break sits inside
-   the clip, and the fix is a different span and never a shift.
-   Two edges inside one region disagree from anchor drift instead, so cut the padded window and let
-   the words of the rough cut settle the edges.
+   Read the map when `aligned` is false, because there are two different reasons why the two edges
+   disagree.
+   Check the tail even when `aligned` is true.
+   An anchor near the head hides drift that grows towards the end, and the clip then loses its last
+   sentence.
+   Stop and report when a region boundary is inside the span.
+   That means that an advertisement break is inside the clip.
+   The fix is a different span, and never a shift.
+   When both edges are inside one region, they disagree because of anchor drift.
+   In that case, cut the padded window, and use the words of the rough cut to set the edges.
    A Fountain file and an HLS playlist need no translation, because their clock is the clock of the
    transcript.
    A source with only a YouTube video id needs no translation.
-   The caller read its span from that video, so the two clocks are one.
+   The caller read its span from that video, so the two clocks are the same.
    Empty `ids` and a raw local source also use the clock of `media`.
 
 3. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
@@ -117,10 +124,10 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    Stop and report to the user when the score is under the threshold.
 
 7. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
-   Measure the inset and crop to the camera area before any other module runs.
+   Measure the inset, and crop to the camera area before any other module runs.
 8. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
-9. Build an empty base instead, when the source carries no video at all, because every module after this
-   one paints onto a frame and there is none:
+9. Build an empty base instead when the source carries no video at all.
+   Every module after this one paints onto a frame, and such a source has none:
 
    ```bash
    # -f lavfi draws an empty frame of the target shape, and -shortest ends it with the audio.
@@ -133,35 +140,40 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 ## Additional notes
 
 The deliverable is always edge-to-edge camera video.
-An export that still shows the graphic frame of the show is a failed export, and this module prevents it.
+An export that still shows the graphic frame of the show is a failed export.
+This module prevents that fault.
 
 Never give an HLS video and an HLS audio playlist their own `-ss`.
 Many masters carry the audio as a separate rendition whose segments do not line up with the video.
-Two seeks then land at two real positions, and ffmpeg muxes them with a constant offset.
-That reads as lip-sync drift of several seconds, it is constant for the whole clip, and a quick look misses it.
+Two seeks then go to two different real positions, and ffmpeg muxes the two streams with a constant offset.
+The result looks like lip-sync drift of several seconds.
+The offset is constant for the whole clip, and a quick look misses it.
 
 A bare master playlist with no map makes ffmpeg take the lowest bandwidth, which is often 360p.
-A vertical crop keeps about a third of the width, so 720p gives 405x720 of real picture for a 1080x1920
-delivery, and 1080p gives 608x1080. No later module puts back what this one did not fetch.
+A vertical crop keeps about a third of the width.
+Thus 720p gives 405x720 of real picture for a 1080x1920 delivery, and 1080p gives 608x1080.
+No later module can put back picture that this module did not fetch.
 
-The map of an episode does not change, and one episode gives up several clips over the weeks, so the
-cache saves the caption download and the anchoring of every clip after the first.
-These are working files and never settings: a run that finds no cache measures the map as before, and
-is only slower.
-The cache gives a map back only when that map names the same video, because an episode whose video
-changed needs a new one.
-It holds one file for each episode, and each worker writes the file of the episode it is clipping and
-no other, so workers on different episodes cannot lose each other's maps.
-That is what the layout is for: the day's clips are three different episodes, and they are measured at
-the same time.
+The map of an episode does not change, and one episode gives several clips over the weeks.
+Thus the cache saves the caption download and the anchoring for every clip after the first.
+The cached maps are working files, and never settings.
+A run that finds no cache measures the map as before, and is only slower.
+The cache returns a map only when that map names the same video, because an episode whose video
+changed needs a new map.
+The cache holds one file for each episode.
+Each worker writes only the file of the episode that it is clipping.
+Thus workers on different episodes cannot lose each other's maps.
+This layout exists because the day's clips are from three different episodes, and the workers measure
+them at the same time.
 
 The time map exists because the two files hold the same words at different times.
-A podcast inserts its advertisements into the audio and the video carries a different set, so the distance
-between the two clocks changes at every break.
-One offset for the whole episode is therefore wrong, and the map records each region on its own.
+A podcast inserts its advertisements into the audio, and the video carries a different set.
+Thus the distance between the two clocks changes at every break.
+One offset for the whole episode is therefore wrong, so the map records each region separately.
 The map costs one caption download of approximately 6 seconds, whatever the length of the episode.
-A low `anchor_coverage` means the captions and the transcript disagree, which usually means the video
-is not the episode - stop and report it, because the cut would hold the wrong words.
+A low `anchor_coverage` means that the captions and the transcript disagree.
+Usually, that means that the video is not the episode.
+Stop and report it, because the cut would hold the wrong words.
 
 To confirm sync on an HLS source, cut a short reference and compare the audio envelopes.
 Use a window of at least ±5 seconds, because a narrow window reports a small wrong offset and hides a large one.

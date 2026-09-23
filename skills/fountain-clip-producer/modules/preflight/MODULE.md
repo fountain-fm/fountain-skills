@@ -6,9 +6,10 @@ description: Confirm that the machine can render what the request asks for, befo
 ## Overview
 
 A render that fails halfway wastes the whole render.
-This module asks the machine what it can do, and it answers before any work begins.
-It names the caption renderer to use, the ffmpeg binary to burn with and the one to time words with,
-and every tool that is absent.
+This module checks what the machine can do, and it gives the answer before any work starts.
+It names the caption renderer to use.
+It names the ffmpeg binary to burn with, and the ffmpeg binary to time words with.
+It also names every tool that is absent.
 It reports the environment, and it never looks at a rendered file.
 
 ## Input
@@ -40,11 +41,11 @@ It reports the environment, and it never looks at a rendered file.
      --require-magick --require-visual-qa --require-words --fonts "Montserrat,Anton" --json
    ```
 
-   Drop `--require-magick` and `--fonts` for an export that carries no captions, and keep
-   `--require-visual-qa`, because module **framing** needs that interpreter on every export.
-   Keep `--require-words` for every tier above a rough cut, because the words of the clip come from
-   whisper and three modules read them.
-   Name the family alone, because a weight in the name matches nothing and reads as a missing font.
+   For an export with no captions, drop `--require-magick` and `--fonts`.
+   Keep `--require-visual-qa`, because module **framing** needs that interpreter on every export.
+   Keep `--require-words` for every tier above a rough cut.
+   The words of the clip come from whisper, and three modules read them.
+   Give the family name alone, because a weight in the name matches nothing and shows as a missing font.
 
 2. Stop and run skill **fountain-onboarding** when the report names a missing tool, because this is a
    fault of the machine and not of the clip.
@@ -59,27 +60,33 @@ It reports the environment, and it never looks at a rendered file.
 
 A stock ffmpeg is often built without libass, so it cannot burn a styled caption.
 The report therefore looks for another build on the machine, wherever the platform keeps them.
-When it finds one, the ASS path stays open and the report names that binary.
-A build without libass is a reason to use the other binary, and never a reason to drop to a lesser renderer.
-The same search finds the build that carries whisper, and the two are usually the same binary.
-There is no lesser renderer for a word timing: without whisper the clip has no words at all.
+When it finds one, the ASS renderer is still available, and the report names that binary.
+When a build has no libass, use the other binary.
+Never drop to a lesser renderer for that reason.
+The same search finds the build that has whisper, and the two are usually the same binary.
+Word timing has no lesser renderer.
+Without whisper, the clip has no words at all.
 
-The whisper filter transcribes nothing on its own, because it takes the path of a whisper.cpp model.
-A build that carries the filter and a machine that holds no model is the dangerous case: ffmpeg loads
-its backend, prints no error, and never returns, so the render hangs instead of failing.
-The report therefore names the model as well as the binary, and `--require-words` fails without one.
+The whisper filter transcribes nothing on its own.
+It needs the path of a whisper.cpp model.
+The dangerous case is a build that has the filter, on a machine that has no model.
+Then ffmpeg loads its backend, prints no error, and never returns.
+The render hangs, and does not fail.
+So the report names the model as well as the binary, and `--require-words` fails when there is no model.
 
-The model is not bundled, because it is 141 MB against the 2.3 MB of the face model.
-The report carries the one line that installs it, so give that line to the user and say it is one time
-and about 141 MB.
+The model is not bundled, because it is 141 MB, and the face model is only 2.3 MB.
+The report has the one line that installs the model.
+Give that line to the user, and say that it is a one-time install of about 141 MB.
 Never let the queue spend an attempt on a machine with no model.
 
 A model named `for-tests` is ignored on purpose.
-The Homebrew whisper package ships one, and it transcribes nonsense rather than failing, which reads
-as a machine that works and spoils every caption on it.
+The Homebrew whisper package ships one.
+That model transcribes nonsense, and does not fail.
+So the machine looks as if it works, and every caption on it is wrong.
 
 The report also names the Python interpreter that carries OpenCV, which module **framing** needs for its scripts.
-An interpreter older than OpenCV 4.8 carries no `FaceDetectorYN`, and that is a missing tool rather than a warning.
+An interpreter older than OpenCV 4.8 carries no `FaceDetectorYN`.
+That is a missing tool, and not a warning.
 
 A prepared transparent layer is the last choice, and it needs its own checks in module **qa**.
 Reach for it only when no build on the machine can burn an ASS file.

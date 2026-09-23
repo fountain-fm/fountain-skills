@@ -7,9 +7,9 @@ description: Read a video that Fountain does not hold, as transcript segments in
 
 A talk on YouTube and an episode that is not published yet have the same problem.
 Fountain holds no episode for either, so the Search API finds nothing and no transcript can be loaded.
-This module reads the words from the best source the video has - the caption track of a watch page, a
-subtitle file beside a local video, or whisper on the audio of that video - and groups them into
-segments shaped like a `TranscriptSegment`, so the modules after it work as they do on an episode.
+This module reads the words from the best source of the video: the caption track of a watch page, a
+subtitle file beside a local video, or whisper on the audio of that video.
+The module groups the words into segments like a `TranscriptSegment`, so the later modules work as on an episode.
 Those times are the clock of the video itself, so nothing translates the span at render time.
 
 ## Input
@@ -21,17 +21,17 @@ Those times are the clock of the video itself, so nothing translates the span at
 ## Output
 
 - A partial `SocialPostMediaSource` for each media URL, with `ids` and `media`.
-  The title and segments go with it for the later modules.
+  The title and the segments go with it to the later modules.
   A YouTube watch page uses its `youtube:video:<id>`, and another external URL uses empty `ids`.
   The modules after this one fill `transcript`, `ts_start` and `ts_end`.
 - An external source for each local video, with its path, title, and segments.
   A raw local path is not a valid `media` URL, so it cannot be stored on the post.
-- What each set of segments was read from, which decides how far a span is padded and how much a
-  quote from it can be trusted.
+- The source of each set of segments.
+  The source decides how far a span is padded, and how much a quote from it can be trusted.
 
 ## Requirements
 
-- Python 3.11 or later, for every input: the reading is done by the script of this module.
+- Python 3.11 or later, for every input, because the script of this module does the reading.
 - yt-dlp, for a watch page URL.
 - ffmpeg built with whisper, and a whisper.cpp model, for a local video that has no subtitle file.
   Skill **fountain-clip-producer** names both, and its module **preflight** finds them.
@@ -46,9 +46,11 @@ Those times are the clock of the video itself, so nothing translates the span at
    ```
 
    `$VIDEO` is the watch page URL or the path of the file.
-   The script reads a watch page from the track the channel uploaded, and falls back to the generated
-   one; it reads a local video from a subtitle file beside it, and transcribes the audio when there is
-   none. Name a subtitle file that sits elsewhere with `--subtitles`.
+   For a watch page, the script reads the track that the channel uploaded.
+   When there is no such track, it reads the generated track.
+   For a local video, the script reads a subtitle file beside the video.
+   When there is no subtitle file, it transcribes the audio.
+   Name a subtitle file that is not beside the video with `--subtitles`.
    Stop and tell the user when a watch page has no English track, because nothing here can read it.
 
 2. Read the title, the duration, and the publish date, so that module **copy** can credit the video:
@@ -58,12 +60,13 @@ Those times are the clock of the video itself, so nothing translates the span at
    yt-dlp --skip-download --print "%(title)s | %(duration)s | %(channel)s | %(upload_date)s" "$VIDEO_URL"
    ```
 
-   A local file carries no such record, so ask the user who speaks and what the video is, and never
-   take either from the file name.
+   A local file has no such record, so ask the user who speaks and what the video is.
+   Never take either from the file name.
 
-3. Confirm that the segments cover the video: the last segment MUST end near the duration.
-   A subtitle file or a caption track that stops early holds a part of the talk, so say which part the
-   search reaches.
+3. Confirm that the segments cover the video.
+   The last segment MUST end near the duration.
+   A subtitle file or a caption track that stops early holds only a part of the talk.
+   Say which part the search reaches.
 4. Write `media` as the URL or the path the user gave.
    For a YouTube watch page, set `ids` to an array that contains only `youtube:video:<id>`.
    Use the video id from the watch page URL.
@@ -74,23 +77,27 @@ Those times are the clock of the video itself, so nothing translates the span at
 
 ## Additional notes
 
-The words are read again in each session, and never kept, because the video is the record and this is
-a reading of it.
+The module reads the words again in each session, and never keeps them.
+The video is the record, and the segments are only a reading of it.
 
-A speaker is named on the stage and not in a transcript, so the transcript names nobody here either.
+A speaker is named on the stage, and not in a transcript.
+Thus this transcript also names no speaker.
 The title of a watch page usually names the speaker, and module **copy** takes the name from there.
 
-The three readings are not equally good, and the modules after this one need to know which one they hold:
+The three readings are not equally good.
+The later modules need to know which reading they have:
 
 - A subtitle file the show wrote itself is the best, because a person checked the words.
-- A whisper transcript times the speech and punctuates it, so a span cuts as cleanly as one from an
-  episode, and the words are still a machine's hearing.
-- An automatic caption track times a line rather than a word and punctuates by guess, so a span from
-  one is padded further and a machine's hearing of a name or a number MUST be confirmed on the video.
+- A whisper transcript gives the times of the speech and adds punctuation.
+  Thus a span cuts as cleanly as a span from an episode.
+  But the words are still a machine transcription.
+- An automatic caption track gives the time of a line and not of a word, and it guesses the punctuation.
+  Thus a span from such a track is padded further.
+  A name or a number in its machine transcription MUST be confirmed on the video.
 
-A local video is a file and not an address, so the clip MUST be rendered on the machine that holds it,
-and no later session finds it there.
+A local video is a file and not an address.
+Thus the clip MUST be rendered on the machine that holds the file, and no later session can find the file there.
 
 An episode that is not published yet becomes an episode on the day it publishes.
-Clip it from the episode after that, because the post then carries `source` and the work is not
-trapped in one session.
+After that day, clip it from the episode.
+The post then has `source`, so the work is not limited to one session.

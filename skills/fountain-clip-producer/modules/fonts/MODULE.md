@@ -7,10 +7,11 @@ description: Make the font that a style names available to the renderer, and sub
 
 A style spec names a font family, and `build-captions.py` writes that name into the ASS style block.
 The skill carries its own fonts, so every preset renders the same on any machine.
-A bundled file is named after the family it carries, so a new family needs no entry in any list: the
-script builds the file name from the family name and finds it.
-A missing font does more than change the look, because it changes the rendered width of the text.
-The fit measurement and the burn must therefore see the same font.
+Each bundled file has the name of the family that it holds.
+The script builds the file name from the family name, and finds the file.
+So a new family needs no entry in any list.
+A missing font changes the look, and it also changes the rendered width of the text.
+So the fit measurement and the burn must use the same font.
 
 ## Input
 
@@ -25,7 +26,8 @@ The fit measurement and the burn must therefore see the same font.
 
 ## Requirements
 
-- ffmpeg built with libass. On macOS that is the Homebrew `ffmpeg-full` formula, and not the default one.
+- ffmpeg built with libass.
+  On macOS that is the Homebrew `ffmpeg-full` formula, and not the default one.
 - fontconfig, for `fc-match`.
 
 ## Process
@@ -43,7 +45,8 @@ The fit measurement and the burn must therefore see the same font.
    Point it at the fonts of the show instead when module **brand** carries some.
 
 2. Give the font names to module **preflight** when a spec names a font that is not bundled.
-3. Check one font by hand while you debug a failure, where a different family means it is absent:
+3. While you debug a failure, check one font by hand.
+   When `fc-match` returns a different family, the font is absent:
 
    ```bash
    fc-match "Montserrat"
@@ -54,33 +57,37 @@ The fit measurement and the burn must therefore see the same font.
 ## Additional notes
 
 No font is on every machine.
-The web-safe faces belong to Microsoft, so a Linux box carries none of them, and a container often
-carries no font at all. The skill therefore ships the fonts it names rather than trust the machine.
+The web-safe fonts belong to Microsoft, so a Linux machine has none of them.
+A container often has no font at all.
+So the skill ships the fonts that it names, and does not trust the machine.
 
-A download at render time would not do instead.
-Module **captions** measures the width of each word against the file itself, so a family that shifts by one
-release changes every measurement and a line that fitted starts to overflow.
-The bundled file is the one those measurements were taken against.
+A download at render time is not a good replacement.
+Module **captions** measures the width of each word against the font file itself.
+If a family changes in a new release, every measurement changes, and a line that fitted before now overflows.
+The measurements were taken against the bundled file.
 
-Never substitute a lookalike font without a word to the user.
+Never substitute a lookalike font without telling the user.
 Ask for the files when a show uses a licensed font, and say which font you used and why.
 
-A caption in the wrong font is a styling failure and not a small cosmetic point,
-because the font is most of what makes the clip look like that show.
+A caption in the wrong font is a styling failure, and not a small cosmetic point.
+The font is most of what makes the clip look like that show.
 
 A font that resolves by name can still render badly for other reasons, so the still is the real check.
 
-ImageMagick can fail a family name without an error, which changes the measured width as well as the look.
+ImageMagick can fail to find a family name, and give no error.
+That changes the measured width as well as the look.
 Pass it an absolute path to the bundled file, because `magick -list font` is often empty.
 
-A font file registers a family and a style, and libass matches on the family.
-The bold weight of a family is therefore the family name with `font.bold`, and never "Family Bold",
-which matches nothing at all.
+A font file registers a family and a style.
+libass finds a font by its family.
+So the bold weight of a family is the family name with `font.bold`.
+Never use "Family Bold", because that name matches nothing at all.
 
-Most display faces ship one weight, and `font.bold` on one of those makes libass draw a bold that the
-file does not carry.
-ImageMagick measures the file as it is, so the caption is then wider than the width the fit report
-certifies. Leave `font.bold` off for a face that ships a single weight.
+Leave `font.bold` off for a face that ships a single weight.
+Most display faces ship one weight.
+On one of those, `font.bold` makes libass draw a bold that the file does not have.
+ImageMagick measures the file as it is.
+So the caption is then wider than the width that the fit report gives.
 
 Title cards, lower thirds, and on-screen labels follow these same rules.
 They take `fontfile=` with the drawtext filter, or they come in as a prepared image.

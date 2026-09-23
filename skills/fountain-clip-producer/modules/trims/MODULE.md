@@ -5,21 +5,21 @@ description: Remove dead air and filler from a clip, after the user asks for it 
 
 ## Overview
 
-A clip is often longer than its span deserves.
-This module finds the pauses and the filler, says what removing them would save, and cuts them when the
-user agrees.
-It removes time, so every module after it works on a shorter clock.
-Module **captions** takes its revised word list, so the words and the picture never disagree.
+A clip is often longer than its content needs.
+This module finds the pauses and the filler, and says how much time removing them would save.
+It cuts them when the user agrees.
+It removes time, so every module after it works on a shorter timeline.
+Module **captions** takes the revised word list of this module, so the words always match the picture.
 
 ## Input
 
 - The word timings of the clip, and its duration.
-- `clip-landscape-master.mp4` from module **media**, so a cut can land in real silence.
+- `clip-landscape-master.mp4` from module **media**, so that a cut can fall in real silence.
 
 ## Output
 
 - A removal report, with the length and the words of each cut.
-- The spans to keep, and the word timings rebased onto the shorter clock.
+- The spans to keep, and the word timings rebased onto the shorter timeline.
 - The trimmed master, joined from the kept spans.
 
 ## Requirements
@@ -60,33 +60,36 @@ Module **captions** takes its revised word list, so the words and the picture ne
    ```
 
 6. Give the rebased word list to module **captions**, and the trimmed master to every module after this one.
-7. Listen to each join, and confirm that no cut clicks and no sentence lost its sense.
+7. Listen to each join, and confirm that no cut clicks and no sentence lost its meaning.
 
 ## Additional notes
 
 You MUST NOT trim unless the user asks.
-Every other module changes how the clip looks, and this one changes what the speaker said.
-A crop the user did not want is a disagreement about taste, and a cut they did not want is a misquotation.
+Every other module changes how the clip looks.
+This module changes what the speaker said.
+A crop that the user did not want is a disagreement about taste.
+A cut that the user did not want is a misquotation.
 
-Module **captions** removes filler from the text of a caption by default, and that is safe because the
-audio still carries the word.
-This module removes the word itself, and nothing carries it afterwards.
-That difference is the whole reason the two behave differently.
+By default, module **captions** removes filler from the text of a caption.
+That is safe, because the word is still in the audio.
+This module removes the word itself, so the word is gone from the audio too.
+That difference is the full reason why the two modules behave differently.
 
 You MUST NOT join two spans so that the speaker appears to say something they did not.
-A removal that takes speech with it, and runs longer than the single-cut limit, is held back for that reason.
-Take each one to the user on its own, with the words that would go.
+For that reason, a removal is held back when it takes speech with it and is longer than the single-cut limit.
+Take each held-back removal to the user on its own, with the words that would go.
 
-Only sounds that are not words are removed by default.
-"Like", "you know", and "I mean" are speech as often as they are filler, so name them yourself to remove them.
-A repeated word can carry emphasis or contrast, so a repeat stays unless you ask for it.
+By default, only sounds that are not words are removed.
+"Like", "you know", and "I mean" are speech as often as they are filler.
+To remove them, name them yourself.
+A repeated word can give emphasis or contrast, so a repeat stays unless you ask to remove it.
 An emphasised word is never treated as filler.
 
-A pause is exempt from the single-cut limit, because silence holds no words and cannot invent a quotation.
-It still changes the performance, so the report names each long pause it closes.
+The single-cut limit does not apply to a pause, because silence has no words and cannot create a false quotation.
+Removing a pause still changes the performance, so the report names each long pause that a cut removes.
 Check that the pause was not a beat before a punchline.
 
-Give the media, because a cut on a word boundary clicks.
+Give the script the media, because a cut on a word boundary clicks.
 The script measures the real silence and moves each cut into it.
 
-Removing a quarter of a clip is the point at which it stops being a fair excerpt, and the report says so.
+When a quarter of a clip is removed, the clip stops being a fair excerpt, and the report says so.

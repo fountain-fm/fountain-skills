@@ -1,4 +1,4 @@
-<!-- Data: none. What each preferences heading can hold; the user fills any of it by saying so. -->
+<!-- Data: none. What each preferences heading can hold. The user fills any of it by telling the agent. -->
 
 Tell the agent any of this, and it is recorded and honoured from the next run:
 

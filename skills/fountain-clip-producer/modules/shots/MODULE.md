@@ -6,10 +6,12 @@ description: Decide which shot the clip holds when one frame carries two people,
 ## Overview
 
 Some footage never cuts.
-A boxed side-by-side layout and a locked-off wide shot of two people at a table both hold one frame
-for the whole clip, so scene detection finds nothing and module **framing** holds one crop.
+A boxed side-by-side layout keeps one frame for the whole clip.
+So does a locked-off wide shot of two people at a table.
+Scene detection then finds no cut, and module **framing** keeps one crop.
 This module supplies the missing signal.
-The words say who speaks, and this module turns that into a cut list with the geometry for each shot.
+The words tell who speaks.
+This module turns that into a cut list, with the geometry for each shot.
 
 ## Input
 
@@ -40,7 +42,8 @@ The words say who speaks, and this module turns that into a cut list with the ge
    ```
 
 3. Read `sides` in the plan, and confirm that each speaker sits on the side the plan gives them.
-   The plan guesses that the first speaker is on the left, so check one still and correct it:
+   The plan guesses that the first speaker is on the left.
+   Check one still, and correct the sides:
 
    ```bash
    scripts/plan-shots.py … --map "A=right,B=left"
@@ -63,35 +66,41 @@ The words say who speaks, and this module turns that into a cut list with the ge
 
 ## Additional notes
 
-A cut change of crop size cannot happen inside one ffmpeg filter, because the output size is fixed
-for the whole pass.
-The segments are therefore rendered one at a time and joined, which is also what gives each speaker
-their own geometry.
+One ffmpeg filter cannot change the crop size at a cut, because the output size is fixed for the whole pass.
+So the segments are rendered one at a time and then joined.
+This is also what gives each speaker their own geometry.
 
-These are the rules that make one frame read as two cameras:
+These rules make one frame look like two cameras:
 
-- Both faces end the same size on screen, which is the strongest tell of all.
+- Both faces end the same size on screen.
+  This rule matters most, because a difference in face size shows most clearly that the shots share one frame.
   Each crop is sized from that speaker's own measured face, so a small face takes a tighter crop.
 - Both faces sit at the same height, so the eye line holds across the cut.
-- Each face sits away from the centre, on the side it looks away from, so the speaker looks into the frame.
-- The cut lands a moment before the first word, the way an editor cuts on the breath.
-- A short answer never earns a cut, so a clip does not flick back for every "yes".
-- No shot is held for less than the dwell, so a quick exchange does not swing between the two.
+- Each face sits away from the centre, on the side opposite to the direction it looks.
+  Then the speaker looks into the frame.
+- The cut comes a moment before the first word, as an editor cuts on the breath.
+- A short answer never gets a cut, so the clip does not cut back for every "yes".
+- No shot is held for less than the dwell, so the clip does not cut back and forth in a quick exchange.
 
-You MUST cut, and you MUST NOT slide from one speaker to the other.
-The background does not move in this footage, so a slide shows the audience that one frame is behind both shots.
+You MUST cut.
+You MUST NOT slide from one speaker to the other.
+The background does not move in this footage, so a slide shows the audience that both shots come from one frame.
 
-An exchange too quick to cut is a real outcome, and the plan then holds one shot and says so.
-Offer the user a two-shot or a letterbox for that clip rather than force a cut list onto it.
-Neither one is yours to choose, because both change how the clip reads.
+An exchange can be too quick to cut, and that is a valid result.
+The plan then holds one shot, and says so.
+For that clip, offer the user a two-shot or a letterbox, and do not force a cut list onto it.
+The choice between the two is not yours, because each one changes how the viewer sees the clip.
 
-This module needs the speaker of each word, and nothing supplies one: whisper hears the words and not
-who says them, and the episode transcript names nobody either.
-That is a gap in the words and not a fault of the render, so no new render fixes it.
+This module needs the speaker of each word, and no source gives it.
+Whisper hears the words, but not who says them.
+The episode transcript does not name the speakers either.
+That is a gap in the word data and not a fault of the render, so a new render does not fix it.
 
-No speaker labels does not always mean no crop.
-Read the words of the refused segment first, because a frame that holds two people often holds one voice.
-When they carry one uninterrupted utterance, a single crop is right after all, and only the seat is open.
-An edit cuts to the person who starts to speak, so when the next speaker's first word lands on the cut,
-the shot after it holds that speaker, and the seat that matches it is not the one talking in the wide shot.
-Match the seat on a still of each, and stop when the words change speaker inside the segment.
+A clip without speaker labels can still get a crop.
+Read the words of the refused segment first, because a frame that shows two people often has only one voice.
+When the words are one uninterrupted utterance, a single crop is correct, and only the seat is still open.
+An edit cuts to the person who starts to speak.
+So when the next speaker's first word falls on the cut, the shot after the cut shows that speaker.
+The seat that matches that shot is then not the seat of the person who talks in the wide shot.
+Match the seat on a still of each.
+Stop when the words change speaker inside the segment.

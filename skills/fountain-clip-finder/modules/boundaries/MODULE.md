@@ -6,11 +6,11 @@ description: Shape a scored moment into a clip - set a clean start and end, appl
 ## Overview
 
 A moment is a passage of a few minutes, and a clip is a span of about a minute inside it.
-Only the transcript carries sentence-level times, so only here can that span be cut and judged.
-The agent reads the segments around the moment, selects a clean in and out point, and pads each cut
+Only the transcript has sentence-level times, so only this module can cut and judge that span.
+The agent reads the segments around the moment, selects clean in and out points, and pads each cut
 into the silence between segments.
-That span is in the clock of the transcript, and it stays there: a YouTube match is translated into the
-clock of its file at render time.
+That span is in the clock of the transcript, and it stays there.
+A YouTube match is translated into the clock of its file at render time.
 The clip MUST pass the gates below, because a moment with substance can still fail as a clip.
 
 ## Input
@@ -43,8 +43,9 @@ The clip MUST pass the gates below, because a moment with substance can still fa
 3. Select the in segment and the out segment that give the best clip:
 
    - The in point starts on the first word of the hook, and never on the words that lead up to it.
-     A segment ident, a date, and a speaker naming themselves lead up to it, whatever they open, so
-     start after them: a viewer who wanted the show's own opening would already be watching it.
+     A segment ident, a date, and a speaker naming themselves lead up to the hook, whatever they open.
+     Start after them.
+     A viewer who wanted the show's own opening would already be watching the show.
    - The out point ends a complete thought, and never a list, an example, or a question with no answer.
 
 4. Pad each cut into the silence between segments:
@@ -54,17 +55,20 @@ The clip MUST pass the gates below, because a moment with substance can still fa
    - The out point is `end` of the out segment, plus half the gap to the segment after,
      and never more than 0.5 seconds.
 
-   The duration is the distance between the two padded cuts, and the duration gate reads that number.
-   Pad a span from an automatic caption track by 0.5 seconds at each end instead, whatever the gap:
-   such a track times a line and not a word, so a cut on its edge lands inside a word.
-   A whisper transcript and a subtitle file time the speech itself, so the rule above holds for them.
+   The duration is the distance between the two padded cuts.
+   The duration gate uses that number.
+   Pad a span from an automatic caption track by 0.5 seconds at each end instead, whatever the gap.
+   Such a track gives the time of a line and not of a word, so a cut on its edge falls inside a word.
+   A whisper transcript and a subtitle file give the times of the speech itself, so the rule above
+   applies to them.
 
 5. Score the clip 1-5 for hook strength, novelty, emotional intensity, shareability, and independence.
    Remove any clip under 18 of 25.
    Score timeliness and platform fit 1-5 as well, but only when the caller gives trend context.
 6. Apply the gates below, and remove a clip that fails one.
    Keep the best `clip_count` clips when the caller gives a count, and keep fewer when fewer pass.
-   Returning fewer is the right answer and never a shortfall to make up.
+   Returning fewer clips is the right answer.
+   It is never a shortfall to make up.
 7. Join `text` of every segment that overlaps the span, word for word, and write it into `transcript`.
 8. Write the span into `ts_start` and `ts_end`, in the clock of the transcript.
 
@@ -81,25 +85,29 @@ Gates - a clip MUST pass all of them:
 
 A sentence edge is the usual clean cut, but it is not the rule.
 A thought can run across two sentences, and a long sentence can hold a complete thought in its second half.
-Move the cut off a sentence edge when the words are better, and never cut in the middle of a word.
+Move the cut away from a sentence edge when that gives better words.
+Never cut in the middle of a word.
 
-A segment edge usually falls between two words, and the gap to the next segment is silence, so each
-cut sits inside that gap: a short breath at each end, and never more than half the gap, so two clips
-cut from neighbouring segments cannot overlap.
-A segment can stop before the speech does, so the out point reaches further than the in point.
-Prefer an out point with silence after it, because a segment that abuts the next one leaves nothing to
-reach into and the last word is cut.
+A segment edge usually falls between two words, and the gap to the next segment is silence.
+Thus each cut is inside that gap, with a short breath at each end.
+A cut never uses more than half the gap, so two clips cut from neighbouring segments cannot overlap.
+A segment can stop before the speech stops, so the out point extends further than the in point.
+Prefer an out point with silence after it.
+A segment that touches the next segment leaves no gap to pad into, and the last word is cut.
 
-The transcript carries no word timings, and captions do not need them from here.
-Skill **fountain-clip-producer** makes them from the clip's own audio at render time.
+The transcript has no word timings, and the captions do not need word timings from this module.
+Skill **fountain-clip-producer** makes the word timings from the audio of the clip at render time.
 
 `ts_start` and `ts_end` are always in the clock of the transcript.
 For a Fountain file that is also the clock of `media`, because both come from one recording.
 For a video that Fountain does not hold, the captions are the transcript, so the two clocks are one there too.
-A YouTube cut runs behind the transcript by an amount that changes at every advertisement break, so
-skill **fountain-clip-producer** translates the span there, where it opens the file.
-A break inside the clip moves the end alone, so such a clip can fail at render time, after approval.
-The renderer reports why, and the answer is a different pair of in and out points, never a shift.
-Never end a span on a dangling conjunction - cut before the "and", because a caption must not end on one.
+A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
+Thus skill **fountain-clip-producer** translates the span when it opens the file.
+An advertisement break inside the clip moves only the end, so such a clip can fail at render time,
+after approval.
+The renderer reports the reason.
+The fix is a different pair of in and out points, and never a shift of the span.
+Never end a span on a dangling conjunction.
+Cut before the "and", because a caption must not end on a conjunction.
 
 This module does not open `media`.

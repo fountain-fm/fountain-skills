@@ -17,12 +17,13 @@ github.com/fountain-fm/fountain-skills contains
 - all the skills (including this file)
 - the configuration files for the MCP and the agent plugins
 
-Plugins are an abstraction that packages together
+A plugin is a package that contains
 
 1. the MCP
 2. the skills
 
-The plugin is the preferred way to install Fountain MCP and skills because it receives regular updates.
+The plugin is the preferred way to install Fountain MCP and skills.
+The reason is that the plugin receives regular updates.
 
 ### API
 
@@ -34,13 +35,13 @@ The API can
 - publish your podcasts
 - publish social posts
 
-It can be reached via one of two routes.
+An agent reaches the API through one of two routes.
 
 #### Route A: MCP (preferred)
 
 - MCP enables Fountain users to authenticate via OAuth instead of generating API keys
 - MCP provides tools for different API groups
-- For additional information, you can read the docs at https://beta.fountain.fm/docs.md
+- For more information, you can read the docs at https://beta.fountain.fm/docs.md
 - If MCP is not connected, ask the user to connect it via the MCP Server URL
 
 Config:
@@ -54,9 +55,9 @@ Config:
 - Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
 - If no key, ask the user to make one at https://beta.fountain.fm/studio/projects
 - A Fountain key starts with `fountain_`.
-  When a request fails to authenticate under a key with a different prefix, the key is for another
-  service, and you MUST tell the user.
-- You MUST NOT write the key into a log, a command, a report, or any file but the key store.
+  If a request fails to authenticate and the key has a different prefix, the key is for another service.
+  You MUST tell the user.
+- You MUST NOT write the key into a log, a command, a report, or any file other than the key store.
 
 Config:
 
@@ -65,8 +66,8 @@ Config:
 
 #### Additional details
 
-- If you think the MCP/API is not connected / authenticated, double check by trying to list the projects.
-  Don't just assume it isn't working.
+- If you think that the MCP/API is not connected or not authenticated, try to list the projects to check.
+  Do not assume that the MCP/API does not work before you do this check.
 - Write a large response to a file and read only the part you need.
 - You CAN write a throwaway script, e.g. to repeat one request over many items.
   Put it in a temporary place and delete it at the end of the session.
@@ -74,26 +75,27 @@ Config:
 
 ## Setup
 
-Skill **fountain-onboarding** ensures Fountain and the user's environment are fully set up.
+Skill **fountain-onboarding** makes sure that Fountain and the user's environment are fully set up.
 
 - You MUST run it before the task when the preferences are empty.
 - You MUST run it when a part of the setup is missing, e.g. a channel, a report address, or a tool.
 
 ## How you talk
 
-These rules dictate your communication style in the chat.
-A report has its own separate communication rules, which are described in skill **fountain-reports**.
+These rules tell you how to communicate in the chat.
+A report has its own separate communication rules.
+Skill **fountain-reports** gives those rules.
 
-Inform the reader when it changes what they may do next:
+Tell the reader about each of these items when the item changes what the reader may do next:
 
-- You made a change to their words or video, and it changes the meaning
+- A change that you made to their words or video, when the change alters the meaning
 - Money you spent
 - What is now public and what requires action
 - A failure, and what it blocks
 
-Do not provide unnecessary information (unless the reader asks about it):
+Do not give unnecessary information, unless the reader asks for it:
 
-- Process of how you successfully completed the task
+- The steps that you took to complete the task successfully
 - Technical details of fountain-skills: module names, file names, object fields, parts of the API
 
 When you give the reader a number about their show, say which sources you counted.
@@ -101,7 +103,7 @@ When you give the reader a number about their show, say which sources you counte
 ## Approving
 
 You MUST NOT approve, schedule, or publish content on your own.
-The user does that themselves in the dashboard OR gives you the instruction explicitly.
+The user does these actions in the dashboard, OR the user explicitly tells you to do them.
 
 When you ask the user to approve content, you MUST provide the full context.
 You MUST quote the content in full, e.g. the words of a clip or the text of a post.
@@ -110,7 +112,8 @@ You MUST quote the content in full, e.g. the words of a clip or the text of a po
 
 - `post_url` - `https://beta.fountain.fm/studio/{project_id}/~/posts/{post_id}`
 - `drafts_url` - `https://beta.fountain.fm/studio/{project_id}/~/posts?tab=DRAFT`
-- `episode_url` - `https://beta.fountain.fm/episode/{episode_id}?t={seconds}`, which starts the player at that second
+- `episode_url` - `https://beta.fountain.fm/episode/{episode_id}?t={seconds}`
+  This link starts the player at that second.
 - `platform_icon` - `https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp`
 - Clip styling page - `https://beta.fountain.fm/docs/styling-clips`
 
@@ -124,10 +127,15 @@ They are the ONLY store for project data that later sessions need.
 - Preferences are stored as Markdown.
 - Preferences MUST NOT have frontmatter.
 - The whole document is `##` headings followed by unordered Markdown lists.
-- The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", "Reporting", "Automation", and "Other".
+- The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", "Reporting", "Automation",
+  and "Other".
 - Include a heading only when it has an entry.
-- Each list item MUST NOT exceed 200 chars. 200 is a ceiling, not a target. 5 words is better than 30.
-- Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)` to indicate whether it was chosen by an agent or the user and when it was updated, e.g. "- `bold-social` caption style (USER-2026-09-10)"
+- Each list item MUST NOT exceed 200 chars.
+  200 is a maximum, not a target.
+  5 words is better than 30.
+- Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)`.
+  This tag shows whether an agent or the user chose the item, and when the item was updated.
+  E.g. "- `bold-social` caption style (USER-2026-09-10)"
 
 ### Guidelines
 
@@ -139,14 +147,16 @@ They are the ONLY store for project data that later sessions need.
 - You MUST NOT mark an entry as proposed or pending.
   If it is in preferences, it is active.
 - Show-related preferences may go stale.
-  Give greater weight to recent episodes when you write new entries or review old ones.
+  Give more weight to recent episodes when you write new entries or review old ones.
   You MUST tell the user when an entry may be stale.
 
 ### Updating
 
 - Use Project API to update preferences.
-- The API call replaces the whole Markdown document, so you MUST NOT delete parts you did not mean to change.
-- When updating, always compare against existing preferences. Tell the user what you updated.
+- The API call replaces the whole Markdown document.
+  Thus you MUST NOT delete parts that you did not mean to change.
+- When you update, always compare against the existing preferences.
+  Tell the user what you updated.
 
 ### Sections
 
@@ -165,16 +175,18 @@ When you write narratives:
 - Narratives are show-level, never episode-level.
 - Pick a narrative by how often the show returns to it, never by how good one episode was.
 - Count episodes that are _about_ the subject, not the ones that just mention it.
-- Provide a few strong narratives rather than many - a long list makes every trend match something.
-- Update narratives at the start of a task that requires them: check that existing ones are still valid and whether any new ones can be added from recent episodes.
+- Give a few strong narratives rather than many.
+  A long list makes every trend match something.
+- Update narratives at the start of a task that requires them.
+  Check that the existing narratives are still valid.
+  Check whether you can add new narratives from recent episodes.
 - End the section with the newest episode you read for a given show, e.g. `- Read up to TFTC #781 (AGENT-2026-08-09)`.
 
 **Editorial**
 
 - Tone, structure, and rules for what to make and when to publish it.
-- A guest, a format, or a name that carries authority in a hook belongs here and
-  never under Narratives, because it shapes how a clip is written and not which
-  subject the show returns to.
+- A guest, a format, or a name that makes a hook more credible belongs here, and never under Narratives.
+  The reason is that such an item changes how a clip is written, and not which subject the show returns to.
 
 **Brand**
 
@@ -187,10 +199,11 @@ The show's look:
 
 **Accounts**
 
-Information not provided by the API, e.g.:
+Information that the API does not provide, e.g.:
 
-- handle to tag a person by
-- external video source (e.g. YouTube) for a show - ask the user before you cut video the first time
+- the handle to use when you tag a person
+- external video source (e.g. YouTube) for a show.
+  Ask the user before you cut video the first time.
 - folder name for a show
 
 **Reporting**
@@ -225,8 +238,10 @@ your-project
 ```
 
 You MUST keep your work as stateless as possible.
-If data is available from an API, you MUST load it from the API, and you MUST NOT keep a local copy.
-A file under `fountain` is working material, and a setting only when the preferences name its path.
+If data is available from an API, you MUST load it from the API.
+You MUST NOT keep a local copy of that data.
+A file under `fountain` is working material.
+The file is a setting only when the preferences name its path.
 
 ### Outputs
 
@@ -236,10 +251,12 @@ You MUST NOT make an output for a later session to read.
 `outputs` holds one folder for each show.
 Each show holds one folder for each asset you produce.
 
-Use show folder name from the Accounts section of the preferences.
+Use the show folder name from the Accounts section of the preferences.
 Choose the name once and record it in the same turn.
-For assets, use folder name `{episode_number ?? YYYY-MM-DD}-{slugified-topic}`, i.e. episode number (or publish date) and the topic.
+For assets, use the folder name `{episode_number ?? YYYY-MM-DD}-{slugified-topic}`.
+This name is the episode number (or the publish date) and the topic.
 
 In each asset folder, keep the finished work that the Output of the skill names, and nothing else.
-Everything else goes in `workings`: a draft, a proof, a plan, a report, an intermediate video, a throwaway script.
+Everything else goes in `workings`.
+This includes a draft, a proof, a plan, a report, an intermediate video, and a throwaway script.
 Anything the user does not need to see MUST go into `workings`.
