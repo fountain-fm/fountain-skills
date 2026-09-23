@@ -56,9 +56,12 @@ It hands them over together, because one post's render tells the next post nothi
    in front of the user, and it makes a working clip look broken.
    Retry on later runs while the count is under 3.
    At 3, stop retrying - the draft needs a person, not a fourth attempt.
-5. When this run attached media and every draft is done or given up, give the batch to skill
-   **fountain-reports** as the `review-posts-simple` report - one report for the whole batch, the given-up
-   drafts under warnings so a failure never hides, delivery decided by the Reporting section.
+5. When this run attached media and every draft is done or given up, the batch reaches the user once.
+   With auto-render on, send nothing, and give the caller the drafts you gave up: the day's report waited
+   for these videos, and the caller sends it with those drafts under its warnings.
+   With auto-render off, give the batch to skill **fountain-reports** as the `review-posts-simple`
+   report, which says the renders are ready, with the given-up drafts under warnings so a failure never
+   hides.
    Give each source label and its publish date when known.
    Use the episode for a source with an episode id, and use the external video title from `context` otherwise.
    Report only on a run that attached something, or every idle poll repeats it.
