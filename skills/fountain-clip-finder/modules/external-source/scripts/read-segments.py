@@ -34,6 +34,9 @@ DEFAULT_WORD_SECONDS = 0.4
 DEFAULT_MODEL = os.path.expanduser("~/.cache/whisper/ggml-base.en.bin")
 # A subtitle beside the video is read before whisper runs, in this order of preference.
 SIDECAR_SUFFIXES = (".srt", ".vtt", ".en.srt", ".en.vtt")
+# One line of whisper output. The speech is read with a pattern and not with a JSON parser,
+# because the filter writes a quotation mark inside it unescaped.
+WHISPER_LINE = re.compile(r'^\{"start":(?P<start>\d+),"end":(?P<end>\d+),"text":"(?P<text>.*)"\}$')
 # One cue of a subtitle file: two timestamps, and the text on the lines after them.
 CUE_TIMES = re.compile(r"(\d{1,2}):(\d{2}):(\d{2})[.,](\d{1,3})\s*-->\s*(\d{1,2}):(\d{2}):(\d{2})[.,](\d{1,3})")
 
@@ -229,18 +232,19 @@ def transcribe(video_path: str, ffmpeg: str, model: str) -> list[dict[str, objec
 
     segments: list[dict[str, object]] = []
     for line in payload.splitlines():
-        line = line.strip().rstrip(",")
-        if not line.startswith("{"):
+        # The filter does not escape a quotation mark inside the speech, so a line that holds a
+        # quoted phrase is not valid JSON. Read the three fields instead of parsing the line.
+        match = WHISPER_LINE.match(line.strip().rstrip(","))
+        if not match:
             continue
-        record = json.loads(line)
-        text = (record.get("text") or "").strip()
+        text = match.group("text").strip()
         if not text:
             continue
         # The filter writes milliseconds, and every module after this one reads seconds.
         segments.append(
             {
-                "start": round(float(record["start"]) / 1000.0, 2),
-                "end": round(float(record["end"]) / 1000.0, 2),
+                "start": round(float(match.group("start")) / 1000.0, 2),
+                "end": round(float(match.group("end")) / 1000.0, 2),
                 "text": text,
             }
         )
