@@ -41,7 +41,7 @@ An agent reaches the API through one of two routes.
 
 - MCP enables Fountain users to authenticate via OAuth instead of generating API keys
 - MCP provides tools for different API groups
-- For more information, you can read the docs at https://beta.fountain.fm/docs.md
+- For more information, you can read the docs at https://fountain.fm/docs.md
 - If MCP is not connected, ask the user to connect it via the MCP Server URL
 
 Config:
@@ -51,9 +51,9 @@ Config:
 
 #### Route B: HTTP (discouraged)
 
-- MUST read https://beta.fountain.fm/docs.md in each new session
+- MUST read https://fountain.fm/docs.md in each new session
 - Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
-- If no key, ask the user to make one at https://beta.fountain.fm/studio/projects
+- If no key, ask the user to make one at https://fountain.fm/studio/projects
 - A Fountain key starts with `fountain_`.
   If a request fails to authenticate and the key has a different prefix, the key is for another service.
   You MUST tell the user.
@@ -110,12 +110,12 @@ You MUST quote the content in full, e.g. the words of a clip or the text of a po
 
 ## Links
 
-- `post_url` - `https://beta.fountain.fm/studio/{project_id}/~/posts/{post_id}`
-- `drafts_url` - `https://beta.fountain.fm/studio/{project_id}/~/posts?tab=DRAFT`
-- `episode_url` - `https://beta.fountain.fm/episode/{episode_id}?t={seconds}`
+- `post_url` - `https://fountain.fm/studio/{project_id}/~/posts/{post_id}`
+- `drafts_url` - `https://fountain.fm/studio/{project_id}/~/posts?tab=DRAFT`
+- `episode_url` - `https://fountain.fm/episode/{episode_id}?t={seconds}`
   This link starts the player at that second.
 - `platform_icon` - `https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp`
-- Clip styling page - `https://beta.fountain.fm/docs/styling-clips`
+- Clip styling page - `https://fountain.fm/docs/styling-clips`
 
 ## Preferences
 
