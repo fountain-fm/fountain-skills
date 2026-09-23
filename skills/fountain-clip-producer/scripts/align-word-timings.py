@@ -95,12 +95,18 @@ def align(cues, reference, offset, duration):
             spans[word] = (min(a, token[0]), max(b, token[1]))
 
     timed = spread([list(spans[i]) if i in spans else None for i in range(len(ref_words))], duration)
-    out, cursor = [], 0.0
+    out, past_end, cursor = [], [], 0.0
     for word, (a, b) in zip(ref_words, timed, strict=True):
         a = max(a, cursor)
+        # A reference that runs past the clip describes speech this file does not hold: say so, and drop it.
+        if a >= duration - MIN_WORD:
+            past_end.append(word)
+            continue
         b = min(max(b, a + MIN_WORD), duration)
         out.append({"word": word, "start": round(a, 3), "end": round(b, 3)})
         cursor = out[-1]["end"]
+    if not out:
+        sys.exit("align-word-timings: no reference word falls inside the clip - check the offset and the duration")
 
     unheard, run = [], []
     for i, word in enumerate(ref_words):
@@ -116,6 +122,7 @@ def align(cues, reference, offset, duration):
         "anchor_ratio": round(len(spans) / len(ref_words), 3),
         "duration": duration,
         "unheard": unheard,
+        "past_end": past_end,
         "words": out,
     }
 
@@ -131,14 +138,23 @@ def main():
     parser.add_argument("--out", required=True, help="Where to write the words JSON.")
     args = parser.parse_args()
 
-    with open(args.reference, encoding="utf-8") as handle:
-        result = align(read_srt(args.srt), handle.read(), args.offset, args.duration)
+    try:
+        with open(args.reference, encoding="utf-8") as handle:
+            reference = handle.read()
+        cues = read_srt(args.srt)
+    except OSError as error:
+        sys.exit(f"align-word-timings: {error}")
+    if not cues:
+        sys.exit(f"align-word-timings: {args.srt} holds no cues - is it the whisper SRT of the clip?")
+    result = align(cues, reference, args.offset, args.duration)
     with open(args.out, "w", encoding="utf-8") as handle:
         json.dump(result, handle, indent=1, ensure_ascii=False)
 
     print(f"{args.out}: {len(result['words'])} words, anchor_ratio {result['anchor_ratio']}")
     for run in result["unheard"]:
         print(f"  unheard: {run}")
+    if result["past_end"]:
+        print(f"  past the end of the clip, dropped: {' '.join(result['past_end'])}")
     if result["anchor_ratio"] < LOW_RATIO:
         print(f"  WARNING: under {LOW_RATIO:.0%} of the reference matched - it may not describe this audio")
     return 0
