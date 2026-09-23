@@ -44,9 +44,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    **fountain-daily-growth**, and **fountain-reports**.
    If you don't have access, install the plugin from https://github.com/fountain-fm/fountain-skills
 4. Ensure that the user has at least one project.
-   Otherwise, link to https://beta.fountain.fm/studio/onboarding?kind=PODCAST
+   Otherwise, link to https://fountain.fm/studio/onboarding?kind=PODCAST
 5. Ensure that the project has at least one podcast.
-   Otherwise, link to https://beta.fountain.fm/studio/{project_id}/onboarding?kind=PODCAST
+   Otherwise, link to https://fountain.fm/studio/{project_id}/onboarding?kind=PODCAST
 6. If there are no connected social channels, suggest connecting YouTube, X, or Instagram via the Social API.
 7. Ensure the project preferences specify the source of clip material, automation (auto-render, etc.),
    email addresses to send the reports to, and any other relevant details.
