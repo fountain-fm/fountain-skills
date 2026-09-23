@@ -40,9 +40,11 @@ It hands them over together, because one post's render tells the next post nothi
    With auto-render off, keep only the ones whose `meta.status` is `APPROVED`.
    With auto-render on, keep them all - rendering a draft the user later rejects wastes only CPU.
 3. Run module **preflight** one time before any render, because the machine is the same for every post.
-   Then dispatch the eligible posts together, one worker for each post, and at most three at a time.
-   Give each worker the post, the preflight report, and its own output folder, and let it run the
-   process of the skill from module **media** to the attachment, in the shape its platform needs.
+   Then share the eligible posts between the workers, and run at most three workers at a time.
+   Each worker renders its posts one after another.
+   Use one worker for three posts or fewer, because each new worker costs extra before it renders anything.
+   Give each worker its posts, the preflight report, and an output folder for each post, and let it run
+   the process of the skill from module **media** to the attachment, in the shape each platform needs.
    The posts are independent - each names its own source, its own span and its own render - so a
    worker reads no file another worker writes, and decides nothing about another post.
    Wait for every worker, and read the result of each one.
@@ -73,6 +75,11 @@ whisper competes for the same ones.
 The win is the waiting - the reading, the deciding and the network of one post now happen while
 another post encodes - and the encoding itself gets no faster.
 Lower the number on a machine with few cores.
+
+Each new worker reads the skill, the modules and its own setup before its first render.
+With one worker for each post, that cost comes again for every clip.
+On 2026-09-22, three clips on three workers cost about 50% more than the same three clips in one session.
+So use more workers only for a long queue, where running three at once saves real time.
 
 The queue asks per show for a source with a show id, because that is the narrowest reliable list.
 It also asks by status for YouTube-only and empty `ids`, because those sources cannot match a show filter.

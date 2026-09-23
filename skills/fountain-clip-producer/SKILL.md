@@ -159,9 +159,10 @@ A post does not have to be approved before this skill runs, and rendering one ap
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
 
 These steps make one clip, and several clips of one run are independent.
-Module **queue** therefore gives each clip its own worker and runs the workers at the same time, each
-in its own output folder, and a run is finished when the last clip is.
+Module **queue** therefore shares the clips of a long queue between at most three workers, each with its
+own output folder, and a run is finished when the last clip is.
 They do not finish three times faster, because ffmpeg already uses every core of the machine.
+A short queue uses one worker, because each new worker reads the skill again before it renders anything.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.
 Readability, framing, and sync matter more than procedure.
