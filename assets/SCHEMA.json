@@ -378,6 +378,10 @@
         {
           "name": "face-detection-yunet-2023mar.onnx",
           "path": "skills/fountain-clip-producer/assets/models/face-detection-yunet-2023mar.onnx"
+        },
+        {
+          "name": "align-word-timings.py",
+          "path": "skills/fountain-clip-producer/scripts/align-word-timings.py"
         }
       ]
     },
