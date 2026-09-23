@@ -158,7 +158,7 @@ These steps make one clip, and several clips of one run are independent.
 Module **queue** therefore shares the clips of a long queue between at most three workers, each with its
 own output folder, and a run is finished when the last clip is.
 They do not finish three times faster, because ffmpeg already uses every core of the machine.
-A short queue takes one worker, because a worker reads the skill again before it renders anything.
+A short queue uses one worker, because each new worker reads the skill again before it renders anything.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.
 Readability, framing, and sync matter more than procedure.
