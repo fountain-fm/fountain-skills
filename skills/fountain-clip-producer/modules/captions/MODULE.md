@@ -5,11 +5,13 @@ description: Build styled, word-timed captions from a style spec and burn them i
 
 ## Overview
 
-A portrait clip is watched with the sound off, so it carries captions by default.
-Any other shape is captioned when the request asks for it.
-A style spec drives the look, and `build-captions.py` compiles that spec and the word timings into an ASS file.
+People watch a portrait clip with the sound off, so it has captions by default.
+Caption any other shape when the request asks for it.
+A style spec sets the look.
+`build-captions.py` compiles that spec and the word timings into an ASS file.
 ffmpeg then burns the ASS file in with one filter pass.
-Never write animated ASS events by hand, because the per-word timing arithmetic is what the script exists to get right.
+Never write animated ASS events by hand.
+The script exists to get the per-word timing arithmetic right.
 
 ## Input
 
@@ -25,7 +27,8 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 
 ## Requirements
 
-- ffmpeg built with libass. On macOS that is the Homebrew `ffmpeg-full` formula, and not the default one.
+- ffmpeg built with libass.
+  On macOS that is the Homebrew `ffmpeg-full` formula, and not the default one.
 - ImageMagick, to measure text width.
 - fontconfig, to resolve a font the way libass does.
 - Python 3.11 or later.
@@ -35,9 +38,11 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
 1. Take the word timings that the skill made from the clip's audio with whisper.
    The sentence-level segments of the episode transcript are too coarse for a caption.
    Use the rebased list of module **trims** instead, when that module cut the clip.
-   Stop and report to the user when a portrait export has no word timings, rather than deliver it bare.
+   Stop and report to the user when a portrait export has no word timings.
+   Do not deliver it without captions.
    Make the timings again when the script refuses the list, and tell the user if it refuses them twice.
-2. Clean the text before you set any timing, under the faithful-clean rules below.
+2. Clean the text before you set any timing.
+   Use the faithful-clean rules below.
 3. Compile the spec and the words into the ASS file:
 
    ```bash
@@ -46,8 +51,8 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
      --out captions.ass --emit-lines caption-lines.json --emit-spec resolved-style.json
    ```
 
-4. Fill in the fit report by measuring each line the script emits, which confirms the packing rather
-   than finds a surprise:
+4. Measure each line that the script emits, and write the results in the fit report.
+   This step confirms the packing of the script, and is not a search for new faults:
 
    ```bash
    # label renders the text at the real font and size, and "%w" prints the width it took.
@@ -67,91 +72,114 @@ Never write animated ASS events by hand, because the per-word timing arithmetic 
      clip-vertical-captioned.mp4
    ```
 
-7. Check the render: no new black interval, captions that change through the clip, and no caption that lags the audio.
+7. Check that the render has no new black interval, and no caption that lags the audio.
+   Check that the captions change through the clip.
 
 ## Additional notes
 
-The spec layers from the lowest priority to the highest: defaults, shape, preset, brand kit, per-clip override.
+The spec applies its layers from the lowest priority to the highest: defaults, shape, preset, brand kit,
+per-clip override.
 
-`--shape` MUST name the shape of the export being captioned, because it sets the coordinate space that
-libass draws in: a portrait spec burned on a landscape export stretches every letter.
-The shape also decides where the words sit, so the position is right without anybody setting a margin.
-A portrait post is watched inside the app's own furniture, and the words stay clear of it: the post
-caption, the handle and the audio line claim the bottom of the frame, and the reaction buttons claim
-the right edge.
-The margins of the portrait shape clear the worst of the four apps, and they leave the face clear too,
-because a 9:16 crop of one speaker fills the middle of the frame with that face.
-A landscape clip carries no such furniture, so its words sit along the bottom.
+`--shape` MUST name the shape of the export that you caption.
+The shape sets the coordinate space that libass draws in.
+A portrait spec burned on a landscape export stretches every letter.
+The shape also sets where the words sit, so nobody needs to set a margin.
+A portrait post plays inside the app's own interface, and the words stay clear of that interface.
+The post caption, the handle and the audio line cover the bottom of the frame.
+The reaction buttons cover the right edge.
+The margins of the portrait shape clear the interface of the worst of the four apps.
+They also keep the face clear, because a 9:16 crop of one speaker fills the middle of the frame with that
+face.
+A landscape clip has no such interface, so its words sit along the bottom.
 Move them with an override only for a clip that needs it, such as a shot where the speaker sits low.
-The script warns when an override puts the words back under the furniture.
-A misspelled override path is a hard error, and `--check` rejects unreadable contrast or flicker on its own.
+The script warns when an override puts the words back under the interface.
+A misspelled override path is a hard error.
+`--check` rejects unreadable contrast or flicker on its own.
 
-Use `bold-social` when neither the request nor the brand kit names a preset: it reads on a phone at arm's
-length, and it animates nothing that can go wrong.
-Send the user to the clip styling page rather than this list when they have not chosen,
-because the descriptions in `assets` say what a style is for and only the page shows it.
+Use `bold-social` when neither the request nor the brand kit names a preset.
+It is readable on a phone at arm's length, and it has no animation that can go wrong.
+When the user has not chosen a style, send them to the clip styling page, and not to this list.
+The descriptions in `assets` say what a style is for, but only the page shows the style.
 
-Each preset owns one job, and no two of them differ by a knob alone:
+Each preset has one job, and no two presets differ by only one setting:
 
-- Nothing moves: `bold-social` reads anywhere, `broadsheet` carries authority in a display serif,
-  `wide-block` survives the busiest footage on a solid block, `minimal-light` stays out of the way.
-- One word at a time: `word-pop` scales in, `bounce-in` rises, `impact-loud` shouts, `marker` is written
-  by hand, and `glow-bounce` burns.
+- Nothing moves: `bold-social` is readable anywhere, `broadsheet` looks serious in a display serif,
+  `wide-block` sits on a solid block and stays readable on the busiest footage, `minimal-light` draws
+  little attention.
+- One word at a time: `word-pop` scales in, `bounce-in` rises, `impact-loud` is loud, `marker` looks
+  hand-written, and `glow-bounce` glows.
 - The phrase stays and the spoken word is marked: by colour in `current-word`, by a pill in
   `pill-karaoke`, by a halo in `glow-word`, by filling in `karaoke-fill`, and across the line in `stadium`.
-- `typewriter` reveals a letter at a time, and `hormozi` wants 3 to 5 words marked `"emphasize": true`.
+- `typewriter` reveals a letter at a time, and `hormozi` needs 3 to 5 words marked `"emphasize": true`.
 
 The script colours each speaker differently and labels them, through `colors.speakers` and
 `grouping.speakerLabels`.
 No preset uses either, because nothing gives this skill the speaker of a word.
-Set them as overrides on the day something does.
+Set them as overrides when something supplies the speaker.
 
 These are the text rules, and the default mode is faithful-clean.
-The script owns the mechanical ones - safe because the audio still carries every word: it drops "um" and
-"uh", strips commas, joins a number range on an en dash, never lets a clip end on a dangling conjunction,
-and applies the casing map (ai -> AI, wifi -> Wi-Fi; kit-extended, an ambiguous token rides as a phrase:
-"the fed" -> "the Fed"). Sentence case capitalizes only at sentence starts, keeping "I" and existing capitals.
-The judgment calls stay yours:
+The script applies the mechanical rules.
+These rules are safe because the audio still carries every word.
+The script drops "um" and "uh", strips commas, and joins a number range on an en dash.
+It never lets a clip end on a dangling conjunction.
+It applies the casing map (ai -> AI, wifi -> Wi-Fi).
+The brand kit can extend the casing map, and an ambiguous token goes into the map as a phrase
+("the fed" -> "the Fed").
+Sentence case capitalizes only at sentence starts, and keeps "I" and existing capitals.
+You make the judgment calls:
 
-- Remove a false start - the abandoned fragment before a restart - when that does not change the meaning.
-- The script names each filler candidate (like, right, you know, kind of, sort of, I mean), removing none.
-  Delete only when the sentence keeps its claim; keep the verb, the comparison, the quotative "it's like",
-  a fixed "like that", anything before a quote or a number. A trailing tag "right" always goes.
+- Remove a false start when that does not change the meaning.
+  A false start is the abandoned fragment before a restart.
+- The script names each filler candidate (like, right, you know, kind of, sort of, I mean), but removes none.
+  Delete a filler only when the sentence keeps its claim.
+  Keep the verb, the comparison, the quotative "it's like", a fixed "like that", and anything before a
+  quote or a number.
+  Always delete a trailing tag "right".
 - Keep a repetition that carries emphasis, and never turn a sentence into a different claim.
 - Correct any remaining name, number, or currency the way the show notes spell it.
 
-Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style:
+Keep `font.case` at `verbatim` when the transcript carries real capitals, and use `upper` for a loud style.
 `sentence` lowercases every word first, so it destroys "I" and every name.
 
-Whisper invents a timing, so the script refuses four: a word that starts before the word before it,
+Whisper invents timings, so the script refuses four kinds: a word that starts before the word before it,
 a word that still runs when the next one starts, a word longer than two seconds, and a run of words
 packed tighter than anybody speaks.
-A list you build by hand MUST refuse them too.
+A list that you build by hand MUST refuse them too.
 The long word ruins a clip because every later word is pushed past its end.
-The packed run is what whisper leaves when it writes over speech it did not hear: each word is short,
-in order and not long, so the rate is the only thing that gives it away.
+Whisper leaves a packed run when it writes words over speech that it did not hear.
+Each word of the run is short, in order and not long, so only the rate shows the fault.
 
-Hand the script a word list that still carries its punctuation, because the script reads each word's
-own text to find a sentence end: that is what closes a group, and what sentence case capitalises after.
-The script drops a full stop and a trailing comma itself, once it has used them.
-A list that arrives stripped runs two sentences into one caption, and the capital is the only clue the
-reader gets.
+Give the script a word list that still has its punctuation.
+The script reads the text of each word to find a sentence end.
+A sentence end closes a group, and sentence case capitalises the word after it.
+The script drops a full stop and a trailing comma itself, after it has used them.
+When the list arrives with no punctuation, the script puts two sentences into one caption.
+The capital is then the only clue that the reader gets.
 
 A caption group breaks on a speaker change, a sentence end, a silence, or the safe width, and never inside a clause.
-The script measures each word in the font and case it will render in and packs until the next will not fit,
-so `font.size` is the control, `grouping.maxWords` only a ceiling, and a one-word style is not packed at all.
-It resolves the font the way libass does, the bundled directory first and fontconfig after, so the file it
-measures is the file that gets drawn, and it refuses only when neither answers.
-Every preset names a font, so the clip has one without you choosing: pass `--font-file` only for a family
-this skill does not bundle, and never for a file you found on the disk.
-To change the font, record `font.family` under Brand, which is enough for a family this skill bundles.
-A family it does not bundle needs its file recorded beside it, true only for the machine that holds the
-file, because naming such a family alone renders the substitute and not the font.
-A caption packed by the word cap alone wraps wherever it does not fit, and the fit report then certifies a
-layout the render never had.
-Tell the user what the build says about the font: that one is not installed and the clip is drawn in the
-substitute, or that it drew from a file this skill does not bundle.
-A social caption drops the full stop and the comma that end a group, though a comma inside one stays.
-A question mark and an exclamation mark stay, because they carry tone.
+The script measures each word in the font and the case that it will render in.
+It packs words into a group until the next word does not fit.
+Thus `font.size` is the control, and `grouping.maxWords` is only a ceiling.
+A one-word style is not packed at all.
+The script resolves the font the way libass does: the bundled directory first, and fontconfig after.
+Thus the file that it measures is the file that libass draws.
+It refuses only when neither source finds the font.
+Every preset names a font, so the clip has a font when you do not choose one.
+Pass `--font-file` only for a family that this skill does not bundle.
+Never pass it for a file that you found on the disk.
+To change the font, record `font.family` under Brand.
+That is enough for a family that this skill bundles.
+A family that this skill does not bundle needs its file recorded beside it.
+That record is true only for the machine that holds the file.
+If you name such a family alone, the render uses the substitute, and not the font.
+A caption packed by the word cap alone wraps wherever it does not fit.
+The fit report then confirms a layout that the render never had.
+Tell the user what the build says about the font.
+The build can say that a font is not installed, and that the clip is drawn in the substitute.
+Or it can say that it drew the font from a file that this skill does not bundle.
+A social caption drops the full stop and the comma at the end of a group.
+A comma inside a group stays.
+A question mark and an exclamation mark stay, because they show tone.
 
-libass renders no colour emoji, so put an emoji in an overlay rather than ship a monochrome box.
+libass renders no colour emoji.
+Put an emoji in an overlay, and do not deliver a monochrome box.

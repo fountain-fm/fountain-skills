@@ -5,16 +5,17 @@ description: Read yesterday's posts and their numbers fresh from the API, and wr
 
 ## Overview
 
-This module turns yesterday's outcomes into tomorrow's instructions.
-It loads the recent posts and their engagement fresh from the API, compares each post against the show's
-own baseline, reads the user's decisions from the post metadata, and writes what holds beyond today
-into the preferences.
-The posts are the record, and the preferences are the memory.
+This module turns the results of yesterday's posts into instructions for the next runs.
+It loads the recent posts and their engagement fresh from the API.
+It compares each post against the show's own baseline.
+It reads the user's decisions from the post metadata.
+It writes the lessons that stay true beyond today into the preferences.
+The posts keep the record of what happened, and the preferences keep what later runs remember.
 
 ## Input
 
 - `show` - the show the loop runs for.
-- The show's recent posts, listed via the Social API, each carrying its `SocialPostStats`.
+- The show's recent posts, listed via the Social API, each with its `SocialPostStats`.
 
 ## Output
 
@@ -31,98 +32,116 @@ The posts are the record, and the preferences are the memory.
 
 1. List the show's recent posts via the Social API.
    The last 14 days is enough.
-   Each post carries its `SocialPostStats`, which Fountain refreshes, so the list is the whole read and
-   there is nothing to ask for post by post.
-   Treat a published post with no stats as one the platform has not answered for yet, and never as a
-   post that no one saw.
-   Leave it out of the totals of step 2 and the baseline of step 3, because a zero it did not earn
-   pulls both down.
-2. Total each platform over the last 7 days: the published posts counted, the reactions, the
-   engagement rate, and the views.
-   Reactions are likes plus comments, and the engagement rate is reactions divided by views.
+   Each post has its `SocialPostStats`, and Fountain refreshes them.
+   So the list gives all the data, and there is nothing to ask for post by post.
+   Treat a published post with no stats as a post that the platform has not reported yet.
+   Never treat it as a post that no one saw.
+   Leave it out of the totals of step 2 and the baseline of step 3.
+   This is because its zero is not a real result, and that zero pulls both down.
+2. For each platform, total these values over the last 7 days: the count of published posts, the
+   reactions, the engagement rate, and the views.
+   Reactions are likes plus comments.
+   The engagement rate is reactions divided by views.
    Name the span you counted, e.g. "Last 7 days", because the clips below cover a shorter one.
-   The load is wider than this, because the baseline of step 3 wants more posts than a week holds.
-3. Compute the baseline from these posts alone: the median views, likes, and comments per platform.
-   The baseline is computed each run, so it exists from the first run and needs no history file.
-   It is what a post is measured against, and the report never shows it.
+   Step 1 loads more than these 7 days, because the baseline of step 3 needs more posts than a week holds.
+3. Compute the baseline from these posts alone.
+   The baseline is the median views, likes, and comments per platform.
+   The module computes the baseline each run, so it exists from the first run and needs no history file.
+   The module measures each post against the baseline, and the report never shows the baseline.
 4. Group the posts by clip on one source key, because no field identifies a clip.
    Sort `source.ids`, then combine them with `source.media`, `source.ts_start` and `source.ts_end`.
    The media value keeps two empty-ID sources with the same span separate.
    A post without `source` cannot join its other channel posts, so report it alone by post id.
-   Report the clips that published since the last report, each one time, with every platform it went to
-   and the total of those platforms.
+   Report each clip that published since the last report, one time only.
+   Give every platform that the clip went to, and the total of those platforms.
    The Reporting section of the preferences records where the last report reached.
-   Cover the last day when it records none, and say that this is the first one.
-   The window stays wider than that span so that the baseline holds.
+   When the section records no point, cover the last day, and say that this is the first report.
+   The loaded window stays wider than that span, so that the baseline stays valid.
 5. Find the posts that clearly beat or missed the baseline, and name the likely cause:
    the hook, the platform fit, the posting time, the clip length, or a saturated topic.
-   A lesson from one clip names that clip, and a lesson that holds across clips names none.
-   Both go in the lessons list, where the reader reads the day together rather than clip by clip.
+   A lesson from one clip names that clip.
+   A lesson that is true across clips names no clip.
+   Put both kinds in the lessons list, where the reader reads the day as a whole and not clip by clip.
 6. Read the user's decisions from `meta.status` and the timestamps.
-   A draft approved fast, edited before approval, or left untouched each says something.
-   The user's edits to label, title, text, or context are the closest thing to a reason - diff them.
-   Read the decisions on the posts that arrived since the last report, and not on the whole window,
-   because an earlier run already read the older ones into the preferences.
-7. Write each durable lesson under the matching heading of the preferences, dated, succinctly.
-   When a new lesson contradicts an old entry, revise the old entry - do not append a duplicate.
+   Each of these tells you something: a draft approved fast, a draft edited before approval, and a
+   draft left untouched.
+   Diff the user's edits to label, title, text, or context.
+   These edits are the closest thing to a reason from the user.
+   Read the decisions on the posts that arrived since the last report, and not on the whole window.
+   This is because an earlier run already wrote the older decisions into the preferences.
+7. Write each durable lesson under the matching heading of the preferences.
+   Add the date to each lesson, and keep it short.
+   When a new lesson contradicts an old entry, revise the old entry.
+   Do not append a duplicate.
 8. Report a post in `ERROR`, or one whose `meta.scheduled` passed without publishing.
-   That is an operational failure to surface, not a weak post to learn from.
-   Give none when nothing failed, and the report leaves the section out.
+   Such a post is an operational failure to show to the user, and not a weak post to learn from.
+   When nothing failed, give no failures, and the report then leaves the section out.
 9. Give the numbers, the diagnosis, and the warnings to skill **fountain-reports**.
-   Which preset carries them is the caller's decision, and how the report reaches the user is that
-   skill's, so this module names neither.
-   Give the project, the show, and the posts by id as well, because a clip card links its label into the
-   dashboard and every channel row into its own post.
-   Name each platform the way the platform writes itself - Instagram, X, YouTube - and never as the API
-   spells it.
+   The caller decides which preset holds them.
+   Skill **fountain-reports** decides how the report reaches the user.
+   So this module names neither.
+   Also give the project, the show, and the posts by id.
+   A clip card needs them, because it links its label to the dashboard and every channel row to its own post.
+   Name each platform the way the platform writes its own name - Instagram, X, YouTube.
+   Never name it the way the API spells it.
    For a source with an episode id, give the episode and the day it came out.
    The Content API holds both.
-   Load each episode one time, however many clips came from it, and ask for them all at the same time.
+   Load each episode one time, however many clips came from it.
+   Ask for all the episodes at the same time.
    For another source, give the source label in the post context when it is available.
    Otherwise use `External source`, and omit the source date.
-10. Record where the report reached at the end of the Reporting section, as the publish time of the
-    newest post it covered, e.g. `- Reported up to 2026-08-17T16:41Z (AGENT-2026-08-18)`.
-    Move it only when the report was sent.
+10. At the end of the Reporting section, record where the report reached.
+    Record it as the publish time of the newest post that the report covered,
+    e.g. `- Reported up to 2026-08-17T16:41Z (AGENT-2026-08-18)`.
+    Move this marker only when the report was sent.
 
 ## Additional notes
 
-The span is what the last report did not cover, and never a fixed day.
-A loop that misses a morning would otherwise skip that day's clips in both runs, and nothing would ever
-show them.
-That is also why the marker moves only on a send: a report that failed has covered nothing.
+The span is the time that the last report did not cover.
+It is never a fixed day.
+With a fixed day, a loop that misses a morning would skip that day's clips in both runs.
+Then no report would ever show them.
+For the same reason, the marker moves only when a report is sent.
+A report that failed has covered nothing.
 
 A missing dashboard link is not an operational failure, so it never goes under the warnings.
 
-The whole window gets fresh stats each run, because an older post keeps collecting views and the totals
-and the baseline are counted again from the live numbers.
-One list carries every post's numbers, so the width of the window costs nothing.
+The whole window gets fresh stats each run.
+This is because an older post keeps collecting views.
+The module counts the totals and the baseline again from the live numbers.
+One list holds the numbers of every post, so a wide window adds no cost.
 
 One-day noise MUST NOT go into the preferences.
 "This clip beat the baseline" is noise.
 "Question hooks beat statement hooks on X" is a lesson.
 
 The baseline is the show's own recent posts, never a global number.
-A show with one post has a weak baseline - say so instead of forcing a diagnosis.
+A show with one post has a weak baseline.
+Say so, and do not force a diagnosis.
 
-A rate on few views is an artifact, and not a result.
+A rate on few views comes from the small count, and is not a real result.
 Do not call a winner or a loser from a rate alone when the post has fewer views than the platform's median.
 
-A lesson about a platform needs a platform that varied.
-Compare the publish hours before you write one: when every post on a platform went out at the same hour,
-say that instead, because the hour and the platform cannot be told apart.
+A lesson about a platform needs posts on that platform that varied.
+Compare the publish hours before you write one.
+When every post on a platform went out at the same hour, say that instead.
+In that case, the effect of the hour and the effect of the platform cannot be told apart.
 The times are already on the cards, so the reader can see what the lesson could not separate.
 
-A YouTube post is not settled for 72 hours, and its age comes from `meta.published`.
-Do not diagnose one younger than that.
-Do not mark the row either: the cards are yesterday's clips, so every YouTube row is young and a mark
-on all of them tells the reader nothing.
+The numbers of a YouTube post are not settled for 72 hours.
+The age of the post comes from `meta.published`.
+Do not diagnose a YouTube post younger than that.
+Do not mark the row either.
+The cards show yesterday's clips, so every YouTube row is young.
+A mark on all of them tells the reader nothing.
 
-The same guest in two clips a few days apart is a saturated topic, which is one of the causes step 5 names.
-The window holds the evidence for it.
+The same guest in two clips a few days apart is a saturated topic.
+A saturated topic is one of the causes that step 5 names.
+The window holds the posts that show it.
 
-Untouched drafts are a signal with more than one reading: a rejected candidate and an unseen one look
-the same.
+An untouched draft can mean more than one thing.
+A rejected candidate and an unseen candidate look the same.
 Diagnose a pattern of untouched drafts, not any single one.
 
-A reason the user already gave at a review is already in the preferences - do not re-derive it from
-the outcomes, and do not write it twice.
+A reason that the user already gave at a review is already in the preferences.
+Do not re-derive it from the outcomes, and do not write it twice.

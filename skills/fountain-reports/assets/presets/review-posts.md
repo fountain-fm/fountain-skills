@@ -1,9 +1,10 @@
 <!-- Preset: the posts that wait for a decision, then what yesterday's clips did. -->
-<!-- This is composed once rather than combined at delivery, because two reports joined at delivery -->
-<!-- carry two headlines and one subject, and the reader reads the second subject over the first mail. -->
+<!-- This preset is composed one time, and not combined at delivery. -->
+<!-- Two reports joined at delivery have two headlines and one subject. -->
+<!-- The reader then reads the second subject over the first mail. -->
 <!-- The warnings of both halves are one section, so the reader finds every one of them in one place. -->
-<!-- It carries no headline: the show and the day are in the subject, and a mail the reader opens -->
-<!-- every morning is read for what it asks of them, which is the first line. -->
+<!-- It has no headline, because the show and the day are in the subject. -->
+<!-- The reader opens this mail every morning to see what it asks of them, and that is the first line. -->
 
 Subject: {show} Daily Growth, {date}
 

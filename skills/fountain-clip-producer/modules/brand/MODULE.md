@@ -5,11 +5,11 @@ description: Hold the colours, fonts, and assets of a show, so that every clip f
 
 ## Overview
 
-A brand kit is what makes the clips of a show look like that show every time.
+A brand kit makes every clip of a show look like that show.
 The user does not describe the style again in each session.
-The kit sits between a caption preset and the per-clip overrides.
+In the order of priority, the kit sits between a caption preset and the per-clip overrides.
 It carries the colours of the show, its fonts, its text case, and the location of its logo.
-The values live in the preferences, because only the preferences survive a session.
+The values are kept in the preferences, because only the preferences survive the end of a session.
 
 ## Input
 
@@ -34,80 +34,88 @@ The values live in the preferences, because only the preferences survive a sessi
 ## Process
 
 1. Load the preferences with the Project API, and read the kit of the show.
-   The Brand section holds all of it: the caption style, and the assets around it.
-2. Derive a kit from the artwork of the show when the Brand section holds none, because a show that has
-   never been asked still has a look, and the preset's look is nobody's:
+   The Brand section holds the whole kit: the caption style, and the assets around it.
+2. Derive a kit from the artwork of the show when the Brand section holds none.
+   A show whose user was never asked about its style still has a look.
+   The look of a preset is not the look of any show:
    1. Download the image of `info.image`, and read the colours out of it:
 
       ```bash
       scripts/derive-palette.py --artwork artwork.jpg --out brand-palette.json --emit-kit kit.json
       ```
 
-   2. Look at the artwork yourself and choose the font, because no script reads a typeface out of a
-      picture. Take the bundled family whose character matches the wordmark, and choose three presets
-      that suit it. A serif cover suits `broadsheet`, a heavy condensed one `stadium` or `impact-loud`,
+   2. Look at the artwork yourself and choose the font, because no script can identify a typeface in a
+      picture.
+      Take the bundled family whose style matches the wordmark, and choose three presets that suit it.
+      A serif cover suits `broadsheet`, a heavy condensed one `stadium` or `impact-loud`,
       a hand-lettered one `marker`, and a clean geometric one `bold-social` or `wide-block`.
    3. Render one mockup on real footage of the show, in the colours the artwork gave.
    4. Show the user the mockup, and send them to the clip styling page to change it.
-      Name what they can change on it - the size of the captions, their case, their colours and the
-      highlight, the outline, where they sit, how many words are on screen, and the font - because a
-      reader who does not know the vocabulary cannot ask for a correction.
-   5. Tell them which values came from their artwork and which stayed with the preset, which the notes
-      of the report say.
+      Name what they can change on it: the size of the captions, their case, their colours and the
+      highlight, the outline, where they sit, how many words are on screen, and the font.
+      A reader who does not know the words for these things cannot ask for a correction.
+   5. Tell them which values came from their artwork and which values stayed with the preset.
+      The notes of the palette report say which.
 3. Write the kit values into a kit file for this session, and give that file to the two scripts that read it.
    Build the file again in a later session, because the preferences are the store and the file is not.
 4. Apply the kit as the default, and let a per-clip override from the user win over it.
 5. Build a kit from a reference clip when the user asks to match a look that they already make:
    1. Ask for one or two finished clips, or for a full-resolution screenshot of a caption on screen.
-      Read what the show already has when the user gives none, and stop at the first that answers:
+      When the user gives none, read what the show already has.
+      Stop at the first source that answers:
 
       - A clip the show posted on one of its own channels, which the Accounts section names.
-        Prefer this one: it is the only source that shows the show's captions on the show's footage.
+        Prefer this source, because it is the only one that shows the show's captions on the show's footage.
       - The website of the show and its social profiles.
 
       Say which source each value came from, because a colour read from a profile is a guess at a
       caption that the show has never made.
 
-   2. Pull stills at the caption moments, and read the style off them.
-      Read the character of the font, the case, the colours from the real pixels, the border, the position,
+   2. Take stills at the moments when a caption is on screen, and read the style from them.
+      Read the style of the font, the case, the colours from the real pixels, the border, the position,
       the number of words on screen, and the animation.
    3. Draft the kit values, record them with the Project API, and render a style proof on real footage
       of the show.
    4. Show the proof beside the reference, and repeat until the user confirms the match.
       Record each correction with the Project API in the same turn.
-      Name what the user can change on it - the size of the captions, their case, their colours and
-      the highlight, the outline, where they sit, how many words are on screen, the font, and the
-      logo - because a reader who does not know the vocabulary cannot ask for a correction.
-      Give them the clip styling page with it, because a style is a thing to look at rather than a
-      list to read.
+      Name what the user can change on it: the size of the captions, their case, their colours and
+      the highlight, the outline, where they sit, how many words are on screen, the font, and the logo.
+      A reader who does not know the words for these things cannot ask for a correction.
+      Give them the clip styling page with it, because a style is something to look at, and not a list
+      to read.
    5. Ask for the font files when the show uses a licensed font.
 6. Record the confirmation of the kit with the Project API in the same turn.
 
 ## Additional notes
 
-An artwork colour is chosen to work on a square cover, and a caption is read at arm's length over
-moving pictures, so the script never takes a colour as it finds it.
-The darkest colour becomes the outline, the lightest tint becomes the words, and the accent goes on the
-highlight rather than on the words themselves.
-The accent is then lightened, keeping its hue, until it reads against the outline and still looks like a
-different colour from the words.
-An accent that reaches neither at any lightness is left to the preset, and so is the highlight of a
-cover that carries no colour at all.
-Say so when that happens, rather than let the user believe the whole look came from their artwork.
+An artwork colour is chosen to work on a square cover.
+A caption is read at arm's length over moving pictures.
+Thus the script never uses a colour of the artwork as it is.
+The darkest colour becomes the outline, and the lightest tint becomes the words.
+The accent goes on the highlight, and not on the words themselves.
+The script then makes the accent lighter, and keeps its hue.
+It stops when the accent is readable against the outline and still looks like a different colour from
+the words.
+An accent that reaches neither result at any lightness is left to the preset.
+The highlight of a cover that carries no colour at all is also left to the preset.
+Tell the user when that happens.
+Do not let the user believe that the whole look came from their artwork.
 
 A kit counts as established only after the user approves a proof render.
 You MUST NOT read one screenshot and then produce a batch of clips against it.
 
 The colours and the font are usually right on the first pass.
-The size and the margins usually need one correction, because a reference screenshot rarely states its resolution.
+The size and the margins usually need one correction.
+The reason is that a reference screenshot rarely states its resolution.
 
-Any change to a kit calls for a new style proof before the next full render.
+After any change to a kit, render a new style proof before the next full render.
 
 The preferences hold text, so they hold the style values, the names of the fonts, and where each asset is.
 They cannot hold the font file or the logo file itself.
 Record a URL when the show has one, because a URL survives a new machine and a session that runs elsewhere.
-Record a path when it does not, and know that the path is true for that one machine.
-Ask again and record the new location when a recorded one no longer resolves, and never fall through to a
-system font or a silently missing layer.
+Record a path when it does not.
+A path is true only for that one machine.
+When a recorded location no longer resolves, ask again and record the new location.
+Never fall back to a system font, or to a layer that is silently missing.
 
 Record the values themselves in the preferences, and not a description of them.
