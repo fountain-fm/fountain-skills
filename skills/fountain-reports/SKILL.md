@@ -30,6 +30,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 ## Requirements
 
 - Fountain API.
+- Skill **fountain-onboarding**.
 
 ## Process
 
@@ -37,16 +38,17 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    A customization can drop a component, reorder them, change a subject line, or change the delivery.
 2. Read the preset from `assets/presets`, and apply the customization.
 3. Fill each component template from `assets/components` with the caller's data.
-   Build every Fountain link and every platform mark from `assets/links.md`, which holds each
-   address one time, so a report never carries an address a component spelled for itself.
    Drop a component whose data the caller did not give, and say so after the send.
    A component that needs no data is never missing data, so this rule never drops it.
    Only a customization can.
 4. Deliver as the Reporting section asks: email via the Project API, printed in the chat, combined
    into a report sent later in the same run, or not at all.
    Email is the default, and goes to the addresses under Reporting.
-   Ask for them when the section holds none, and record them in the same turn.
-   Print in the chat instead when the user asked to read it there.
+   Run skill **fountain-onboarding** when the section holds none.
+   Print it in the chat as well when the caller asks for both, and print it instead when the user
+   asked only to read it here.
+   A printed report is the same words as the sent one, so the reader never has to open the mail to
+   learn what the chat left out.
    Say plainly when a report was composed but not sent.
    A send that answers success is not proof of delivery, so say which one you saw.
 
@@ -63,32 +65,14 @@ The presets:
 - `review-posts` - the whole day in one mail: the posts that wait for a decision, then the numbers.
   The user asks for it in place of the two, and the Reporting section records which shape the show wants.
 - `settings` - the current settings, each with its origin, and the tour of the headings.
-  Sent at first contact, or whenever the user asks what their settings are.
-
-First contact, for a caller that finds the preferences empty:
-
-1. Write the defaults: caption preset bold-social under Brand, each report delivered as email under
-   Reporting, and auto-render on under Automation.
-2. Mark each one `(default)`, and drop that mark when the user confirms or changes the value.
-   The mark is what lets a later reader, and the origin of a `setting-row`, tell a default from a choice.
-3. Ask the user where their emails go, and record the addresses under Reporting.
-   The `settings` report is the first one, so nothing sends without them.
-4. Send the `settings` report, which says what was set and what else each heading holds.
-   First contact comes one time, so this is the only report that shows the headings unasked.
-
-The defaults only make the settings visible and editable, because every skill already defaults the same
-way with no entry at all.
-
-The look of the show does not wait for first contact, because a project can hold entries and still have
-no look: the web onboarding writes some of them before an agent ever runs.
-Skill **fountain-clip-producer** drafts a kit from the show itself whenever the Brand section names
-none, and the first rendered clip is the style proof whose corrections confirm it.
+  Sent when the user asks what their settings are.
 
 A preset is named for the state it reports, never for the occasion or the skill that sends it,
 so any head of the chain reuses it unchanged.
 
 The printed surface serves the review in the chat: the user reads the same report that the email
 carries, so the two never disagree.
+A caller that prints and sends gives the reader one report in two places, and never two reports.
 
 Combining joins reports, not machines: a report can wait only for one sent later in the same run,
 because nothing holds a pending report between machines.

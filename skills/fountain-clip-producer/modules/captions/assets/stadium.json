@@ -1,0 +1,26 @@
+{
+  "name": "stadium",
+  "description": "Tall condensed capitals that fill the width, colouring word by word as they are spoken. Sports and news energy without the shouting of impact-loud.",
+  "font": {
+    "family": "Bebas Neue",
+    "size": 112,
+    "bold": false,
+    "case": "upper"
+  },
+  "colors": {
+    "primary": "#FFFFFF",
+    "highlight": "#FF4438",
+    "outline": "#000000"
+  },
+  "border": {
+    "style": "outline",
+    "outline": 5,
+    "shadow": 0
+  },
+  "grouping": {
+    "maxWords": 4
+  },
+  "animation": {
+    "type": "highlight-sweep"
+  }
+}

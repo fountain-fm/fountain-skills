@@ -19,10 +19,7 @@
     "blur": 8
   },
   "position": {
-    "alignment": "bottom-center",
-    "marginL": 60,
-    "marginR": 60,
-    "marginV": 250
+    "alignment": "bottom-center"
   },
   "animation": {
     "type": "word-pop",

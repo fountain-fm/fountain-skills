@@ -38,18 +38,19 @@ module **boundaries**.
 A post targets one channel, and the platform of that channel decides how the text reads.
 One clip on two channels is therefore two posts, each with its own text.
 
-The API marks `source` optional, but this skill MUST write it.
-Fountain shows a post as a candidate only when it holds `source`, and only then can a renderer cut the clip.
-Module **copy** writes `content.title`, `content.text`, and `context`.
+This skill MUST write `source` when `media` is a URL, because a later renderer cuts the clip from it.
+Module **copy** writes `meta.label`, `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 
-A clip from a video that is not an episode carries an external source instead, which module
-**external-source** defines, and the post holds no `source` at all: `ids` names an episode and a show,
-and this clip has neither.
-Such a post is a draft with words and no clip behind it, so the render MUST happen in the same session.
+A Fountain episode source names its episode and show in `ids`.
+A YouTube match for that episode adds its YouTube video id.
+A standalone YouTube source names only its YouTube video id, and another external URL uses empty `ids`.
+Module **external-source** builds the last two forms.
+A raw local path is not a URL, so its post holds no `source` and the render MUST happen in the same session.
 
-The posts then wait in the Social API, and nothing here invokes the next stage: skill
-**fountain-clip-producer** works from `source` and attaches the video to the post.
+The posts with `source` then wait in the Social API, and nothing here invokes the next stage.
+Skill **fountain-clip-producer** works from `source` and attaches the video to the post.
+It receives a raw local source directly in the same session.
 
 ## Housekeeping
 
@@ -62,6 +63,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - Python 3.11 or later, and yt-dlp for a video URL, and ffmpeg with whisper for a local video that
   has no subtitle file.
   Module **external-source** needs all three, and a machine without them runs every other input.
+- Skill **fountain-onboarding**.
 
 ## Process
 
@@ -69,8 +71,8 @@ Make the calls that do not need each other's answers at the same time.
 A run is slow between its actions, and not inside them.
 
 1. Resolve the show, and list the connected `SocialChannel` with the Social API.
-   Ask the user to connect a channel in the dashboard when the show has none, because a clip becomes a
-   draft post on a channel, and there is no other place to keep the work.
+   Run skill **fountain-onboarding** when the show has none, because a clip becomes a draft post on a
+   channel, and there is no other place to keep the work.
    Continue only when the user asks for the clips without a channel.
 2. Run module **discovery** to search the transcripts, score each moment, and drop the weak ones.
    For a video that is not an episode, run module **external-source** first, and give its segments to
@@ -79,17 +81,15 @@ A run is slow between its actions, and not inside them.
    Drop a moment when its episode has no video to cut from.
    Skip this module for such a video, because module **external-source** already named the file.
 4. Run module **boundaries** to shape each moment into a clip, and to drop the ones that fail a gate.
-5. Run module **copy** to write `content.title`, `content.text`, and `context`.
+5. Run module **copy** to write `meta.label`, `content.title`, `content.text`, and `context`.
 6. Create one draft `SocialPost` for each clip on each channel with the Social API.
-   Creating a post does not carry its text, so write the text with a second call, and check that it
-   landed - a draft with no words looks finished in the dashboard and publishes as an empty post.
-   The two calls of one post run in that order, and no post waits for another, so work through the
-   posts in batches of 4 to 6 at the same time.
+   Give it the copy, and the complete `SocialPostMediaSource` when `media` is a URL.
+   Clips don't wait for each other, so create them in batches of 4 to 6 at the same time.
 7. Present each clip as one clip card of `assets/clip-card.md`, in rank order, and close with the
    card's drafts link.
    The card carries the score, the reason, and each flag, so nothing waits in a summary above it.
-   Give the external source of each clip to the renderer in this session, and say that these posts
-   cannot be rendered from a later one.
+   Give each raw local source to the renderer in this session, and say that these posts cannot be
+   rendered from a later one.
 
 ## Additional notes
 

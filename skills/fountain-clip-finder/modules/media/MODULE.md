@@ -24,8 +24,8 @@ translates it at render time, because only the renderer must reach YouTube.
   Module **boundaries** sets the three remaining fields, so it is complete only after that module.
 - A confidence tier for each moment that needed a YouTube match.
 - A preview link for each moment, which opens the video at the moment so the user can watch it.
-  Always `https://beta.fountain.fm/episode/<id>?t=<seconds>`, with the bare episode id and the seconds in
-  the clock of the transcript, which that player runs on for the audio and the Fountain video alike.
+  Always `episode_url`, with the bare episode id and the seconds in the clock of the transcript,
+  which that player runs on for the audio and the Fountain video alike.
   For a YouTube match, add `https://www.youtube.com/watch?v=<id>&t=<seconds>s` with the transcript
   seconds, and call it approximate, because that file runs on its own clock and nothing here can
   translate into it - the drift is the advertisement difference, from zero to a few minutes.
@@ -35,6 +35,7 @@ translates it at render time, because only the renderer must reach YouTube.
 
 - Fountain API.
 - A web search tool, for the episodes that have no video on Fountain.
+- Skill **fountain-onboarding**.
 
 ## Process
 
@@ -46,7 +47,7 @@ translates it at render time, because only the renderer must reach YouTube.
    Fountain cuts that file and the audio from one recording, so the clocks agree and no map is needed.
 4. Read where the show publishes its video, usually a YouTube channel, from the Accounts section of the
    preferences.
-   Ask the user one time when the preferences do not name a channel, then record the answer with the Project API.
+   Run skill **fountain-onboarding** when the preferences do not name a channel.
    Do this only when an episode reaches this step.
 5. Match each episode that has no video with the web search tool.
    Search for the episode title of the `ContentHit` together with the name of the channel, and never
@@ -63,6 +64,7 @@ translates it at render time, because only the renderer must reach YouTube.
    - `unmatched` - no candidate fits. Mark the moment for removal.
 
 7. Write the resolved URL into `media`.
+   Add the matched video as `youtube:video:<id>` to `ids`.
 
 ## Additional notes
 

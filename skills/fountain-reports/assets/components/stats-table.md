@@ -1,8 +1,8 @@
 <!-- Data: one row per platform - platform, posts, reactions, eng_rate, views. -->
 <!-- This is what each platform did in the window, and never a baseline. -->
 <!-- posts is how many published posts the row counts. -->
-<!-- platform carries its mark, whose address is platform_icon in links.md. The mark's own margin -->
-<!-- makes the gap, so no space sits between the mark and the name. -->
+<!-- platform carries its mark, platform_icon. The mark's own margin makes the gap, so no space -->
+<!-- sits between the mark and the name. -->
 <!-- reactions is likes plus comments. -->
 <!-- eng_rate is reactions divided by views. Write "-" when views are zero. -->
 <!-- The total row sums the platforms, and every table in a report ends on one. -->

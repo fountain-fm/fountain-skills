@@ -13,15 +13,16 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 ## Input
 
 - The `SocialPostMediaSource` of the post, which names the file in `media` and the span in `ts_start` and `ts_end`.
-  A caller can give the same five fields without `ids`, for a video that Fountain does not hold.
+- Or the external source of a raw local video for this session.
 - The `transcript` of that source, to confirm that the cut holds the expected words.
-- The `TranscriptSegment` list of the episode, from the Content API, for a watch-page source whose
-  span is in the clock of that transcript.
-- The id of the episode, which names its saved time map.
+- The `TranscriptSegment` list from the Content API when `ids` names an episode, a show, and a YouTube video.
+- The id of that episode, which names its saved time map.
 
 ## Output
 
 - `clip-landscape-master.mp4`, cut to the span and cropped to the camera area.
+- Or `clip-base.mp4` for a source that carries no video: the audio of the span on an empty frame of the
+  target shape, which module **overlays** then paints.
 - An alignment report, for a source that needed the content check.
 
 ## Requirements
@@ -36,8 +37,8 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 
 1. Open `media` and read what kind of source it is.
    A local file and an HLS playlist are cuttable directly, and a watch-page URL is not.
-2. Translate the span of a watch-page source first, because its `ts_start` and `ts_end` are in the
-   clock of the transcript and that file is not:
+2. Translate the span first when `ids` names an episode, a show, and a YouTube video.
+   Its `ts_start` and `ts_end` are in the clock of the Fountain transcript, and that file is not:
 
    ```bash
    # The cache sits in the workings of the show, so that every clip of that show reads it.
@@ -60,8 +61,9 @@ A mistake at this step is a sync fault or a timing fault, and every module after
    the words of the rough cut settle the edges.
    A Fountain file and an HLS playlist need no translation, because their clock is the clock of the
    transcript.
-   A watch page that no episode holds needs none either: the caller read the span off that video, so
-   the two clocks are one. Translate only when the span comes from a Fountain transcript of an episode.
+   A source with only a YouTube video id needs no translation.
+   The caller read its span from that video, so the two clocks are one.
+   Empty `ids` and a raw local source also use the clock of `media`.
 
 3. Cut an HLS source with one `-ss` and an explicit program map, always on the tallest video program:
 
@@ -117,6 +119,16 @@ A mistake at this step is a sync fault or a timing fault, and every module after
 7. Inspect a still of the master for a show frame, a border, a sidebar, or a decorative background.
    Measure the inset and crop to the camera area before any other module runs.
 8. Run ffprobe on the master, and confirm the duration, the audio stream, and the height of the tallest rendition.
+9. Build an empty base instead, when the source carries no video at all, because every module after this
+   one paints onto a frame and there is none:
+
+   ```bash
+   # -f lavfi draws an empty frame of the target shape, and -shortest ends it with the audio.
+   # The frame is black because the audiogram package covers it; nothing here is ever seen.
+   ffmpeg -hide_banner -y -f lavfi -i color=c=black:s=1080x1920 -ss "$TS_START" -to "$TS_END" \
+     -i "$SOURCE" -shortest -map 0:v -map 1:a \
+     -c:v libx264 -preset veryfast -crf 20 -c:a aac -movflags +faststart clip-base.mp4
+   ```
 
 ## Additional notes
 
