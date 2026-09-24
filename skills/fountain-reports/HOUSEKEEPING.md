@@ -40,7 +40,7 @@ An agent reaches the API through one of two routes.
 #### Route A: MCP (preferred)
 
 - MCP enables Fountain users to authenticate via OAuth instead of generating API keys
-- MCP provides tools for different API groups
+- MCP provides one tool for each API endpoint
 - For more information, you can read the docs at https://fountain.fm/docs.md
 - If MCP is not connected, ask the user to connect it via the MCP Server URL
 
