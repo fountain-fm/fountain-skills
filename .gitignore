@@ -9,3 +9,6 @@ fountain/
 
 # scratch renders - never part of a skill
 .preview/
+
+# OpenAI submission zips
+dist/
