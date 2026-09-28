@@ -1,6 +1,6 @@
 {
   "name": "fountain",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "displayName": "Fountain",
   "description": "Skills and tools for podcast growth: automate publishing, produce clips, and analyze performance.",
   "mcpServers": "./.mcp.json",
@@ -11,5 +11,10 @@
   "homepage": "https://fountain.fm",
   "repository": "https://github.com/fountain-fm/fountain-skills",
   "keywords": ["podcast", "clips", "video", "social", "fountain"],
-  "license": "MIT"
+  "license": "MIT",
+  "icon": "./.claude-plugin/icon.svg",
+  "documentationUrl": "https://fountain.fm/docs",
+  "supportUrl": "https://fountain.fm/faq",
+  "privacyPolicyUrl": "https://fountain.fm/privacy-policy",
+  "termsOfServiceUrl": "https://fountain.fm/terms-of-use"
 }

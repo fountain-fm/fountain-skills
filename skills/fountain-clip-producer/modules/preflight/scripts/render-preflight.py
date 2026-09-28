@@ -128,7 +128,7 @@ def find_capable_ffmpeg(group, exclude):
 # path of one, and a build with the filter and no model transcribes nothing.
 # The first entry is where this skill asks the user to put it.
 WHISPER_MODEL = (
-    "~/.cache/whisper/ggml-*.bin",  # where the install line below puts it
+    "~/.cache/whisper/ggml-*.bin",  # where the install hint below puts it
     "/opt/homebrew/share/whisper-cpp/ggml-*.bin",  # macOS, Apple silicon Homebrew
     "/usr/local/share/whisper-cpp/ggml-*.bin",  # macOS, Intel Homebrew
     "/opt/homebrew/share/whisper.cpp/models/ggml-*.bin",  # a source build, kept beside its models
@@ -139,8 +139,10 @@ WHISPER_MODEL = (
 
 WHISPER_MODEL_DEFAULT = "ggml-base.en.bin"
 WHISPER_MODEL_INSTALL = (
-    "mkdir -p ~/.cache/whisper && curl -L -o ~/.cache/whisper/" + WHISPER_MODEL_DEFAULT + " "
-    "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/" + WHISPER_MODEL_DEFAULT
+    "download https://huggingface.co/ggerganov/whisper.cpp/resolve/main/"
+    + WHISPER_MODEL_DEFAULT
+    + " and save it as ~/.cache/whisper/"
+    + WHISPER_MODEL_DEFAULT
 )
 
 
