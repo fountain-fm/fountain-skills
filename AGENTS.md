@@ -228,6 +228,11 @@ The git pre-commit hook runs the same steps before each commit.
 
 `npm run check` also validates the Claude plugin manifests, if the Claude Code CLI is installed.
 
+You MUST NOT commit a lockfile, such as `package-lock.json`.
+The repository root is the plugin root, and Claude Code installs the npm packages there when it finds
+`package.json` and a lockfile.
+These packages are for development only, so a user MUST NOT get them.
+
 ### Version
 
 `version` in `package.json` is the version of the plugin.

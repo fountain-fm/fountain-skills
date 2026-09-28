@@ -12,3 +12,6 @@ fountain/
 
 # OpenAI submission zips
 dist/
+
+# Claude Code runs npm ci in a plugin root that has package.json and a lockfile
+package-lock.json
