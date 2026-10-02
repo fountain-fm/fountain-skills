@@ -39,6 +39,7 @@ The script exists to get the per-word timing arithmetic right.
    The sentence-level segments of the episode transcript are too coarse for a caption.
    Use the rebased list of module **trims** instead, when that module cut the clip.
    Use the retimed list of module **pace** instead, when that module sped up the clip.
+   Then pass `max_speed` of the pace plan as `--speed`, so that the rate check allows the faster speech.
    Stop and report to the user when a portrait export has no word timings.
    Do not deliver it without captions.
    Make the timings again when the script refuses the list, and tell the user if it refuses them twice.

@@ -75,6 +75,7 @@ It changes time, so every module after it works on the new timeline.
    ```
 
 5. Give the words of the plan to module **captions**, and the paced master to every module after this one.
+   Give `max_speed` to module **captions** as `--speed`, because a faster clip has more words a second.
    Give `duration.after` to module **qa** as the expected duration.
 6. Listen to the start of each segment, and confirm that no change of speed is easy to hear.
 
@@ -97,8 +98,12 @@ A phrase that is already faster than the target plays at 1.0.
 The syllable count is an estimate from the letters of each word, so compare phrases with it,
 and never quote it as a measurement.
 
-A phrase shorter than two seconds joins the phrase before it.
+A phrase grows over the next pause until it lasts two seconds.
 A speed that changes every second sounds like a fault, and not like a style.
+
+Give the plan the word timings of the recogniser.
+A caption stream often ends each word where the next word starts, so it holds no pause.
+Then the whole clip is one phrase, and the plan says so.
 
 This module changes the speed of the speech, and never the words.
 Thus, unlike a trim, it cannot make the speaker seem to say something that they did not say.

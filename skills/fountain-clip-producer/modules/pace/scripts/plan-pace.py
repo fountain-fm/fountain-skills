@@ -12,8 +12,8 @@ Two modes:
     syllables a second, so a slow phrase speeds up more than a fast one.
 
 A phrase ends at a pause between two words, so a speed never changes inside a
-word. A phrase shorter than --min-phrase joins the phrase before it, because a
-speed that changes every second sounds like a fault rather than a style.
+word. A phrase grows over the next pause until it lasts --min-phrase, because
+a speed that changes every second sounds like a fault rather than a style.
 
 The speed of every phrase is held between --min-speed and --max-speed. The
 default floor is 1.0, so the plan never slows a speaker down.
@@ -65,16 +65,16 @@ def phrases(words, duration, min_gap, min_phrase):
 
     spans = [{"start": start, "end": end} for start, end in zip(cuts, cuts[1:], strict=False) if end > start]
 
-    # Join each short phrase onto the phrase before it, and a short first phrase onto the next one.
+    # Grow each phrase until it is long enough, then start the next one. A short last phrase joins the one before.
     joined = []
     for span in spans:
-        if joined and span["end"] - span["start"] < min_phrase:
+        if joined and joined[-1]["end"] - joined[-1]["start"] < min_phrase:
             joined[-1]["end"] = span["end"]
         else:
             joined.append(dict(span))
-    if len(joined) > 1 and joined[0]["end"] - joined[0]["start"] < min_phrase:
-        joined[1]["start"] = joined[0]["start"]
-        joined.pop(0)
+    if len(joined) > 1 and joined[-1]["end"] - joined[-1]["start"] < min_phrase:
+        joined[-2]["end"] = joined[-1]["end"]
+        joined.pop()
     return joined
 
 
@@ -165,7 +165,13 @@ def main():
         segments = [{"start": 0.0, "end": round(args.duration, 3), "speed": round(args.speed, 3), "rate": None}]
     else:
         segments, capped = [], 0
-        for span in phrases(words, args.duration, args.min_gap, args.min_phrase):
+        spans = phrases(words, args.duration, args.min_gap, args.min_phrase)
+        if len(spans) == 1 and args.duration >= 2 * args.min_phrase:
+            warnings.append(
+                f"the word timings show no pause of {args.min_gap}s or more, so the whole clip is one phrase "
+                "-- give the timings of the recogniser, because a caption stream closes every gap"
+            )
+        for span in spans:
             rate = speech_rate(span, words)
             wanted = args.target_rate / rate if rate else args.min_speed
             speed = min(args.max_speed, max(args.min_speed, wanted))
@@ -188,6 +194,7 @@ def main():
         "ok": len(retimed) == len(words),
         "mode": "fixed" if args.speed is not None else "dynamic",
         "fps": args.fps,
+        "max_speed": max(segment["speed"] for segment in segments),
         "duration": {
             "before": round(args.duration, 3),
             "after": round(after, 3),

@@ -395,7 +395,7 @@ def validate_spec(spec):
     return failures, warnings
 
 
-def load_words(path):
+def load_words(path, speed=1.0):
     data = json.loads(Path(path).read_text())
     if isinstance(data, dict):
         data = data.get("words", [])
@@ -421,7 +421,7 @@ def load_words(path):
         )
     if not words:
         fail(f"no usable words in {path}")
-    refuse_impossible_rate(words)
+    refuse_impossible_rate(words, MAX_WORDS_PER_SECOND * speed)
     clamped, nudged = enforce_monotonic(words)
     if clamped:
         print(f"note: shortened {clamped} word(s) that ran longer than {MAX_WORD_DUR}s in {path}", file=sys.stderr)
@@ -436,25 +436,26 @@ MAX_WORDS_PER_SECOND = 9.0  # far above the fastest speech; only invented words 
 RATE_WINDOW = 5  # words to measure a rate over, so one short word cannot fail a build
 
 
-def refuse_impossible_rate(words):
+def refuse_impossible_rate(words, limit):
     """Fail when a run of words is packed tighter than anybody can speak.
 
     Whisper can write words over speech it did not hear, and the invented ones
     then anchor the real ones: a caption holds words that are each short enough,
     in order, and none too long, so every other check passes while the line
     races the audio. Rate is what gives it away, and it is measured over a run
-    because a single short word is ordinary.
+    because a single short word is ordinary. A clip that module pace sped up
+    really is faster, so its limit rises by the same factor.
     """
     if len(words) < RATE_WINDOW:
         return
     for i in range(len(words) - RATE_WINDOW + 1):
         span = words[i + RATE_WINDOW - 1]["end"] - words[i]["start"]
-        if span <= 0 or RATE_WINDOW / span <= MAX_WORDS_PER_SECOND:
+        if span <= 0 or RATE_WINDOW / span <= limit:
             continue
         said = " ".join(w["text"] for w in words[i : i + RATE_WINDOW])
         fail(
             f"words[{i}:{i + RATE_WINDOW}] ('{said}') run at {RATE_WINDOW / span:.1f} words a second, "
-            f"past the {MAX_WORDS_PER_SECOND:.0f} limit - make the word timings again from the clip's audio"
+            f"past the {limit:.1f} limit - make the word timings again from the clip's audio"
         )
 
 
@@ -1247,6 +1248,12 @@ def main():
         metavar="dot.path=value",
         help="Per-clip style override, e.g. colors.highlight=#FFD400 or font.size=84. Repeatable.",
     )
+    parser.add_argument(
+        "--speed",
+        type=float,
+        default=1.0,
+        help="The highest speed in the pace plan, when module pace sped up the clip. Raises the rate limit to match.",
+    )
     parser.add_argument("--font-file", help="TTF/OTF to measure with. Defaults to the bundled file for the family.")
     parser.add_argument("--out", help="Output .ass path. Required unless --check.")
     parser.add_argument(
@@ -1325,7 +1332,7 @@ def main():
     if not args.words or not args.out:
         fail("--words and --out are required unless --check")
 
-    words = load_words(args.words)
+    words = load_words(args.words, args.speed)
     removed = faithful_clean(words)
     if removed:
         print(f"note: faithful-clean dropped or joined {removed} word(s)", file=sys.stderr)
