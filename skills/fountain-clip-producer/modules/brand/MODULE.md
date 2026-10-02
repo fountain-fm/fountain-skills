@@ -9,6 +9,7 @@ A brand kit makes every clip of a show look like that show.
 The user does not describe the style again in each session.
 In the order of priority, the kit sits between a caption preset and the per-clip overrides.
 It carries the colours of the show, its fonts, its text case, and the location of its logo.
+It can also carry a pace, which module **pace** reads.
 The values are kept in the preferences, because only the preferences survive the end of a session.
 
 ## Input

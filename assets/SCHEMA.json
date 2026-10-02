@@ -248,6 +248,17 @@
           ]
         },
         {
+          "name": "pace",
+          "description": "Play a clip a little faster, at one speed or at a speed that follows how fast the speaker talks.",
+          "module": "skills/fountain-clip-producer/modules/pace/MODULE.md",
+          "assets": [
+            {
+              "name": "plan-pace.py",
+              "path": "skills/fountain-clip-producer/modules/pace/scripts/plan-pace.py"
+            }
+          ]
+        },
+        {
           "name": "preflight",
           "description": "Confirm that the machine can render what the request asks for, before the first render starts.",
           "module": "skills/fountain-clip-producer/modules/preflight/MODULE.md",
