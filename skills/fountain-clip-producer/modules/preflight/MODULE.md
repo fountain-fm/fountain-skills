@@ -20,8 +20,8 @@ It reports the environment, and it never looks at a rendered file.
 
 ## Output
 
-- A preflight report, which names the caption renderer, the binary to burn with, and the binary that
-  carries whisper.
+- A preflight report, which names the caption renderer, the binary to burn with, and the source of the
+  word timings.
 - A list of the missing tools, and a pass or a fail.
 
 ## Requirements
@@ -47,6 +47,10 @@ It reports the environment, and it never looks at a rendered file.
    The words of the clip come from whisper, and three modules read them.
    Give the family name alone, because a weight in the name matches nothing and shows as a missing font.
 
+   When the machine runs a transcription service, add `--words-service-url http://127.0.0.1:8766`.
+   The service must return word timings as JSON, where each word has a `word`, a `start`, and an `end`.
+   Module **captions** reads that JSON.
+
 2. Stop and run skill **fountain-onboarding** when the report names a missing tool, because this is a
    fault of the machine and not of the clip.
 3. Read the caption renderer from the report, and record it in the caption plan.
@@ -65,7 +69,7 @@ When a build has no libass, use the other binary.
 Never drop to a lesser renderer for that reason.
 The same search finds the build that has whisper, and the two are usually the same binary.
 Word timing has no lesser renderer.
-Without whisper, the clip has no words at all.
+Without whisper, and without a transcription service, the clip has no words at all.
 
 The whisper filter transcribes nothing on its own.
 It needs the path of a whisper.cpp model.
@@ -73,6 +77,15 @@ The dangerous case is a build that has the filter, on a machine that has no mode
 Then ffmpeg loads its backend, prints no error, and never returns.
 The render hangs, and does not fail.
 So the report names the model as well as the binary, and `--require-words` fails when there is no model.
+
+A transcription service removes that whole path.
+It holds its own model, so the machine needs neither a whisper-enabled ffmpeg nor a whisper.cpp model file.
+The report takes its base URL from `--words-service-url`, or from `FOUNTAIN_WORDS_SERVICE_URL`.
+When the service answers, the report names it as the source of the words, and it does not ask for a model.
+When it does not answer, the report falls back to the ffmpeg build and says that the service did not answer.
+Any HTTP answer counts as reachable, because a 404 still proves that something is listening.
+The report does not prove that the service holds a model.
+Only the render itself proves that.
 
 The model is not bundled, because it is 141 MB, and the face model is only 2.3 MB.
 The report has the one line that installs the model.

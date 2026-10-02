@@ -9,10 +9,13 @@ face detection and visual-person-qa.py.
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 REQUIRED_FILTERS = {
@@ -21,6 +24,26 @@ REQUIRED_FILTERS = {
     "text": {"drawtext"},
     "words": {"whisper"},
 }
+
+
+def service_health(url, timeout=2.0):
+    """Report whether a word-timings service answers at this base URL.
+
+    Returns (reachable, detail). Any HTTP answer counts as reachable, because a
+    404 still proves that something is listening and speaking HTTP. This does not
+    prove that the service holds a model. Only the render itself proves that.
+
+    Set FOUNTAIN_WORDS_SERVICE_URL, or pass --words-service-url, to use one.
+    """
+    base = url.rstrip("/")
+    try:
+        with urllib.request.urlopen(base, timeout=timeout) as response:
+            code = getattr(response, "status", None) or response.getcode()
+        return True, f"{base} answered HTTP {code}"
+    except urllib.error.HTTPError as exc:
+        return True, f"{base} answered HTTP {exc.code}"
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        return False, f"no service at {base}: {exc}"
 
 
 def run(cmd):
@@ -194,11 +217,20 @@ def main():
     parser.add_argument(
         "--require-words",
         action="store_true",
-        help="Fail if no ffmpeg carries the whisper filter, or if no whisper model file is found.",
+        help="Fail if no source of word timings is available.",
     )
     parser.add_argument(
         "--whisper-model",
         help="Path of the whisper.cpp model to time words with. Searched for when not given.",
+    )
+    parser.add_argument(
+        "--words-service-url",
+        default=os.environ.get("FOUNTAIN_WORDS_SERVICE_URL", ""),
+        help=(
+            "Base URL of a transcription service that returns word timings. "
+            "Defaults to $FOUNTAIN_WORDS_SERVICE_URL. When set, this replaces the "
+            "need for an ffmpeg whisper build and a whisper.cpp model file."
+        ),
     )
     parser.add_argument("--require-magick", action="store_true")
     parser.add_argument(
@@ -275,21 +307,54 @@ def main():
 
         # Word timings come from whisper on the clip's own audio, so a build
         # without it stops captions, trims and shots after the master is cut.
-        if "whisper" in filters:
-            report["ffmpeg_for_words"] = args.ffmpeg
-        else:
-            report["ffmpeg_for_words"] = find_capable_ffmpeg("words", exclude=args.ffmpeg)
-            if args.require_words and not report["ffmpeg_for_words"]:
-                report["missing"].append("ffmpeg filter:whisper (no whisper-capable ffmpeg found on this machine)")
+        #
+        # A transcription service replaces that whole path. It keeps its own
+        # model, so the machine needs neither a whisper-enabled ffmpeg nor a
+        # whisper.cpp model file.
+        service_url = (args.words_service_url or "").strip()
+        service_ok = False
+        service_detail = None
+        if service_url:
+            service_ok, service_detail = service_health(service_url)
+            report["words_service_url"] = service_url.rstrip("/")
+            report["words_service_reachable"] = service_ok
+            report["words_service_detail"] = service_detail
 
-        # The filter alone transcribes nothing: it takes a whisper.cpp model file,
-        # and with none it loads its backend and then hangs rather than failing.
-        report["whisper_model"] = find_whisper_model(args.whisper_model)
-        if args.require_words and not report["whisper_model"]:
-            report["missing"].append(
-                "whisper model (the whisper filter takes a model file and hangs without one) - "
-                f"install it one time, about 141 MB: {WHISPER_MODEL_INSTALL}"
-            )
+        if service_ok:
+            # The service owns the model, so neither ffmpeg nor a model file is
+            # needed for words. Do not report them as missing.
+            report["ffmpeg_for_words"] = None
+            report["whisper_model"] = None
+            report["words_source"] = "service"
+        else:
+            report["words_source"] = None
+            if "whisper" in filters:
+                report["ffmpeg_for_words"] = args.ffmpeg
+            else:
+                report["ffmpeg_for_words"] = find_capable_ffmpeg("words", exclude=args.ffmpeg)
+                if args.require_words and not report["ffmpeg_for_words"]:
+                    report["missing"].append("ffmpeg filter:whisper (no whisper-capable ffmpeg found on this machine)")
+
+            # The filter alone transcribes nothing: it takes a whisper.cpp model file,
+            # and with none it loads its backend and then hangs rather than failing.
+            report["whisper_model"] = find_whisper_model(args.whisper_model)
+
+            if args.require_words and not report["whisper_model"]:
+                if service_url:
+                    # The user asked for a service and it did not answer, so say that
+                    # first, and keep the model hint for the case where it is the only
+                    # thing that is missing.
+                    report["missing"].append(
+                        "word timings: the configured words service did not answer "
+                        f"({service_detail}), and no whisper-capable ffmpeg with a model was found "
+                        f"on this machine. Point --words-service-url at a service that answers, or "
+                        f"install a whisper-enabled ffmpeg and a whisper.cpp model - {WHISPER_MODEL_INSTALL}"
+                    )
+                else:
+                    report["missing"].append(
+                        "whisper model (the whisper filter takes a model file and hangs without one) - "
+                        f"install it one time, about 141 MB: {WHISPER_MODEL_INSTALL}"
+                    )
 
         if args.require_magick and not shutil.which("magick"):
             report["missing"].append("magick")
@@ -336,6 +401,12 @@ def main():
         print(f"caption renderer: {report['caption_renderer'] or 'none'}")
         if report.get("ffmpeg_for_captions") and report["ffmpeg_for_captions"] != report["ffmpeg"]:
             print(f"burn captions with: {report['ffmpeg_for_captions']}")
+        if report.get("words_source") == "service":
+            print(f"word timings: transcription service ({report.get('words_service_url')})")
+        elif report.get("ffmpeg_for_words"):
+            print(f"word timings: ffmpeg whisper filter ({report['ffmpeg_for_words']})")
+        else:
+            print("word timings: none available")
         for font in report["fonts"]:
             status = "OK" if font["matched"] else "FALLBACK"
             print(f"font '{font['requested']}': {status} (resolved: {font['resolved'] or 'none'})")
