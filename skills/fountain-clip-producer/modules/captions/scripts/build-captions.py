@@ -1252,7 +1252,7 @@ def main():
         "--speed",
         type=float,
         default=1.0,
-        help="The highest speed in the pace plan, when module pace sped up the clip. Raises the rate limit to match.",
+        help="The speed of the pace plan, when module pace sped up the clip. Raises the rate limit to match.",
     )
     parser.add_argument("--font-file", help="TTF/OTF to measure with. Defaults to the bundled file for the family.")
     parser.add_argument("--out", help="Output .ass path. Required unless --check.")
