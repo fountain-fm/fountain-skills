@@ -249,7 +249,7 @@
         },
         {
           "name": "pace",
-          "description": "Play a clip a little faster, at one speed or at a speed that follows how fast the speaker talks.",
+          "description": "Play a clip a little faster, and keep the pitch of the voice.",
           "module": "skills/fountain-clip-producer/modules/pace/MODULE.md",
           "assets": [
             {
