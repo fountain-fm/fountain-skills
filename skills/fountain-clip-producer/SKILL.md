@@ -39,8 +39,8 @@ Optional:
   The master is finished work, and not one of the workings.
   The user keeps it and cuts from it again.
 - A `SocialPostUpload` on `content.uploads` of the post, unless the user asked you not to attach it.
-- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, and a removal
-  report when module **trims** cut the clip.
+- Workings: a clip manifest, a crop plan, a caption plan, an overlay plan, a QA report, a removal
+  report when module **trims** cut the clip, and a pace plan when module **pace** sped it up.
 
 ## Housekeeping
 
@@ -96,27 +96,28 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    file.
 4. Run module **trims** to survey the pauses and the filler, and report what it found.
    Cut only when the user asks, because a cut moves every time stamp after it.
-5. Run module **framing** to crop the master to each shape that the request asks for.
+5. Run module **pace** when the request asks for a faster clip, or the Brand section records a pace.
+6. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
    Skip both for a source with no video.
    Such a source has no picture to crop and no face to follow.
-6. Run module **brand** to load the look of the show, for a clean final or a publish final.
-7. Send the user to the clip styling page when the request names no caption style and module
+7. Run module **brand** to load the look of the show, for a clean final or a publish final.
+8. Send the user to the clip styling page when the request names no caption style and module
    **brand** holds none.
    The choice that the page records comes back as a brand kit.
    Do not stop the run to wait for an answer.
    Produce the clip with the default style, and tell the user which style that was.
-8. Run module **captions** on every portrait export, and on another shape when the request asks for it.
+9. Run module **captions** on every portrait export, and on another shape when the request asks for it.
    Run module **fonts** with it.
-9. Run module **overlays** when the request asks for a layer, and always for a source with no video.
-   For a source with no video, the overlay is not polish.
-   There, an audiogram package is the whole picture.
-   Without one, the clip is captions on an empty frame.
-   Load the artwork of the show from `info.image`, and give it to the package.
-   Every audiogram package needs the artwork.
-10. Run module **qa** as the blocking gate.
+10. Run module **overlays** when the request asks for a layer, and always for a source with no video.
+    For a source with no video, the overlay is not polish.
+    There, an audiogram package is the whole picture.
+    Without one, the clip is captions on an empty frame.
+    Load the artwork of the show from `info.image`, and give it to the package.
+    Every audiogram package needs the artwork.
+11. Run module **qa** as the blocking gate.
     Deliver nothing until it reports a pass.
-11. Use the render, and never the transcript, to confirm two things.
+12. Use the render, and never the transcript, to confirm two things.
     The quote that the copy uses is in the clip.
     The person that the copy credits is the person who says the quote.
     The caller wrote the quote and the credit without seeing the clip.
@@ -132,8 +133,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     Only the gate can say that the new cut is finished.
     Move an edge only to repair a fault that you can prove, or to make a change that the user asked for.
     Never move an edge to improve the clip, because choosing the moment is the caller's job.
-12. Attach the video with the Uploads API and the Social API, unless the user asked you not to.
-13. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
+13. Attach the video with the Uploads API and the Social API, unless the user asked you not to.
+14. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
     line saying the render result and where the video is attached.
 
 ## Additional notes

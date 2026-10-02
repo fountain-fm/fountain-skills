@@ -14,6 +14,7 @@ Nothing reaches the user until that gate reports a pass.
 
 - The clean master, the final export, and the landscape master of module **media**.
 - The expected width, height, frame rate, and duration.
+  The expected duration is `duration.after` of the pace plan, when module **pace** sped up the clip.
 - The crop plan and the visual QA report of module **framing**, and the contact sheet.
 - The caption fit report of module **captions**, when the export carries captions.
 - The removal report of module **trims**, when the clip was cut.
