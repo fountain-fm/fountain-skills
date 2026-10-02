@@ -398,9 +398,15 @@
     },
     {
       "name": "fountain-daily-growth",
-      "description": "Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.",
+      "description": "Read yesterday's results, the new episodes and today's news, then brief fountain-clip-finder.",
       "skill": "skills/fountain-daily-growth/SKILL.md",
       "modules": [
+        {
+          "name": "episode-watch",
+          "description": "Find the episodes published since the last run, and brief fountain-clip-finder on each one.",
+          "module": "skills/fountain-daily-growth/modules/episode-watch/MODULE.md",
+          "assets": []
+        },
         {
           "name": "performance-review",
           "description": "Read yesterday's posts and their numbers fresh from the API, and write the durable lessons.",

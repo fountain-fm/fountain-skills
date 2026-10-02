@@ -1,33 +1,37 @@
 ---
 name: fountain-daily-growth
-description: Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.
+description: Read yesterday's results, the new episodes and today's news, then brief fountain-clip-finder.
 ---
 
 ## Overview
 
 This skill is the first step of the daily content chain.
-It runs two modules in order.
+It runs three modules in order.
 Module **performance-review** reviews yesterday's posts.
 It turns the numbers of those posts into lessons in the preferences.
+Module **episode-watch** finds the episodes that the show published since the last run.
+It makes each one into a brief for skill **fountain-clip-finder**.
 Module **trend-discovery** reviews today's news.
-It scores the news and makes the best trends into briefs for skill **fountain-clip-finder**.
-The skill itself updates the narratives first, because both modules read them.
+It scores the news and makes the best trends into briefs for the same skill.
+The skill itself updates the narratives first, because every module reads them.
 
 ## Input
 
 - `show` - the show to run the loop for.
-- The Narratives and Editorial sections of the preferences.
+- The Narratives, Editorial and Automation sections of the preferences.
 
 ## Output
 
 - One brief per advancing trend, handed to skill **fountain-clip-finder**.
   A brief is a completed trend of module **trend-discovery**.
   Each brief holds its share of the day's clip budget as `clip_count`.
+- One brief per new episode, from module **episode-watch**, handed to the same skill.
+  Each brief holds the new-episode clip budget as `clip_count`.
 - One report for the day.
   It shows the posts that wait, then yesterday's numbers.
   With auto-render on, the report goes out when the videos exist, and it is the only mail of the day.
-- Updated preferences: the narratives, and the lessons of module
-  **performance-review**.
+- Updated preferences: the narratives, the lessons of module **performance-review**, and the episode
+  that module **episode-watch** reached.
 
 ## Housekeeping
 
@@ -44,15 +48,19 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Process
 
-1. Update the Narratives section, because both modules read it.
+1. Update the Narratives section, because every module reads it.
 2. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
    Skip it when a render machine sends the report, because that machine runs it.
-3. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
-4. Hand each brief to skill **fountain-clip-finder**, and do not read its result.
+3. Run module **episode-watch** to brief the episodes that the show published since the last run.
+   Give it the list of episodes that step 1 read, so it does not list them again.
+   It hands its own briefs on, so step 5 is for the trends alone.
+4. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
+5. Hand each brief to skill **fountain-clip-finder**, and do not read its result.
    The chain continues without this skill.
-5. List the day's drafts with the Social API, because step 4 hands the briefs on and never reads them back.
+6. List the day's drafts with the Social API, because steps 3 and 5 hand the briefs on and never read them
+   back.
    Render them with skill **fountain-clip-producer**, under the rules of Rendering below.
-6. Send the day's report one time, as the `review-posts` report of skill **fountain-reports**.
+7. Send the day's report one time, as the `review-posts` report of skill **fountain-reports**.
    The report shows the clips that wait, then the numbers of module **performance-review**.
    Ask skill **fountain-reports** to send the report and also to print the same report here.
 
@@ -62,7 +70,7 @@ Some steps repeat one API call over many items.
 Examples are the numbers of each post, the news of each subject, and the drafts of each clip.
 These items do not depend on each other, so ask for them all at the same time.
 
-This skill owns the two morning modules, and none of the work after them.
+This skill owns the three morning modules, and none of the work after them.
 Finding moments and writing the copy is the job of skill **fountain-clip-finder**.
 Rendering is the job of skill **fountain-clip-producer**, run here or on a render machine that picks the
 drafts up from the Social API.
@@ -78,7 +86,7 @@ Auto-render is on unless that section says otherwise.
   This is because a batch in the wrong look is rendered twice.
 - With a render machine named for this show, do not render here.
   The render machine renders the drafts and sends the report.
-  Stop after step 5, unless no draft waits for a video.
+  Stop after step 6, unless no draft waits for a video.
   When no draft waits, the render machine renders nothing and sends nothing.
 - With auto-render off, something else has to render.
   Say which: the user's word in the chat, or a render machine that works this show.
@@ -98,7 +106,7 @@ It also covers the clips that this run did not make.
 This is because a day at budget still has clips that the user has not seen.
 
 A caller that has just rendered the day's drafts can ask for the report alone.
-Run steps 2 and 6 for that caller, and put the drafts that it gave up under warnings.
+Run steps 2 and 7 for that caller, and put the drafts that it gave up under warnings.
 Skip the report when the line that module **performance-review** writes in the Reporting section already
 has today's date.
 This makes sure that a second pass of the render machine never mails the day twice.

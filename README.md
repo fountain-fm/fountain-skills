@@ -42,7 +42,7 @@ Then say "Set up Fountain".
 | `fountain-onboarding`    | Set up Fountain.                                                         |
 | `fountain-clip-finder`   | Search the transcripts, find clippable moments, and create draft posts.  |
 | `fountain-clip-producer` | Produce videos for candidate clips with framing, captions, and overlays. |
-| `fountain-daily-growth`  | Read yesterday's numbers and today's news, then brief the clip finder.   |
+| `fountain-daily-growth`  | Read yesterday's numbers, new episodes and news; brief the clip finder.  |
 | `fountain-reports`       | Create email reports detailing clip performance and new clip candidates. |
 
 ## Data and privacy

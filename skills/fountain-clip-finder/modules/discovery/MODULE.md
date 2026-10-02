@@ -55,9 +55,9 @@ Also, no step before step 6 has a source to work on.
    Then you must judge the coverage from the results.
    The progress request and the searches of step 3 need only the show, so send them together.
 3. Search the show's transcripts with the Search API, and scope the search to the show.
-   Scope to the show even when the caller names an episode.
-   Then keep the hits of that episode, and drop the rest.
+   When the caller names an episode, give that episode as the episode to search, and not as the scope.
    A search scope that names an episode returns nothing.
+   A search of the whole show gives at most 10 episodes, so the named episode can be missing from it.
    Each `ContentHitSegments` gives the episode and the segments that matched, with their times.
 4. Search for the theme, and not for the proper nouns of a news headline.
    Use short keyword queries.
