@@ -13,6 +13,7 @@ Inputs:
 
 Output: the words JSON that `build-captions.py` reads, rebased to clip time, with `anchor_ratio`, the share
 of reference words that matched whisper, and `unheard`, each run of reference words that matched nothing.
+A run of words packed tighter than anybody speaks is spread over the words around it, and listed in `spread`.
 A low ratio means the reference does not describe this audio: check the span before you caption it.
 """
 
@@ -25,7 +26,10 @@ import sys
 SRT_TIME = re.compile(r"^(\d+):(\d\d):(\d\d)[,.](\d{3})\s*-->\s*(\d+):(\d\d):(\d\d)[,.](\d{3})")
 EDGE_SLACK = 0.3  # seconds a token can hang over the clip edge and still count
 MIN_WORD = 0.06  # seconds, the shortest span a word can keep
+MAX_WORD = 1.0  # seconds a word keeps before an unheard run; whisper stretches it over the words it missed
 LOW_RATIO = 0.8  # below this share of matched words, the reference does not describe the audio
+MAX_RATE = 8.5  # words a second over RATE_WINDOW words; under the 9.0 that build-captions.py refuses
+RATE_WINDOW = 5
 
 
 def seconds(h, m, s, ms):
@@ -62,7 +66,9 @@ def spread(words, clip_end):
         j = i
         while j < len(words) and words[j] is None:
             j += 1
-        left = words[i - 1][1] if i > 0 else 0.0
+        left = 0.0
+        if i > 0:
+            left = words[i - 1][1] = min(words[i - 1][1], words[i - 1][0] + MAX_WORD)
         right = words[j][0] if j < len(words) else clip_end
         step = max(MIN_WORD, right - left) / (j - i)
         for k in range(i, j):
@@ -71,12 +77,44 @@ def spread(words, clip_end):
     return words
 
 
+def unpack(words):
+    """Spread each run of words that whisper packed tighter than anybody speaks over the words around it."""
+    spread_runs = []
+    for _ in range(len(words)):
+        packed = next(
+            (
+                i
+                for i in range(len(words) - RATE_WINDOW + 1)
+                if words[i + RATE_WINDOW - 1]["end"] - words[i]["start"] < RATE_WINDOW / MAX_RATE
+            ),
+            None,
+        )
+        if packed is None:
+            break
+        lo, hi = packed, packed + RATE_WINDOW
+        while words[hi - 1]["end"] - words[lo]["start"] < (hi - lo) / MAX_RATE and (lo > 0 or hi < len(words)):
+            lo, hi = max(0, lo - 1), min(len(words), hi + 1)
+        start, step = words[lo]["start"], (words[hi - 1]["end"] - words[lo]["start"]) / (hi - lo)
+        for k in range(lo, hi):
+            words[k]["start"] = round(start + step * (k - lo), 3)
+            words[k]["end"] = round(start + step * (k - lo + 1), 3)
+        if spread_runs and lo <= spread_runs[-1][1] and hi >= spread_runs[-1][0]:
+            lo, hi = min(lo, spread_runs[-1][0]), max(hi, spread_runs[-1][1])
+            spread_runs.pop()
+        spread_runs.append((lo, hi))
+    return [f"{words[lo]['start']:.1f}s: {' '.join(w['word'] for w in words[lo:hi])}" for lo, hi in spread_runs]
+
+
 def align(cues, reference, offset, duration):
     tokens = []
     for a, b, text in cues:
         a, b = a - offset, b - offset
         if letters(text) and b >= -EDGE_SLACK and a <= duration + EDGE_SLACK:
             tokens.append((max(0.0, a), min(duration, b), letters(text)))
+    # Whisper hears the audio in chunks that overlap, so a token can still run when the next one starts.
+    for k in range(len(tokens) - 1):
+        a, b, text = tokens[k]
+        tokens[k] = (a, max(a, min(b, tokens[k + 1][0])), text)
     ref_words = [w for w in reference.split() if letters(w)]
     if not ref_words:
         sys.exit("align-word-timings: the reference holds no words")
@@ -107,6 +145,7 @@ def align(cues, reference, offset, duration):
         cursor = out[-1]["end"]
     if not out:
         sys.exit("align-word-timings: no reference word falls inside the clip - check the offset and the duration")
+    spread_runs = unpack(out)
 
     unheard, run = [], []
     for i, word in enumerate(ref_words):
@@ -123,6 +162,7 @@ def align(cues, reference, offset, duration):
         "duration": duration,
         "unheard": unheard,
         "past_end": past_end,
+        "spread": spread_runs,
         "words": out,
     }
 
@@ -153,6 +193,8 @@ def main():
     print(f"{args.out}: {len(result['words'])} words, anchor_ratio {result['anchor_ratio']}")
     for run in result["unheard"]:
         print(f"  unheard: {run}")
+    for run in result["spread"]:
+        print(f"  packed by whisper, spread out: {run}")
     if result["past_end"]:
         print(f"  past the end of the clip, dropped: {' '.join(result['past_end'])}")
     if result["anchor_ratio"] < LOW_RATIO:

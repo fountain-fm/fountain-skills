@@ -455,7 +455,8 @@ def refuse_impossible_rate(words, limit):
         said = " ".join(w["text"] for w in words[i : i + RATE_WINDOW])
         fail(
             f"words[{i}:{i + RATE_WINDOW}] ('{said}') run at {RATE_WINDOW / span:.1f} words a second, "
-            f"past the {limit:.1f} limit - make the word timings again from the clip's audio"
+            f"past the {limit:.1f} limit - make the words JSON with scripts/align-word-timings.py from the whisper SRT "
+            "of the clip; never raise the limit, and give --speed only for a clip that module pace sped up"
         )
 
 
@@ -1254,6 +1255,9 @@ def main():
         default=1.0,
         help="The speed of the pace plan, when module pace sped up the clip. Raises the rate limit to match.",
     )
+    parser.add_argument(
+        "--max-speed", type=float, default=1.25, help="The --max-speed of the pace plan, when the user raised it."
+    )
     parser.add_argument("--font-file", help="TTF/OTF to measure with. Defaults to the bundled file for the family.")
     parser.add_argument("--out", help="Output .ass path. Required unless --check.")
     parser.add_argument(
@@ -1332,6 +1336,8 @@ def main():
     if not args.words or not args.out:
         fail("--words and --out are required unless --check")
 
+    if not 1.0 <= args.speed <= args.max_speed:
+        fail(f"--speed {args.speed} is outside 1.0-{args.max_speed}, the range of the pace plan")
     words = load_words(args.words, args.speed)
     removed = faithful_clean(words)
     if removed:
