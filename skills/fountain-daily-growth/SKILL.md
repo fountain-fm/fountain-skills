@@ -35,7 +35,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- An HTTP client, e.g. curl, for the Google News RSS route of module **trend-discovery**.
+- An HTTP client, e.g. curl, for the Google News RSS and Hacker News routes of module **trend-discovery**.
 - Optional: a web search tool, and a social trend search tool such as one for X, when the machine has them.
 - Fountain API.
 - Skill **fountain-clip-finder**.

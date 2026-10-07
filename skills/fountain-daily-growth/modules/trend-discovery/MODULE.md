@@ -33,7 +33,7 @@ At most 5 briefs, one per advancing trend, where each brief has:
 
 ## Requirements
 
-- An HTTP client, e.g. curl, for the Google News RSS route.
+- An HTTP client, e.g. curl, for the Google News RSS and Hacker News routes.
 - Optional: a web search tool, and a social trend search tool such as one for X, when the machine has them.
 - Fountain API.
 
@@ -55,6 +55,22 @@ At most 5 briefs, one per advancing trend, where each brief has:
    Set them for the audience that the show writes for, and say which values you used.
    Then run the same query one more time on the subject of the whole show.
    That subject is too broad to be a narrative, but it is right for a catch-all query.
+   Scan Hacker News with the same queries:
+
+   ```bash
+   # typoTolerance and queryType stop a short word from matching other words, e.g. "AGI" matching "gi"
+   curl -sG "https://hn.algolia.com/api/v1/search_by_date" \
+     --data-urlencode "query=<subject>" \
+     --data-urlencode "tags=story" \
+     --data-urlencode "numericFilters=created_at_i><48h ago, in Unix seconds>" \
+     --data-urlencode "typoTolerance=false" \
+     --data-urlencode "queryType=prefixNone" \
+     --data-urlencode "hitsPerPage=100"
+   ```
+
+   Put a query of two or more words in double quotes, because the search otherwise matches each word alone.
+   Each hit is a story with its title, its `url`, its `points`, its `num_comments` and its date.
+   The publisher is the domain of `url`, and the link is `https://news.ycombinator.com/item?id=<objectID>`.
    No query depends on the answer to another, so issue them together, in batches of 4 to 6.
    Widen the scan with a web search tool or a social trend tool when the machine has one, and say what
    the scan covered.
@@ -92,6 +108,14 @@ An evergreen article used as if it were breaking news is not a trend.
 
 Avoid trends that are unverified, rumour-dependent, outside the show's area of expertise, or generic hype
 with no show angle.
+
+A Hacker News story shows what people discuss, and not only what was published.
+Use its `points` and `num_comments` as evidence for Engagement potential.
+A story with no `url`, e.g. an "Ask HN", has Hacker News as its publisher.
+A broad word such as "GPU" or "inflation" matches many stories that are not about the show's subject.
+The score drops those stories, so do not add broad words to get more hits.
+Some shows get no relevant story from Hacker News, e.g. a show about Bitcoin.
+That is normal, so say so and rely on the other routes.
 
 A narrative says what the show returns to, and never what the show is allowed to talk about.
 One episode from years ago, on a subject in today's news, gives the clip that no other show can make.

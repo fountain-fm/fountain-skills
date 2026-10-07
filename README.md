@@ -53,7 +53,8 @@ How Fountain uses and keeps this data is in the [Fountain privacy policy](https:
 Some steps send requests to other services:
 
 - The storage URLs that the Fountain Uploads API gives: the rendered clip videos.
-- Google News RSS: the subjects of the show, as search queries (skill **fountain-daily-growth**).
+- Google News RSS and the Hacker News search of Algolia: the subjects of the show, as search queries
+  (skill **fountain-daily-growth**).
 - The web search and social trend tools of the agent, if it has them: search queries about the show and the news.
 - The pages that the show publishes outside Fountain, such as its site and its social profiles: page requests.
 - YouTube or another video site, through yt-dlp: requests for the video and the captions of a clip source.
