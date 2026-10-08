@@ -1092,9 +1092,9 @@ def build_events(groups, spec, widths=None, width_scale=1.0):
                         color_hex = group[j]["_emphColor"] if group[j]["emphasize"] else colors["highlight"]
                         active_hl = hex_to_inline(color_hex, "highlight color")
                         if mode == "box":
-                            # The pill is drawn behind the line; the word itself keeps its own colour.
-                            open_tags = "\\shad0"
-                            close_tags = f"\\shad{border['shadow']}"
+                            # The pill is drawn behind the line; no outline, which would look heavier on the pill
+                            open_tags = "\\shad0\\bord0"
+                            close_tags = f"\\shad{border['shadow']}\\bord{border['outline']}"
                         elif mode == "glow":
                             glow = max(5, border["blur"])
                             open_tags = f"\\bord4\\blur{glow}\\3c{active_hl}"
