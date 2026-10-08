@@ -1,6 +1,6 @@
 {
   "name": "pill-karaoke",
-  "description": "Current-word highlight rendered as a colored pill behind the active word (approximated with a thick rounded border), slightly scaled. The Opus-Clip 'Karaoke' look.",
+  "description": "Current-word highlight rendered as a colored pill behind the active word (approximated with a thick rounded border). The Opus-Clip 'Karaoke' look.",
   "font": {
     "family": "Montserrat",
     "size": 92,
@@ -26,7 +26,6 @@
   "animation": {
     "type": "current-word",
     "highlightMode": "box",
-    "activeScalePct": 104,
     "leadMs": 80
   }
 }
