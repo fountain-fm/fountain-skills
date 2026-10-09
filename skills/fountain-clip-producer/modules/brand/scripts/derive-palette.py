@@ -159,7 +159,8 @@ def assign_roles(palette):
             "whatever the preset uses"
         )
     else:
-        for candidate in sorted(accents, key=lambda c: (-c["chroma"], -c["share"])):
+        # The accent the artwork shows most is the show's colour, even when a smaller detail is more vivid
+        for candidate in sorted(accents, key=lambda c: (-c["share"], -c["chroma"])):
             repaired, moved = repair_accent(candidate["hex"], outline["hex"], primary["hex"])
             if repaired:
                 highlight = {
