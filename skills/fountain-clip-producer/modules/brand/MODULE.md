@@ -94,6 +94,8 @@ A caption is read at arm's length over moving pictures.
 Thus the script never uses a colour of the artwork as it is.
 The darkest colour becomes the outline, and the lightest tint becomes the words.
 The accent goes on the highlight, and not on the words themselves.
+The accent is the colour that covers the most area of the artwork, and not the most vivid one.
+A small vivid detail, such as a line of text, is not the colour of the show.
 The script then makes the accent lighter, and keeps its hue.
 It stops when the accent is readable against the outline and still looks like a different colour from
 the words.
