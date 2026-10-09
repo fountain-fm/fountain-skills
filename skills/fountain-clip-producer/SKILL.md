@@ -99,7 +99,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Run module **pace** when the request asks for a faster clip, or the Brand section records a pace.
 6. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
-   Let module **framing** add punch-ins when the request asks for them.
+   Let module **framing** add punch-ins to a portrait export, unless the Brand section turns them off.
    Skip both for a source with no video.
    Such a source has no picture to crop and no face to follow.
 7. Run module **brand** to load the look of the show, for a clean final or a publish final.
@@ -136,7 +136,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     Never move an edge to improve the clip, because choosing the moment is the caller's job.
 13. Attach the video with the Uploads API and the Social API, unless the user asked you not to.
 14. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
-    line saying the render result and where the video is attached.
+    line saying the render result, the words that have punch-ins, and where the video is attached.
 
 ## Additional notes
 
@@ -152,16 +152,16 @@ The user names the work that they want, and not the tier, so read the tier from 
 - A rough cut is the landscape master alone, with no crop, no captions and no gate.
   Read it from words about checking a span rather than making a clip.
 - A clean final is publishable.
-  Its portrait export has captions, because people watch it with the sound off.
+  Its portrait export has captions and punch-ins, because people watch it with the sound off in a feed.
   Read it from "produce this clip", when the request names neither captions nor packaging.
   A clean final of a source with no video also has its audiogram package.
   The reason is the same as for the captions on a portrait export.
   Without the package, there is nothing to watch.
-- A publish final adds the overlays, the punch-ins and the packaging, and the request names one of them.
+- A publish final adds the overlays and the packaging, and the request names one of them.
 
 Ask the user when the words fit none of the three tiers.
 You MUST NOT raise the tier on your own, because polish is requested work.
-Captions on a portrait export do not raise the tier.
+Captions and punch-ins on a portrait export do not raise the tier.
 Make a square or a landscape export only when the request asks for it.
 
 The word timings come from the clip, and never from the episode transcript.

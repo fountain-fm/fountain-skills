@@ -14,7 +14,9 @@ It stops and asks the user when no clean crop exists.
 
 - `clip-landscape-master.mp4` from module **media**.
 - The target shape, which is vertical, square, or landscape.
-- Optional: the word timings of the clip, when the request asks for punch-ins.
+- The word timings of the clip, for the punch-ins of a portrait export.
+  Use the word timings of module **pace** when it ran.
+  A punch-in is in seconds of the master that this module crops.
 
 ## Output
 
@@ -25,6 +27,7 @@ It stops and asks the user when no clean crop exists.
 
 ## Requirements
 
+- Fountain API.
 - ffmpeg and ffprobe.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, and the first release to carry `FaceDetectorYN`.
@@ -64,8 +67,10 @@ It stops and asks the user when no clean crop exists.
      clip-vertical.mp4
    ```
 
-5. When the request asks for punch-ins, write the punch-in list and render the crop with the script.
+5. On a portrait export, write the punch-in list and render the crop with the script.
    This replaces step 4.
+   Load the preferences with the Project API, unless this run already holds them.
+   Use step 4 when the Brand section turns punch-ins off, or when the request asks for no punch-ins.
    A punch-in is a span of words where the crop snaps closer to the face, and snaps back after it:
    `{"start": 5.57, "end": 6.33, "zoom": 1.2}`, in seconds of the clip.
 
@@ -77,6 +82,8 @@ It stops and asks the user when no clean crop exists.
    ```
 
    The script renders nothing when the list is not safe, and says which punch-in to change.
+   Change or remove those punch-ins.
+   Use step 4 when no punch-in is left, e.g. on a master under 1080p, where a zoom of 1.2 is too large.
 
 6. Draw a centre line on a still of each segment, and confirm that the line is on the nose:
 
@@ -135,6 +142,10 @@ On a 1080p master, a zoom of 1.2 gives 2.13.
 
 Module **captions** burns the captions on the export after this module, so the captions do not zoom.
 Module **shots** has its own crop, and it does not take punch-ins.
+A source with no video has no crop, so it has no punch-ins.
+
+Record in the Brand section that the show takes no punch-ins, when the user does not want them for later clips.
+A calm long interview is an example.
 
 You MUST NOT deliver a crop segment that nobody looked at.
 You MUST NOT letterbox unless the user asks.
