@@ -14,15 +14,20 @@ It stops and asks the user when no clean crop exists.
 
 - `clip-landscape-master.mp4` from module **media**.
 - The target shape, which is vertical, square, or landscape.
+- The word timings of the clip, for the punch-ins of a portrait export.
+  Use the word timings of module **pace** when it ran.
+  A punch-in is in seconds of the master that this module crops.
 
 ## Output
 
 - One export for each requested shape, for example `clip-vertical.mp4`.
 - A crop plan, with one row for each segment.
+- A punch-in list, when the clip has punch-ins.
 - A visual QA report, which module **qa** requires for a vertical export.
 
 ## Requirements
 
+- Fountain API.
 - ffmpeg and ffprobe.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, and the first release to carry `FaceDetectorYN`.
@@ -62,7 +67,25 @@ It stops and asks the user when no clean crop exists.
      clip-vertical.mp4
    ```
 
-5. Draw a centre line on a still of each segment, and confirm that the line is on the nose:
+5. On a portrait export, write the punch-in list and render the crop with the script.
+   This replaces step 4.
+   Load the preferences with the Project API, unless this run already holds them.
+   Use step 4 when the Brand section turns punch-ins off, or when the request asks for no punch-ins.
+   A punch-in is a span of words where the crop snaps closer to the face, and snaps back after it:
+   `{"start": 5.57, "end": 6.33, "zoom": 1.2}`, in seconds of the clip.
+
+   ```bash
+   # Give each segment the start time of the segment and the JSON that step 2 printed for it.
+   scripts/render-punch-ins.py clip-landscape-master.mp4 \
+     --segment 0 framing-1.json --segment "$CUT_A" framing-2.json \
+     --punch-ins punch-ins.json --out clip-vertical.mp4
+   ```
+
+   The script renders nothing when the list is not safe, and says which punch-in to change.
+   Change or remove those punch-ins.
+   Use step 4 when no punch-in is left, e.g. on a master under 1080p, where a zoom of 1.2 is too large.
+
+6. Draw a centre line on a still of each segment, and confirm that the line is on the nose:
 
    ```bash
    # -frames:v 1 takes one still, and drawbox paints a 4px line down the middle of the crop.
@@ -70,7 +93,7 @@ It stops and asks the user when no clean crop exists.
      -vf "drawbox=x=$CROP_X+$CROP_W/2-2:y=0:w=4:h=ih:color=lime@1:t=fill" center-check.jpg
    ```
 
-6. Stop when a segment has no clean crop.
+7. Stop when a segment has no clean crop.
    Offer a span that leaves the segment out, and also offer this letterbox.
    Render the letterbox only after the user asks for it:
 
@@ -82,7 +105,7 @@ It stops and asks the user when no clean crop exists.
      clip-vertical.mp4
    ```
 
-7. Make a contact sheet with one frame every 2 seconds, and a full-size frame at each crop change.
+8. Make a contact sheet with one frame every 2 seconds, and a full-size frame at each crop change.
    Then sample the export for frames that show no person:
 
    ```bash
@@ -102,6 +125,27 @@ It stops and asks the user when no clean crop exists.
 - The face sits a little off centre, on the side opposite to the direction it looks.
   Then the face looks into the frame.
 - No edge cuts off the face, and the head has space above it.
+
+Choose the punch-ins from the words, at about one for each 8 to 10 seconds.
+Put each one on a word that carries the claim: a number, a name, a contrast, or a strong word.
+Start it on the first word, and end it at the first pause after the phrase.
+An end in the middle of a sentence reads as a stumble.
+Use a zoom of 1.2.
+For two punch-ins in a row that build to one point, use 1.1 and then 1.2.
+A snap is better than a smooth zoom.
+A small smooth zoom looks like the camera moves, and a snap looks like an edit that somebody chose.
+
+The script refuses a punch-in that is longer than 3 seconds, or that is less than 0.5 seconds from a scene cut.
+It also refuses a zoom that makes the picture more than 2.25 times its height in the master.
+That limit is higher than the 2.0 of module **qa**, because a softer picture for a few seconds is difficult to see.
+On a 1080p master, a zoom of 1.2 gives 2.13.
+
+Module **captions** burns the captions on the export after this module, so the captions do not zoom.
+Module **shots** has its own crop, and it does not take punch-ins.
+A source with no video has no crop, so it has no punch-ins.
+
+Record in the Brand section that the show takes no punch-ins, when the user does not want them for later clips.
+A calm long interview is an example.
 
 You MUST NOT deliver a crop segment that nobody looked at.
 You MUST NOT letterbox unless the user asks.

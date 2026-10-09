@@ -156,6 +156,10 @@
               "path": "skills/fountain-clip-producer/modules/framing/scripts/extract-face-framing.py"
             },
             {
+              "name": "render-punch-ins.py",
+              "path": "skills/fountain-clip-producer/modules/framing/scripts/render-punch-ins.py"
+            },
+            {
               "name": "visual-person-qa.py",
               "path": "skills/fountain-clip-producer/modules/framing/scripts/visual-person-qa.py"
             }
