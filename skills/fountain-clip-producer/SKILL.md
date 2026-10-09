@@ -99,6 +99,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 5. Run module **pace** when the request asks for a faster clip, or the Brand section records a pace.
 6. Run module **framing** to crop the master to each shape that the request asks for.
    Run module **shots** with it when one shot holds two people and the crop must follow who speaks.
+   Let module **framing** add punch-ins when the request asks for them.
    Skip both for a source with no video.
    Such a source has no picture to crop and no face to follow.
 7. Run module **brand** to load the look of the show, for a clean final or a publish final.
@@ -156,7 +157,7 @@ The user names the work that they want, and not the tier, so read the tier from 
   A clean final of a source with no video also has its audiogram package.
   The reason is the same as for the captions on a portrait export.
   Without the package, there is nothing to watch.
-- A publish final adds the overlays and the packaging, and the request names one of them.
+- A publish final adds the overlays, the punch-ins and the packaging, and the request names one of them.
 
 Ask the user when the words fit none of the three tiers.
 You MUST NOT raise the tier on your own, because polish is requested work.
