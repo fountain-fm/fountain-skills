@@ -1,18 +1,15 @@
 ---
 name: fountain-daily-growth
-description: Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.
+description: Run Daily Growth on this agent instead of on Fountain, only when the user asks for a local run.
 ---
 
 ## Overview
 
-This skill is the first step of the daily content chain.
+This skill reads yesterday's numbers and today's news, then briefs skill **fountain-clip-finder**.
 It runs two modules in order.
-Module **performance-review** reviews yesterday's posts.
-It turns the numbers of those posts into lessons in the preferences.
-Module **trend-discovery** reviews today's news.
-It scores the news and makes the best trends into briefs for skill **fountain-clip-finder**.
+Module **performance-review** turns the numbers of yesterday's posts into lessons in the preferences.
+Module **trend-discovery** scores today's news and makes the best trends into briefs.
 The skill itself updates the narratives first, because both modules read them.
-With Daily Growth on, Fountain runs the day instead.
 
 ## Input
 
@@ -46,8 +43,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 ## Process
 
 1. Load the `ProjectOverview` with the Project API.
-   When Daily Growth is on, stop, and tell the user that Fountain runs the day.
-   Do not schedule this skill for that project.
+   When Daily Growth is on, Fountain also makes drafts today.
+   Tell the user, and continue only when they confirm.
 2. Update the Narratives section, because both modules read it.
 3. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
 4. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
@@ -82,5 +79,4 @@ This makes sure that a second run never mails the day twice.
 An empty Editorial section does not stop the skill.
 Proceed, and tell the user plainly that the section is empty.
 
-Use this skill for the recurring daily cycle.
 For a one-off "find me a clip about X", use skill **fountain-clip-finder** directly.

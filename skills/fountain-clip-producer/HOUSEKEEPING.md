@@ -7,6 +7,15 @@ The reader does not develop fountain-skills.
 
 ## About fountain-skills
 
+Fountain does the daily clip work on its servers, and the user needs no agent for it.
+With the Daily Growth project setting on, Fountain finds news trends each day, makes draft clip posts, and renders
+their videos.
+Fountain also renders the video of each clip post that an agent makes.
+
+The skills let this agent set up Fountain, find clips on request, and build reports.
+Run skill **fountain-daily-growth** or skill **fountain-clip-producer** only when the user asks for a local run.
+Each one does on this machine what Fountain already does on its servers.
+
 Fountain has an MCP that wraps around its API.
 
 Fountain also provides public skills for podcast growth.
@@ -75,8 +84,7 @@ Config:
 
 ### Clips
 
-Fountain renders the video of each clip post on its servers, and the Social API gives the state of the render.
-Render a clip on this machine only when the user asks for it, with skill **fountain-clip-producer**.
+The Social API gives the state of the render of each clip post.
 Always give the `post_url` of each post that you tell the user about.
 
 ## Setup
@@ -182,7 +190,6 @@ When you write narratives:
 - A narrative for one show starts with the show ID, e.g.
   `- show:id:abc123 — Bitcoin mining and energy (AGENT-2026-10-26)`.
   A narrative without a show ID is for each show of the project.
-  Fountain reads this format, so keep the spaces around the dash.
 - Pick a narrative by how often the show returns to it, never by how good one episode was.
 - Count episodes that are _about_ the subject, not the ones that just mention it.
 - Give a few strong narratives rather than many.
@@ -222,8 +229,11 @@ Customizations of skill **fountain-reports**, e.g. email addresses and presets.
 
 **Automation**
 
-Daily loop options, e.g. the number of clips per day.
-Daily Growth itself is a project setting, and not a preference.
+Options for Daily Growth, e.g. the number of clips per day.
+
+Daily Growth is a project setting, and the Project API turns it on.
+With it on, Fountain runs Daily Growth each day, so that the user does not need their own agent.
+The user can still run Daily Growth on their own agent, with skill **fountain-daily-growth**.
 
 **Other**
 

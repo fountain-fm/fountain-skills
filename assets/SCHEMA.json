@@ -51,7 +51,7 @@
     },
     {
       "name": "fountain-clip-producer",
-      "description": "Render a clip post on this machine into a platform-ready video, only when the user asks for a local render.",
+      "description": "Render a clip on this machine instead of on Fountain, only when the user asks for a local run.",
       "skill": "skills/fountain-clip-producer/SKILL.md",
       "modules": [
         {
@@ -133,10 +133,6 @@
             {
               "name": "word-pop.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
-            },
-            {
-              "name": "build-captions.cpython-313.pyc",
-              "path": "skills/fountain-clip-producer/modules/captions/scripts/__pycache__/build-captions.cpython-313.pyc"
             },
             {
               "name": "build-captions.py",
@@ -301,10 +297,6 @@
       ],
       "assets": [
         {
-          "name": "align-word-timings.cpython-313.pyc",
-          "path": "skills/fountain-clip-producer/scripts/__pycache__/align-word-timings.cpython-313.pyc"
-        },
-        {
           "name": "align-word-timings.py",
           "path": "skills/fountain-clip-producer/scripts/align-word-timings.py"
         }
@@ -312,7 +304,7 @@
     },
     {
       "name": "fountain-daily-growth",
-      "description": "Read yesterday's results and today's news, then brief fountain-clip-finder on the best trends.",
+      "description": "Run Daily Growth on this agent instead of on Fountain, only when the user asks for a local run.",
       "skill": "skills/fountain-daily-growth/SKILL.md",
       "modules": [
         {

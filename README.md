@@ -4,6 +4,11 @@ Skills for podcast growth.
 
 Every skill relies on the Fountain API—create an account at [fountain.fm](https://fountain.fm).
 
+Fountain does the daily clip work on its servers, so you need no agent for it.
+With Daily Growth on, Fountain finds news trends each day, makes draft clip posts, and renders their videos.
+The skills let your agent set up Fountain, find clips when you ask, and build reports.
+Two of them do the server work on your machine instead, only when you ask.
+
 ## Install
 
 ### Codex
@@ -41,8 +46,8 @@ Then say "Set up Fountain".
 | ------------------------ | ------------------------------------------------------------------------ |
 | `fountain-onboarding`    | Set up Fountain.                                                         |
 | `fountain-clip-finder`   | Search the transcripts, find clippable moments, and create draft posts.  |
-| `fountain-clip-producer` | Render a clip on your machine, when you ask for a local render.          |
-| `fountain-daily-growth`  | Read yesterday's numbers and today's news, then brief the clip finder.   |
+| `fountain-clip-producer` | Render a clip on your machine instead of on Fountain.                    |
+| `fountain-daily-growth`  | Run Daily Growth on your agent instead of on Fountain.                   |
 | `fountain-reports`       | Create email reports detailing clip performance and new clip candidates. |
 
 ## Data and privacy
@@ -64,20 +69,10 @@ Some steps send requests to other services:
 - Package managers, such as Homebrew: installs of the software that skill **fountain-onboarding** finds missing.
 
 No skill sends a Fountain API key or a Fountain token to a different service.
-Fountain renders the clip videos on its servers.
-Skill **fountain-clip-producer** renders a clip on the machine that runs the agent, only when you ask for it.
 
 The plugin holds no binary files.
-Skill **fountain-clip-producer** downloads these files from `https://media.fountain.fm/clip-assets/skills/`,
-and checks the sha256 of each:
-
-- `fonts/`: Anton, Archivo Black, Bebas Neue, Courier Prime, DM Serif Display, Montserrat (regular, bold,
-  black), Permanent Marker, and Poppins Bold.
-- `models/face-detection-yunet-2023mar.onnx`: the YuNet face detection model from OpenCV Zoo.
-- `overlays/`: the placeholder logo and the placeholder sponsor image.
-- `licences/`: one licence for each font and for the model.
-
-ffmpeg and OpenCV read them as data, and no part of the plugin runs them as code.
+Skill **fountain-clip-producer** checks the sha256 of each file that it downloads from `media.fountain.fm`.
+ffmpeg and OpenCV read these files as data, and no part of the plugin runs them as code.
 
 ## License
 

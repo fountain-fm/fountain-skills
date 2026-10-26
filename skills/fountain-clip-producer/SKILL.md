@@ -1,12 +1,11 @@
 ---
 name: fountain-clip-producer
-description: Render a clip post on this machine into a platform-ready video, only when the user asks for a local render.
+description: Render a clip on this machine instead of on Fountain, only when the user asks for a local run.
 ---
 
 ## Overview
 
-Fountain renders each clip post on its servers.
-This skill renders the clip of a post on this machine, and runs only when the user asks for that.
+This skill makes the platform-ready video of a clip post on this machine.
 It does not choose the moment or the span.
 The caller chooses both before this skill runs.
 Module **media** cuts the landscape master.
