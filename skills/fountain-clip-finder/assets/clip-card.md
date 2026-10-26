@@ -7,10 +7,9 @@
 <!-- Omit the date only when the source does not provide it, because the reader judges an old moment differently. -->
 <!-- {why} is one or two sentences: the trend or the request the clip answers, and its score. -->
 <!-- {transcript} is source.transcript, quoted whole, because an ellipsis looks like a cut in the video. -->
-<!-- One text line per channel the clip went to, labelled by platform, each from its own post. -->
+<!-- One text line per channel the clip went to, labelled by platform, each from its own post with its {post_url}. -->
 <!-- Add one line for each flag that the clip has, e.g. an uncertain speaker. -->
 <!-- The reader approves only what they can see. -->
-<!-- {post_url} is the post of the first channel listed. -->
 
 ### {label}
 
@@ -21,8 +20,7 @@
 > {transcript}
 
 - **{platform}:** {text}
-
-**[Review this draft]({post_url})**
+  **[Review this draft]({post_url})**
 
 <!-- After the last card, add one link to all the drafts that wait for review: -->
 

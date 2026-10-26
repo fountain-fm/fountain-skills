@@ -10,8 +10,7 @@ It first reads the `ContentHit` that module **discovery** loaded, because the `C
 It searches YouTube only when the show published none.
 A YouTube cut of an episode has different advertisements, so it runs on a different clock.
 Thus the span of such a clip stays in the clock of the transcript.
-Skill **fountain-clip-producer** translates the span at render time, because only the renderer must
-access YouTube.
+The renderer translates the span, because only the renderer must access YouTube.
 
 ## Input
 
@@ -93,7 +92,7 @@ Then the guest name is the signal that finds the match.
 An episode with no guest in its title and a rewritten video title can stay unmatched, and that is correct.
 You MUST NOT carry a `low` or an `unmatched` match forward without confirmation.
 
-Skill **fountain-clip-producer** opens `media` at render time.
+The renderer opens `media` at render time.
 At that time, it confirms that the video is real.
 It also translates the span of a YouTube match into the clock of that file.
 The renderer also stops a wrong match at that time.

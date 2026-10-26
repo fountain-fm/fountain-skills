@@ -10,6 +10,7 @@ This module checks what the machine can do, and it gives the answer before any w
 It names the caption renderer to use.
 It names the ffmpeg binary to burn with, and the ffmpeg binary to time words with.
 It also names every tool that is absent.
+It downloads the fonts, the face model and the overlay placeholders one time, and checks the sha256 of each.
 It reports the environment, and it never looks at a rendered file.
 
 ## Input
@@ -22,6 +23,7 @@ It reports the environment, and it never looks at a rendered file.
 
 - A preflight report, which names the caption renderer, the binary to burn with, and the binary that
   carries whisper.
+- The assets folder, with the fonts folder and the face model in it.
 - A list of the missing tools, and a pass or a fail.
 
 ## Requirements
@@ -30,6 +32,7 @@ It reports the environment, and it never looks at a rendered file.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python.
 - ImageMagick, for a captioned render.
+- Access to `media.fountain.fm`, for the first download of the assets.
 - Skill **fountain-onboarding**, to install a missing tool.
 
 ## Process
@@ -53,7 +56,7 @@ It reports the environment, and it never looks at a rendered file.
    The order of preference is ASS, then drawtext, then a prepared transparent layer.
 4. Burn the captions with the binary that the report names, and not always with the one on the PATH.
 5. Confirm that each named font resolves to itself, and read module **fonts** when one falls back.
-   A family that the skill ships passes without a system install, because libass is given that directory.
+   A family that the skill ships passes without a system install, because libass is given the fonts folder.
 6. Cache the report, and run this module again only when the machine or the kind of output changes.
 
 ## Additional notes
@@ -74,10 +77,10 @@ Then ffmpeg loads its backend, prints no error, and never returns.
 The render hangs, and does not fail.
 So the report names the model as well as the binary, and `--require-words` fails when there is no model.
 
-The model is not bundled, because it is 141 MB, and the face model is only 2.3 MB.
+This module does not download the whisper model, because it is 141 MB.
 The report has the one line that installs the model.
 Give that line to the user, and say that it is a one-time install of about 141 MB.
-Never let the queue spend an attempt on a machine with no model.
+Never start a render on a machine with no model.
 
 A model named `for-tests` is ignored on purpose.
 The Homebrew whisper package ships one.
@@ -90,3 +93,7 @@ That is a missing tool, and not a warning.
 
 A prepared transparent layer is the last choice, and it needs its own checks in module **qa**.
 Reach for it only when no build on the machine can burn an ASS file.
+
+The scripts of the other modules read the assets folder of the report.
+When you give this module `--assets-dir`, give the same folder to those scripts.
+Give the face model to the scripts of module **framing** as `--model`.

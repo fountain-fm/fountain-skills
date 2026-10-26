@@ -64,7 +64,6 @@ The presets:
 - `review-posts-simple` - the posts that wait for a decision, and nothing else.
   The reader reads the words in the dashboard, where the reader approves or deletes.
   So the mail says which posts exist, and sends the reader to the dashboard.
-  The approve note says whether approving renders a clip or sends it.
   A second preset does not do this job.
 - `review-posts` - the whole day in one mail: the posts that wait for a decision, then the numbers.
   The user asks for it in place of the two presets above.

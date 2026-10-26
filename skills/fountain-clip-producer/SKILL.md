@@ -1,11 +1,12 @@
 ---
 name: fountain-clip-producer
-description: Render a clip post into a finished, platform-ready video with framing, captions, and overlays.
+description: Render a clip post on this machine into a platform-ready video, only when the user asks for a local render.
 ---
 
 ## Overview
 
-This skill turns the clip that a post carries into a video file.
+Fountain renders each clip post on its servers.
+This skill renders the clip of a post on this machine, and runs only when the user asks for that.
 It does not choose the moment or the span.
 The caller chooses both before this skill runs.
 Module **media** cuts the landscape master.
@@ -25,8 +26,6 @@ The skill delivers nothing until one report passes.
   Module **shots** also needs the speaker of each word.
   No input supplies it.
 - A delivery tier, which the words of the request imply.
-- Or a queue run.
-  Module **queue** reads the drafts that wait for media, and derives the inputs above from them.
 
 Optional:
 
@@ -51,16 +50,15 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 - Fountain API.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, for the face detection of module **framing**.
-  Its model, and the fonts that the presets name, ship in `assets`, so no machine installs either.
+  Module **preflight** downloads its model, the fonts that the presets name, and the overlay placeholders.
 - ffmpeg and ffprobe, built with libass, drawtext, fontconfig and whisper.
   Without them, the skill cannot burn a caption or time a word.
   A stock build often has none of them.
   On macOS, the Homebrew `ffmpeg-full` formula has them.
 - A whisper.cpp model file.
   The whisper filter takes the path of this file, and does nothing without it.
-  This skill looks first for `ggml-base.en.bin` in `~/.cache/whisper`.
-  That file is 141 MB, so the skill does not ship it.
-  The machine installs it one time.
+  That file is 141 MB, so the machine installs it one time.
+  Module **preflight** finds the file, and prints the line that installs it.
 - ImageMagick, to measure the width of caption text.
 - yt-dlp, for a source that ffmpeg cannot seek directly.
   Keep it current, because YouTube changes what a client must send.
@@ -102,7 +100,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Skip both for a source with no video.
    Such a source has no picture to crop and no face to follow.
 7. Run module **brand** to load the look of the show, for a clean final or a publish final.
-8. Send the user to the clip styling page when the request names no caption style and module
+8. Send the user to the clip rendering page when the request names no caption style and module
    **brand** holds none.
    The choice that the page records comes back as a brand kit.
    Do not stop the run to wait for an answer.
@@ -123,7 +121,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     The caller wrote the quote and the credit without seeing the clip.
     The transcript holds sentences and names no speaker.
     Find the speaker from the camera, and from a cutaway that shows a closed mouth.
-    Repair what is wrong with the Social API, and tell the user what you changed.
+    Repair what is wrong, and tell the user what you changed.
     Move `ts_start` or `ts_end` when the clip opens or closes inside a word, or when the quote is outside
     the span.
     Then write the new words into `transcript`, so that the two agree.
@@ -133,7 +131,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     Only the gate can say that the new cut is finished.
     Move an edge only to repair a fault that you can prove, or to make a change that the user asked for.
     Never move an edge to improve the clip, because choosing the moment is the caller's job.
-13. Attach the video with the Uploads API and the Social API, unless the user asked you not to.
+13. Attach the video with the Uploads API, unless the user asked you not to.
+    Send its `upload_id` and the repairs of step 12, with the new `source`, in one Social API update.
 14. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
     line saying the render result and where the video is attached.
 
@@ -188,13 +187,6 @@ A caption change MUST NOT force a new crop.
 
 A post does not have to be approved before this skill runs, and rendering one approves nothing.
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
-
-These steps make one clip, and the clips of one run are independent of each other.
-Module **queue** therefore shares the clips of a long queue between at most three workers.
-Each worker has its own output folder.
-A run is finished when the last clip is finished.
-Three workers do not finish three times faster, because ffmpeg already uses every core of the machine.
-A short queue uses one worker, because each new worker reads the skill again before it renders anything.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.
 Readability, framing, and sync matter more than procedure.

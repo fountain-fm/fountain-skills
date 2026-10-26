@@ -73,6 +73,12 @@ Config:
   Put it in a temporary place and delete it at the end of the session.
   You MUST NOT keep a script that wraps the API, because the API can change.
 
+### Clips
+
+Fountain renders the video of each clip post on its servers, and the Social API gives the state of the render.
+Render a clip on this machine only when the user asks for it, with skill **fountain-clip-producer**.
+Always give the `post_url` of each post that you tell the user about.
+
 ## Setup
 
 Skill **fountain-onboarding** makes sure that Fountain and the user's environment are fully set up.
@@ -115,7 +121,7 @@ You MUST quote the content in full, e.g. the words of a clip or the text of a po
 - `episode_url` - `https://fountain.fm/episode/{episode_id}?t={seconds}`
   This link starts the player at that second.
 - `platform_icon` - `https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp`
-- Clip styling page - `https://fountain.fm/docs/styling-clips`
+- Clip rendering page - `https://fountain.fm/docs/rendering-clips`
 
 ## Preferences
 
@@ -173,6 +179,10 @@ Skills use narratives to decide:
 When you write narratives:
 
 - Narratives are show-level, never episode-level.
+- A narrative for one show starts with the show ID, e.g.
+  `- show:id:abc123 — Bitcoin mining and energy (AGENT-2026-10-26)`.
+  A narrative without a show ID is for each show of the project.
+  Fountain reads this format, so keep the spaces around the dash.
 - Pick a narrative by how often the show returns to it, never by how good one episode was.
 - Count episodes that are _about_ the subject, not the ones that just mention it.
 - Give a few strong narratives rather than many.
@@ -212,11 +222,8 @@ Customizations of skill **fountain-reports**, e.g. email addresses and presets.
 
 **Automation**
 
-Daily loop options, e.g.:
-
-- auto-render
-- a render machine that renders this show's drafts on its own schedule
-- number of clips per day
+Daily loop options, e.g. the number of clips per day.
+Daily Growth itself is a project setting, and not a preference.
 
 **Other**
 

@@ -20,6 +20,7 @@ is the way to inspect or debug a single layer's filtergraph.
 import argparse
 import copy
 import json
+import os
 import shlex
 import shutil
 import subprocess
@@ -146,14 +147,22 @@ LAYER_DEFAULTS = {
     },
 }
 
-BUNDLED_FONTS = Path(__file__).resolve().parents[3] / "assets" / "fonts"
-DEFAULT_FONT = BUNDLED_FONTS / "montserrat-bold.ttf"
-
 VIDEO_EXTS = {".mp4", ".mov", ".webm", ".mkv", ".gif"}
 WAVE_MODES = {"filled": ("showwaves", "cline"), "line": ("showwaves", "p2p"), "bars": ("showfreqs", "bar")}
 
 HORIZONTAL = {"left", "center", "right"}
 VERTICAL = {"top", "middle", "bottom"}
+
+
+def clip_assets_dir():
+    """The folder that render-preflight.py downloads the fonts, the face model and the overlay placeholders into."""
+    if sys.platform == "darwin":
+        root = Path.home() / "Library" / "Caches"
+    elif os.name == "nt":
+        root = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    else:
+        root = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+    return root / "fountain-skills" / "clip-assets"
 
 
 def is_remote(value):
@@ -783,9 +792,13 @@ def main():
         help="Spec override; list indices allowed, e.g. layers.0.text='new hook'. Repeatable.",
     )
     parser.add_argument(
+        "--assets-dir",
+        default=str(clip_assets_dir()),
+        help="The assets folder of the render-preflight.py report, when it is not the default.",
+    )
+    parser.add_argument(
         "--font",
-        default=str(DEFAULT_FONT),
-        help="Font for any text layer that names none. Defaults to the bundled Montserrat Bold, so a "
+        help="Font for any text layer that names none. Defaults to the downloaded Montserrat Bold, so a "
         "clip never falls back to whatever the machine happens to carry.",
     )
     parser.add_argument("--magick", default=shutil.which("magick") or "magick")
@@ -799,6 +812,8 @@ def main():
     )
     parser.add_argument("--run", action="store_true", help="Execute the ffmpeg command instead of printing it.")
     args = parser.parse_args()
+    assets_dir = Path(args.assets_dir).expanduser()
+    args.font = args.font or str(assets_dir / "fonts" / "montserrat-bold.ttf")
 
     kit, kit_dir = None, None
     if args.brand_kit:
@@ -813,16 +828,17 @@ def main():
     spec = json.loads(spec_path.read_text())
     for raw in args.override:
         apply_override(spec, raw)
-    # A preset that ships its own asset names it beside itself, so resolve a
-    # relative path against the preset rather than against the caller's cwd.
+    # A preset names its placeholder by file name, so resolve a relative path beside the preset,
+    # then in the downloaded placeholders, rather than against the caller's cwd.
     # An override always wins, because it is applied above.
     for layer in spec.get("layers", []):
         for field in ("asset", "fontFile"):
             value = layer.get(field)
             if value and not is_remote(value) and not Path(value).is_absolute() and not Path(value).exists():
-                beside = spec_path.parent / value
-                if beside.is_file():
-                    layer[field] = str(beside)
+                for candidate in (spec_path.parent / value, assets_dir / "overlays" / value):
+                    if candidate.is_file():
+                        layer[field] = str(candidate)
+                        break
 
     layers = resolve_layers(spec, kit, kit_dir)
     if not layers:

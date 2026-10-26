@@ -50,7 +50,7 @@ If the words promise something that the clip does not give, the viewer leaves at
    The transcript names no speaker.
    Thus the guest name is a guess whenever the host may have said the line.
    Say which words you are unsure of.
-   Skill **fountain-clip-producer** resolves the uncertainty on the video.
+   The user resolves the uncertainty on the video before approving.
    `<topic>` is 1 to 4 words that say what the quote is about.
 
 3. Write the context note in Markdown, with 300 to 1000 characters of the words that the reader sees.

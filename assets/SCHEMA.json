@@ -51,7 +51,7 @@
     },
     {
       "name": "fountain-clip-producer",
-      "description": "Render a clip post into a finished, platform-ready video with framing, captions, and overlays.",
+      "description": "Render a clip post on this machine into a platform-ready video, only when the user asks for a local render.",
       "skill": "skills/fountain-clip-producer/SKILL.md",
       "modules": [
         {
@@ -133,6 +133,10 @@
             {
               "name": "word-pop.json",
               "path": "skills/fountain-clip-producer/modules/captions/assets/word-pop.json"
+            },
+            {
+              "name": "build-captions.cpython-313.pyc",
+              "path": "skills/fountain-clip-producer/modules/captions/scripts/__pycache__/build-captions.cpython-313.pyc"
             },
             {
               "name": "build-captions.py",
@@ -226,14 +230,6 @@
               "path": "skills/fountain-clip-producer/modules/overlays/assets/pip-card.json"
             },
             {
-              "name": "placeholder-logo.png",
-              "path": "skills/fountain-clip-producer/modules/overlays/assets/placeholder-logo.png"
-            },
-            {
-              "name": "placeholder-sponsor.png",
-              "path": "skills/fountain-clip-producer/modules/overlays/assets/placeholder-sponsor.png"
-            },
-            {
               "name": "show-logo.json",
               "path": "skills/fountain-clip-producer/modules/overlays/assets/show-logo.json"
             },
@@ -281,12 +277,6 @@
           ]
         },
         {
-          "name": "queue",
-          "description": "Work the render queue - find the drafts that wait for media, and render what auto-render allows.",
-          "module": "skills/fountain-clip-producer/modules/queue/MODULE.md",
-          "assets": []
-        },
-        {
           "name": "shots",
           "description": "Decide which shot the clip holds when one frame carries two people, and keep the cuts continuous.",
           "module": "skills/fountain-clip-producer/modules/shots/MODULE.md",
@@ -311,84 +301,8 @@
       ],
       "assets": [
         {
-          "name": "anton-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/anton-regular.ttf"
-        },
-        {
-          "name": "archivo-black-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/archivo-black-regular.ttf"
-        },
-        {
-          "name": "bebas-neue-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/bebas-neue-regular.ttf"
-        },
-        {
-          "name": "courier-prime-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/courier-prime-regular.ttf"
-        },
-        {
-          "name": "dm-serif-display-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/dm-serif-display-regular.ttf"
-        },
-        {
-          "name": "montserrat-black.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/montserrat-black.ttf"
-        },
-        {
-          "name": "montserrat-bold.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/montserrat-bold.ttf"
-        },
-        {
-          "name": "montserrat-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/montserrat-regular.ttf"
-        },
-        {
-          "name": "permanent-marker-regular.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/permanent-marker-regular.ttf"
-        },
-        {
-          "name": "poppins-bold.ttf",
-          "path": "skills/fountain-clip-producer/assets/fonts/poppins-bold.ttf"
-        },
-        {
-          "name": "apache-permanent-marker.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/apache-permanent-marker.txt"
-        },
-        {
-          "name": "mit-yunet.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/mit-yunet.txt"
-        },
-        {
-          "name": "ofl-anton.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-anton.txt"
-        },
-        {
-          "name": "ofl-archivo-black.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-archivo-black.txt"
-        },
-        {
-          "name": "ofl-bebas-neue.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-bebas-neue.txt"
-        },
-        {
-          "name": "ofl-courier-prime.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-courier-prime.txt"
-        },
-        {
-          "name": "ofl-dm-serif-display.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-dm-serif-display.txt"
-        },
-        {
-          "name": "ofl-montserrat.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-montserrat.txt"
-        },
-        {
-          "name": "ofl-poppins.txt",
-          "path": "skills/fountain-clip-producer/assets/licences/ofl-poppins.txt"
-        },
-        {
-          "name": "face-detection-yunet-2023mar.onnx",
-          "path": "skills/fountain-clip-producer/assets/models/face-detection-yunet-2023mar.onnx"
+          "name": "align-word-timings.cpython-313.pyc",
+          "path": "skills/fountain-clip-producer/scripts/__pycache__/align-word-timings.cpython-313.pyc"
         },
         {
           "name": "align-word-timings.py",

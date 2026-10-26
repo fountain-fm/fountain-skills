@@ -11,7 +11,7 @@ Each anchor carries face_h as well as face_cx/face_cy, because matching
 apparent head size between speakers is what stops two crops of one frame from
 reading as two crops of one frame.
 
-Detection uses the YuNet model the skill bundles, and not a Haar cascade. A
+Detection uses the YuNet model that render-preflight.py downloads, and not a Haar cascade. A
 cascade misses a head that is turned, lit from one side, or far from the
 camera -- exactly the head on the far side of a wide two-shot -- and it misses
 it silently, which reads as a one-speaker frame.
@@ -23,6 +23,7 @@ Usage:
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -67,19 +68,23 @@ TURN_RATIO = 0.15
 MODEL_NAME = "face-detection-yunet-2023mar.onnx"
 
 
+def clip_assets_dir():
+    """The folder that render-preflight.py downloads the fonts, the face model and the overlay placeholders into."""
+    if sys.platform == "darwin":
+        root = Path.home() / "Library" / "Caches"
+    elif os.name == "nt":
+        root = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    else:
+        root = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+    return root / "fountain-skills" / "clip-assets"
+
+
 def find_model(explicit=None):
-    """Locate the bundled detector. The skill ships it beside the fonts, so
-    walk up from this script rather than depend on a working directory."""
-    if explicit:
-        path = Path(explicit)
-        if not path.is_file():
-            sys.exit(f"detector model not found: {path}")
-        return str(path)
-    for parent in Path(__file__).resolve().parents:
-        candidate = parent / "assets" / "models" / MODEL_NAME
-        if candidate.is_file():
-            return str(candidate)
-    sys.exit(f"detector model {MODEL_NAME} not found in any assets/models above this script")
+    """Locate the detector: the path given, or the copy that render-preflight.py downloads."""
+    path = Path(explicit) if explicit else clip_assets_dir() / "models" / MODEL_NAME
+    if not path.is_file():
+        sys.exit(f"detector model not found: {path}. Run render-preflight.py, or pass the face_model of its report.")
+    return str(path)
 
 
 def facing_from_landmarks(landmarks):
@@ -315,7 +320,7 @@ def main():
     parser.add_argument(
         "--model",
         default=None,
-        help="Path to the YuNet ONNX model. Defaults to the copy the skill bundles in assets/models.",
+        help="Path to the YuNet ONNX model. Defaults to the copy that render-preflight.py downloads.",
     )
     args = parser.parse_args()
 

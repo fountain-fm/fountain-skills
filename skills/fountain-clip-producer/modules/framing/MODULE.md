@@ -26,7 +26,7 @@ It stops and asks the user when no clean crop exists.
 - ffmpeg and ffprobe.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, and the first release to carry `FaceDetectorYN`.
-- The YuNet model in `assets/models`, which the skill ships and the script finds on its own.
+- The YuNet model, which module **preflight** downloads and the scripts find on their own.
 
 ## Process
 

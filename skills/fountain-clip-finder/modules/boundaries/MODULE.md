@@ -96,13 +96,13 @@ Prefer an out point with silence after it.
 A segment that touches the next segment leaves no gap to pad into, and the last word is cut.
 
 The transcript has no word timings, and the captions do not need word timings from this module.
-Skill **fountain-clip-producer** makes the word timings from the audio of the clip at render time.
+The renderer makes the word timings from the audio of the clip.
 
 `ts_start` and `ts_end` are always in the clock of the transcript.
 For a Fountain file that is also the clock of `media`, because both come from one recording.
 For a video that Fountain does not hold, the captions are the transcript, so the two clocks are one there too.
 A YouTube cut runs behind the transcript by an amount that changes at every advertisement break.
-Thus skill **fountain-clip-producer** translates the span when it opens the file.
+Thus the renderer translates the span when it opens the file.
 An advertisement break inside the clip moves only the end, so such a clip can fail at render time,
 after approval.
 The renderer reports the reason.

@@ -35,9 +35,7 @@ fountain-skills
         ├───scripts // skill-wide scripts
         │       def.py
         ├───assets // skill-wide non-script assets
-        │   │   example-ghi.srt
-        │   └───licences // one licence for each bundled third-party work
-        │           mit-stu.txt
+        │       example-ghi.srt
         └───modules // parts of a skill
             └───jkl // module name
                 │   MODULE.md // module
@@ -53,16 +51,24 @@ File names MUST be in kebab-case.extension, except SKILL.md and MODULE.md.
 
 Skill names MUST start with `fountain-`.
 
-### Bundled assets
+### Hosted assets
 
-A skill CAN bundle a third-party asset, such as a font or a model, when no machine can be trusted to have it.
-It MUST NOT bundle one whose licence does not allow redistribution.
+A skill MUST NOT ship a binary file, such as a font, a model, or an image.
+The Claude plugin directory does not inspect binaries, and it holds each plugin version that has one.
+The plugin icon is the only exception.
 
-The licence of each bundled work MUST ship in `assets/licences`, as one file for each work.
+A skill CAN use a third-party asset when no machine can be trusted to have it.
+Host the asset under `https://media.fountain.fm/clip-assets/skills/`, in the `fountain-fm-media` R2 bucket.
+A script downloads it one time, and checks its sha256.
+You MUST NOT host an asset whose licence does not allow redistribution.
+
+Host the licence of each work in `licences`, as one file for each work.
 A licence MUST NOT sit in the directory that holds the asset, because a loader often reads every file in
 that directory and a text file breaks it.
 
-A later reader MUST be able to tell which version of the asset is bundled, so that they can compare it
+You MUST NOT overwrite a file at a published path, because a released plugin version downloads it.
+Give a new version of an asset a new file name.
+A later reader MUST be able to tell which version of the asset is hosted, so that they can compare it
 against the source.
 Put the version in the file name when the asset does not carry it, e.g. a model blob.
 Leave it out when the asset does, e.g. a font, whose version a font tool reads from the file.

@@ -41,7 +41,7 @@ Then say "Set up Fountain".
 | ------------------------ | ------------------------------------------------------------------------ |
 | `fountain-onboarding`    | Set up Fountain.                                                         |
 | `fountain-clip-finder`   | Search the transcripts, find clippable moments, and create draft posts.  |
-| `fountain-clip-producer` | Produce videos for candidate clips with framing, captions, and overlays. |
+| `fountain-clip-producer` | Render a clip on your machine, when you ask for a local render.          |
 | `fountain-daily-growth`  | Read yesterday's numbers and today's news, then brief the clip finder.   |
 | `fountain-reports`       | Create email reports detailing clip performance and new clip candidates. |
 
@@ -52,20 +52,32 @@ How Fountain uses and keeps this data is in the [Fountain privacy policy](https:
 
 Some steps send requests to other services:
 
-- The storage URLs that the Fountain Uploads API gives: the rendered clip videos.
+- The storage URLs that the Fountain Uploads API gives: the clip videos that you render on your machine.
+- `media.fountain.fm`: one download of the fonts, the face detection model, and the overlay placeholders that
+  skill **fountain-clip-producer** reads, with their licences.
 - Google News RSS: the subjects of the show, as search queries (skill **fountain-daily-growth**).
 - The web search and social trend tools of the agent, if it has them: search queries about the show and the news.
 - The pages that the show publishes outside Fountain, such as its site and its social profiles: page requests.
 - YouTube or another video site, through yt-dlp: requests for the video and the captions of a clip source.
 - The host of each episode: requests for the episode media.
-- Hugging Face: one download of the whisper.cpp model file.
+- Hugging Face: one download of the whisper.cpp model file `ggml-base.en.bin`, for a local render.
 - Package managers, such as Homebrew: installs of the software that skill **fountain-onboarding** finds missing.
 
 No skill sends a Fountain API key or a Fountain token to a different service.
-Video render, face framing, and captions occur on the machine that runs the agent.
+Fountain renders the clip videos on its servers.
+Skill **fountain-clip-producer** renders a clip on the machine that runs the agent, only when you ask for it.
 
-Skill **fountain-clip-producer** bundles fonts and an ONNX face detection model as data files.
-ffmpeg and OpenCV read them, and no part of the plugin runs them as code.
+The plugin holds no binary files.
+Skill **fountain-clip-producer** downloads these files from `https://media.fountain.fm/clip-assets/skills/`,
+and checks the sha256 of each:
+
+- `fonts/`: Anton, Archivo Black, Bebas Neue, Courier Prime, DM Serif Display, Montserrat (regular, bold,
+  black), Permanent Marker, and Poppins Bold.
+- `models/face-detection-yunet-2023mar.onnx`: the YuNet face detection model from OpenCV Zoo.
+- `overlays/`: the placeholder logo and the placeholder sponsor image.
+- `licences/`: one licence for each font and for the model.
+
+ffmpeg and OpenCV read them as data, and no part of the plugin runs them as code.
 
 ## License
 

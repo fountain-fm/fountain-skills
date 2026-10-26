@@ -42,7 +42,7 @@ A post targets one channel, and the platform of that channel sets the style of t
 Thus one clip on two channels gives two posts, each with its own text.
 
 This skill MUST write `source` when `media` is a URL.
-A later renderer cuts the clip from `source`.
+Fountain renders the video of the post from `source`.
 Module **copy** writes `meta.label`, `content.title`, `content.text`, and `context`.
 Module **media** and module **boundaries** build `source` between them.
 
@@ -51,13 +51,8 @@ A YouTube match for that episode adds its YouTube video id.
 A standalone YouTube source names only its YouTube video id.
 Another external URL uses empty `ids`.
 Module **external-source** builds the last two forms.
-A raw local path is not a URL, so its post holds no `source`.
-Thus the render MUST happen in the same session.
-
-The posts with `source` then wait in the Social API.
-This skill does not start the next stage.
-Skill **fountain-clip-producer** works from `source` and attaches the video to the post.
-Skill **fountain-clip-producer** receives a raw local source directly in the same session.
+A raw local path is not a URL, so its post holds no `source`, and Fountain cannot render it.
+Skill **fountain-clip-producer** renders that post on this machine in the same session.
 
 ## Housekeeping
 
@@ -95,9 +90,9 @@ A run loses time between its actions, and not inside them.
    Give it the copy, and the complete `SocialPostMediaSource` when `media` is a URL.
    The clips do not depend on each other, so create them in batches of 4 to 6 at the same time.
 7. Present each clip as one clip card of `assets/clip-card.md`, in rank order.
-   End with the drafts link of the card.
    The card shows the score, the reason, and each flag, so do not put them in a summary above the cards.
-   Give each raw local source to the renderer in this session.
+   End with the drafts link of the card, and say that Fountain is rendering the videos.
+   Give each raw local source to skill **fountain-clip-producer** in this session.
    Say that these posts cannot be rendered from a later session.
 
 ## Additional notes
@@ -114,8 +109,7 @@ The clip is posted before the episode is published.
 Thus the words MUST NOT say that the audience can hear the rest of the episode today.
 
 `ts_start` and `ts_end` are always in the clock of the transcript.
-A YouTube cut of an episode runs to its own clock, and skill **fountain-clip-producer** translates the
-span into it at render time.
+A YouTube cut of an episode runs to its own clock, and the renderer translates the span into it.
 A video that is not an episode is its own transcript.
 Thus the two clocks are the same, and nothing translates the span.
 

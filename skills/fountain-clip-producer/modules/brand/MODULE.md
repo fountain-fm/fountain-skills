@@ -47,11 +47,11 @@ The values are kept in the preferences, because only the preferences survive the
 
    2. Look at the artwork yourself and choose the font, because no script can identify a typeface in a
       picture.
-      Take the bundled family whose style matches the wordmark, and choose three presets that suit it.
+      Take the shipped family whose style matches the wordmark, and choose three presets that suit it.
       A serif cover suits `broadsheet`, a heavy condensed one `stadium` or `impact-loud`,
       a hand-lettered one `marker`, and a clean geometric one `bold-social` or `wide-block`.
    3. Render one mockup on real footage of the show, in the colours the artwork gave.
-   4. Show the user the mockup, and send them to the clip styling page to change it.
+   4. Show the user the mockup, and send them to the clip rendering page to change it.
       Name what they can change on it: the size of the captions, their case, their colours and the
       highlight, the outline, where they sit, how many words are on screen, and the font.
       A reader who does not know the words for these things cannot ask for a correction.
@@ -82,7 +82,7 @@ The values are kept in the preferences, because only the preferences survive the
       Name what the user can change on it: the size of the captions, their case, their colours and
       the highlight, the outline, where they sit, how many words are on screen, the font, and the logo.
       A reader who does not know the words for these things cannot ask for a correction.
-      Give them the clip styling page with it, because a style is something to look at, and not a list
+      Give them the clip rendering page with it, because a style is something to look at, and not a list
       to read.
    5. Ask for the font files when the show uses a licensed font.
 6. Record the confirmation of the kit with the Project API in the same turn.

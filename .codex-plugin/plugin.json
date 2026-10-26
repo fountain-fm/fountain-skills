@@ -1,6 +1,6 @@
 {
   "name": "fountain",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "description": "Podcast Growth Skills for Your Agent",
   "author": {
     "name": "Fountain"
@@ -26,7 +26,7 @@
     "defaultPrompt": [
       "Set up Fountain for my podcast.",
       "Find the strongest clip moments from my latest episode.",
-      "Produce the next draft clip as a platform-ready video.",
+      "Make the captions bigger on my latest clip.",
       "Review yesterday's podcast growth and recommend today's work."
     ]
   }

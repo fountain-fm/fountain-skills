@@ -72,7 +72,7 @@ Also, no step before step 6 has a source to work on.
    The transcript names no speaker.
    Thus this search finds where someone said the name, and never who spoke.
    Tell the caller that.
-   Let module **copy** and skill **fountain-clip-producer** identify the speaker.
+   Let module **copy** name the speaker, and mark the name as unsure.
 6. Sort the segments of one episode by time, then join the segments that touch or overlap.
    A passage often returns as two segments, and a hit gives them in the order of the score.
    The result is a moment, which is one continuous passage to judge.

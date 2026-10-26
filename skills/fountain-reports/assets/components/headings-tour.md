@@ -7,4 +7,4 @@ Tell the agent any of this, and it is recorded and honoured from the next run:
 - **Brand** - your look: caption style, fonts, logos, and colours.
 - **Accounts** - your channels, and each confirmed handle per platform.
 - **Reporting** - which reports you get, and how each one arrives.
-- **Automation** - the switches of the daily loop, e.g. auto-render.
+- **Automation** - the options of the daily loop, e.g. the number of clips per day.
