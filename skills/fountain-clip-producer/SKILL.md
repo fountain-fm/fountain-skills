@@ -131,8 +131,9 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     Only the gate can say that the new cut is finished.
     Move an edge only to repair a fault that you can prove, or to make a change that the user asked for.
     Never move an edge to improve the clip, because choosing the moment is the caller's job.
-13. Attach the video with the Uploads API, unless the user asked you not to.
-    Send its `upload_id` and the repairs of step 12, with the new `source`, in one Social API update.
+13. Upload the video with the Uploads API, unless the user asked you not to attach it.
+    Send the repairs of step 12 and the `upload_id` in one Social API update.
+    A new `source` and its `upload_id` MUST go in the same update.
 14. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
     line saying the render result and where the video is attached.
 

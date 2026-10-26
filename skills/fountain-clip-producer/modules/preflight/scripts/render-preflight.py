@@ -100,6 +100,7 @@ def fetch_assets(assets_dir):
                 continue
             partial.replace(path)
         except OSError as exc:
+            partial.unlink(missing_ok=True)
             failed.append(f"asset:{name} (download to {assets_dir} failed: {exc})")
     return failed
 
