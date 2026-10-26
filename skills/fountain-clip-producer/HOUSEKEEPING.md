@@ -18,9 +18,6 @@ Each one does on this machine what Fountain already does on its servers.
 
 Fountain has an MCP that wraps around its API.
 
-Fountain also provides public skills for podcast growth.
-Most of them rely on the Fountain API.
-
 github.com/fountain-fm/fountain-skills contains
 
 - all the skills (including this file)

@@ -43,8 +43,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 ## Process
 
 1. Load the `ProjectOverview` with the Project API.
-   When Daily Growth is on, Fountain also makes drafts today.
-   Tell the user, and continue only when they confirm.
+   When Daily Growth is on, tell the user that Fountain also makes drafts today.
 2. Update the Narratives section, because both modules read it.
 3. Run module **performance-review** to turn yesterday's posts and their numbers into lessons.
 4. Run module **trend-discovery** to score today's trends and shape the strongest into briefs.
