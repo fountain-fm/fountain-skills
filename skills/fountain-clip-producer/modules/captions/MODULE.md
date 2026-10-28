@@ -58,7 +58,7 @@ The script exists to get the per-word timing arithmetic right.
 
    ```bash
    # label renders the text at the real font and size, and "%w" prints the width it took.
-   magick -background none -font assets/fonts/montserrat-bold.ttf -pointsize 72 \
+   magick -background none -font "$FONTS_DIR/montserrat-bold.ttf" -pointsize 72 \
      label:"the line to measure" -format "%w" info:
    ```
 
@@ -69,7 +69,7 @@ The script exists to get the per-word timing arithmetic right.
    # The subtitles filter hands the file to libass, which reads the styles and the animation from it.
    # -c:a copy leaves the audio untouched, because this pass changes the picture alone.
    ffmpeg -hide_banner -y -i clip-vertical.mp4 \
-     -vf "subtitles=captions.ass:fontsdir=assets/fonts" \
+     -vf "subtitles=captions.ass:fontsdir=$FONTS_DIR" \
      -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
      clip-vertical-captioned.mp4
    ```
@@ -100,7 +100,7 @@ A misspelled override path is a hard error.
 
 Use `bold-social` when neither the request nor the brand kit names a preset.
 It is readable on a phone at arm's length, and it has no animation that can go wrong.
-When the user has not chosen a style, send them to the clip styling page, and not to this list.
+When the user has not chosen a style, send them to the clip rendering page, and not to this list.
 The descriptions in `assets` say what a style is for, but only the page shows the style.
 
 Each preset has one job, and no two presets differ by only one setting:
@@ -163,22 +163,23 @@ The script measures each word in the font and the case that it will render in.
 It packs words into a group until the next word does not fit.
 Thus `font.size` is the control, and `grouping.maxWords` is only a ceiling.
 A one-word style is not packed at all.
-The script resolves the font the way libass does: the bundled directory first, and fontconfig after.
+The script resolves the font the way libass does: the fonts folder of module **preflight** first, and
+fontconfig after.
 Thus the file that it measures is the file that libass draws.
 It refuses only when neither source finds the font.
 Every preset names a font, so the clip has a font when you do not choose one.
-Pass `--font-file` only for a family that this skill does not bundle.
+Pass `--font-file` only for a family that this skill does not ship.
 Never pass it for a file that you found on the disk.
 To change the font, record `font.family` under Brand.
-That is enough for a family that this skill bundles.
-A family that this skill does not bundle needs its file recorded beside it.
+That is enough for a family that this skill ships.
+A family that this skill does not ship needs its file recorded beside it.
 That record is true only for the machine that holds the file.
 If you name such a family alone, the render uses the substitute, and not the font.
 A caption packed by the word cap alone wraps wherever it does not fit.
 The fit report then confirms a layout that the render never had.
 Tell the user what the build says about the font.
 The build can say that a font is not installed, and that the clip is drawn in the substitute.
-Or it can say that it drew the font from a file that this skill does not bundle.
+Or it can say that it drew the font from a file that this skill does not ship.
 A social caption drops the full stop and the comma at the end of a group.
 A comma inside a group stays.
 A question mark and an exclamation mark stay, because they show tone.

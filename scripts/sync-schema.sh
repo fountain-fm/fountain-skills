@@ -77,13 +77,15 @@ collect_assets() {
   local directory
   local path
 
+  # git lists tracked and new files, and leaves out ignored ones such as __pycache__
   {
     for directory in "$@"; do
       if [[ -d "$directory" ]]; then
-        find "$directory" -type f -print
+        git -C "$REPO_ROOT" ls-files --cached --others --exclude-standard -- "$(relative_path "$directory")"
       fi
     done
-  } | LC_ALL=C sort | while IFS= read -r path; do
+  } | LC_ALL=C sort -u | while IFS= read -r path; do
+    [[ -f "$REPO_ROOT/$path" ]] || continue
     jq --null-input \
       --arg name "${path##*/}" \
       --arg path "$(relative_path "$path")" \

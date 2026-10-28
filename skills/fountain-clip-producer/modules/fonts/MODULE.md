@@ -6,8 +6,9 @@ description: Make the font that a style names available to the renderer, and sub
 ## Overview
 
 A style spec names a font family, and `build-captions.py` writes that name into the ASS style block.
-The skill carries its own fonts, so every preset renders the same on any machine.
-Each bundled file has the name of the family that it holds.
+The skill ships its own fonts, so every preset renders the same on any machine.
+Module **preflight** downloads them, and its report names the fonts folder, `$FONTS_DIR` below.
+Each file has the name of the family that it holds.
 The script builds the file name from the family name, and finds the file.
 So a new family needs no entry in any list.
 A missing font changes the look, and it also changes the rendered width of the text.
@@ -16,7 +17,7 @@ So the fit measurement and the burn must use the same font.
 ## Input
 
 - The font families that the resolved caption spec or the overlay spec names.
-- The bundled fonts in `assets`, which every preset points at.
+- The fonts folder of the preflight report, which every preset points at.
 - Optional: the font files of a show, from module **brand**.
 
 ## Output
@@ -32,19 +33,19 @@ So the fit measurement and the burn must use the same font.
 
 ## Process
 
-1. Point libass at the bundled fonts on every caption burn:
+1. Point libass at the fonts folder on every caption burn:
 
    ```bash
    # fontsdir makes libass read that folder before it asks the machine for a font.
    ffmpeg -hide_banner -y -i clip-vertical.mp4 \
-     -vf "subtitles=captions.ass:fontsdir=assets/fonts" \
+     -vf "subtitles=captions.ass:fontsdir=$FONTS_DIR" \
      -c:v libx264 -preset veryfast -crf 18 -c:a copy -movflags +faststart \
      clip-vertical-captioned.mp4
    ```
 
    Point it at the fonts of the show instead when module **brand** carries some.
 
-2. Give the font names to module **preflight** when a spec names a font that is not bundled.
+2. Give the font names to module **preflight** when a spec names a font that the skill does not ship.
 3. While you debug a failure, check one font by hand.
    When `fc-match` returns a different family, the font is absent:
 
@@ -61,10 +62,10 @@ The web-safe fonts belong to Microsoft, so a Linux machine has none of them.
 A container often has no font at all.
 So the skill ships the fonts that it names, and does not trust the machine.
 
-A download at render time is not a good replacement.
+Module **preflight** downloads one fixed file for each font, and checks its sha256.
 Module **captions** measures the width of each word against the font file itself.
 If a family changes in a new release, every measurement changes, and a line that fitted before now overflows.
-The measurements were taken against the bundled file.
+Thus a new release of a font gets a new file name, and the old file stays the same.
 
 Never substitute a lookalike font without telling the user.
 Ask for the files when a show uses a licensed font, and say which font you used and why.
@@ -76,7 +77,7 @@ A font that resolves by name can still render badly for other reasons, so the st
 
 ImageMagick can fail to find a family name, and give no error.
 That changes the measured width as well as the look.
-Pass it an absolute path to the bundled file, because `magick -list font` is often empty.
+Pass it an absolute path to the font file, because `magick -list font` is often empty.
 
 A font file registers a family and a style.
 libass finds a font by its family.

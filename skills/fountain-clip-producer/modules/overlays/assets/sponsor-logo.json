@@ -1,6 +1,6 @@
 {
   "name": "sponsor-logo",
-  "description": "A sponsor lockup that appears for a few seconds and leaves, sized larger than the show mark because it has to be read once. The bundled image is a placeholder.",
+  "description": "A sponsor lockup that appears for a few seconds and leaves, sized larger than the show mark because it has to be read once. The default image is a placeholder that module preflight downloads.",
   "layers": [
     {
       "type": "image",

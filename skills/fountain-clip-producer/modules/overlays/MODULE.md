@@ -33,7 +33,8 @@ A standing layer from module **brand**, such as the logo of the show, counts as 
 
 1. Read the standing layers of the show from module **brand**.
    Use preset `show-logo` or `sponsor-logo` when the show has no kit, and point `asset` at the real image.
-   Each of these presets ships a placeholder, so that it renders from its defaults.
+   Each of these presets has a placeholder that module **preflight** downloads, so that it renders from its
+   defaults.
    An `asset` can be a file on this machine or an `http` URL.
    ffmpeg opens the URL itself.
 2. Compile the layers into the render command:
@@ -130,8 +131,9 @@ A simple lower third works well.
 Heavy branding on the first frame looks like an advertisement, and it raises the skip rate.
 Keep a title card clear of the caption zone, and take it off screen before the viewer must read both at once.
 
-Take the font from `assets/fonts`, or from the kit of the show, rather than choose one per clip,
-because a title card in the wrong typeface breaks the look, the same as a caption in the wrong typeface.
+Take the font from the fonts folder of module **preflight**, or from the kit of the show.
+Do not choose one per clip.
+A title card in the wrong typeface breaks the look, the same as a caption in the wrong typeface.
 
 On a two-speaker clip, use the speaker labels of module **captions** rather than name the speaker in both layers.
 

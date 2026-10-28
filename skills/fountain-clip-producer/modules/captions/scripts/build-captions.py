@@ -24,6 +24,7 @@ the highlight tracks real speech, not just each word's own span.
 import argparse
 import copy
 import json
+import os
 import re
 import struct
 import subprocess
@@ -651,7 +652,7 @@ def safe_width(spec):
 
 
 def match_installed_font(family, bold=False):
-    """Ask fontconfig for a family, the way libass does when the family is not bundled.
+    """Ask fontconfig for a family, the way libass does when the family is not downloaded.
 
     fontconfig always answers, so a different family in the answer is how a missing
     font is found: the clip renders in whatever was substituted.
@@ -717,14 +718,21 @@ def descent_ratio(font_file):
     return descent / upem if upem else 0.25
 
 
-def bundled_fonts_dir():
-    return Path(__file__).resolve().parents[3] / "assets" / "fonts"
+def clip_assets_dir():
+    """The folder that render-preflight.py downloads the fonts, the face model and the overlay placeholders into."""
+    if sys.platform == "darwin":
+        root = Path.home() / "Library" / "Caches"
+    elif os.name == "nt":
+        root = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    else:
+        root = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+    return root / "fountain-skills" / "clip-assets"
 
 
-def resolve_font_file(spec, explicit=None):
+def resolve_font_file(spec, fonts_dir, explicit=None):
     """The file libass will draw, so the measurement and the render are the same font.
 
-    ffmpeg is given the bundled directory, so libass looks there first and asks
+    ffmpeg is given the downloaded fonts directory, so libass looks there first and asks
     fontconfig only for a family this skill does not ship. Resolving in that order
     keeps the two in step; measuring a different file is what packs a caption too
     full and wraps it.
@@ -733,8 +741,8 @@ def resolve_font_file(spec, explicit=None):
     if explicit:
         return Path(explicit), None
     family, bold = spec["font"]["family"], spec["font"]["bold"]
-    bundled = bundled_fonts_dir()
-    # A bundled file is named after its family, so a new font needs no entry in
+    bundled = Path(fonts_dir)
+    # A downloaded file is named after its family, so a new font needs no entry in
     # any list: drop "Bebas Neue" in as bebas-neue-regular.ttf and it resolves.
     # The regular file answers a bold request for a face that ships one weight,
     # which is every display face here, and libass then bolds it itself.
@@ -870,7 +878,7 @@ def anchor_xy(spec):
     return round(horizontal[h]), round(vertical[v])
 
 
-CAP_HEIGHT = 0.72  # a capital's share of the em, close enough in every face this skill bundles
+CAP_HEIGHT = 0.72  # a capital's share of the em, close enough in every face this skill ships
 
 
 def rounded_rect_path(width, height, radius):
@@ -1254,7 +1262,12 @@ def main():
         default=1.0,
         help="The speed of the pace plan, when module pace sped up the clip. Raises the rate limit to match.",
     )
-    parser.add_argument("--font-file", help="TTF/OTF to measure with. Defaults to the bundled file for the family.")
+    parser.add_argument("--font-file", help="TTF/OTF to measure with. Defaults to the downloaded file for the family.")
+    parser.add_argument(
+        "--assets-dir",
+        default=str(clip_assets_dir()),
+        help="The assets folder of the render-preflight.py report, when it is not the default.",
+    )
     parser.add_argument("--out", help="Output .ass path. Required unless --check.")
     parser.add_argument(
         "--emit-lines",
@@ -1300,12 +1313,13 @@ def main():
             print(f"FAIL: {message}", file=sys.stderr)
         return 1
 
-    font_file, substituted = resolve_font_file(spec, args.font_file)
-    if font_file and bundled_fonts_dir() not in font_file.resolve().parents:
+    fonts_dir = Path(args.assets_dir).expanduser().resolve() / "fonts"
+    font_file, substituted = resolve_font_file(spec, fonts_dir, args.font_file)
+    if font_file and fonts_dir not in font_file.resolve().parents:
         # This cannot read the preferences, so it names the file rather than judging the choice.
         print(
             f"note: drawing in {spec['font']['family']} from {font_file}, which this skill does not "
-            f"bundle - right only if the preferences name it",
+            f"ship - right only if the preferences name it",
             file=sys.stderr,
         )
     if substituted:

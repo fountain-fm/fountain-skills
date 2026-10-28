@@ -12,6 +12,7 @@ measured as good.
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -22,17 +23,23 @@ SCORE_THRESHOLD = 0.6
 NMS_THRESHOLD = 0.3
 
 
+def clip_assets_dir():
+    """The folder that render-preflight.py downloads the fonts, the face model and the overlay placeholders into."""
+    if sys.platform == "darwin":
+        root = Path.home() / "Library" / "Caches"
+    elif os.name == "nt":
+        root = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    else:
+        root = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+    return root / "fountain-skills" / "clip-assets"
+
+
 def find_model(explicit=None):
-    """Locate the bundled detector by walking up from this script."""
-    if explicit:
-        if not Path(explicit).is_file():
-            raise RuntimeError(f"detector model not found: {explicit}")
-        return str(explicit)
-    for parent in Path(__file__).resolve().parents:
-        candidate = parent / "assets" / "models" / MODEL_NAME
-        if candidate.is_file():
-            return str(candidate)
-    raise RuntimeError(f"detector model {MODEL_NAME} not found in any assets/models above this script")
+    """Locate the detector: the path given, or the copy that render-preflight.py downloads."""
+    path = Path(explicit) if explicit else clip_assets_dir() / "models" / MODEL_NAME
+    if not path.is_file():
+        raise RuntimeError(f"detector model not found: {path}. Run render-preflight.py, or pass its face_model.")
+    return str(path)
 
 
 def detect_faces(detector, frame, min_size, min_area):
@@ -82,7 +89,7 @@ def main():
     parser.add_argument("--min-face-width-ratio", type=float, default=0.035)
     parser.add_argument("--min-face-area-ratio", type=float, default=0.01)
     parser.add_argument("--report", required=True)
-    parser.add_argument("--model", default=None, help="Path to the YuNet ONNX model. Defaults to the bundled copy.")
+    parser.add_argument("--model", default=None, help="Path to the YuNet ONNX model. Defaults to the downloaded copy.")
     args = parser.parse_args()
 
     model = find_model(args.model)
