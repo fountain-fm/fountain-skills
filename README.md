@@ -1,6 +1,6 @@
 # Fountain Skills
 
-Agents skills for podcast growth.
+Agent skills for podcast growth.
 
 Each morning, Fountain reads the headlines and finds the matching moments in your back catalog.
 It turns them into captioned clips in your style, and drafts a post for each of your channels.
