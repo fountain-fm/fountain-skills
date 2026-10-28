@@ -1,6 +1,6 @@
 {
   "name": "fountain",
-  "version": "1.28.0",
+  "version": "1.29.0",
   "description": "Podcast Growth Skills for Your Agent",
   "author": {
     "name": "Fountain"
@@ -17,16 +17,20 @@
   },
   "interface": {
     "displayName": "Fountain",
-    "shortDescription": "Podcast Growth Skills for Your Agent",
+    "shortDescription": "Podcast Growth Skills",
     "longDescription": "Podcast Growth Skills for Your Agent",
     "developerName": "Fountain",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "websiteURL": "https://fountain.fm",
+    "supportURL": "https://fountain.fm/faq",
+    "privacyPolicyURL": "https://fountain.fm/privacy-policy",
+    "termsOfServiceURL": "https://fountain.fm/terms-of-use",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
     "defaultPrompt": [
       "Set up Fountain for my podcast.",
       "Make the captions bigger on my latest clip.",
-      "Turn on Daily Growth for my project.",
       "Show me the draft clips that wait for my approval."
     ]
   }

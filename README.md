@@ -117,6 +117,16 @@ The plugin holds no binary files.
 Skill **fountain-clip-producer** checks the sha256 of each file that it downloads from `media.fountain.fm`.
 ffmpeg and OpenCV read these files as data, and no part of the plugin runs them as code.
 
+## Package an OpenAI update
+
+Commit your changes, then run:
+
+```sh
+npm run package:openai
+```
+
+Upload `dist/fountain-openai-<version>.zip` to the existing Fountain plugin in the OpenAI developer dashboard.
+
 ## License
 
 [MIT](LICENSE)
