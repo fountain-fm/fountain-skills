@@ -38,7 +38,6 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 3. Make sure that the project has at least one show.
    Otherwise, connect the show with the Project API, or link to
    https://fountain.fm/studio/{project_id}/onboarding?kind=PODCAST
-   Tell the user the credit cost of the connection before you connect it.
 4. Make sure that the project has at least one social channel, e.g. X, YouTube, or Instagram.
    Connect it with the Social API, and send the user the link that approves access.
    Daily Growth writes one post for each connected channel.
@@ -59,7 +58,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
      The report goes to each project member who can access the show.
    - The user approves and schedules each draft at the `drafts_url`, or tells the agent to do it.
    - To change a clip, the user tells the agent, e.g. "make the captions bigger on my latest clip".
-   - Drafts and renders are free, and each post that goes out uses one credit.
+   - Each post that goes out uses one credit.
 
 ## Additional notes
 
