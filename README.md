@@ -1,14 +1,14 @@
 # Fountain Skills
 
-Clips worth posting, every morning.
+Agents skills for podcast growth.
 
-Each morning, Fountain reads the headlines and finds the moments in your back catalog that match.
-It turns them into captioned clips in your style, and writes a post for each of your channels.
+Each morning, Fountain reads the headlines and finds the matching moments in your back catalog.
+It turns them into captioned clips in your style, and drafts a post for each of your channels.
 You approve the ones you like, and they go out to X, YouTube and Instagram.
 
 This plugin connects your agent to Fountain and helps you set it all up: your show, your channels, and the look of
 your clips.
-After that, just ask your agent, e.g. "Make the captions bigger on my latest clip".
+After that, just ask your agent, e.g. "Make three clips from my latest episode".
 
 You need a [Fountain](https://fountain.fm) account.
 
