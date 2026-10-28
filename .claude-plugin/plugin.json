@@ -2,7 +2,7 @@
   "name": "fountain",
   "version": "1.28.0",
   "displayName": "Fountain",
-  "description": "Skills and tools for podcast growth: automate publishing, produce clips, and analyze performance.",
+  "description": "Set up Fountain for your podcast: your show, your channels, the look of your clips, and your preferences.",
   "mcpServers": "./.mcp.json",
   "author": {
     "name": "Fountain",

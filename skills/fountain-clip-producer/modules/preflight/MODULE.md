@@ -33,7 +33,6 @@ It reports the environment, and it never looks at a rendered file.
 - OpenCV 4.8 or later, importable from that same Python.
 - ImageMagick, for a captioned render.
 - Access to `media.fountain.fm`, for the first download of the assets.
-- Skill **fountain-onboarding**, to install a missing tool.
 
 ## Process
 
@@ -50,8 +49,8 @@ It reports the environment, and it never looks at a rendered file.
    The words of the clip come from whisper, and three modules read them.
    Give the family name alone, because a weight in the name matches nothing and shows as a missing font.
 
-2. Stop and run skill **fountain-onboarding** when the report names a missing tool, because this is a
-   fault of the machine and not of the clip.
+2. Stop when the report names a missing tool, because this is a fault of the machine and not of the clip.
+   Install the tool when the user agrees, or make it easy for the user to install it.
 3. Read the caption renderer from the report, and record it in the caption plan.
    The order of preference is ASS, then drawtext, then a prepared transparent layer.
 4. Burn the captions with the binary that the report names, and not always with the one on the PATH.

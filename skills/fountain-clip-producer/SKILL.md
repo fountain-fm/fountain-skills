@@ -1,15 +1,13 @@
 ---
 name: fountain-clip-producer
-description: Render a clip on this machine instead of on Fountain, only when the user asks for a local run.
+description: Render a clip on this machine, only when the user asks. To change a clip on Fountain, render it again there.
 ---
 
 ## Overview
 
-This skill makes the platform-ready video of a clip post on this machine.
-It does not choose the moment or the span.
-The caller chooses both before this skill runs.
-Module **media** cuts the landscape master.
-Every module after it works from that one file.
+This skill renders the video of a clip post on this machine, when the user asks for a local render.
+Fountain renders each clip automatically, and that render is the first choice, even when it misses part of the request.
+Module **media** cuts the landscape master, and every module after it works from that file.
 The other modules crop the picture and put the captions and the layers on it.
 The skill delivers nothing until one report passes.
 
@@ -63,7 +61,6 @@ You MUST read HOUSEKEEPING.md if you haven't already.
   Keep it current, because YouTube changes what a client must send.
   A build a few weeks old gets a 403 error on every download, while the captions still download.
 - A web search tool, and a way to read a page, for the reference sources of module **brand**.
-- Skill **fountain-onboarding**, which installs a tool that module **preflight** finds missing.
 
 ## Process
 
@@ -133,8 +130,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 13. Upload the video with the Uploads API, unless the user asked you not to attach it.
     Send the repairs of step 12 and the `upload_id` in one Social API update.
     A new `source` and its `upload_id` MUST go in the same update.
-14. Present each finished clip on the clip card of skill **fountain-clip-finder**, with one added
-    line saying the render result and where the video is attached.
+14. Give the user each finished clip, with its `post_url`, the render result, and where the video is attached.
 
 ## Additional notes
 
@@ -187,6 +183,12 @@ A caption change MUST NOT force a new crop.
 
 A post does not have to be approved before this skill runs, and rendering one approves nothing.
 Never put an API key, a token, or a cookie into a command, a manifest, or a report.
+
+Keep the files of a run in `fountain/outputs` of the working folder, with one folder for each show.
+In it, give each clip a folder named `{episode_number ?? YYYY-MM-DD}-{slugified-topic}`.
+Keep only the finished work in the clip folder.
+Put the rest in its `workings` folder, or in the `workings` folder of the show when clips share it.
+These files are for this session only, so no later session reads them.
 
 The purpose of this skill is a good clip, and not a full set of completed steps.
 Readability, framing, and sync matter more than procedure.

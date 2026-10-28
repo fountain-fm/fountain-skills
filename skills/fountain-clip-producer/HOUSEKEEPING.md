@@ -7,14 +7,16 @@ The reader does not develop fountain-skills.
 
 ## About fountain-skills
 
-Fountain does the daily clip work on its servers, and the user needs no agent for it.
-With the Daily Growth project setting on, Fountain finds news trends each day, makes draft clip posts, and renders
-their videos.
-Fountain also renders the video of each clip post that an agent makes.
+Fountain makes clips on its servers, with no agent.
 
-The skills let this agent set up Fountain, find clips on request, and build reports.
-Run skill **fountain-daily-growth** or skill **fountain-clip-producer** only when the user asks for a local run.
-Each one does on this machine what Fountain already does on its servers.
+- Automations are project settings in `settings.workflows` of the `ProjectOverview`.
+  E.g. with Daily Growth on, Fountain matches the news of each day to the archive of each show.
+  Then it makes draft clip posts, renders their videos, and emails a report.
+- Fountain renders the video of each new clip post automatically.
+- On request, it renders a clip again with a prompt for the change, e.g. "bigger captions".
+
+The skills set up Fountain, and help the user to use it well.
+Do all other work with the API directly, e.g. edit the text of a draft, or turn an automation on or off.
 
 Fountain has an MCP that wraps around its API.
 
@@ -39,7 +41,7 @@ The API can
 - load public shows, episodes, and transcripts
 - search across public content and transcripts
 - publish your podcasts
-- publish social posts
+- make, render, and publish social posts
 
 An agent reaches the API through one of two routes.
 
@@ -81,21 +83,29 @@ Config:
 
 ### Clips
 
-The Social API gives the state of the render of each clip post.
+Fountain renders the video of each clip post automatically, when the post has a `source` and no upload.
+The Social API gives the state of each render.
 Always give the `post_url` of each post that you tell the user about.
+
+To change the look of a clip, render it again with the Social API, and give the change as a prompt.
+The new video replaces the video of each unpublished post that shares the clip.
+A change for all later clips belongs under Brand, because each render reads the preferences.
+
+Always prefer a Fountain render, also when Fountain cannot render all of a request, e.g. a logo.
+Say what Fountain cannot render, and offer the closest look that it can, from the clip rendering page.
+Use skill **fountain-clip-producer** only when the user asks for a render on their own computer.
 
 ## Setup
 
-Skill **fountain-onboarding** makes sure that Fountain and the user's environment are fully set up.
+Skill **fountain-onboarding** sets up Fountain and the preferences.
 
-- You MUST run it before the task when the preferences are empty.
-- You MUST run it when a part of the setup is missing, e.g. a channel, a report address, or a tool.
+- You MUST run it before the task when the user has no project, no show, or no connected channel.
+- Suggest it when the preferences have no caption style.
+  Fountain renders with its default style until the user chooses one.
 
 ## How you talk
 
 These rules tell you how to communicate in the chat.
-A report has its own separate communication rules.
-Skill **fountain-reports** gives those rules.
 
 Tell the reader about each of these items when the item changes what the reader may do next:
 
@@ -123,10 +133,8 @@ You MUST quote the content in full, e.g. the words of a clip or the text of a po
 
 - `post_url` - `https://fountain.fm/studio/{project_id}/~/posts/{post_id}`
 - `drafts_url` - `https://fountain.fm/studio/{project_id}/~/posts?tab=DRAFT`
-- `episode_url` - `https://fountain.fm/episode/{episode_id}?t={seconds}`
-  This link starts the player at that second.
-- `platform_icon` - `https://storage.googleapis.com/fountain-fm-assets/icons/{instagram|x|youtube}-icon.webp`
 - Clip rendering page - `https://fountain.fm/docs/rendering-clips`
+  Read its text at `https://fountain.fm/docs/rendering-clips.md`.
 
 ## Preferences
 
@@ -138,8 +146,7 @@ They are the ONLY store for project data that later sessions need.
 - Preferences are stored as Markdown.
 - Preferences MUST NOT have frontmatter.
 - The whole document is `##` headings followed by unordered Markdown lists.
-- The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", "Reporting", "Automation",
-  and "Other".
+- The only allowed `##` headings are "Narratives", "Editorial", "Brand", "Accounts", and "Other".
 - Include a heading only when it has an entry.
 - Each list item MUST NOT exceed 200 chars.
   200 is a maximum, not a target.
@@ -147,6 +154,9 @@ They are the ONLY store for project data that later sessions need.
 - Each list item MUST end with `(AGENT-YYYY-MM-DD)` or `(USER-YYYY-MM-DD)`.
   This tag shows whether an agent or the user chose the item, and when the item was updated.
   E.g. "- `bold-social` caption style (USER-2026-09-10)"
+- An older document can have a Reporting or an Automation section.
+  No part of Fountain reads them, so remove them when you next update the preferences.
+  Tell the user what you removed.
 
 ### Guidelines
 
@@ -174,103 +184,39 @@ They are the ONLY store for project data that later sessions need.
 **Narratives**
 
 A narrative is a subject the show returns to repeatedly.
-
-Skills use narratives to decide:
-
-- whether a subject is for this show
-- what angle to take
-- what risks to consider
-
-When you write narratives:
+Daily Growth uses narratives to choose the angle of a clip.
+When Daily Growth runs for a show that has no narratives, it writes the first ones.
 
 - Narratives are show-level, never episode-level.
 - A narrative for one show starts with the show ID, e.g.
   `- show:id:abc123 — Bitcoin mining and energy (AGENT-2026-10-26)`.
+  Put one space on each side of the dash, or Fountain reads the entry as one for each show.
   A narrative without a show ID is for each show of the project.
+  When the project has more than one show, add the show ID to each older entry that is for one show only.
 - Pick a narrative by how often the show returns to it, never by how good one episode was.
 - Count episodes that are _about_ the subject, not the ones that just mention it.
 - Give a few strong narratives rather than many.
-  A long list makes every trend match something.
-- Update narratives at the start of a task that requires them.
-  Check that the existing narratives are still valid.
-  Check whether you can add new narratives from recent episodes.
-- End the section with the newest episode you read for a given show, e.g. `- Read up to TFTC #781 (AGENT-2026-08-09)`.
+  A long list makes every news story match something.
 
 **Editorial**
 
-- Tone, structure, and rules for what to make and when to publish it.
+- Tone, structure, and rules for the words of a post, e.g. "never use emoji".
 - A guest, a format, or a name that makes a hook more credible belongs here, and never under Narratives.
   The reason is that such an item changes how a clip is written, and not which subject the show returns to.
 
 **Brand**
 
-The show's look:
-
-- caption style
-- fonts
-- logos
-- colors
+The show's look: caption style, colors, fonts, and logos.
+Each render reads this section, so a change applies from the next render.
+To apply a change to a clip that exists, render it again.
 
 **Accounts**
 
 Information that the API does not provide, e.g.:
 
 - the handle to use when you tag a person
-- external video source (e.g. YouTube) for a show.
-  Ask the user before you cut video the first time.
-- folder name for a show
-
-**Reporting**
-
-Customizations of skill **fountain-reports**, e.g. email addresses and presets.
-
-**Automation**
-
-Options for Daily Growth, e.g. the number of clips per day.
-
-Daily Growth is a project setting, and the Project API turns it on.
-With it on, Fountain runs Daily Growth each day, so that the user does not need their own agent.
-The user can still run Daily Growth on their own agent, with skill **fountain-daily-growth**.
+- the YouTube channel of a show, when its video is not on Fountain
 
 **Other**
 
 All other preferences.
-
-## Fountain assets
-
-If a local file system is available, you MUST store Fountain-related assets in `fountain`:
-
-```
-your-project
-└───fountain
-    └───outputs // ephemeral outputs
-        └───my-show // one folder for each show
-            ├───104-best-moment // one folder for each asset
-            │   │   vertical-captioned.mp4 // the finished work
-            │   └───workings // intermediate outputs
-            └───workings // outputs that are shared or that don't belong to any one asset
-```
-
-You MUST keep your work as stateless as possible.
-If data is available from an API, you MUST load it from the API.
-You MUST NOT keep a local copy of that data.
-A file under `fountain` is working material.
-The file is a setting only when the preferences name its path.
-
-### Outputs
-
-Outputs are ephemeral.
-You MUST NOT make an output for a later session to read.
-
-`outputs` holds one folder for each show.
-Each show holds one folder for each asset you produce.
-
-Use the show folder name from the Accounts section of the preferences.
-Choose the name once and record it in the same turn.
-For assets, use the folder name `{episode_number ?? YYYY-MM-DD}-{slugified-topic}`.
-This name is the episode number (or the publish date) and the topic.
-
-In each asset folder, keep the finished work that the Output of the skill names, and nothing else.
-Everything else goes in `workings`.
-This includes a draft, a proof, a plan, a report, an intermediate video, and a throwaway script.
-Anything the user does not need to see MUST go into `workings`.

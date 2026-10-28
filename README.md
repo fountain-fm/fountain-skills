@@ -1,54 +1,97 @@
 # Fountain Skills
 
-Skills for podcast growth.
+Clips worth posting, every morning.
 
-Every skill relies on the Fountain API—create an account at [fountain.fm](https://fountain.fm).
+Each morning, Fountain reads the headlines and finds the moments in your back catalog that match.
+It turns them into captioned clips in your style, and writes a post for each of your channels.
+You approve the ones you like, and they go out to X, YouTube and Instagram.
 
-Fountain does the daily clip work on its servers, so you need no agent for it.
-With Daily Growth on, Fountain finds news trends each day, makes draft clip posts, and renders their videos.
-The skills let your agent set up Fountain, find clips when you ask, and build reports.
-Two of them do the server work on your machine instead, only when you ask.
+This plugin connects your agent to Fountain and helps you set it all up: your show, your channels, and the look of
+your clips.
+After that, just ask your agent, e.g. "Make the captions bigger on my latest clip".
+
+You need a [Fountain](https://fountain.fm) account.
 
 ## Install
 
-### Codex
+### Claude and Claude Code
 
-Codex plugin bundles Fountain skills and MCP.
+1. Open the [Fountain plugin](https://claude.ai/new#customize/plugins/id/0c080483-a976-4807-b9b3-d8ba36b7e03f%40anthropic-plugin-directory)
+   and click Add.
+   If the link doesn't work, go to Settings → Plugins → Discover and search for Fountain.
+2. In the plugin's Connectors tab, click Connect next to Fountain and sign in to your Fountain account.
+3. Start a chat and say "Set up Fountain".
 
-Sign in to Fountain when Codex asks you to authenticate the MCP connection.
+For the best experience, we recommend Claude Code.
+On Team and Enterprise plans, your admin may need to allow the plugin.
 
-In chat (preferably Codex), say "Set up Fountain".
+### ChatGPT and Codex
 
-### Claude
+1. Open the [Fountain plugin](https://chatgpt.com/plugins/plugin_asdk_app_6aa429bc4d1c819198ad6571766be52b)
+   and click Install plugin.
+2. Sign in to your Fountain account.
+3. Start a chat and say "Set up Fountain".
 
-Claude plugin bundles Fountain skills and MCP.
+Works in ChatGPT on web, desktop and mobile, and in Codex.
+For the best experience, we recommend Codex.
 
-1. On [claude.ai](https://claude.ai), open **Settings** in the sidebar
-2. Go to **Plugins**
-3. Press Add > Add marketplace > Add from a repository
-4. Paste in `https://github.com/fountain-fm/fountain-skills` and press Sync
-5. In chat (preferably Claude Code), say "Set up Fountain"
+### OpenCode
 
-### Claude Code
-
-Run these commands in Claude Code:
-
+```sh
+# Add the Fountain MCP server
+opencode mcp add fountain --url https://api.fountain.fm/v1/mcp --global
+# Sign in to your Fountain account in the browser
+opencode mcp auth fountain
+# Install the Fountain skills
+npx skills add fountain-fm/fountain-skills -g -a opencode -s '*' -y
 ```
-/plugin marketplace add fountain-fm/fountain-skills
-/plugin install fountain@fountain-skills
+
+Start OpenCode and say "Set up Fountain".
+
+### Hermes
+
+```sh
+# Add the Fountain MCP server, sign in to your Fountain account in the browser, and enable all tools
+hermes mcp add fountain --url https://api.fountain.fm/v1/mcp --auth oauth --connect-timeout 300
+# Install the Fountain skills
+npx skills add fountain-fm/fountain-skills -g -a hermes-agent -s '*' -y
 ```
 
-Then say "Set up Fountain".
+Start Hermes and say "Set up Fountain".
+
+### OpenClaw
+
+```sh
+# Add the Fountain MCP server
+openclaw mcp set fountain '{"url":"https://api.fountain.fm/v1/mcp","transport":"streamable-http","auth":"oauth"}'
+# Sign in to your Fountain account in the browser
+openclaw mcp login fountain
+# Install the Fountain skills
+npx skills add fountain-fm/fountain-skills -g -a openclaw -s '*' -y
+```
+
+Restart OpenClaw and say "Set up Fountain".
+
+### Any other agent
+
+1. Add an MCP server named Fountain with the URL `https://api.fountain.fm/v1/mcp`.
+   Leave the OAuth client ID and secret empty.
+2. Sign in to your Fountain account when your agent asks.
+3. Install the Fountain skills.
+   The CLI asks which agent to install for.
+
+   ```sh
+   npx skills add fountain-fm/fountain-skills -g
+   ```
+
+4. Start your agent and say "Set up Fountain".
 
 ## The skills
 
-| Skill                    | Job                                                                      |
-| ------------------------ | ------------------------------------------------------------------------ |
-| `fountain-onboarding`    | Set up Fountain.                                                         |
-| `fountain-clip-finder`   | Search the transcripts, find clippable moments, and create draft posts.  |
-| `fountain-clip-producer` | Render a clip on your machine instead of on Fountain.                    |
-| `fountain-daily-growth`  | Run Daily Growth on your agent instead of on Fountain.                   |
-| `fountain-reports`       | Create email reports detailing clip performance and new clip candidates. |
+| Skill                    | What it does                                                                |
+| ------------------------ | --------------------------------------------------------------------------- |
+| `fountain-onboarding`    | Sets up your show, your channels, the look of your clips, and Daily Growth. |
+| `fountain-clip-producer` | Renders a clip on your own computer, when you ask for it.                   |
 
 ## Data and privacy
 
@@ -60,13 +103,12 @@ Some steps send requests to other services:
 - The storage URLs that the Fountain Uploads API gives: the clip videos that you render on your machine.
 - `media.fountain.fm`: one download of the fonts, the face detection model, and the overlay placeholders that
   skill **fountain-clip-producer** reads, with their licences.
-- Google News RSS: the subjects of the show, as search queries (skill **fountain-daily-growth**).
-- The web search and social trend tools of the agent, if it has them: search queries about the show and the news.
+- The web search tools of the agent, if it has them: search queries about the show.
 - The pages that the show publishes outside Fountain, such as its site and its social profiles: page requests.
-- YouTube or another video site, through yt-dlp: requests for the video and the captions of a clip source.
-- The host of each episode: requests for the episode media.
+- YouTube or another video site, through yt-dlp: requests for the video and the captions of a local render.
+- The host of each episode: requests for the episode media of a local render.
 - Hugging Face: one download of the whisper.cpp model file `ggml-base.en.bin`, for a local render.
-- Package managers, such as Homebrew: installs of the software that skill **fountain-onboarding** finds missing.
+- Package managers, such as Homebrew: installs of the software that a local render needs, when you agree.
 
 No skill sends a Fountain API key or a Fountain token to a different service.
 

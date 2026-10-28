@@ -7,7 +7,7 @@
   },
   "homepage": "https://fountain.fm",
   "repository": "https://github.com/fountain-fm/fountain-skills",
-  "keywords": ["podcasts", "clips", "growth", "social-media", "reporting"],
+  "keywords": ["podcasts", "clips", "growth", "social-media"],
   "skills": "./skills/",
   "mcpServers": {
     "fountain": {
@@ -25,9 +25,9 @@
     "websiteURL": "https://fountain.fm",
     "defaultPrompt": [
       "Set up Fountain for my podcast.",
-      "Find the strongest clip moments from my latest episode.",
       "Make the captions bigger on my latest clip.",
-      "Review yesterday's podcast growth and recommend today's work."
+      "Turn on Daily Growth for my project.",
+      "Show me the draft clips that wait for my approval."
     ]
   }
 }

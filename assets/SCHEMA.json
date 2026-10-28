@@ -2,56 +2,8 @@
   "housekeeping": "assets/HOUSEKEEPING.md",
   "skills": [
     {
-      "name": "fountain-clip-finder",
-      "description": "Find the strongest clip moments in a show, write the post copy, and open a draft post for each channel.",
-      "skill": "skills/fountain-clip-finder/SKILL.md",
-      "modules": [
-        {
-          "name": "boundaries",
-          "description": "Shape a scored moment into a clip - set a clean start and end, apply the gates, and cut the words.",
-          "module": "skills/fountain-clip-finder/modules/boundaries/MODULE.md",
-          "assets": []
-        },
-        {
-          "name": "copy",
-          "description": "Write the label, the context note, and the platform post text for a verified clip, and check them for risk.",
-          "module": "skills/fountain-clip-finder/modules/copy/MODULE.md",
-          "assets": []
-        },
-        {
-          "name": "discovery",
-          "description": "Search a show's transcripts for real moments, and score each one for substance and for fit.",
-          "module": "skills/fountain-clip-finder/modules/discovery/MODULE.md",
-          "assets": []
-        },
-        {
-          "name": "external-source",
-          "description": "Read a video that Fountain does not hold, as transcript segments in the clock of that video.",
-          "module": "skills/fountain-clip-finder/modules/external-source/MODULE.md",
-          "assets": [
-            {
-              "name": "read-segments.py",
-              "path": "skills/fountain-clip-finder/modules/external-source/scripts/read-segments.py"
-            }
-          ]
-        },
-        {
-          "name": "media",
-          "description": "Resolve the file each clip is cut from, and map the transcript clock onto the clock of that file.",
-          "module": "skills/fountain-clip-finder/modules/media/MODULE.md",
-          "assets": []
-        }
-      ],
-      "assets": [
-        {
-          "name": "clip-card.md",
-          "path": "skills/fountain-clip-finder/assets/clip-card.md"
-        }
-      ]
-    },
-    {
       "name": "fountain-clip-producer",
-      "description": "Render a clip on this machine instead of on Fountain, only when the user asks for a local run.",
+      "description": "Render a clip on this machine, only when the user asks. To change a clip on Fountain, render it again there.",
       "skill": "skills/fountain-clip-producer/SKILL.md",
       "modules": [
         {
@@ -303,95 +255,11 @@
       ]
     },
     {
-      "name": "fountain-daily-growth",
-      "description": "Run Daily Growth on this agent instead of on Fountain, only when the user asks for a local run.",
-      "skill": "skills/fountain-daily-growth/SKILL.md",
-      "modules": [
-        {
-          "name": "performance-review",
-          "description": "Read yesterday's posts and their numbers fresh from the API, and write the durable lessons.",
-          "module": "skills/fountain-daily-growth/modules/performance-review/MODULE.md",
-          "assets": []
-        },
-        {
-          "name": "trend-discovery",
-          "description": "Scan the news, score the trends, and shape the strongest into briefs for fountain-clip-finder.",
-          "module": "skills/fountain-daily-growth/modules/trend-discovery/MODULE.md",
-          "assets": []
-        }
-      ],
-      "assets": []
-    },
-    {
       "name": "fountain-onboarding",
-      "description": "Set up Fountain. Trigger on first use, when asked, when preferences are empty, or when a skill is missing something.",
+      "description": "Set up Fountain: show, channels, clip look, preferences, and Daily Growth. Use on first use or on request.",
       "skill": "skills/fountain-onboarding/SKILL.md",
       "modules": [],
       "assets": []
-    },
-    {
-      "name": "fountain-reports",
-      "description": "Build the reports the user reads - compose components into a preset, then email or print it.",
-      "skill": "skills/fountain-reports/SKILL.md",
-      "modules": [],
-      "assets": [
-        {
-          "name": "approve-note.md",
-          "path": "skills/fountain-reports/assets/components/approve-note.md"
-        },
-        {
-          "name": "clip-performance.md",
-          "path": "skills/fountain-reports/assets/components/clip-performance.md"
-        },
-        {
-          "name": "clip-summary.md",
-          "path": "skills/fountain-reports/assets/components/clip-summary.md"
-        },
-        {
-          "name": "dashboard-link.md",
-          "path": "skills/fountain-reports/assets/components/dashboard-link.md"
-        },
-        {
-          "name": "headings-tour.md",
-          "path": "skills/fountain-reports/assets/components/headings-tour.md"
-        },
-        {
-          "name": "headline.md",
-          "path": "skills/fountain-reports/assets/components/headline.md"
-        },
-        {
-          "name": "learnings.md",
-          "path": "skills/fountain-reports/assets/components/learnings.md"
-        },
-        {
-          "name": "setting-row.md",
-          "path": "skills/fountain-reports/assets/components/setting-row.md"
-        },
-        {
-          "name": "stats-table.md",
-          "path": "skills/fountain-reports/assets/components/stats-table.md"
-        },
-        {
-          "name": "warnings.md",
-          "path": "skills/fountain-reports/assets/components/warnings.md"
-        },
-        {
-          "name": "performance.md",
-          "path": "skills/fountain-reports/assets/presets/performance.md"
-        },
-        {
-          "name": "review-posts-simple.md",
-          "path": "skills/fountain-reports/assets/presets/review-posts-simple.md"
-        },
-        {
-          "name": "review-posts.md",
-          "path": "skills/fountain-reports/assets/presets/review-posts.md"
-        },
-        {
-          "name": "settings.md",
-          "path": "skills/fountain-reports/assets/presets/settings.md"
-        }
-      ]
     }
   ]
 }

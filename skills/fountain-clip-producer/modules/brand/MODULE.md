@@ -65,7 +65,7 @@ The values are kept in the preferences, because only the preferences survive the
       When the user gives none, read what the show already has.
       Stop at the first source that answers:
 
-      - A clip the show posted on one of its own channels, which the Accounts section names.
+      - A clip the show posted on one of its own channels, which the Social API lists.
         Prefer this source, because it is the only one that shows the show's captions on the show's footage.
       - The website of the show and its social profiles.
 
