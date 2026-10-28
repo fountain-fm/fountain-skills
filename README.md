@@ -9,6 +9,7 @@ You approve the ones you like, and they go out to X, YouTube and Instagram.
 This plugin connects your agent to Fountain and helps you set it all up: your show, your channels, and the look of
 your clips.
 After that, just ask your agent, e.g. "Make three clips from my latest episode".
+Your agent finds the moments and drafts the posts, and Fountain renders the videos automatically.
 
 You need a [Fountain](https://fountain.fm) account.
 

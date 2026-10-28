@@ -38,6 +38,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 3. Make sure that the project has at least one show.
    Otherwise, connect the show with the Project API, or link to
    https://fountain.fm/studio/{project_id}/onboarding?kind=PODCAST
+   A connected show costs one credit for each episode with no transcript.
+   Tell the user this cost before you connect the show.
 4. Make sure that the project has at least one social channel, e.g. X, YouTube, or Instagram.
    Connect it with the Social API, and send the user the link that approves access.
    Daily Growth writes one post for each connected channel.
@@ -54,7 +56,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Turn on Daily Growth, unless the user declines.
    Another automation stays off until the user agrees to it.
 9. Describe the daily routine to the user, in a few lines:
-   - With Daily Growth on, Fountain makes new drafts each day, renders their videos, and emails a report.
+   - With Daily Growth on, Fountain finds new clips each day, drafts their posts, renders the videos, and emails
+     a report.
      The report goes to each project member who can access the show.
    - The user approves and schedules each draft at the `drafts_url`, or tells the agent to do it.
    - To change a clip, the user tells the agent, e.g. "make the captions bigger on my latest clip".

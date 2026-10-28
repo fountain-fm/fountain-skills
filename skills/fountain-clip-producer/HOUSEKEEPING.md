@@ -10,8 +10,8 @@ The reader does not develop fountain-skills.
 Fountain makes clips on its servers, with no agent.
 
 - Automations are project settings in `settings.workflows` of the `ProjectOverview`.
-  E.g. with Daily Growth on, Fountain matches the news of each day to the archive of each show.
-  Then it makes draft clip posts, renders their videos, and emails a report.
+  E.g. with Daily Growth on, Fountain finds clips each day in the archive of each show that match the news.
+  Then it makes a draft post for each clip, renders their videos, and emails a report.
 - Fountain renders the video of each new clip post automatically.
 - On request, it renders a clip again with a prompt for the change, e.g. "bigger captions".
 
@@ -83,7 +83,10 @@ Config:
 
 ### Clips
 
-Fountain renders the video of each clip post automatically, when the post has a `source` and no upload.
+To make clips, find them with the Search API, which gives each one as a `ClipCandidate`.
+Add a social post for each clip with the Social API.
+With Daily Growth on, look at its drafts first, so that you do not make the same clip twice.
+Fountain renders the video of each new clip post automatically, when the post has a `source` and no upload.
 The Social API gives the state of each render.
 Always give the `post_url` of each post that you tell the user about.
 
