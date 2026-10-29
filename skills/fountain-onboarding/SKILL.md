@@ -1,6 +1,6 @@
 ---
 name: fountain-onboarding
-description: Set up Fountain: show, channels, clip look, preferences, and Daily Growth. Use on first use or on request.
+description: "Set up Fountain: show, channels, clip look, preferences, and Daily Growth. Use on first use or on request."
 ---
 
 ## Overview
