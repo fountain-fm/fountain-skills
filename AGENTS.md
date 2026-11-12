@@ -170,11 +170,11 @@ The agent loads and updates them with the Project API.
 Fountain API docs live at https://fountain.fm/docs.md
 The docs have two parts: `## Endpoints` and `## Models`.
 
-An agent reaches the API through the Fountain MCP server, or through HTTP with a Fountain API key.
-HOUSEKEEPING.md owns that choice, and each skill carries a copy of it.
+An agent reaches the API only through the Fountain MCP server.
+HOUSEKEEPING.md owns that route, and each skill carries a copy of it.
 
 A skill or module that needs the API MUST list "Fountain API" in Requirements.
-It MUST NOT say which route to take, how to authenticate, or what an MCP tool takes.
+It MUST NOT say how to connect, how to authenticate, or what an MCP tool takes.
 It MUST NOT tell the agent to load anything before the first request.
 
 ### Endpoints
@@ -184,7 +184,7 @@ You MUST refer to the API only by its group (Project, Content, Search, Publishin
 E.g., you CAN say "Load the latest episode via the Publishing API".
 
 HOUSEKEEPING.md is the only exception.
-It CAN name the two routes, the docs, and the key.
+It CAN name the MCP server and the docs.
 It still MUST NOT refer to an endpoint.
 
 ### Models
@@ -238,6 +238,17 @@ You MUST NOT commit a lockfile, such as `package-lock.json`.
 The repository root is the plugin root, and Claude Code installs the npm packages there when it finds
 `package.json` and a lockfile.
 These packages are for development only, so a user MUST NOT get them.
+
+### Claude directory
+
+The Claude directory follows the `directory` branch, and never `main`.
+Anthropic refuses scripts and some config fields from an organization that it has not verified.
+Thus the `directory` branch holds only Markdown, JSON, and skill **fountain-onboarding**.
+Its README is `assets/directory-readme.md`, because it MUST NOT mention a skill that the branch leaves out.
+Its `plugin.json` has no listing-only fields, such as `icon`, because the listing kept them from the first submission.
+
+After each release on `main`, run `npm run build:directory -- --push`.
+The script builds from `origin/main`, and refuses to commit a file that breaks the policy.
 
 ### Version
 

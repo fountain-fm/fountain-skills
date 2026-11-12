@@ -43,41 +43,24 @@ The API can
 - publish your podcasts
 - make, render, and publish social posts
 
-An agent reaches the API through one of two routes.
+An agent reaches the API through the Fountain MCP.
 
-#### Route A: MCP (preferred)
-
-- MCP enables Fountain users to authenticate via OAuth instead of generating API keys
-- MCP provides one tool for each API endpoint
+- The MCP signs in the Fountain user with OAuth.
+- It gives one tool for each API endpoint.
 - For more information, you can read the docs at https://fountain.fm/docs.md
-- If MCP is not connected, ask the user to connect it via the MCP Server URL
+- If the MCP is not connected, ask the user to connect it with the Server URL.
+- When the MCP seems not connected or not signed in, try to list the projects to check.
+  Do not assume that the MCP does not work before you do this check.
 
 Config:
 
 - Server URL: https://api.fountain.fm/v1/mcp
 - Authorization: Fountain User OAuth
 
-#### Route B: HTTP (discouraged)
-
-- MUST read https://fountain.fm/docs.md in each new session
-- Find the API key in the `FOUNTAIN_API_KEY` environment variable or in `.env`
-- If no key, ask the user to make one at https://fountain.fm/studio/projects
-- A Fountain key starts with `fountain_`.
-  If a request fails to authenticate and the key has a different prefix, the key is for another service.
-  You MUST tell the user.
-- You MUST NOT write the key into a log, a command, a report, or any file other than the key store.
-
-Config:
-
-- Base URL: https://api.fountain.fm/v1
-- Authorization: Fountain API Key as Bearer Key
-
 #### Additional details
 
-- If you think that the MCP/API is not connected or not authenticated, try to list the projects to check.
-  Do not assume that the MCP/API does not work before you do this check.
 - Write a large response to a file and read only the part you need.
-- You CAN write a throwaway script, e.g. to repeat one request over many items.
+- You CAN write a throwaway script, e.g. to count the items in a large response.
   Put it in a temporary place and delete it at the end of the session.
   You MUST NOT keep a script that wraps the API, because the API can change.
 

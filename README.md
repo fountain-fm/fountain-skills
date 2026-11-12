@@ -96,7 +96,7 @@ Restart OpenClaw and say "Set up Fountain".
 
 ## Data and privacy
 
-The skills send data to the Fountain API, through the Fountain MCP server or through HTTP with a Fountain API key.
+The skills send data to the Fountain API through the Fountain MCP server.
 How Fountain uses and keeps this data is in the [Fountain privacy policy](https://fountain.fm/privacy-policy).
 
 Some steps send requests to other services:
@@ -111,7 +111,7 @@ Some steps send requests to other services:
 - Hugging Face: one download of the whisper.cpp model file `ggml-base.en.bin`, for a local render.
 - Package managers, such as Homebrew: installs of the software that a local render needs, when you agree.
 
-No skill sends a Fountain API key or a Fountain token to a different service.
+No skill sends a Fountain token to a different service.
 
 The plugin holds no binary files.
 Skill **fountain-clip-producer** checks the sha256 of each file that it downloads from `media.fountain.fm`.
