@@ -10,7 +10,9 @@ INCLUDED_PATHS=(.mcp.json LICENSE "skills/$INCLUDED_SKILL")
 # The directory listing shows this file as README.md, because the main README also lists skills it leaves out.
 README_SOURCE_PATH="assets/directory-readme.md"
 # Claude Code does not read these manifest fields, and the listing kept their values from the first submission.
-LISTING_ONLY_FIELDS_FILTER='del(.icon, .documentationUrl, .supportUrl, .privacyPolicyUrl, .termsOfServiceUrl)'
+LISTING_ONLY_FIELDS_FILTER='del(.icon, .documentationUrl, .supportUrl, .termsOfServiceUrl)'
+# The directory finds the icon at this path with no icon field, which would refer to an image from code.
+ICON_SOURCE_PATH="assets/icon.png"
 ALLOWED_EXTENSIONS_PATTERN='\.(md|txt|json|ya?ml|png|jpe?g|gif|webp|ico)$'
 ALLOWED_PLAIN_NAMES_PATTERN='^(LICENSE|\.gitignore)$'
 
@@ -52,6 +54,7 @@ manifest_blob_id="$(git show "$source_ref:.claude-plugin/plugin.json" | jq "$LIS
   git ls-tree -r "$source_ref" -- "${INCLUDED_PATHS[@]}"
   printf '100644 blob %s\tREADME.md\n' "$(git rev-parse "$source_ref:$README_SOURCE_PATH")"
   printf '100644 blob %s\t.claude-plugin/plugin.json\n' "$manifest_blob_id"
+  printf '100644 blob %s\t.claude-plugin/icon.png\n' "$(git rev-parse "$source_ref:$ICON_SOURCE_PATH")"
   printf '100644 blob %s\t%s\n' "$housekeeping_blob_id" "$housekeeping_path"
 } | GIT_INDEX_FILE="$index_file" git update-index --add --index-info
 tree_id="$(GIT_INDEX_FILE="$index_file" git write-tree)"
