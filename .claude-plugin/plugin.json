@@ -1,6 +1,6 @@
 {
   "name": "fountain",
-  "version": "1.30.0",
+  "version": "1.31.0",
   "displayName": "Fountain",
   "description": "Set up Fountain for your podcast: your show, your channels, the look of your clips, and your preferences.",
   "mcpServers": "./.mcp.json",
@@ -17,5 +17,6 @@
     "social",
     "fountain"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "privacyPolicyUrl": "https://fountain.fm/privacy-policy"
 }
