@@ -243,9 +243,9 @@ These packages are for development only, so a user MUST NOT get them.
 
 The Claude directory follows the `claude-directory` branch, and never `main`.
 Anthropic refuses scripts and some config fields from an organization that it has not verified.
-Thus the `claude-directory` branch holds only Markdown, JSON, the icon, and skill **fountain-onboarding**.
+Thus the `claude-directory` branch holds only Markdown, JSON, and skill **fountain-onboarding**.
 Its README is `assets/directory-readme.md`, because it MUST NOT mention a skill that the branch leaves out.
-Its `plugin.json` keeps only `privacyPolicyUrl` of the listing fields, and the icon is at `.claude-plugin/icon.png`.
+Its `plugin.json` has no listing-only fields, such as `icon`, because the listing kept them from the first submission.
 
 After each release on `main`, run `npm run build:directory -- --push`.
 The script builds from `origin/main`, and refuses to commit a file that breaks the policy.
