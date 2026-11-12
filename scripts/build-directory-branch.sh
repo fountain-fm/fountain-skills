@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Commits the files that the Claude directory accepts from an unverified organization to the directory branch.
+# Commits the files that the Claude directory accepts from an unverified organization to the claude-directory branch.
 # Builds from origin/main, or from the ref after --source. With --push, also pushes the branch to origin.
 set -euo pipefail
 
 REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
-TARGET_BRANCH="directory"
+TARGET_BRANCH="claude-directory"
 INCLUDED_SKILL="fountain-onboarding"
 INCLUDED_PATHS=(.mcp.json LICENSE "skills/$INCLUDED_SKILL")
 # The directory listing shows this file as README.md, because the main README also lists skills it leaves out.

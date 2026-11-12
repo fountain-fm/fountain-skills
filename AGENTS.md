@@ -241,9 +241,9 @@ These packages are for development only, so a user MUST NOT get them.
 
 ### Claude directory
 
-The Claude directory follows the `directory` branch, and never `main`.
+The Claude directory follows the `claude-directory` branch, and never `main`.
 Anthropic refuses scripts and some config fields from an organization that it has not verified.
-Thus the `directory` branch holds only Markdown, JSON, and skill **fountain-onboarding**.
+Thus the `claude-directory` branch holds only Markdown, JSON, and skill **fountain-onboarding**.
 Its README is `assets/directory-readme.md`, because it MUST NOT mention a skill that the branch leaves out.
 Its `plugin.json` has no listing-only fields, such as `icon`, because the listing kept them from the first submission.
 
