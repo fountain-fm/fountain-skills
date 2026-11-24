@@ -99,7 +99,6 @@ The tools that change it can:
 - Publish a social post now or at a set time on a connected channel, and delete a post that is not published.
 - Connect a social channel, after you approve access on that platform.
 - Publish, schedule, change or delete an episode in a podcast feed that Fountain hosts.
-- Send a report by email to any address, when you own the project.
 - Change the settings and the preferences of a project.
 - Spend project credits, e.g. when Fountain makes a clip draft or a transcript.
 
