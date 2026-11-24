@@ -44,7 +44,7 @@ You MUST read HOUSEKEEPING.md if you haven't already.
 
 ## Requirements
 
-- Fountain API.
+- Fountain MCP.
 - Python 3.11 or later.
 - OpenCV 4.8 or later, importable from that same Python, for the face detection of module **framing**.
   Module **preflight** downloads its model, the fonts that the presets name, and the overlay placeholders.
@@ -127,8 +127,8 @@ You MUST read HOUSEKEEPING.md if you haven't already.
     Only the gate can say that the new cut is finished.
     Move an edge only to repair a fault that you can prove, or to make a change that the user asked for.
     Never move an edge to improve the clip, because choosing the moment is the caller's job.
-13. Upload the video with the Uploads API, unless the user asked you not to attach it.
-    Send the repairs of step 12 and the `upload_id` in one Social API update.
+13. Upload the video with `create-upload`, unless the user asked you not to attach it.
+    Send the repairs of step 12 and the `upload_id` in one `update-social-post` call.
     A new `source` and its `upload_id` MUST go in the same update.
 14. Give the user each finished clip, with its `post_url`, the render result, and where the video is attached.
 

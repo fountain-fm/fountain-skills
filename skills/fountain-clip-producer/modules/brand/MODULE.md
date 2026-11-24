@@ -26,7 +26,7 @@ The values are kept in the preferences, because only the preferences survive the
 
 ## Requirements
 
-- Fountain API.
+- Fountain MCP.
 - ImageMagick, to quantise the artwork.
 - Python 3.11 or later.
 - A web search tool, and a way to read a page, to reach the clips and the profiles that a show
@@ -34,7 +34,7 @@ The values are kept in the preferences, because only the preferences survive the
 
 ## Process
 
-1. Load the preferences with the Project API, and read the kit of the show.
+1. Load the preferences with `load-project-preferences`, and read the kit of the show.
    The Brand section holds the whole kit: the caption style, and the assets around it.
 2. Derive a kit from the artwork of the show when the Brand section holds none.
    A show whose user was never asked about its style still has a look.
@@ -65,7 +65,7 @@ The values are kept in the preferences, because only the preferences survive the
       When the user gives none, read what the show already has.
       Stop at the first source that answers:
 
-      - A clip the show posted on one of its own channels, which the Social API lists.
+      - A clip the show posted on one of its own channels, which `list-social-posts` lists.
         Prefer this source, because it is the only one that shows the show's captions on the show's footage.
       - The website of the show and its social profiles.
 
@@ -75,17 +75,17 @@ The values are kept in the preferences, because only the preferences survive the
    2. Take stills at the moments when a caption is on screen, and read the style from them.
       Read the style of the font, the case, the colours from the real pixels, the border, the position,
       the number of words on screen, and the animation.
-   3. Draft the kit values, record them with the Project API, and render a style proof on real footage
+   3. Draft the kit values, record them with `update-project-preferences`, and render a style proof on real footage
       of the show.
    4. Show the proof beside the reference, and repeat until the user confirms the match.
-      Record each correction with the Project API in the same turn.
+      Record each correction in the same turn.
       Name what the user can change on it: the size of the captions, their case, their colours and
       the highlight, the outline, where they sit, how many words are on screen, the font, and the logo.
       A reader who does not know the words for these things cannot ask for a correction.
       Give them the clip rendering page with it, because a style is something to look at, and not a list
       to read.
    5. Ask for the font files when the show uses a licensed font.
-6. Record the confirmation of the kit with the Project API in the same turn.
+6. Record the confirmation of the kit in the same turn.
 
 ## Additional notes
 

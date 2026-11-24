@@ -16,7 +16,7 @@ Every module after this one inherits the fault.
 - The `SocialPostMediaSource` of the post, which names the file in `media` and the span in `ts_start` and `ts_end`.
 - Or the external source of a raw local video for this session.
 - The `transcript` of that source, to confirm that the cut holds the expected words.
-- The `TranscriptSegment` list from the Content API when `ids` names an episode, a show, and a YouTube video.
+- The `TranscriptSegment` list from `load-content-transcript` when `ids` names an episode, a show, and a YouTube video.
 - The id of that episode, which names its saved time map.
 
 ## Output

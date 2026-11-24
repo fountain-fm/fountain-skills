@@ -25,13 +25,13 @@ It changes time, so every module after it works on the new timeline.
 
 ## Requirements
 
-- Fountain API.
+- Fountain MCP.
 - ffmpeg and ffprobe.
 - Python 3.11 or later.
 
 ## Process
 
-1. Load the preferences with the Project API, and read the pace of the show from the Brand section.
+1. Load the preferences with `load-project-preferences`, and read the pace of the show from the Brand section.
    A speed that the request gives replaces the recorded one.
 2. Plan the pace:
 

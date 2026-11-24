@@ -11,14 +11,13 @@ Fountain makes clips on its servers, with no agent.
 
 - Automations are project settings in `settings.workflows` of the `ProjectOverview`.
   E.g. with Daily Growth on, Fountain finds clips each day in the archive of each show that match the news.
-  Then it makes a draft post for each clip, renders their videos, and emails a report.
+  Then it makes a draft post for each clip and renders their videos.
+  It emails the clips to each project member who can access the show.
 - Fountain renders the video of each new clip post automatically.
 - On request, it renders a clip again with a prompt for the change, e.g. "bigger captions".
 
 The skills set up Fountain, and help the user to use it well.
-Do all other work with the API directly, e.g. edit the text of a draft, or turn an automation on or off.
-
-Fountain has an MCP that wraps around its API.
+Do all other work with the MCP tools directly, e.g. edit the text of a draft, or turn an automation on or off.
 
 github.com/fountain-fm/fountain-skills contains
 
@@ -33,20 +32,11 @@ A plugin is a package that contains
 The plugin is the preferred way to install Fountain MCP and skills.
 The reason is that the plugin receives regular updates.
 
-### API
+### MCP
 
-The API can
-
-- load project information
-- load public shows, episodes, and transcripts
-- search across public content and transcripts
-- publish your podcasts
-- make, render, and publish social posts
-
-An agent reaches the API through the Fountain MCP.
+The Fountain MCP gives one tool for each endpoint of the Fountain API.
 
 - The MCP signs in the Fountain user with OAuth.
-- It gives one tool for each API endpoint.
 - For more information, you can read the docs at https://fountain.fm/docs.md
 - If the MCP is not connected, ask the user to connect it.
   In Claude, the plugin does not connect the MCP by itself.
@@ -65,19 +55,16 @@ Config:
 - Write a large response to a file and read only the part you need.
 - You CAN write a throwaway script, e.g. to count the items in a large response.
   Put it in a temporary place and delete it at the end of the session.
-  You MUST NOT keep a script that wraps the API, because the API can change.
+  You MUST NOT keep a script that wraps the MCP, because the tools can change.
 
 ### Clips
 
-To make clips, find them with the Search API, which gives each one as a `ClipCandidate`.
-The Search API also finds a compilation: one clip of moments from several episodes.
-Add a social post for each clip with the Social API.
+Find clips with `search-clips`, and draft a post for each one with `add-social-post`.
 With Daily Growth on, look at its drafts first, so that you do not make the same clip twice.
-Fountain renders the video of each new clip post automatically, when the post has a `source` and no upload.
-The Social API gives the state of each render.
+Fountain renders the video of each new post that has a `source` and no upload.
 Always give the `post_url` of each post that you tell the user about.
 
-To change the look of a clip, render it again with the Social API, and give the change as a prompt.
+To change the look of a clip, render it again with `render-social-post`, and give the change as a prompt.
 The new video replaces the video of each unpublished post that shares the clip.
 A change for all later clips belongs under Brand, because each render reads the preferences.
 
@@ -87,9 +74,7 @@ Use skill **fountain-clip-producer** only when the user asks for a render on the
 
 ### Credits
 
-The description of each API tool gives its cost in credits.
-Before the first action in a session that costs credits, tell the user its cost.
-Also tell the user how many credits the project has left.
+Do not stop to ask the user before an action that costs credits.
 Link https://fountain.fm/faq/credits when the user asks about credits.
 
 ## Setup
@@ -114,7 +99,7 @@ Tell the reader about each of these items when the item changes what the reader 
 Do not give unnecessary information, unless the reader asks for it:
 
 - The steps that you took to complete the task successfully
-- Technical details of fountain-skills: module names, file names, object fields, parts of the API
+- Technical details of fountain-skills: module names, file names, object fields, MCP tools
 
 When you give the reader a number about their show, say which sources you counted.
 
@@ -157,9 +142,9 @@ They are the ONLY store for project data that later sessions need.
 
 ### Guidelines
 
-- You MUST load the preferences with the Project API at the start of each session.
+- You MUST load the preferences at the start of each session.
 - You MUST NOT keep a local copy for a later session.
-- When the user gives a new preference, you MUST record it with the Project API in the same turn.
+- When the user gives a new preference, you MUST record it in the same turn.
 - You MUST be succinct and write in ASD-STE100 Simplified Technical English.
 - You MUST NOT store data that can be derived from other sources, e.g. API shape.
 - You MUST NOT mark an entry as proposed or pending.
@@ -170,8 +155,7 @@ They are the ONLY store for project data that later sessions need.
 
 ### Updating
 
-- Use Project API to update preferences.
-- The API call replaces the whole Markdown document.
+- `update-project-preferences` replaces the whole Markdown document.
   Thus you MUST NOT delete parts that you did not mean to change.
 - When you update, always compare against the existing preferences.
   Tell the user what you updated.
@@ -209,7 +193,7 @@ To apply a change to a clip that exists, render it again.
 
 **Accounts**
 
-Information that the API does not provide, e.g.:
+Information that Fountain does not provide, e.g.:
 
 - the handle to use when you tag a person
 - the YouTube channel of a show, when its video is not on Fountain
