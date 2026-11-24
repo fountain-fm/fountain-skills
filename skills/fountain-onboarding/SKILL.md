@@ -82,7 +82,6 @@ Onboarding must be fast and not overwhelming:
 - Record Editorial and Accounts preferences only when the user gives them.
 
 A request to run Daily Growth each day means: turn on the Daily Growth automation.
-This skill installs no software, because Fountain renders the clips.
 
 When no user is present, do only the steps that need no answer from the user.
 Report what is still missing, so that the user can complete it in the next chat.

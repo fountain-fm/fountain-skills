@@ -13,7 +13,7 @@ Each sentence MUST be on a different line.
 
 You MUST put the name of a skill or a module in bold (e.g. module **face-detection**).
 You MUST bold the name only, and not the words "skill" or "module".
-A planned name keeps its brackets inside the bold (e.g. skill **[fountain-clip-producer]**).
+A planned name keeps its brackets inside the bold (e.g. skill **[fountain-report-feedback]**).
 
 ```md
 Sentence 1.

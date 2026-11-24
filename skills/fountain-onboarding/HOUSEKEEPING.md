@@ -55,7 +55,6 @@ Config:
 - Write a large response to a file and read only the part you need.
 - You CAN write a throwaway script, e.g. to count the items in a large response.
   Put it in a temporary place and delete it at the end of the session.
-  You MUST NOT keep a script that wraps the MCP, because the tools can change.
 
 ### Clips
 
@@ -68,14 +67,8 @@ To change the look of a clip, render it again with `render-social-post`, and giv
 The new video replaces the video of each unpublished post that shares the clip.
 A change for all later clips belongs under Brand, because each render reads the preferences.
 
-Always prefer a Fountain render, also when Fountain cannot render all of a request, e.g. a logo.
-Say what Fountain cannot render, and offer the closest look that it can, from the clip rendering page.
-Use skill **fountain-clip-producer** only when the user asks for a render on their own computer.
-
-### Credits
-
-Do not stop to ask the user before an action that costs credits.
-Link https://fountain.fm/faq/credits when the user asks about credits.
+When Fountain cannot render all of a request, e.g. a logo, say so.
+Then offer the closest look that it can, from the clip rendering page.
 
 ## Setup
 
