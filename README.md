@@ -23,7 +23,6 @@ You need a [Fountain](https://fountain.fm) account.
 2. In the plugin's Connectors tab, click Connect next to Fountain and sign in to your Fountain account.
 3. Start a chat and say "Set up Fountain".
 
-For the best experience, we recommend Claude Code.
 On Team and Enterprise plans, your admin may need to allow the plugin.
 
 ### ChatGPT and Codex
@@ -34,7 +33,6 @@ On Team and Enterprise plans, your admin may need to allow the plugin.
 3. Start a chat and say "Set up Fountain".
 
 Works in ChatGPT on web, desktop and mobile, and in Codex.
-For the best experience, we recommend Codex.
 
 ### OpenCode
 
@@ -89,10 +87,9 @@ Restart OpenClaw and say "Set up Fountain".
 
 ## The skills
 
-| Skill                    | What it does                                                                |
-| ------------------------ | --------------------------------------------------------------------------- |
-| `fountain-onboarding`    | Sets up your show, your channels, the look of your clips, and Daily Growth. |
-| `fountain-clip-producer` | Renders a clip on your own computer, when you ask for it.                   |
+| Skill                 | What it does                                                                           |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| `fountain-onboarding` | Sets up your show, your channels, and the look of your clips, then makes a first clip. |
 
 ## Data and privacy
 
@@ -101,21 +98,12 @@ How Fountain uses and keeps this data is in the [Fountain privacy policy](https:
 
 Some steps send requests to other services:
 
-- The storage URLs that the Fountain Uploads API gives: the clip videos that you render on your machine.
-- `media.fountain.fm`: one download of the fonts, the face detection model, and the overlay placeholders that
-  skill **fountain-clip-producer** reads, with their licences.
 - The web search tools of the agent, if it has them: search queries about the show.
 - The pages that the show publishes outside Fountain, such as its site and its social profiles: page requests.
-- YouTube or another video site, through yt-dlp: requests for the video and the captions of a local render.
-- The host of each episode: requests for the episode media of a local render.
-- Hugging Face: one download of the whisper.cpp model file `ggml-base.en.bin`, for a local render.
-- Package managers, such as Homebrew: installs of the software that a local render needs, when you agree.
 
 No skill sends a Fountain token to a different service.
 
 The plugin holds no binary files.
-Skill **fountain-clip-producer** checks the sha256 of each file that it downloads from `media.fountain.fm`.
-ffmpeg and OpenCV read these files as data, and no part of the plugin runs them as code.
 
 ## Package an OpenAI update
 
