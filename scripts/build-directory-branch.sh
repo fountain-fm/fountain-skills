@@ -44,7 +44,7 @@ trap 'rm -rf "$work_dir"' EXIT
 index_file="$work_dir/index"
 # Each sentence is on its own line, so dropping a line that names a left-out skill drops one sentence.
 excluded_skills_pattern="$(git ls-tree --name-only "$source_ref" skills/ | sed 's|^skills/||' \
-  | grep -v -x "$INCLUDED_SKILL" | paste -s -d '|' -)"
+  | { grep -v -x "$INCLUDED_SKILL" || true; } | paste -s -d '|' -)"
 housekeeping_path="skills/$INCLUDED_SKILL/HOUSEKEEPING.md"
 housekeeping_blob_id="$(git show "$source_ref:$housekeeping_path" \
   | { [[ -n "$excluded_skills_pattern" ]] && grep -v -E "$excluded_skills_pattern" || cat; } | git hash-object -w --stdin)"
