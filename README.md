@@ -21,7 +21,6 @@ You need a [Fountain](https://fountain.fm) account.
 2. In the plugin's Connectors tab, click Connect next to Fountain and sign in to your Fountain account.
 3. Start a chat and say "Set up Fountain".
 
-For the best experience, we recommend Claude Code.
 On Team and Enterprise plans, your admin may need to allow the plugin.
 
 ## The skills
