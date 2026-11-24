@@ -16,6 +16,7 @@ It finishes the setup, makes a first clip, and links the docs for the rest.
 
 - A project with a show, at least one connected channel, and its automations on.
 - Updated Brand preferences, and Editorial and Accounts preferences when the user gives them.
+- Custom sources for Daily Growth, when major news sites rarely cover the show.
 - One draft from the latest episode, with its `post_url`.
 - A summary in the chat: what changed, what is still missing, and where to read more.
 
@@ -59,7 +60,10 @@ You MUST read HOUSEKEEPING.md if you haven't already.
    Daily Growth and Latest Episode are on by default.
    Tell the user how many clips each one makes, and when Daily Growth next runs.
    The user can change the number of clips, or turn an automation off.
-10. Finish with three example requests that the user can make, and these links:
+10. If major news sites rarely cover the subject of the show, choose a few custom sources for Daily Growth.
+    E.g. trade publications or blogs in the niche of the show.
+    Add them with `update-project`, and link https://fountain.fm/faq/daily-growth-sources.
+11. Finish with three example requests that the user can make, and these links:
     - Finding clips: https://fountain.fm/docs/finding-clips
     - Rendering clips: https://fountain.fm/docs/rendering-clips
     - Publishing clips: https://fountain.fm/docs/publishing-clips
