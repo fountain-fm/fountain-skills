@@ -4,7 +4,7 @@ Agent skills for podcast growth.
 
 Each morning, Fountain reads the headlines and finds the matching moments in your back catalog.
 It turns them into captioned clips in your style, and drafts a post for each of your channels.
-You approve the ones you like, and they go out to X, YouTube and Instagram.
+You approve the ones you like, and they go out to X, YouTube, Instagram and Facebook.
 
 This plugin connects your agent to Fountain and helps you set it all up: your show, your channels, and the look of
 your clips.
@@ -90,6 +90,20 @@ Restart OpenClaw and say "Set up Fountain".
 | Skill                 | What it does                                                                           |
 | --------------------- | -------------------------------------------------------------------------------------- |
 | `fountain-onboarding` | Sets up your show, your channels, and the look of your clips, then makes a first clip. |
+
+## What the Fountain tools can do
+
+The Fountain MCP server gives tools that read your Fountain data, and tools that change it.
+The tools that change it can:
+
+- Publish a social post now or at a set time on a connected channel, and delete a post that is not published.
+- Connect a social channel, after you approve access on that platform.
+- Publish, schedule, change or delete an episode in a podcast feed that Fountain hosts.
+- Send a report by email to one address.
+- Change the settings and the preferences of a project.
+- Spend project credits, e.g. when Fountain makes a clip draft or a transcript.
+
+The skills publish nothing until you approve it.
 
 ## Data and privacy
 
