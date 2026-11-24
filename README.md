@@ -91,18 +91,18 @@ Restart OpenClaw and say "Set up Fountain".
 | --------------------- | -------------------------------------------------------------------------------------- |
 | `fountain-onboarding` | Sets up your show, your channels, and the look of your clips, then makes a first clip. |
 
-## What the Fountain tools can do
+## What the plugin can do
 
-The Fountain MCP server gives tools that read your Fountain data, and tools that change it.
-The tools that change it can:
+Your agent reads your Fountain data through the plugin.
+It can also:
 
-- Publish a social post now or at a set time on a connected channel, and delete a post that is not published.
+- Publish or schedule posts on your connected channels, and delete posts that are not published.
 - Connect a social channel, after you approve access on that platform.
-- Publish, schedule, change or delete an episode in a podcast feed that Fountain hosts.
-- Change the settings and the preferences of a project.
-- Spend project credits, e.g. when Fountain makes a clip draft or a transcript.
+- Publish, schedule, edit or delete episodes in podcast feeds that Fountain hosts.
+- Change the settings and preferences of your project.
+- Spend project credits on clips and transcripts.
 
-The skills publish nothing until you approve it.
+The plugin publishes nothing until you approve it.
 
 ## Data and privacy
 
