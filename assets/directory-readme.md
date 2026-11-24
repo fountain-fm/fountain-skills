@@ -4,7 +4,7 @@ Agent skills for podcast growth.
 
 Each morning, Fountain reads the headlines and finds the matching moments in your back catalog.
 It turns them into captioned clips in your style, and drafts a post for each of your channels.
-You approve the ones you like, and they go out to X, YouTube and Instagram.
+You approve the ones you like, and they go out to X, YouTube, Instagram and Facebook.
 
 This plugin connects Claude to Fountain and helps you set it all up: your show, your channels, and the look of
 your clips.
@@ -28,6 +28,19 @@ On Team and Enterprise plans, your admin may need to allow the plugin.
 | Skill                 | What it does                                                                |
 | --------------------- | --------------------------------------------------------------------------- |
 | `fountain-onboarding` | Sets up your show, your channels, the look of your clips, and Daily Growth. |
+
+## What the plugin can do
+
+Your agent reads your Fountain data through the plugin.
+It can also:
+
+- Publish or schedule posts on your connected channels, and delete posts that are not published.
+- Connect a social channel, after you approve access on that platform.
+- Publish, schedule, edit or delete episodes in podcast feeds that Fountain hosts.
+- Change the settings and preferences of your project.
+- Spend project credits on clips and transcripts.
+
+The plugin publishes nothing until you approve it.
 
 ## Data and privacy
 
