@@ -48,7 +48,10 @@ An agent reaches the API through the Fountain MCP.
 - The MCP signs in the Fountain user with OAuth.
 - It gives one tool for each API endpoint.
 - For more information, you can read the docs at https://fountain.fm/docs.md
-- If the MCP is not connected, ask the user to connect it with the Server URL.
+- If the MCP is not connected, ask the user to connect it.
+  In Claude, the plugin does not connect the MCP by itself.
+  The user opens the Fountain plugin, then its Connectors tab, and clicks Connect.
+  In another agent, link https://fountain.fm/docs/connect-your-agent
 - When the MCP seems not connected or not signed in, try to list the projects to check.
   Do not assume that the MCP does not work before you do this check.
 
@@ -67,6 +70,7 @@ Config:
 ### Clips
 
 To make clips, find them with the Search API, which gives each one as a `ClipCandidate`.
+The Search API also finds a compilation: one clip of moments from several episodes.
 Add a social post for each clip with the Social API.
 With Daily Growth on, look at its drafts first, so that you do not make the same clip twice.
 Fountain renders the video of each new clip post automatically, when the post has a `source` and no upload.
@@ -80,6 +84,13 @@ A change for all later clips belongs under Brand, because each render reads the 
 Always prefer a Fountain render, also when Fountain cannot render all of a request, e.g. a logo.
 Say what Fountain cannot render, and offer the closest look that it can, from the clip rendering page.
 Use skill **fountain-clip-producer** only when the user asks for a render on their own computer.
+
+### Credits
+
+The description of each API tool gives its cost in credits.
+Before the first action in a session that costs credits, tell the user its cost.
+Also tell the user how many credits the project has left.
+Link https://fountain.fm/faq/credits when the user asks about credits.
 
 ## Setup
 

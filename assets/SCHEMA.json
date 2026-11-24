@@ -256,7 +256,7 @@
     },
     {
       "name": "fountain-onboarding",
-      "description": "Set up Fountain: show, channels, clip look, preferences, and Daily Growth. Use on first use or on request.",
+      "description": "Set up Fountain: show, channels, clip look, and automations, then make a first clip. Use on first use or on request.",
       "skill": "skills/fountain-onboarding/SKILL.md",
       "modules": [],
       "assets": []
